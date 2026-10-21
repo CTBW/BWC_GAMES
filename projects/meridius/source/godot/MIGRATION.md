@@ -68,9 +68,8 @@ preserved (tile grid, one squad per tile, reserves = enemy waves off-field).
       (test_screens, test_campaign_hud, test_battle_hud, test_hud_flow)
 
 ## Verification
-- [~] Automated suite: 289 passed / 0 failed in the last full run reported by
-      the battle-view agent; lead's own final full run was started but its
-      result was not collected (rerun `tools/test.sh`).
+- [x] Automated suite: lead's final full run `tools/test.sh` on the committed
+      tree: 289 passed, 0 failed, 0 skipped (241 s), exit code 0.
 - [x] Windows export builds (168 MB, `tools/export.sh`); the exported exe ran
       the smoke self-test: data, 1210 sprites, 31 sounds, AI expedition, all 11
       encounters, garrison/campaign/battle screens. Rerun after the smoke fix:
@@ -83,7 +82,7 @@ preserved (tile grid, one squad per tile, reserves = enemy waves off-field).
       (0.03em) and line-height calibration in the theme
 
 ## Resume here
-1. `tools/test.sh` (full) — fix anything red.
+1. `tools/test.sh` (full) — green at d759b9c (289/0).
 2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
 3. Play-through QA (open items above), then fix and commit on branch
    `godot-migration`.

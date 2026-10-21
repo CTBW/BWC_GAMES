@@ -4,9 +4,10 @@
 [ext_resource type="FontFile" path="res://assets/fonts/cinzel-latin-ext-700-normal.woff2" id="2_5oaxu"]
 [ext_resource type="Script" path="res://scripts/ui/styles/paper_style.gd" id="3_levwr"]
 
-[sub_resource type="FontVariation" id="FontVariation_cjkfm"]
+[sub_resource type="FontVariation" id="FontVariation_vlrnd"]
 fallbacks = Array[Font]([ExtResource("2_5oaxu")])
 base_font = ExtResource("1_g0vrx")
+spacing_glyph = 1
 
 [sub_resource type="StyleBox" id="StyleBox_m422p"]
 resource_local_to_scene = false
@@ -96,6 +97,10 @@ border_right = 1.0
 border_bottom = 1.0
 shadow_offset = Vector2(0, 2)
 shadow_blur = 4.0
+
+[sub_resource type="FontVariation" id="FontVariation_iy48a"]
+fallbacks = Array[Font]([ExtResource("2_5oaxu")])
+base_font = ExtResource("1_g0vrx")
 
 [sub_resource type="StyleBox" id="StyleBox_8yqa3"]
 resource_local_to_scene = false
@@ -392,7 +397,7 @@ GhostBigButton/constants/h_separation = 6
 GhostBigButton/constants/icon_max_width = 18
 GhostBigButton/constants/outline_size = 0
 GhostBigButton/font_sizes/font_size = 19
-GhostBigButton/fonts/font = SubResource("FontVariation_cjkfm")
+GhostBigButton/fonts/font = SubResource("FontVariation_vlrnd")
 GhostBigButton/styles/disabled = SubResource("StyleBox_m422p")
 GhostBigButton/styles/focus = SubResource("StyleBoxFlat_hwt6s")
 GhostBigButton/styles/hover = SubResource("StyleBox_2avum")
@@ -416,7 +421,7 @@ GhostButton/constants/h_separation = 6
 GhostButton/constants/icon_max_width = 18
 GhostButton/constants/outline_size = 0
 GhostButton/font_sizes/font_size = 14
-GhostButton/fonts/font = SubResource("FontVariation_cjkfm")
+GhostButton/fonts/font = SubResource("FontVariation_iy48a")
 GhostButton/styles/disabled = SubResource("StyleBox_8yqa3")
 GhostButton/styles/focus = SubResource("StyleBoxFlat_o3x0u")
 GhostButton/styles/hover = SubResource("StyleBox_dl8fa")
@@ -440,7 +445,7 @@ GhostSmallButton/constants/h_separation = 6
 GhostSmallButton/constants/icon_max_width = 18
 GhostSmallButton/constants/outline_size = 0
 GhostSmallButton/font_sizes/font_size = 12
-GhostSmallButton/fonts/font = SubResource("FontVariation_cjkfm")
+GhostSmallButton/fonts/font = SubResource("FontVariation_iy48a")
 GhostSmallButton/styles/disabled = SubResource("StyleBox_n7uwv")
 GhostSmallButton/styles/focus = SubResource("StyleBoxFlat_og38k")
 GhostSmallButton/styles/hover = SubResource("StyleBox_faixe")

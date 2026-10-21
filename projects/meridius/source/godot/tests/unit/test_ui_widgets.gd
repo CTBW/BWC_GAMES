@@ -198,3 +198,18 @@ func test_soldier_card() -> void:
 	var sorted := SoldierCard.sort_roster(g.roster)
 	assert_eq(sorted[0].typeId, "footman", "line first")
 	assert_eq(sorted[sorted.size() - 1].typeId, "crossbowman", "missiles last")
+
+
+## Play-through finding: a soldier card without tags (no injuries, full
+## strength, sound armour) built its tag row and left it unparented, so every
+## such card leaked a node (39 HFlowContainer orphans after one play-through,
+## "CanvasItem RIDs leaked" at exit). Building and freeing cards leaves nothing.
+func test_soldier_card_leaves_no_orphans() -> void:
+	var g: Dictionary = Game.new_game(5)
+	var so: Dictionary = g.roster[0]
+	assert_true(so.injuries.is_empty() and not so.get("recovering", false), "a soldier without tags")
+	var before := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
+	for i in 5:
+		var card: Control = SoldierCard.make(so, Callable(), false, false, [])
+		card.free()
+	assert_eq(int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)), before, "no orphan nodes left by cards")

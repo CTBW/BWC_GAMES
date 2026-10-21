@@ -83,3 +83,19 @@ func test_saved_theme_loads() -> void:
 	assert_not_null(t)
 	assert_eq(String(t.get_type_variation_base("ParchmentPanel")), "PanelContainer")
 	assert_true(t.get_stylebox("panel", "ParchmentPanel") is StyleBox)
+
+
+## CSS letter-spacing in whole pixels: `.btn` 0.03em (1 px at the 19 px big
+## buttons, none at 12 and 14 px), `.topbar .brand` 0.12em of 20 px (2 px).
+func test_letter_spacing() -> void:
+	var t: Theme = ThemeBuilder.build()
+	var sp := func(type: String) -> int:
+		var f: Font = t.get_font("font", type)
+		return (f as FontVariation).spacing_glyph if f is FontVariation else 0
+	assert_eq(sp.call("RedBigButton"), 1, "big buttons")
+	assert_eq(sp.call("BigButton"), 1)
+	assert_eq(sp.call("Button"), 0, "14 px buttons")
+	assert_eq(sp.call("SmallButton"), 0, "12 px buttons")
+	assert_eq(sp.call("BrandLabel"), 2, "the top bar brand")
+	assert_eq(ThemeBuilder.button_spacing(19), 1)
+	assert_eq(ThemeBuilder.button_spacing(14), 0)

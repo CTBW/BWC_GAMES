@@ -30,6 +30,30 @@ From a shell (Git Bash), in this folder:
 | `tools/test.sh battle facing` | Only tests whose script or name matches |
 | `tools/export.sh` | Windows build → `build/windows/Meridius.exe` (+ `Meridius.console.exe`) |
 | `build/windows/Meridius.console.exe -- --smoke` | Self-test of the built game (exit code 0 = OK) |
+| `tools/godot.sh --path . -s res://tests/visual/playthrough.gd` | Input-driven play-through in a 1920×1080 window (~2 min; `-- --full` adds a second expedition, restart and last-stand turns, ~5 min); exit code 0 = every check passed and no error was logged |
+| `tools/godot.sh --path . -s res://tests/visual/battle_open_time.gd` | Time to open the first and the second battle (boot warm-up check) |
+
+### The play-through regression check
+
+`tests/visual/playthrough.gd` boots `scenes/main.tscn` in a window and plays
+only through synthesized input (`Input.parse_input_event`: mouse motion,
+clicks, wheel, keys) at positions taken from the Controls' rects and the world
+cameras: title → New Company → welcome → buildings on the camp map (Barracks:
+hire) → Roster → a soldier → Sound → F11 → Esc menu → prep (army, supplies,
+advice) → March Out → map nodes to a battle, dialogs through their buttons →
+the battle played to its end by clicks (a small bot asks `Ai.act_unit` on a
+copy of the battle what to do and clicks it: select, point at a tile edge /
+Q / E for the facing, move, attack, ability buttons and number keys, Redo,
+Done / Space, End Turn / Enter) → result → Retreat home → report → garrison →
+the last stand's minimap click → Save and Quit. `-- --full` adds Save and
+Quit / Continue mid-expedition, more nodes, a second expedition with a battle
+left by Retreat, two turns of the last stand and New Company over the save.
+Each step is checked against the game state. It writes
+`tests/visual/out/playthrough/`: `playthrough.txt` (every step, frame times per
+phase, frames over 100 ms, logged errors, orphan nodes) and numbered
+screenshots. It uses its own save file, restores the prefs afterwards, and
+drops real mouse/key events while it runs (do not type into the window).
+Run it windowed (not `--headless`).
 
 ## Controls
 

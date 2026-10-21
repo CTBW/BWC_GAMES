@@ -147,3 +147,51 @@ func test_wheel_limits() -> void:
 		v.wheel(-1)
 	assert_almost(v.cam.tzoom, 1.2, 1e-9)
 	v.free()
+
+
+## Play-through bug: while the company marched, the host's scorched wash logged
+## "Invalid polygon data, triangulation failed" (campaign_view.gd
+## _draw_horde_land). Clipping the quad at the gradient cuts leaves zero-area
+## slivers where a cut runs along the quad's edge; they are dropped now, and
+## what is drawn still covers the whole quad.
+func test_horde_wash_polygons_triangulate_while_the_host_advances() -> void:
+	var v := _view(fx.game.expedition)
+	var hordes: Array = [v.horde.duplicate()]
+	# Objective and start of expeditions (seeds 6 and 10) whose wash had slivers.
+	for ends in [[8, 8, 30, 30], [7, 6, 30, 29], [7, 7, 31, 31]]:
+		var dx: float = ends[2] - ends[0]
+		var dy: float = ends[3] - ends[1]
+		var l := sqrt(dx * dx + dy * dy)
+		hordes.append({"ox": float(ends[0]), "oy": float(ends[1]), "ux": dx / l, "uy": dy / l, "len": l, "front": -0.27})
+	var bad := 0
+	var steps := 0
+	for h0 in hordes:
+		var h: Dictionary = h0.duplicate()
+		var front := -0.27
+		while front <= -0.03:
+			h.front = front
+			steps += 1
+			var parts: Array = CampaignView.horde_land_parts(h)
+			var area := 0.0
+			for part in parts:
+				if Geometry2D.triangulate_polygon(part[0]).is_empty():
+					bad += 1
+				assert_eq(part[0].size(), part[1].size(), "a colour per point")
+				area += absf(_area(part[0]))
+			# The quad the wash fills.
+			var q := PackedVector2Array()
+			for st in [[front, -30], [front, 30], [front - 0.5, 30], [front - 0.5, -30]]:
+				var g: Vector2 = CampaignView._horde_at(h, st[0], st[1])
+				q.append(Iso.iso(g.x, g.y))
+			assert_almost(area / absf(_area(q)), 1.0, 1e-3, "the pieces cover the quad at front %s" % front)
+			front += 0.0007
+	assert_eq(bad, 0, "pieces that cannot be triangulated over %d positions of the front" % steps)
+	v.free()
+
+
+static func _area(p: PackedVector2Array) -> float:
+	var a := 0.0
+	for i in p.size():
+		var j := (i + 1) % p.size()
+		a += p[i].x * p[j].y - p[j].x * p[i].y
+	return a * 0.5

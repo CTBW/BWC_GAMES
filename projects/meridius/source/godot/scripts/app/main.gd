@@ -42,6 +42,11 @@ const SCREENS := {
 const MANUAL := "res://scripts/ui/screens/manual.gd"
 const MENU := "res://scripts/ui/screens/pause_menu.gd"
 const SMOKE := "res://scripts/qa/smoke.gd"
+## Loaded (and kept) behind the loading screen, so the first expedition and the
+## first battle do not stop to load and compile their scripts: the battle view,
+## its HUD and the battle rules alone cost ~0.75 s on the first battle.
+## Deps keys first, then the screens main.gd loads by path.
+const WARM_DEPS := ["setup", "battle", "ai", "expedition", "battle_view_scene", "battle_hud", "campaign_view_scene", "campaign_hud"]
 
 var world: Node2D
 var ui_root: Control
@@ -52,6 +57,8 @@ var _screen: Control = null
 var _screen_view: Node = null
 var _manual: Control = null
 var _menu: Control = null
+## Scripts warmed at boot (held so they stay loaded).
+var _warm: Array = []
 
 
 func _ready() -> void:
@@ -82,10 +89,19 @@ func _boot() -> void:
 	App.load_progress = 0.0
 	App.emit_changed()
 	await get_tree().process_frame
-	# Warm what the first screens draw: the fonts of the theme and the icons.
-	App.load_progress = 0.5
-	App.emit_changed()
-	await get_tree().process_frame
+	# Warm the views, HUDs, rules and screens the game opens later (one per frame,
+	# so the loading screen counts up).
+	var steps := warm_steps()
+	for i in steps.size():
+		var k: String = steps[i]
+		if Deps.PATHS.has(k):
+			Deps.mod(k)
+		elif ResourceLoader.exists(k):
+			_warm.append(load(k))
+		App.load_progress = float(i + 1) / (steps.size() + 2)
+		App.emit_changed()
+		await get_tree().process_frame
+	await _warm_battle()
 	App.load_progress = 1.0
 	var args := OS.get_cmdline_user_args()
 	if args.has("--newgame"):
@@ -96,6 +112,44 @@ func _boot() -> void:
 		App.new_game(seed)
 	else:
 		App.go_title()
+
+
+## What the loading screen loads: Deps keys and script paths.
+static func warm_steps() -> Array:
+	var steps: Array = WARM_DEPS.duplicate()
+	steps.append_array(SCREENS.values())
+	steps.append_array([MANUAL, MENU])
+	return steps
+
+
+## Draws a small battle once in a hidden viewport: the battle's shaders compile
+## and its figure atlases load now instead of on the first battle's first frame
+## (~190 ms). Its own game and battle; nothing of the App's state is touched.
+func _warm_battle() -> void:
+	var Game = Deps.game()
+	var Setup = Deps.setup()
+	var Battle = Deps.battle()
+	var Soldier = Deps.soldier()
+	if Game == null or Setup == null or Battle == null or Soldier == null or not Deps.has("battle_view"):
+		return
+	var g: Dictionary = Game.new_game(1)
+	var army: Array = []
+	for so in g.roster:
+		army.append(Soldier.soldier_to_unit(so))
+	var roll: Dictionary = Setup.roll_encounter("raiding_party", Deps.rng().new(1), 2)
+	var b = Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
+	var vp := SubViewport.new()
+	vp.name = "WarmBattle"
+	vp.size = Vector2i(480, 270)
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(vp)
+	var v := Deps.instance("battle_view")
+	v.setup(b)
+	vp.add_child(v)
+	for i in 2:
+		await get_tree().process_frame
+	remove_child(vp)
+	vp.queue_free()
 
 
 func _make_screen(key: String) -> Control:

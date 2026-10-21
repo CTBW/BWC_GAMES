@@ -418,7 +418,10 @@ func front_for(ex: Dictionary) -> float:
 
 ## Grid point at `t` along the host's line and `s` tiles across it.
 func horde_at(t: float, s: float) -> Vector2:
-	var h: Dictionary = horde
+	return _horde_at(horde, t, s)
+
+
+static func _horde_at(h: Dictionary, t: float, s: float) -> Vector2:
 	return Vector2(h.ox + h.ux * h.len * t - h.uy * s, h.oy + h.uy * h.len * t + h.ux * s)
 
 
@@ -1039,19 +1042,28 @@ static func puff() -> Texture2D:
 func _draw_horde_land(ci: CanvasItem) -> void:
 	if horde == null:
 		return
-	var h: Dictionary = horde
+	for part in horde_land_parts(horde):
+		ci.draw_polygon(part[0], part[1])
+
+
+## The scorched wash of _draw_horde_land as [points, colours] polygons: the
+## quad behind the front cut at the gradient stops so each piece is linear in
+## colour. Slivers the clipping leaves where a cut runs along the quad's edge
+## (no area, they cannot be triangulated) are dropped.
+static func horde_land_parts(h: Dictionary) -> Array:
+	var out: Array = []
 	# Scorched land: a reddish-dark wash deepening away from the front, on the land only.
-	var a := horde_at(h.front, -30)
-	var b := horde_at(h.front, 30)
-	var c := horde_at(h.front - 0.5, 30)
-	var d := horde_at(h.front - 0.5, -30)
-	var p0 := Iso.iso(horde_at(h.front, 0).x, horde_at(h.front, 0).y)
-	var p1 := Iso.iso(horde_at(h.front - 0.3, 0).x, horde_at(h.front - 0.3, 0).y)
+	var a := _horde_at(h, h.front, -30)
+	var b := _horde_at(h, h.front, 30)
+	var c := _horde_at(h, h.front - 0.5, 30)
+	var d := _horde_at(h, h.front - 0.5, -30)
+	var p0 := Iso.iso(_horde_at(h, h.front, 0).x, _horde_at(h, h.front, 0).y)
+	var p1 := Iso.iso(_horde_at(h, h.front - 0.3, 0).x, _horde_at(h, h.front - 0.3, 0).y)
 	var quad := PackedVector2Array([Iso.iso(a.x, a.y), Iso.iso(b.x, b.y), Iso.iso(c.x, c.y), Iso.iso(d.x, d.y)])
 	var axis := p1 - p0
 	var len2 := axis.length_squared()
 	if len2 <= 0:
-		return
+		return out
 	var stops := [[0.0, Color(60 / 255.0, 20 / 255.0, 10 / 255.0, 0.0)], [0.18, Color(70 / 255.0, 24 / 255.0, 12 / 255.0, 0.38)], [1.0, Color(36 / 255.0, 12 / 255.0, 8 / 255.0, 0.62)]]
 	# Cut the quad at the gradient stops so each piece is linear in colour.
 	var cuts := [-1e6, 0.0, 0.18, 1.0, 1e6]
@@ -1062,11 +1074,14 @@ func _draw_horde_land(ci: CanvasItem) -> void:
 		var hi_p := p0 + axis * minf(cuts[i + 1], 50.0)
 		var band := PackedVector2Array([lo_p - perp, lo_p + perp, hi_p + perp, hi_p - perp])
 		for part in Geometry2D.intersect_polygons(quad, band):
+			if part.size() < 3 or Geometry2D.triangulate_polygon(part).is_empty():
+				continue
 			var cols := PackedColorArray()
 			for p in part:
 				var t := clampf((p - p0).dot(n), 0.0, 1.0)
 				cols.append(stops[0][1].lerp(stops[1][1], t / 0.18) if t < 0.18 else stops[1][1].lerp(stops[2][1], (t - 0.18) / 0.82))
-			ci.draw_polygon(part, cols)
+			out.append([part, cols])
+	return out
 
 
 func _draw_horde_glow(ci: CanvasItem) -> void:

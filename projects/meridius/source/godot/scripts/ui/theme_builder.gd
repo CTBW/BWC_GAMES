@@ -496,11 +496,18 @@ static func _set_button(t: Theme, name: String, kind: String, font_size: int, pa
 	if kind == "Choice":
 		t.set_font("font", name, UI.font("alegreya", 500))
 	else:
-		t.set_font("font", name, UI.font("cinzel", 700))
+		# `.btn { letter-spacing: 0.03em }`: FontVariation spacing is whole pixels,
+		# so it rounds to 1 px for the 19 px big buttons and to none at 12 and 14 px.
+		t.set_font("font", name, UI.font("cinzel", 700, false, button_spacing(font_size)))
 	t.set_font_size("font_size", name, font_size)
 	t.set_constant("h_separation", name, 6)
 	t.set_constant("icon_max_width", name, 18)
 	t.set_constant("outline_size", name, 0)
+
+
+## Letter spacing (px per glyph) of a Cinzel button at this size: CSS 0.03em, rounded.
+static func button_spacing(font_size: int) -> int:
+	return roundi(0.03 * font_size)
 
 
 static func _focus_style() -> StyleBox:

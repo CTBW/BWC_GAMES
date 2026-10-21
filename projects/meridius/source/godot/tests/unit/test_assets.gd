@@ -179,6 +179,49 @@ func test_warm_async_then_sprite() -> void:
 	assert_true(Assets.sprite("portrait_goblin_horn").tex is Texture2D)
 
 
+## Play-through finding: textures warm_async asked for but never drew stayed
+## with the threaded loader; each such request was reported as a leaked
+## RefCounted ("ObjectDB instances leaked at exit"). Finished loads are taken
+## into the cache by the next warm_async, and all of them at exit.
+func test_warm_async_requests_are_taken_from_the_loader() -> void:
+	Assets._ensure()
+	# Two keys on different files, out of the cache (the earlier tests loaded everything).
+	var fresh: Array = []
+	var files := {}
+	for k in ["goblin_horn_idle_f", "portrait_troll", "tuft", "well"]:
+		var f := String(Assets._manifest[k][0].file)
+		if not files.has(f) and ResourceLoader.load_threaded_get_status(f) == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+			files[f] = true
+			fresh.append(k)
+		if fresh.size() >= 2:
+			break
+	if not assert_eq(fresh.size(), 2, "two keys"):
+		return
+	var kept := {}
+	for f in files:
+		kept[f] = Assets._textures.get(f)
+		Assets._textures.erase(f)
+	var f0 := String(Assets._manifest[fresh[0]][0].file)
+	var f1 := String(Assets._manifest[fresh[1]][0].file)
+	Assets.warm_async([fresh[0]])
+	assert_true(Assets.pending_loads() >= 1 or Assets._textures.has(f0), "requested (or, already in the resource cache, taken at once)")
+	# Finished loads are taken by the next warm_async.
+	var t0 := Time.get_ticks_msec()
+	while ResourceLoader.load_threaded_get_status(f0) == ResourceLoader.THREAD_LOAD_IN_PROGRESS and Time.get_ticks_msec() - t0 < 5000:
+		OS.delay_msec(5)
+	Assets.warm_async([fresh[1]])
+	assert_true(Assets._textures.has(f0), "the finished load is in the cache")
+	assert_eq(ResourceLoader.load_threaded_get_status(f0), ResourceLoader.THREAD_LOAD_INVALID_RESOURCE, "and no longer held by the loader")
+	# At exit everything is taken, also loads still running.
+	Assets.collect_loaded(true)
+	assert_eq(Assets.pending_loads(), 0, "nothing left with the loader")
+	assert_true(Assets._textures.has(f1))
+	assert_eq(ResourceLoader.load_threaded_get_status(f1), ResourceLoader.THREAD_LOAD_INVALID_RESOURCE)
+	for f in kept:
+		if kept[f] != null:
+			assert_eq(Assets._textures.get(f), kept[f], "the same texture as before (from the resource cache)")
+
+
 func test_materials_load() -> void:
 	assert_true(Assets.sprite_material().shader is Shader)
 	assert_true(Assets.additive_material().shader is Shader)

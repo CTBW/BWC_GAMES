@@ -72,6 +72,14 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 
+func _exit_tree() -> void:
+	# Sprite textures still loading in the background are taken from the loader
+	# before it shuts down (an untaken threaded load leaks its token at exit).
+	var A: Variant = Deps.assets()
+	if A != null and A.has_method("collect_loaded"):
+		A.collect_loaded(true)
+
+
 func emit_changed() -> void:
 	version += 1
 	changed.emit()

@@ -46,6 +46,8 @@ static var _pixels: Dictionary = {} # file -> {w, h, data: PackedByteArray (RGBA
 static var _warned: Dictionary = {}
 static var _material: ShaderMaterial
 static var _material_add: ShaderMaterial
+## Files warm_async asked the loader for whose result has not been taken yet.
+static var _requested: Dictionary = {}
 
 
 static func _ensure() -> void:
@@ -67,6 +69,7 @@ static func _tex(file: String) -> Texture2D:
 		var st := ResourceLoader.load_threaded_get_status(file)
 		if st == ResourceLoader.THREAD_LOAD_IN_PROGRESS or st == ResourceLoader.THREAD_LOAD_LOADED:
 			t = ResourceLoader.load_threaded_get(file) as Texture2D # waits for warm_async's load
+			_requested.erase(file)
 		else:
 			t = load(file) as Texture2D
 		if t == null:
@@ -169,6 +172,27 @@ static func warm_async(key_list: Array) -> void:
 			var f := String(e.file)
 			if not _textures.has(f) and ResourceLoader.load_threaded_get_status(f) == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 				ResourceLoader.load_threaded_request(f, "Texture2D")
+				_requested[f] = true
+	collect_loaded()
+
+
+## Takes the finished background loads of warm_async into the texture cache.
+## A threaded request stays with the loader until its result is taken (its load
+## token is reported as a leaked RefCounted at exit), so this runs on every
+## warm_async and, with `wait` (also the loads still running), at exit.
+static func collect_loaded(wait := false) -> void:
+	for f in _requested.keys():
+		var st := ResourceLoader.load_threaded_get_status(f)
+		if st == ResourceLoader.THREAD_LOAD_LOADED or (wait and st == ResourceLoader.THREAD_LOAD_IN_PROGRESS):
+			_requested.erase(f)
+			_tex(f)
+		elif st != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			_requested.erase(f)
+
+
+## Files whose background load is still waiting to be taken (tests).
+static func pending_loads() -> int:
+	return _requested.size()
 
 
 # ---------------------------------------------------------------- hit tests

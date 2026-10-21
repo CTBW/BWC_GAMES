@@ -74,12 +74,48 @@ preserved (tile grid, one squad per tile, reserves = enemy waves off-field).
       the smoke self-test: data, 1210 sprites, 31 sounds, AI expedition, all 11
       encounters, garrison/campaign/battle screens. Rerun after the smoke fix:
       passed in the editor build (13/13); re-export + rerun outstanding.
-- [ ] Input-driven graphical play-through (real clicks through the UI, full
-      battle to victory/defeat, restart, second expedition) with captures
-- [ ] Memory/leak check over several battles; ObjectDB leak warnings at exit
-- [ ] Polish requests: preload battle_view.tscn during boot (~280 ms first
-      compile); HUD mouse_filter over the minimap; button letter-spacing
-      (0.03em) and line-height calibration in the theme
+- [x] Input-driven play-through (QA, 21 Oct): `tests/visual/playthrough.gd`,
+      windowed 1920×1080, only synthesized input (see README). Final default
+      run: 155 checks, 0 failed, 0 errors, 0 orphan nodes, no leak warnings at
+      exit, exit code 0 (92 s; one battle won by clicks). Earlier `--full`
+      runs covered Save and Quit / Continue, a defeat, a second expedition,
+      Retreat from battle, two turns of the last stand and New Company over the
+      save (run 5: 548 checks; its remaining failures were bot picking issues,
+      not game bugs). Captures in `tests/visual/out/playthrough/`.
+- [x] Bugs found and fixed (each with a regression test):
+      campaign map logged "Invalid polygon data, triangulation failed" while
+      the company marched (zero-area slivers of the host's scorched wash;
+      `campaign_view.gd horde_land_parts`, test_campaign_view);
+      soldier cards without tags leaked their unparented tag row (39 orphan
+      HFlowContainers per play-through = the "CanvasItem RIDs leaked" warning;
+      `soldier_card.gd`, test_ui_widgets);
+      background texture loads of `Assets.warm_async` never taken from the
+      loader (the "ObjectDB instances leaked at exit" RefCounted tokens;
+      `assets.gd collect_loaded`, App `_exit_tree`; test_assets).
+- [x] Frame times at 1920×1080 windowed, vsync off (RTX 4070), play-through
+      averages: garrison 126–144 fps, campaign 73–78 fps, battle 77–84 fps
+      (p99 ~55 ms: playback of attacks), last stand deployment 54–60 fps, last
+      stand turns 48 fps (p99 60 ms, worst 155 ms), zoomed out on the whole
+      field 49 fps. Remaining hitches: opening a view (campaign 270–380 ms,
+      battle ~230 ms, last stand ~500 ms), the prep screen rebuild (~100–150 ms
+      per change).
+- [x] Polish: the loading screen warms the battle view, its HUD, the rules,
+      the campaign view/HUD and the screens, and draws one small battle in a
+      hidden SubViewport (shaders, figure atlases): first battle opens in
+      258 ms instead of 984 ms (second: 231 ms); boot to title 0.7 → 2.1 s
+      (`main.gd warm_steps`, `_warm_battle`; test_boot_warm,
+      `tests/visual/battle_open_time.gd`). Minimap: no HUD control takes clicks
+      over it (checked over the whole rect in the last stand) and a click on
+      it moves the camera — no change needed. Letter-spacing: `.btn` 0.03em
+      rounds to 1 px for 19 px buttons, 0 at 12/14 px (FontVariation spacing
+      is whole pixels); BrandLabel 0.12em = 2 px was already set; theme.tres
+      rebuilt (test_ui_theme). Line-height calibration: not done, the HUDs'
+      local trims stay (a global change would move every screen).
+- [ ] Memory soak over 5+ battles via the debug API with Performance monitors:
+      not run (descoped); leaks found by the play-through are fixed above.
+- [x] `tools/test.sh --quick`: 287 passed, 0 failed, 8 skipped. Re-export
+      (`tools/export.sh`, Meridius.exe 168 MB) + `Meridius.console.exe -- --smoke`:
+      SMOKE OK, 13/13 (9.2 s). Full `tools/test.sh` not rerun after these changes.
 
 ## Resume here
 1. `tools/test.sh` (full) — green at d759b9c (289/0).

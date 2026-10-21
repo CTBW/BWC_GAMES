@@ -102,6 +102,9 @@ static func make(so: Dictionary, on_click := Callable(), selected := false, disa
 	if tags.get_child_count() > 0:
 		col.add_child(UI.gap(0, 4))
 		col.add_child(tags)
+	else:
+		# Not shown: free it (an unparented node is never freed with the card).
+		tags.free()
 	return card
 
 

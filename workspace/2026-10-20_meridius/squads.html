@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Squad system</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .shots.wide { grid-template-columns: 1fr; }
+    .shots figure { margin: 0; }
+    .shots img { width: 100%; border-radius: 6px; display: block; cursor: zoom-in; }
+    .shots figcaption { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); vertical-align: top; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: squad system</h1>
+  <p><strong>Status, 20 October 2026:</strong> every unit now fights as a squad of six soldiers (Moss Trolls: three) that moves, turns and attacks as one unit, with one shared health pool, soldiers falling at each share, and damage that shrinks with every loss. It plays end to end through the real UI. 40 automated tests pass. The user has not accepted the result yet.</p>
+
+  <h2>What changed</h2>
+  <ul>
+    <li><b>Squads.</b> Six soldiers per squad unless a unit type overrides it; Moss Trolls come in threes. Stats are per soldier; a squad's HP is soldiers × HP per soldier (six footmen at 32 = 192).</li>
+    <li><b>Shared health, real casualties.</b> One bar cut into one segment per soldier. Every share lost kills a soldier, and one heavy blow can kill several. Healing never brings back the dead.</li>
+    <li><b>Damage scales with the living.</b> Squad damage = soldiers standing × damage per soldier, with armour taken off each soldier's blow. Hit chance, flanks, height, cover, charge and stances are unchanged. The rules roll damage once per attack; the animation only shows it.</li>
+    <li><b>Formations.</b> Two ranks of three, closing to 3+2, 2×2, 2+1, a pair and one man; trolls in a triangle; the warlord front and centre among his guard. Ranks follow the reference sheets and stay inside their tile.</li>
+    <li><b>One unit, many bodies.</b> One anchor, path and facing per squad; every soldier keeps his place, turns at corners, dresses ranks on arrival, swings in a ripple from the front rank, looses his own bolt in a volley, flinches, falls where he stood and stays on the field while the survivors close up.</li>
+    <li><b>New units.</b> Orc Brutes and Moss Trolls (regenerating, but a fallen troll stays down) in new encounters; Border Collie Royal Guards as elite recruits from a level-2 Barracks.</li>
+    <li><b>Campaign.</b> Squads carry their strength between battles. Field triage after a battle finds some of the fallen alive (the old survival roll, per soldier). The Barracks sells reinforcements; old saves are converted on load.</li>
+  </ul>
+
+  <h2>In battle</h2>
+  <div class="shots">
+    <figure><img src="media/squads-battle-closeup.jpg" alt="Six player squads in deployment, each two ranks of three soldiers with a standard" loading="lazy"><figcaption>The company deployed: six squads, each with its standard</figcaption></figure>
+    <figure><img src="media/squads-before-closeup.jpg" alt="The same deployment before the squad system, one figure per unit" loading="lazy"><figcaption>Before: one figure per unit (same seed)</figcaption></figure>
+    <figure><img src="media/squads-battle-trolls.jpg" alt="Footmen fighting Moss Trolls at a river bridge" loading="lazy"><figcaption>Moss trolls at the river: segmented health bars, combat log in squads</figcaption></figure>
+    <figure><img src="media/squads-move-ghost.jpg" alt="Selected footman squad with a ghost formation at the end of its path" loading="lazy"><figcaption>Moving a squad: path and ghost formation</figcaption></figure>
+    <figure><img src="media/squads-hud-forecast.jpg" alt="Attack forecast showing strikers, slain soldiers and squad damage" loading="lazy"><figcaption>Forecast: 4 footmen strike, slays 2–3 spearmen</figcaption></figure>
+    <figure><img src="media/squads-battle-deploy.jpg" alt="Troll encounter at deployment" loading="lazy"><figcaption>Opening view of a troll encounter</figcaption></figure>
+  </div>
+
+  <h2>Formations at every strength</h2>
+  <p>Rows face, from top: lower right, lower left, upper left, upper right. Strength falls from six to one, left to right.</p>
+  <div class="shots">
+    <figure><img src="media/squads-formations-player.jpg" alt="Footman and spearman squads from six soldiers down to one in four facings" loading="lazy"><figcaption>Footmen and spearmen, 6 → 1</figcaption></figure>
+    <figure><img src="media/squads-formations-trolls.jpg" alt="Troll triangles of three, two and one, beside goblin squads" loading="lazy"><figcaption>Troll triangles 3 → 1, goblins</figcaption></figure>
+    <figure><img src="media/squads-formations-warlord.jpg" alt="The orc warlord with his guard from six down to one" loading="lazy"><figcaption>The warlord falls last</figcaption></figure>
+    <figure><img src="media/squads-figures.jpg" alt="Every unit type as a squad of six varied soldiers, front idle and attack" loading="lazy"><figcaption>Six different soldiers per squad, all ten unit types</figcaption></figure>
+  </div>
+
+  <h2>Combat frames</h2>
+  <p>Staged in the real renderer (<code>scripts/combatlab.mjs</code>), 0.4× speed, read left to right, top to bottom.</p>
+  <div class="shots wide">
+    <figure><img src="media/squads-lab-melee.jpg" alt="Footmen lunge into goblin spearmen; three goblins fall and the rest close ranks" loading="lazy"><figcaption>Melee: a ripple of blows, 58 damage, three goblins fall, the survivors close up</figcaption></figure>
+    <figure><img src="media/squads-lab-volley.jpg" alt="Crossbowmen fire a volley; five goblins fall one by one" loading="lazy"><figcaption>Volley: six bolts, 76 damage, five goblins drop as their bolts land</figcaption></figure>
+    <figure><img src="media/squads-lab-troll.jpg" alt="Moss trolls swing logs into footmen; one footman falls" loading="lazy"><figcaption>Trolls: 45 damage kills one footman (32 HP each)</figcaption></figure>
+  </div>
+
+  <h2>Roster, Barracks and reports</h2>
+  <div class="shots">
+    <figure><img src="media/squads-roster.jpg" alt="Roster of squads with strength pips" loading="lazy"><figcaption>Roster: strength per squad</figcaption></figure>
+    <figure><img src="media/squads-barracks-reinforce.jpg" alt="Barracks reinforcement panel" loading="lazy"><figcaption>Reinforcements at the Barracks</figcaption></figure>
+    <figure><img src="media/squads-battle-result.jpg" alt="Battle result listing losses and soldiers found alive by triage" loading="lazy"><figcaption>After the battle: losses and field triage</figcaption></figure>
+  </div>
+
+  <h2>Balance</h2>
+  <p>Single battles at full strength (<code>npm run sim</code>, 200 each) stayed close to the old numbers. Over whole campaigns (<code>scripts/simcampaign.ts</code>, 60 companies × 6 expeditions, automated player) expeditions are harder, mostly because a thinned squad hits softer, which is the rule asked for.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Run</th><th>Before squads</th><th>With squads</th></tr>
+    <tr><td>Warband camp, level 1</td><td>78% win</td><td>82% win (one goblin squad fewer at most)</td></tr>
+    <tr><td>Goblins under an orc overseer</td><td>96% win</td><td>92% win</td></tr>
+    <tr><td>Orc brutes / Moss trolls (new)</td><td>–</td><td>100% / 97% win</td></tr>
+    <tr><td>Campaign success per expedition</td><td>59–79%</td><td>49–68%</td></tr>
+  </table>
+  </div>
+
+  <h2>Checks run</h2>
+  <ul>
+    <li><code>npx tsc --noEmit</code> clean; <code>npx vitest run</code> 40/40, including thresholds (60 HP, 10 each → 6…1), multi-kills, no resurrection, damage ×1…×6, one damage roll per attack, troll regeneration, formation geometry and campaign copy-back.</li>
+    <li>Two full expeditions through the UI (<code>scripts/expedition.mjs</code>): no console errors, no failed requests. Mouse selection, move and enemy hover checked with real input events.</li>
+    <li>About 50 fps in a headless browser without a GPU during a 12-squad battle.</li>
+  </ul>
+
+  <h2>Known limits</h2>
+  <ul>
+    <li>Soldiers are still the drawn placeholder figures; there are no walk cycles, so marching is a bob and lean. The troll's face reads poorly at squad size.</li>
+    <li>Dense melee stacks several health bars close together.</li>
+    <li>Campaign difficulty is about ten points higher than before; levers are the triage odds, reinforcement price and encounter weights.</li>
+  </ul>
+  <p>Specification: <code>projects/meridius/docs/squads.md</code>.</p>
+</main>
+</body>
+</html>

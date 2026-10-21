@@ -1,0 +1,12 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true });
+const page = await browser.newPage();
+const bad = [];
+page.on('response', (r) => { if (r.status() >= 400) bad.push(`${r.status()} ${r.url()}`); });
+page.on('pageerror', (e) => bad.push('pageerror ' + e.message));
+await page.goto('http://localhost:5199/?newgame&seed=3');
+await page.waitForFunction(() => window.__meridius?.store?.screen === 'base', null, { timeout: 60000 });
+await page.waitForTimeout(1000);
+console.log('failed requests/errors:', bad.length);
+for (const b of bad) console.log(' ', b);
+await browser.close();

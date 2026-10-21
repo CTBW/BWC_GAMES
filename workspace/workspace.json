@@ -1,6 +1,33 @@
 {
   "entities": [
     {
+      "id": "meridius",
+      "title": "Meridius",
+      "description": "Isometric roguelike tactics RPG: Amberfeld Garrison, the Hillsvain Raids and turn-based battles. Blender environment art; drawn units until fal is unlocked.",
+      "type": "group",
+      "category": "project",
+      "created": "2026-10-20",
+      "updated": "2026-10-20",
+      "folder": "2026-10-20_meridius",
+      "steps": [
+        {
+          "name": "Phase one build",
+          "path": "index.html"
+        },
+        {
+          "name": "Squad system",
+          "path": "squads.html"
+        },
+        {
+          "name": "Loop 1 · Placeholder art",
+          "path": "loop1.html"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0
+    },
+    {
       "id": "my-dream-game",
       "title": "My Dream Game",
       "description": "Mr. Mak 64: a small Sky Islands adventure, with character studies, world layouts and a development board.",

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Phase one build</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .shots figure, .wide figure { margin: 0; }
+    .shots img, .wide img { width: 100%; border-radius: 6px; display: block; cursor: zoom-in; }
+    .shots figcaption, .wide figcaption { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+    .wide { display: grid; gap: 10px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: phase one build</h1>
+  <p><strong>Status, 20 October 2026 (loop 2):</strong> the full loop plays end to end in the browser: base, recruitment, roster, upgrades, expedition preparation with army limits, a randomised campaign, isometric battles and the return home. The environment is now rendered in Blender (trees, rocks, ruins, camp props, all base buildings at three levels, the palisade and campaign landmarks). <strong>Units stay as drawn figures until fal is unlocked</strong>, by your decision. None of this has been accepted by you yet.</p>
+  <p><strong>Update, squad system:</strong> every unit now fights as a squad of six drawn soldiers (Moss Trolls: three) with shared health, casualties and damage that scales with the living. Details, captures and balance are on the <em>Squad system</em> tab. Captures below this line predate it.</p>
+
+  <h2>Run it</h2>
+  <pre><code>cd projects/meridius/source/game
+npm install
+npm run dev        # http://localhost:5199
+npm test           # rules, map generation and full-loop tests
+npm run sim        # headless battle balance</code></pre>
+
+  <h2>Open items</h2>
+  <ul>
+    <li><b>fal is admin-locked</b> (account "Calle Bernsdorff"). Only fal support can lift it (support@fal.ai). No credits have been spent. When it is unlocked, the painterly unit sprites from your reference sheets are next (plan: <code>projects/meridius/source/game/art/ART_PLAN.md</code>).</li>
+    <li>Blender unit renders exist on disk (<code>art/raw/blender</code>) but are not used, by your decision.</li>
+    <li>Sound is synthesised placeholder audio.</li>
+  </ul>
+
+  <h2>Captures (loop 2)</h2>
+  <p>Captured from the running game with fixed seeds (Playwright, 1920 × 1080, Edge).</p>
+  <div class="shots">
+    <figure><img src="media/loop2-title.jpg" alt="Title screen over the garrison" loading="lazy"><figcaption>Title</figcaption></figure>
+    <figure><img src="media/loop2-base.jpg" alt="Amberfeld Garrison with Blender-rendered buildings, palisade and gate towers" loading="lazy"><figcaption>Home base, level 1 buildings</figcaption></figure>
+    <figure><img src="media/loop2-prep.jpg" alt="Expedition preparation screen" loading="lazy"><figcaption>Expedition preparation</figcaption></figure>
+    <figure><img src="media/loop2-campaign.jpg" alt="Campaign map with landmarks and fog" loading="lazy"><figcaption>Campaign map, first march</figcaption></figure>
+    <figure><img src="media/loop2-event.jpg" alt="Event dialog with choices" loading="lazy"><figcaption>Event with choices</figcaption></figure>
+    <figure><img src="media/loop2-camp.jpg" alt="Camp dialog after rest" loading="lazy"><figcaption>Camp</figcaption></figure>
+    <figure><img src="media/loop2-battle-forest.jpg" alt="Forest clearing battle" loading="lazy"><figcaption>Battle: forest clearing</figcaption></figure>
+    <figure><img src="media/loop2-battle-river.jpg" alt="River ruins battle with broken tower" loading="lazy"><figcaption>Battle: ruined steading</figcaption></figure>
+    <figure><img src="media/loop2-battle-warcamp.jpg" alt="Raider war camp objective battle" loading="lazy"><figcaption>Objective: the warband's camp</figcaption></figure>
+    <figure><img src="media/loop2-night-raid.jpg" alt="Night raid lit by torches" loading="lazy"><figcaption>Night raid, torches lit</figcaption></figure>
+    <figure><img src="media/loop2-report.jpg" alt="Expedition report on return" loading="lazy"><figcaption>Return home</figcaption></figure>
+  </div>
+
+  <h3>The camp as it grows</h3>
+  <p>All buildings at level 2, then level 3, in the running game. The camp was re-laid out so the larger buildings never hide each other or the gate towers' view, and every nameplate sits on open ground. On short screens the camera rises to keep the tallest nameplate in view, and the chronicle opens compact.</p>
+  <div class="shots">
+    <figure><img src="media/loop2-base-l2.jpg" alt="Amberfeld Garrison with every building at level 2" loading="lazy"><figcaption>Every building at level 2</figcaption></figure>
+    <figure><img src="media/loop2-base-l3.jpg" alt="Amberfeld Garrison with every building at level 3, keep tower at the back" loading="lazy"><figcaption>Every building at level 3</figcaption></figure>
+    <figure><img src="media/loop2-base-l3-720.jpg" alt="Level 3 camp on a 1280 by 720 screen with a compact chronicle" loading="lazy"><figcaption>Level 3 on a 1280 × 720 screen</figcaption></figure>
+  </div>
+
+  <h3>Base buildings, levels 1 to 3</h3>
+  <div class="wide">
+    <figure><img src="media/loop2-buildings-a.jpg" alt="Command Tent, Hall and Keep; Barracks levels 1 to 3" loading="lazy"><figcaption>Command (levels 1–3), Barracks (levels 1–3)</figcaption></figure>
+    <figure><img src="media/loop2-buildings-b.jpg" alt="Training Yard and Armoury levels 1 to 3" loading="lazy"><figcaption>Training Yard (levels 1–3), Armoury (levels 1–3)</figcaption></figure>
+    <figure><img src="media/loop2-buildings-c.jpg" alt="Infirmary and Quartermaster levels 1 to 3" loading="lazy"><figcaption>Infirmary (levels 1–3), Quartermaster (levels 1–3)</figcaption></figure>
+  </div>
+
+  <h2>What changed since loop 1</h2>
+  <ul>
+    <li>Blender sprite pipeline: an orthographic camera matched exactly to the game's projection, a sun from the upper left, baked shadows, outlines and a painterly post-pass. Sources: <code>art/blender/*.py</code>.</li>
+    <li>Walls and fences come in two orientations, so baked shadows stay correct.</li>
+    <li>Camp layout keeps the road to the gate clear; palisade and gate towers.</li>
+    <li>Campaign: clearings around landmarks, and the camera looks up the road.</li>
+    <li>Battles: props fade only where they actually cover a unit; drawn figures got light, rim and foot shading; chunkier proportions; portraits.</li>
+    <li>Gameplay: undo for the last move, ready-unit count, 2× battle speed, a field manual, a welcome briefing, eighteen events, torch-lit night raids, council stipend, volunteers, and a rebalanced economy.</li>
+    <li>Battles: redo a move for any soldier who has not acted yet (button, Backspace or Ctrl+Z). Clicks go to the tile you can see, even behind your own soldiers.</li>
+    <li>Camp: new layout for upgraded buildings; buildings are picked by their visible outline or nameplate, so the one under the cursor is the one that opens.</li>
+    <li>Enemy behaviour: enemies now take worthwhile attacks instead of hovering beside your line, and strike whenever they end a move within reach. Shaken and wavering enemies still hang back. Passed-up attacks fell from 25–57% to 9–26% of chances, almost all of them now by shaken troops.</li>
+    <li>Battle header follows what is on screen: during the enemy's turn it says "Enemy move", and the enemy count drops as each foe visibly falls.</li>
+    <li>Battle speed and sound on/off are remembered between sessions; 2× speed applies to battles only.</li>
+    <li>Campaign fog is a softer mist, so the roads and the lie of the land show through while unvisited places stay unknown.</li>
+    <li>The return report only mentions the surgeon or leave when someone is actually wounded or worn down.</li>
+    <li>Sprites ship as WebP: the game's art download fell from 18.2 MB to 4.3 MB, and the whole build is 5.9 MB. The editable PNG masters are kept in <code>art/sprites/</code>; side-by-side captures show no visible difference.</li>
+  </ul>
+
+  <h2>Verification</h2>
+  <ul>
+    <li>13 automated tests pass (rules, map connectivity, campaign generation, multi-expedition loop, redo).</li>
+    <li>Camp layout checked for all 729 mixes of building levels: no building more than 4% hidden, no nameplate on another building. Hover picks the right building at 900 of 900 probe points.</li>
+    <li>Two full expeditions played through the real UI: 0 console errors, 0 failed requests.</li>
+    <li>Save and continue verified after a page reload, mid-expedition.</li>
+    <li>100 FPS in the base, battle and campaign scenes (RTX 4070, Edge).</li>
+  </ul>
+
+  <h2>Balance (headless, 60 companies × 6 expeditions)</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Expedition</th><th>Success</th><th>Deaths</th><th>Silver after</th><th>Roster</th><th>Average rank</th></tr>
+    <tr><td>1</td><td>60%</td><td>1.22</td><td>209</td><td>6.8</td><td>1.50</td></tr>
+    <tr><td>2</td><td>62%</td><td>1.07</td><td>222</td><td>6.6</td><td>2.04</td></tr>
+    <tr><td>3</td><td>71%</td><td>0.71</td><td>243</td><td>7.0</td><td>2.41</td></tr>
+    <tr><td>4</td><td>64%</td><td>1.05</td><td>287</td><td>6.8</td><td>2.63</td></tr>
+    <tr><td>5</td><td>79%</td><td>0.60</td><td>315</td><td>7.2</td><td>2.91</td></tr>
+    <tr><td>6</td><td>59%</td><td>0.93</td><td>350</td><td>7.0</td><td>2.99</td></tr>
+  </table>
+  </div>
+  <p>After the enemy-behaviour change; both sides are played by the AI. Later expeditions got somewhat harder (about 65% success instead of about 70%), because the enemy now commits to attacks.</p>
+  <p>Plan: <code>projects/meridius/docs/plan-phase-1.md</code>. Earlier state: see the Loop 1 tab.</p>
+</main>
+</body>
+</html>

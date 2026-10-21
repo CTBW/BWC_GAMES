@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Loop 1 (placeholder art)</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .shots figure { margin: 0; }
+    .shots img { width: 100%; border-radius: 6px; display: block; cursor: zoom-in; }
+    .shots figcaption { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: loop 1, placeholder art</h1>
+  <p><em>History. This was the state before the Blender environment art; see the current tab for the latest build.</em></p>
+  <p><strong>Status, 20 October 2026:</strong> the full loop is playable end to end in the browser (base, recruitment, roster, upgrades, expedition preparation with army limits, a randomised campaign, isometric battles, return home). Art is procedural placeholder work; generated sprites are planned and waiting for fal credits. Nothing on this card has been accepted by the user yet.</p>
+
+  <h2>Run it</h2>
+  <pre><code>cd projects/meridius/source/game
+npm install
+npm run dev        # http://localhost:5199
+npm test           # rules, map generation and full-loop tests
+npm run sim        # headless battle balance</code></pre>
+
+  <h2>What is in the slice</h2>
+  <ul>
+    <li><b>Amberfeld Garrison</b>: six upgradable buildings (Command Tent, Barracks, Training Yard, Armoury, Infirmary, Quartermaster), recruitment with a refreshing pool, drill, promotions, gear tiers, armour repair, injury treatment, leave, a council stipend and a memorial for the fallen.</li>
+    <li><b>Expedition preparation</b>: campaign intelligence (enemies, terrain, length, threat), six unit slots and a command-point budget where veterans cost more, supplies within silver and wagon capacity, quartermaster's advice and warnings.</li>
+    <li><b>The Hillsvain Raids</b>: a randomised branching map with battles, ambushes, lookouts, abandoned villages, eighteen events with choices, camps (rest, watch, repair), fog of war, rations per march, fatigue, morale and wounds that carry over, retreat at any time, and an orc warlord's war camp as the objective.</li>
+    <li><b>Battles</b>: isometric grid with facing, flank and rear attacks, high ground, cover, thickets, line of sight, zones of control, spearwall, shield wall, overwatch, first strike, morale states, rout and rally, permadeath with a survival roll, night raids lit by torches, three map templates and an ambush layout. Enemy AI weighs damage, kill chance, flanks, danger and spear walls by temperament.</li>
+    <li><b>Feel</b>: animated moves, lunges, bolts in flight, hit sparks, misses and blocks, falls, routs, floating combat text, camera follow, synthesised sound, a field manual and a welcome briefing.</li>
+  </ul>
+
+  <h2>Review captures (loop one)</h2>
+  <p>Captured from the running game with fixed seeds (Playwright, 1920 × 1080, Edge). Placeholder art.</p>
+  <div class="shots">
+    <figure><img src="media/loop1-title.jpg" alt="Title screen over the garrison" loading="lazy"><figcaption>Title</figcaption></figure>
+    <figure><img src="media/loop1-base.jpg" alt="Amberfeld Garrison base view" loading="lazy"><figcaption>Home base</figcaption></figure>
+    <figure><img src="media/loop1-prep.jpg" alt="Expedition preparation screen" loading="lazy"><figcaption>Expedition preparation, second expedition</figcaption></figure>
+    <figure><img src="media/loop1-campaign.jpg" alt="Campaign map with fog of war" loading="lazy"><figcaption>Campaign map</figcaption></figure>
+    <figure><img src="media/loop1-event.jpg" alt="Event dialog: The Swollen Ford" loading="lazy"><figcaption>Event with choices</figcaption></figure>
+    <figure><img src="media/loop1-camp.jpg" alt="Camp dialog with rest and watch" loading="lazy"><figcaption>Camp</figcaption></figure>
+    <figure><img src="media/loop1-battle-forecast.jpg" alt="Battle with movement range and enemy info" loading="lazy"><figcaption>Battle: movement range</figcaption></figure>
+    <figure><img src="media/loop1-battle-flank.jpg" alt="Flank attack feedback" loading="lazy"><figcaption>Flank attack feedback</figcaption></figure>
+    <figure><img src="media/loop1-map-river.jpg" alt="River ruins battle map" loading="lazy"><figcaption>River ruins map</figcaption></figure>
+    <figure><img src="media/loop1-map-camp.jpg" alt="Raider war camp battle map" loading="lazy"><figcaption>War camp objective</figcaption></figure>
+    <figure><img src="media/loop1-night-raid.jpg" alt="Night raid lit by torches" loading="lazy"><figcaption>Night raid, torches lit</figcaption></figure>
+    <figure><img src="media/loop1-report.jpg" alt="Expedition report" loading="lazy"><figcaption>Return home</figcaption></figure>
+  </div>
+
+  <h2>Balance runs</h2>
+  <p>Headless simulation with an automated, deliberately average player (60 companies, six expeditions each).</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Expedition</th><th>Success</th><th>Deaths</th><th>Silver after</th><th>Roster</th><th>Average rank</th></tr>
+    <tr><td>1</td><td>60%</td><td>1.25</td><td>217</td><td>6.8</td><td>1.48</td></tr>
+    <tr><td>2</td><td>70%</td><td>1.12</td><td>238</td><td>6.6</td><td>1.96</td></tr>
+    <tr><td>3</td><td>69%</td><td>0.90</td><td>240</td><td>6.8</td><td>2.37</td></tr>
+    <tr><td>4</td><td>76%</td><td>0.59</td><td>313</td><td>7.2</td><td>2.64</td></tr>
+    <tr><td>6</td><td>67%</td><td>0.72</td><td>377</td><td>7.2</td><td>2.98</td></tr>
+  </table>
+  </div>
+  <p>Earlier loops found and fixed: an unwinnable objective (7% success), a starvation spiral, veterans being worth less than their command cost, and an economy that ground the roster down.</p>
+
+  <h2>Next</h2>
+  <ol>
+    <li>Generate the sprite, prop, building, landmark and portrait art (plan in <code>projects/meridius/source/game/art/ART_PLAN.md</code>, about $5–8 of the $30 budget) once fal credits are added.</li>
+    <li>Review the art in the game camera against the reference sheets; loop on weak sheets.</li>
+    <li>Hands-on play-testing of the full loop, then a generated sound bank and music if the budget allows.</li>
+  </ol>
+  <p>Plan: <code>projects/meridius/docs/plan-phase-1.md</code>.</p>
+</main>
+</body>
+</html>

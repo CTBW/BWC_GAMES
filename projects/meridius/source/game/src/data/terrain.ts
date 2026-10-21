@@ -1,0 +1,46 @@
+import type { PropDef, TerrainDef } from '../core/types';
+
+export const TERRAIN: Record<string, TerrainDef> = {
+  grass: { id: 'grass', name: 'Meadow', moveCost: 1, passable: true, rangedCover: 0, defenseMod: 0, losBlock: 0, color: '#7fa23a' },
+  dirt: { id: 'dirt', name: 'Trampled earth', moveCost: 1, passable: true, rangedCover: 0, defenseMod: 0, losBlock: 0, color: '#a98a4f' },
+  road: { id: 'road', name: 'Road', moveCost: 1, passable: true, rangedCover: 0, defenseMod: 0, losBlock: 0, color: '#b49866' },
+  brush: { id: 'brush', name: 'Thicket', moveCost: 2, passable: true, rangedCover: 15, defenseMod: 0, losBlock: 0.5, color: '#4f7a2a' },
+  forest: { id: 'forest', name: 'Woods', moveCost: 2, passable: true, rangedCover: 20, defenseMod: 5, losBlock: 0.75, color: '#2f5a26' },
+  shallows: { id: 'shallows', name: 'Shallow ford', moveCost: 3, passable: true, rangedCover: 0, defenseMod: -10, losBlock: 0, water: true, color: '#4f8fa6' },
+  water: { id: 'water', name: 'Deep water', moveCost: 99, passable: false, rangedCover: 0, defenseMod: 0, losBlock: 0, water: true, color: '#3b7896' },
+  stone: { id: 'stone', name: 'Flagstones', moveCost: 1, passable: true, rangedCover: 0, defenseMod: 0, losBlock: 0, color: '#9a9a8c' },
+  bridge: { id: 'bridge', name: 'Bridge', moveCost: 1, passable: true, rangedCover: 0, defenseMod: 0, losBlock: 0, color: '#8a8478' },
+  mud: { id: 'mud', name: 'Mire', moveCost: 2, passable: true, rangedCover: 0, defenseMod: -5, losBlock: 0, color: '#6b5a3a' },
+  rubble: { id: 'rubble', name: 'Rubble', moveCost: 2, passable: true, rangedCover: 10, defenseMod: 5, losBlock: 0, color: '#8f8a7c' },
+};
+
+export const PROPS: Record<string, PropDef> = {
+  rock_large: { id: 'rock_large', name: 'Boulders', blocksMove: true, los: 2, cover: 25, sprite: 'rock_large' },
+  rock_small: { id: 'rock_small', name: 'Stones', blocksMove: true, los: 0, cover: 20, sprite: 'rock_small' },
+  tree_pine: { id: 'tree_pine', name: 'Pine', blocksMove: true, los: 2, cover: 25, sprite: 'tree_pine' },
+  tree_oak: { id: 'tree_oak', name: 'Oak', blocksMove: true, los: 2, cover: 25, sprite: 'tree_oak' },
+  bush: { id: 'bush', name: 'Bush', blocksMove: true, los: 1, cover: 15, sprite: 'bush' },
+  wall_ruin: { id: 'wall_ruin', name: 'Ruined wall', blocksMove: true, los: 0, cover: 30, sprite: 'wall_ruin_x' },
+  wall_ruin_y: { id: 'wall_ruin_y', name: 'Ruined wall', blocksMove: true, los: 0, cover: 30, sprite: 'wall_ruin_y' },
+  wall_high: { id: 'wall_high', name: 'Ruined tower', blocksMove: true, los: 2, cover: 30, sprite: 'wall_high' },
+  fence: { id: 'fence', name: 'Fence', blocksMove: true, los: 0, cover: 15, sprite: 'fence_x' },
+  fence_y: { id: 'fence_y', name: 'Fence', blocksMove: true, los: 0, cover: 15, sprite: 'fence_y' },
+  stump: { id: 'stump', name: 'Stump', blocksMove: true, los: 0, cover: 10, sprite: 'stump' },
+  log: { id: 'log', name: 'Fallen log', blocksMove: true, los: 0, cover: 20, sprite: 'log' },
+  crates: { id: 'crates', name: 'Crates', blocksMove: true, los: 1, cover: 25, sprite: 'crates' },
+  tent: { id: 'tent', name: 'Tent', blocksMove: true, los: 2, cover: 20, sprite: 'tent' },
+  totem: { id: 'totem', name: 'War totem', blocksMove: true, los: 0, cover: 10, sprite: 'totem' },
+  campfire: { id: 'campfire', name: 'Campfire', blocksMove: true, los: 0, cover: 0, sprite: 'campfire' },
+  // Works of the last stands. Walls block the way but not the view: missiles
+  // fly over them, and whoever shelters behind takes the cover.
+  palisade: { id: 'palisade', name: 'Palisade', blocksMove: true, los: 0, cover: 35, sprite: 'bwall_x' },
+  palisade_y: { id: 'palisade_y', name: 'Palisade', blocksMove: true, los: 0, cover: 35, sprite: 'bwall_y' },
+  gate: { id: 'gate', name: 'Gateway', blocksMove: false, los: 0, cover: 0, defense: 10, sprite: 'gate_x' },
+  gate_y: { id: 'gate_y', name: 'Gateway', blocksMove: false, los: 0, cover: 0, defense: 10, sprite: 'gate_y' },
+  stakes: { id: 'stakes', name: 'Sharpened stakes', blocksMove: true, los: 0, cover: 15, sprite: 'stakes_x' },
+  stakes_y: { id: 'stakes_y', name: 'Sharpened stakes', blocksMove: true, los: 0, cover: 15, sprite: 'stakes_y' },
+  war_banner: { id: 'war_banner', name: 'War standard', blocksMove: true, los: 0, cover: 0, sprite: 'war_banner', decor: true },
+  cart: { id: 'cart', name: 'Overturned cart', blocksMove: true, los: 1, cover: 25, sprite: 'cart' },
+  haystack: { id: 'haystack', name: 'Haystack', blocksMove: true, los: 1, cover: 20, sprite: 'haystack' },
+  well: { id: 'well', name: 'Well', blocksMove: true, los: 0, cover: 20, sprite: 'well' },
+};

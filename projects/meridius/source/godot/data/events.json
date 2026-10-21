@@ -1,0 +1,1696 @@
+{
+ "EVENTS": [
+  {
+   "id": "burned_farmstead",
+   "title": "The Burned Farmstead",
+   "art": "farmstead",
+   "text": "Smoke still rises from the longhouse. A farmer and his two children huddle by the well. \"They took the oxen and the seed grain,\" he says. \"They did not even bother with the house. They knew exactly what to take.\"",
+   "weight": 3,
+   "choices": [
+    {
+     "label": "Share our rations with them",
+     "hint": "-3 rations",
+     "requires": {
+      "supply": [
+       "rations",
+       3
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The farmer presses a hunting crossbow and a pouch of coin into your hands. The men march on with straighter backs.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -3
+        },
+        {
+         "k": "morale",
+         "n": 10,
+         "who": "all"
+        },
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 15
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Search the ruins for anything left",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "In the root cellar you find tools and a sack of turnips the raiders missed.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "tools",
+         "n": 1
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 2
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "Goblin stragglers were picking through the cellar too.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "goblin_scouts"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Move on. We cannot help everyone.",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The children watch the column leave. Nobody speaks for a mile.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deserter",
+   "title": "A Man in the Ditch",
+   "art": "deserter",
+   "text": "A spearman in a torn Imperial tabard lies in the ditch, his leg bound with rags. \"My company broke at the Brattstadt ford,\" he says. \"I ran. I am not proud of it. Let me march with you and I will not run again.\"",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Take him into the company",
+     "hint": "Needs a free slot and command points",
+     "requires": {
+      "slot": true
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "He falls in at the back of the column, limping but determined.",
+       "effects": [
+        {
+         "k": "recruit",
+         "typeId": "spearman",
+         "level": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Give him a bandage and send him home",
+     "requires": {
+      "supply": [
+       "bandages",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "He thanks you, and tells you where the raiders watered their wolves last night.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": -1
+        },
+        {
+         "k": "reveal",
+         "stages": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Deserters hang. Leave him.",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Some of the men mutter. Others nod.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -3,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tyrant_sigil",
+   "title": "The Eye on the Door",
+   "art": "sigil",
+   "text": "On the door of a woodcutter's hut someone has carved a triangle with a slitted eye inside it. The cuts are fresh, and filled with something dark. {name} makes the sign against evil.",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Burn the hut",
+     "hint": "-1 torch",
+     "requires": {
+      "supply": [
+       "torches",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The sigil blackens and is gone. The men cheer the flames.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "torches",
+         "n": -1
+        },
+        {
+         "k": "morale",
+         "n": 8,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Search inside",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Behind a loose board: a purse of old Imperial silver, and a letter in a script nobody can read.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 35
+        },
+        {
+         "k": "morale",
+         "n": -5,
+         "who": "random"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "Something in the hut was waiting. {name} stumbles out pale and shaking, and will not say what they saw.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -20,
+         "who": "random"
+        },
+        {
+         "k": "xp",
+         "n": 6,
+         "who": "random"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Leave it be",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "You march on. The eye seems to follow the column.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -2,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "abandoned_wagon",
+   "title": "An Overturned Wagon",
+   "art": "wagon",
+   "text": "A supply wagon lies on its side in the ruts, its team cut loose. Crates are scattered in the grass. It is very quiet.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Salvage what you can",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Bolts, bandages and a wheel of cheese. A good haul.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bolts",
+         "n": 2
+        },
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": 2
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "It was bait. Spears rise from the long grass.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "road_ambush"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Send a crossbowman to watch the treeline first",
+     "requires": {
+      "type": "crossbowman"
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The lookout spots the waiting goblins. They slink away when they see the bolts, leaving the crates.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bolts",
+         "n": 2
+        },
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": 1
+        },
+        {
+         "k": "xp",
+         "n": 5,
+         "who": "type:crossbowman"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Give it a wide berth",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The detour costs time and sore feet.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pedlar",
+   "title": "A Pedlar on the Road",
+   "art": "pedlar",
+   "text": "A pedlar with a mule and a hard face has followed the army's trail. \"Prices are what they are,\" he says. \"War is bad for supply.\"",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Buy 3 rations (20 silver from the spoils)",
+     "requires": {
+      "loot": [
+       "silver",
+       20
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Dry bread and hard sausage. It will do.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": -20
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 3
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Buy 2 bandages (24 silver from the spoils)",
+     "requires": {
+      "loot": [
+       "silver",
+       24
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Clean linen, boiled and rolled.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": -24
+        },
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Sell him goblin trinkets",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "He pays a little for crude goblin jewellery, and asks no questions.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 18
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "foraging",
+   "title": "Berries and Game",
+   "art": "forage",
+   "text": "The woods here are thick with berries and the tracks of deer. {name} says they could fill a few bellies, given an afternoon.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Spend the afternoon foraging",
+     "outcomes": [
+      {
+       "weight": 3,
+       "text": "Venison and baskets of lingonberries. The army eats well tonight.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 4
+        },
+        {
+         "k": "fatigue",
+         "n": 8,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "The hunters stumble on a wolf den. They come back with meat, and bites.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 3
+        },
+        {
+         "k": "hp",
+         "n": -5,
+         "who": "random"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Keep marching",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The column presses on.",
+       "effects": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ford",
+   "title": "The Swollen Ford",
+   "art": "ford",
+   "text": "Rain in the hills has swollen the stream. The ford is waist deep and fast. The bridge is half a day upstream.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Wade across",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Cold and soaked, but across.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 8,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "A crate of supplies is swept away.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 8,
+         "who": "all"
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -2
+        },
+        {
+         "k": "supply",
+         "id": "bolts",
+         "n": -1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Take the bridge",
+     "hint": "-1 ration per two soldiers",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "A long, dry detour.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -2
+        },
+        {
+         "k": "fatigue",
+         "n": 4,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "signal_fires",
+   "title": "Signal Fires",
+   "art": "signal",
+   "text": "At dusk, fires flare on the ridges to the north. They burn in a pattern: three, then one, then three. Then they go dark together. Goblins do not do this.",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Climb the ridge and watch",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "From the ridge you can see the raiders' camps laid out like a map.",
+       "effects": [
+        {
+         "k": "reveal",
+         "stages": 3
+        },
+        {
+         "k": "fatigue",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Double the watch tonight",
+     "hint": "-1 torch",
+     "requires": {
+      "supply": [
+       "torches",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Nothing comes. The men sleep a little easier with the torches lit.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "torches",
+         "n": -1
+        },
+        {
+         "k": "morale",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Ignore it",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Nobody sleeps well.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -5,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lost_hunter",
+   "title": "The Hunter",
+   "art": "hunter",
+   "text": "A grey-bearded hunter steps from the trees, crossbow on his shoulder. \"Goblins burned my lodge. I would like to shoot some of them. I hear you are going their way.\"",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Welcome him",
+     "hint": "Needs a free slot and command points",
+     "requires": {
+      "slot": true
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "\"Ulf,\" he says, and nothing more.",
+       "effects": [
+        {
+         "k": "recruit",
+         "typeId": "crossbowman",
+         "level": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Ask him for directions instead",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "He sketches the trails in the dirt with his knife.",
+       "effects": [
+        {
+         "k": "reveal",
+         "stages": 2
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sick_camp",
+   "title": "Bad Water",
+   "art": "sick",
+   "text": "Several men woke with cramps. The spring you drew from last night tasted of iron. {name} is the worst of them.",
+   "weight": 1,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Rest half a day",
+     "hint": "-2 rations",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The worst passes.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -2
+        },
+        {
+         "k": "fatigue",
+         "n": -10,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "March through it",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Grim faces and slow feet.",
+       "effects": [
+        {
+         "k": "hp",
+         "n": -4,
+         "who": "all"
+        },
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "goblin_prisoner",
+   "title": "A Goblin in the Snare",
+   "art": "prisoner",
+   "text": "A goblin scout hangs upside down from a hunter's snare, spitting and cursing. It wears a leather cord with a carved triangle, an eye scratched into its centre. \"Big one comes,\" it hisses. \"Big one counts us now.\"",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Make it talk",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "With a knife at its throat it draws the warband's camps in the mud, and the paths between them.",
+       "effects": [
+        {
+         "k": "reveal",
+         "stages": 3
+        },
+        {
+         "k": "morale",
+         "n": -3,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "It bites through the cord and bolts into the brush, shrieking. Others will know you are coming.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Let it hang and take the cord",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The cord is old bone and black iron. It feels heavier than it should.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "iron",
+         "n": 1
+        },
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "random"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "End it quickly",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Quick and quiet. The column moves on.",
+       "effects": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "broken_bridge",
+   "title": "The Broken Bridge",
+   "art": "bridge",
+   "text": "The raiders have hacked through the bridge supports. Half the deck sags into the river. The alternative is a long detour through bog.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Repair it with tools",
+     "hint": "-1 tools",
+     "requires": {
+      "supply": [
+       "tools",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "An hour of sawing and lashing, and the bridge will hold. Villagers will use it too.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "tools",
+         "n": -1
+        },
+        {
+         "k": "morale",
+         "n": 5,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Take the bog road",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Mud to the knee for half a day.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 12,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "Mud to the knee, and a wagon wheel lost to the bog along with some supplies.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 12,
+         "who": "all"
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Have the spearmen brace the planks and cross carefully",
+     "requires": {
+      "type": "spearman"
+     },
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Spear-shafts as props, one soldier at a time. It holds.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 4,
+         "who": "all"
+        },
+        {
+         "k": "xp",
+         "n": 4,
+         "who": "type:spearman"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "A plank gives way. {name} goes into the river and is hauled out half-drowned.",
+       "effects": [
+        {
+         "k": "hp",
+         "n": -6,
+         "who": "random"
+        },
+        {
+         "k": "morale",
+         "n": -6,
+         "who": "random"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "old_battlefield",
+   "title": "An Old Battlefield",
+   "art": "battlefield",
+   "text": "Rusted helms and bleached bones lie in the heather where some forgotten company made its last stand. The grass grows thick here.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Scavenge the iron",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Spearheads, mail rings and a good axe-head. The smith will be pleased; the men less so.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "iron",
+         "n": 2
+        },
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "Under a shield you find a purse of coins and a dead man's ring.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 30
+        },
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Bury the dead and say the words",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "It takes the afternoon. Nobody complains. The men sleep easier that night.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": 9,
+         "who": "all"
+        },
+        {
+         "k": "fatigue",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Keep moving",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The column passes in silence.",
+       "effects": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "smoke_horizon",
+   "title": "Smoke on the Horizon",
+   "art": "smoke",
+   "text": "Black smoke rises behind a ridge: a farmstead burning, and faint screams. It is off the road, and the raiders will still be there.",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Go to their aid",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "You crest the ridge at a run. Goblins scatter from the burning barn, then turn to fight.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": 6,
+         "who": "all"
+        },
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 25
+        },
+        {
+         "k": "battle",
+         "encounterId": "goblin_scouts"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Send the crossbowmen to harry them from the ridge",
+     "requires": {
+      "type": "crossbowman"
+     },
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Bolts from the ridge send the raiders running. The farmer's family is saved.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bolts",
+         "n": -1
+        },
+        {
+         "k": "morale",
+         "n": 5,
+         "who": "all"
+        },
+        {
+         "k": "xp",
+         "n": 5,
+         "who": "type:crossbowman"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "The goblins rush the ridge. The rest of the company must come running.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "goblin_scouts"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "It is not our fight today",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The smoke follows the column for hours.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -8,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wolves",
+   "title": "Wolves in the Dark",
+   "art": "wolves",
+   "text": "Eyes gleam at the edge of the firelight. A pack of grey wolves circles the camp, too hungry to be cautious.",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Drive them off with torches",
+     "hint": "-1 torch",
+     "requires": {
+      "supply": [
+       "torches",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Flaming brands and shouting. The pack melts into the trees.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "torches",
+         "n": -1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Throw them some meat",
+     "hint": "-2 rations",
+     "requires": {
+      "supply": [
+       "rations",
+       2
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "They take the meat and go. The men grumble about their supper.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -2
+        },
+        {
+         "k": "morale",
+         "n": -2,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Stand guard with spears",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "A long, cold night of watching. No one sleeps well, but no one is bitten.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 10,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "The pack tests the line. {name} is badly bitten before they are driven off.",
+       "effects": [
+        {
+         "k": "hp",
+         "n": -8,
+         "who": "random"
+        },
+        {
+         "k": "fatigue",
+         "n": 8,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "herbalist",
+   "title": "The Herb-Wife",
+   "art": "herbalist",
+   "text": "An old woman with a basket of roots and moss stands by the track. \"Soldiers bleed,\" she says. \"I have what stops it. And what helps them sleep.\"",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Trade for her poultices (15 silver from the spoils)",
+     "requires": {
+      "loot": [
+       "silver",
+       15
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Moss poultices and a bitter tea. Wounds close faster than they should.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": -15
+        },
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": 2
+        },
+        {
+         "k": "hp",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Ask her to tend the worst of the wounded",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "She works in silence and leaves without asking payment.",
+       "effects": [
+        {
+         "k": "hp",
+         "n": 10,
+         "who": "weakest"
+        },
+        {
+         "k": "morale",
+         "n": 4,
+         "who": "weakest"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Move on",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "She watches you go.",
+       "effects": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rival_company",
+   "title": "Sellswords at the Ford",
+   "art": "rivals",
+   "text": "A band of hard-faced sellswords holds the ford and demands a toll. Their captain eyes your banner. \"The Empire pays us to keep this road. Pay us, or find another.\"",
+   "weight": 1,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Pay the toll (30 silver from the spoils)",
+     "requires": {
+      "loot": [
+       "silver",
+       30
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "They let you pass with a mocking bow.",
+       "effects": [
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": -30
+        },
+        {
+         "k": "morale",
+         "n": -3,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Face them down with a shield wall",
+     "requires": {
+      "type": "footman"
+     },
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Shields lock and spears level. The sellswords decide the toll is not worth it.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": 8,
+         "who": "all"
+        },
+        {
+         "k": "xp",
+         "n": 4,
+         "who": "type:footman"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "Blows are traded before their captain calls them off. Nobody is killed, but there are cuts.",
+       "effects": [
+        {
+         "k": "hp",
+         "n": -5,
+         "who": "all"
+        },
+        {
+         "k": "morale",
+         "n": 3,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Wade across downstream",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Cold water and a long way round.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 10,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cache",
+   "title": "A Raider Cache",
+   "art": "cache",
+   "text": "Under a cairn of stones the scouts find a goblin cache: stolen goods wrapped in oilcloth, and a chest bound in iron.",
+   "weight": 2,
+   "choices": [
+    {
+     "label": "Break the chest open with tools",
+     "hint": "-1 tools",
+     "requires": {
+      "supply": [
+       "tools",
+       1
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Silver plate stolen from some chapel, and iron bars.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "tools",
+         "n": -1
+        },
+        {
+         "k": "loot",
+         "id": "silver",
+         "n": 45
+        },
+        {
+         "k": "loot",
+         "id": "iron",
+         "n": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Take what is loose",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "Bolts, a sack of grain, a bolt of linen.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bolts",
+         "n": 1
+        },
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": 2
+        },
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": 1
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "The owners return while you are still digging.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "goblin_scouts"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "refugee_column",
+   "title": "The Road South",
+   "art": "refugees",
+   "text": "The road is choked with carts, cattle and people from the western steadings, all going the other way. An old woman grips {name}'s arm. \"There are thousands of them,\" she says. \"Thousands. You are going the wrong way.\"",
+   "weight": 3,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Ask them what they saw",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "They saw the host come out of the woods: goblins beyond counting, wolf riders, orcs with clubs as long as a man. Their tales go round the camp fires.",
+       "effects": [
+        {
+         "k": "reveal",
+         "stages": 2
+        },
+        {
+         "k": "morale",
+         "n": -5,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Give them bread for the road",
+     "hint": "-3 rations",
+     "requires": {
+      "supply": [
+       "rations",
+       3
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "A boy runs after the column with a sling and a sack of stones. \"For the goblins,\" he says. The men laugh, and stand a little straighter.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "rations",
+         "n": -3
+        },
+        {
+         "k": "morale",
+         "n": 10,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Clear the road and march on",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Carts are pushed into the ditch. The company makes good time, and does not look back.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "war_drums",
+   "title": "Drums in the Night",
+   "art": "drums",
+   "text": "The drums start at dusk, somewhere west, and do not stop. Nobody sleeps. Toward midnight {name} swears they are getting closer.",
+   "weight": 2,
+   "minStage": 2,
+   "choices": [
+    {
+     "label": "Find the drummers and silence them",
+     "outcomes": [
+      {
+       "weight": 2,
+       "text": "A ring of goblins around a fire, beating hides. They see you too late.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "stragglers"
+        },
+        {
+         "k": "morale",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      },
+      {
+       "weight": 1,
+       "text": "The drums move away as you come, and start again behind you. A wasted night.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 12,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Sing louder than the drums",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "Old marching songs, badly sung. The drums falter once, near dawn, and the men cheer.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": 6,
+         "who": "all"
+        },
+        {
+         "k": "fatigue",
+         "n": 6,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Double the watch and endure it",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "A long night. Nothing comes, but nobody believes nothing is there.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 8,
+         "who": "all"
+        },
+        {
+         "k": "morale",
+         "n": -4,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shadowed",
+   "title": "Riders on the Ridge",
+   "art": "wolves",
+   "text": "All morning wolf riders have kept pace with the column along the ridge, out of bolt range, watching. Counting.",
+   "weight": 2,
+   "minStage": 1,
+   "choices": [
+    {
+     "label": "Turn into the woods and ambush them",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The riders take the bait and come down the slope after the stragglers you left in plain sight.",
+       "effects": [
+        {
+         "k": "battle",
+         "encounterId": "archer_screen"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "March hard and lose them",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "A forced march through the bogs. The riders give up at dusk.",
+       "effects": [
+        {
+         "k": "fatigue",
+         "n": 12,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Let them count. Shields up, keep moving.",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "They follow you to the camp, howl once, and are gone. Now the host knows exactly how few you are.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": -5,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "brannsted_rider",
+   "title": "A Rider from Brannsted",
+   "art": "rider",
+   "text": "A girl on a farm horse, mud to the knees. \"From Brannsted,\" she gasps. \"The Margrave's riders are on their way, three days out. Father says the walls will hold a night, with you on them. Without you, not an hour.\"",
+   "weight": 3,
+   "minStage": 3,
+   "choices": [
+    {
+     "label": "Send her back with bandages for the steading",
+     "hint": "-2 bandages",
+     "requires": {
+      "supply": [
+       "bandages",
+       2
+      ]
+     },
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "\"Tell them we are coming,\" says {name}. She is gone before the words are out.",
+       "effects": [
+        {
+         "k": "supply",
+         "id": "bandages",
+         "n": -2
+        },
+        {
+         "k": "morale",
+         "n": 12,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Ask about the host",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "She saw its fires from the walls last night: a second sky, she says, burning red.",
+       "effects": [
+        {
+         "k": "reveal",
+         "stages": 2
+        },
+        {
+         "k": "morale",
+         "n": -3,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "label": "Tell her the company will be there",
+     "outcomes": [
+      {
+       "weight": 1,
+       "text": "The men watch her ride away. Something has settled in them.",
+       "effects": [
+        {
+         "k": "morale",
+         "n": 8,
+         "who": "all"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "NIGHT_RAID": {
+  "title": "Night Raid",
+  "text": "Shapes move between the trees. Goblins rush the camp in the dark!",
+  "encounterId": "road_ambush"
+ }
+}

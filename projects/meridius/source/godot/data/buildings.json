@@ -1,0 +1,324 @@
+{
+ "BUILDINGS": [
+  {
+   "id": "command",
+   "name": "Command Tent",
+   "role": "Plan expeditions. Raises the army limit.",
+   "sprite": "command",
+   "pos": [
+    8,
+    4
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Command Tent",
+     "cost": {},
+     "description": "A map table under canvas. The council pays a stipend of 50 silver after each expedition.",
+     "effects": {
+      "commandBonus": 0,
+      "slotBonus": 0,
+      "stipend": 50
+     }
+    },
+    {
+     "level": 2,
+     "name": "Command Hall",
+     "cost": {
+      "silver": 180,
+      "timber": 3,
+      "iron": 2
+     },
+     "description": "+1 command point on every expedition. Council stipend rises to 75.",
+     "effects": {
+      "commandBonus": 1,
+      "slotBonus": 0,
+      "stipend": 75
+     }
+    },
+    {
+     "level": 3,
+     "name": "Captain's Keep",
+     "cost": {
+      "silver": 380,
+      "timber": 6,
+      "iron": 4,
+      "trophies": 2
+     },
+     "description": "+2 command points and +1 unit slot. Stipend 100.",
+     "effects": {
+      "commandBonus": 2,
+      "slotBonus": 1,
+      "stipend": 100
+     }
+    }
+   ]
+  },
+  {
+   "id": "barracks",
+   "name": "Barracks",
+   "role": "Recruit squads, reinforce them and grant leave.",
+   "sprite": "barracks",
+   "pos": [
+    3.8,
+    5.2
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Tent Lines",
+     "cost": {},
+     "description": "Three recruit squads each cycle. Room for 10 squads.",
+     "effects": {
+      "pool": 3,
+      "rosterCap": 10,
+      "veteranChance": 0,
+      "leaveCost": 25
+     }
+    },
+    {
+     "level": 2,
+     "name": "Barracks",
+     "cost": {
+      "silver": 150,
+      "timber": 4
+     },
+     "description": "Four recruit squads, some already blooded; the Border Collie Royal Guard may answer. Room for 14.",
+     "effects": {
+      "pool": 4,
+      "rosterCap": 14,
+      "veteranChance": 0.3,
+      "leaveCost": 20
+     }
+    },
+    {
+     "level": 3,
+     "name": "Garrison Hall",
+     "cost": {
+      "silver": 320,
+      "timber": 6,
+      "iron": 2,
+      "trophies": 1
+     },
+     "description": "Five recruit squads, many seasoned. Room for 18.",
+     "effects": {
+      "pool": 5,
+      "rosterCap": 18,
+      "veteranChance": 0.6,
+      "leaveCost": 15
+     }
+    }
+   ]
+  },
+  {
+   "id": "training",
+   "name": "Training Yard",
+   "role": "Drill squads and promote veterans.",
+   "sprite": "training",
+   "pos": [
+    12.4,
+    2.6
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Drill Field",
+     "cost": {},
+     "description": "Drill soldiers up to Soldier rank.",
+     "effects": {
+      "drillMaxLevel": 2,
+      "drillCost": 30,
+      "promote": 0,
+      "promoteCost": 0
+     }
+    },
+    {
+     "level": 2,
+     "name": "Training Yard",
+     "cost": {
+      "silver": 160,
+      "timber": 3,
+      "iron": 2
+     },
+     "description": "Drill to Veteran. Promote veterans to unlock a second ability.",
+     "effects": {
+      "drillMaxLevel": 3,
+      "drillCost": 30,
+      "promote": 1,
+      "promoteCost": 80
+     }
+    },
+    {
+     "level": 3,
+     "name": "Fencing Hall",
+     "cost": {
+      "silver": 340,
+      "timber": 5,
+      "iron": 4,
+      "trophies": 1
+     },
+     "description": "Drill to Sergeant. Cheaper promotions.",
+     "effects": {
+      "drillMaxLevel": 4,
+      "drillCost": 25,
+      "promote": 1,
+      "promoteCost": 50
+     }
+    }
+   ]
+  },
+  {
+   "id": "armoury",
+   "name": "Armoury",
+   "role": "Buy better arms and armour; repair worn gear.",
+   "sprite": "armoury",
+   "pos": [
+    12.2,
+    11.4
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Smithy",
+     "cost": {},
+     "description": "Repairs only.",
+     "effects": {
+      "tier": 1,
+      "repairCost": 1
+     }
+    },
+    {
+     "level": 2,
+     "name": "Armoury",
+     "cost": {
+      "silver": 170,
+      "timber": 3,
+      "iron": 4
+     },
+     "description": "Forges second-tier weapons and armour.",
+     "effects": {
+      "tier": 2,
+      "repairCost": 0.8
+     }
+    },
+    {
+     "level": 3,
+     "name": "Master Armoury",
+     "cost": {
+      "silver": 360,
+      "timber": 4,
+      "iron": 8,
+      "trophies": 1
+     },
+     "description": "Forges masterwork gear. Cheaper repairs.",
+     "effects": {
+      "tier": 3,
+      "repairCost": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "id": "infirmary",
+   "name": "Infirmary",
+   "role": "Treat lasting injuries. Better surgeons save more of the fallen.",
+   "sprite": "infirmary",
+   "pos": [
+    3,
+    11.5
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Surgeon's Tent",
+     "cost": {},
+     "description": "Treat injuries for 40 silver per severity.",
+     "effects": {
+      "treatCost": 40,
+      "survival": 0
+     }
+    },
+    {
+     "level": 2,
+     "name": "Infirmary",
+     "cost": {
+      "silver": 140,
+      "timber": 3
+     },
+     "description": "Treatment 25 per severity. Field surgeons: +8% survival for the sergeant of a squad cut down.",
+     "effects": {
+      "treatCost": 25,
+      "survival": 0.08
+     }
+    },
+    {
+     "level": 3,
+     "name": "House of Healing",
+     "cost": {
+      "silver": 300,
+      "timber": 5,
+      "iron": 2,
+      "trophies": 1
+     },
+     "description": "Treatment 15 per severity. +16% survival for the sergeant of a squad cut down.",
+     "effects": {
+      "treatCost": 15,
+      "survival": 0.16
+     }
+    }
+   ]
+  },
+  {
+   "id": "quartermaster",
+   "name": "Quartermaster",
+   "role": "Sells supplies. Larger wagons and better prices.",
+   "sprite": "quartermaster",
+   "pos": [
+    8,
+    12.2
+   ],
+   "levels": [
+    {
+     "level": 1,
+     "name": "Supply Cart",
+     "cost": {},
+     "description": "Wagon capacity 30. Full prices.",
+     "effects": {
+      "capacity": 30,
+      "priceMult": 1,
+      "buyback": 0.3
+     }
+    },
+    {
+     "level": 2,
+     "name": "Depot",
+     "cost": {
+      "silver": 120,
+      "timber": 3
+     },
+     "description": "Capacity 38. Prices -10%.",
+     "effects": {
+      "capacity": 38,
+      "priceMult": 0.9,
+      "buyback": 0.4
+     }
+    },
+    {
+     "level": 3,
+     "name": "Storehouse",
+     "cost": {
+      "silver": 260,
+      "timber": 5,
+      "iron": 2
+     },
+     "description": "Capacity 46. Prices -20%.",
+     "effects": {
+      "capacity": 46,
+      "priceMult": 0.8,
+      "buyback": 0.5
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,63 @@
+# tools/bake — sprites and sounds from the original
+
+The Godot port draws every sprite and plays every sound the original produced,
+baked once from the original code (`../game/src`, never modified). The bake runs
+that code in Microsoft Edge through `playwright-core`, served by the original's
+own vite install (`../game/node_modules`) on port 5181.
+
+## Run
+
+From `projects/meridius/source/godot`:
+
+```sh
+node tools/bake/bake.mjs           # sprites + audio + browser contact sheets
+tools/import.sh                    # import what changed (never import any other way)
+tools/test.sh test_assets test_sfx
+```
+
+Single steps: `node tools/bake/bake.mjs sprites | audio | sheets | imports`.
+A re-bake only rewrites files whose bytes changed (sound randomness is seeded),
+so unchanged assets are not re-imported. Override the browser with
+`CHROME_PATH=…` and the port with `BAKE_PORT=…`.
+
+## What it writes
+
+| Output | Contents |
+| --- | --- |
+| `assets/sprites/blender/*.webp` | The original's Blender sprites (`public/assets/sprites/blender`), copied as is |
+| `assets/sprites/baked/*.png` | Procedural art packed into atlases: `fig_<type>.png` (12 poses × 6 looks per unit type; the troll needs two pages), `portraits.png`, `misc.png` (ground decals, the fallen log, the unexplored node icon, `missing`) |
+| `assets/sprites.json` | `key → [{file, region?: [x, y, w, h], ax, ay, scale, w, h, noShadow, art?}]`, one entry per variant, exactly what the original's `sprite(key, v)` returns |
+| `assets/audio/<name>_<i>.wav`, `sfx.json` | Every `sfx(name)` recipe rendered with `OfflineAudioContext` (44.1 kHz mono 16-bit, master gain 0.55 included); four takes for recipes that use `Math.random`, one otherwise |
+| `tests/fixtures/assets/variant_counts.json` | The original's `variantCount()` per key, `hasArt()` keys, and the key groups |
+| `tests/fixtures/assets/hit_masks.json` | The original's `opaqueAt()` on a grid for a few sprites |
+| `tests/fixtures/assets/sfx_names.json` | Sound names, takes, master gain and gaps from `sfx.ts` |
+| `tests/fixtures/assets/sheets.json`, `tests/visual/out/assets_*_browser.png` | Contact-sheet layouts and the original's rendering of them |
+| `*.import` | Sprites: lossless, mipmaps, fix alpha border, no 3D detection. WAVs: PCM |
+
+## How keys are found
+
+`bake.mjs` enumerates every key the original can request at runtime from its
+sources: the figure and portrait key regexes in `procedural.ts` (15 unit types ×
+the 12 poses of `figures.ts`'s `Pose` type, 14 portrait types), `PROPS[*].sprite`
+and the prop ids the garrison and campaign scenes name directly, `b_<id>_<1..levels>`
+from `BUILDINGS`, `node_<type>` from `NODE_INFO` plus `node_unknown`, the terrain
+decals, literal `sprite('…')` / `hasArt('…')` keys in `src/render` and `src/ui`, and
+`missing`. The page (`page.ts`) then calls the original `loadAssets()`,
+`variantCount()` and `sprite()` for each and returns Blender files by path and
+procedural canvases as straight-alpha `getImageData` pixels, which `png.mjs`
+writes without further conversion.
+
+## Visual check
+
+```sh
+node tools/bake/bake.mjs sheets                                   # browser sheets
+tools/godot.sh --path . -s res://tests/visual/capture_assets.gd   # Godot sheets (windowed)
+node tools/bake/compare.mjs                                       # diffs + side-by-side pairs
+```
+
+`capture_assets.gd` draws the same layouts through `scripts/render/assets.gd`
+(`draw_sprite`, `draw_cast_shadow`, `draw_flash`, `draw_silhouette`,
+`draw_sprite_rect`); `compare.mjs` writes `assets_<sheet>_diff.png` (differing
+pixels in red) and `assets_<sheet>_pair.png` (browser | Godot) to
+`tests/visual/out/`. Pass `-- nomat` to the capture to see `draw_flash` without
+the sprite material.

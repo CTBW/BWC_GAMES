@@ -54,17 +54,36 @@ preserved (tile grid, one squad per tile, reserves = enemy waves off-field).
       `tools/bake/bake.mjs`, tests/unit/test_assets.gd)
 - [x] Blender sprites and audio (31 sounds, 91 takes) imported; manifest;
       runtime load tests (tests/unit/test_assets.gd, test_sfx.gd: 18/18)
-- [ ] Fonts, icons, theme (UI agent)
+- [x] Fonts (16 woff2), 37 icons, theme from styles.css (test_ui_theme)
 
 ## Presentation
-- [ ] Terrain painter, atmosphere, FX, camera
-- [ ] Battle view: units, formations, playback, overlays, minimap, relief
-- [ ] Base view, campaign view
-- [ ] UI: theme, title, top bar, base panels, roster, prep, campaign HUD,
-      battle HUD, report, manual, pause/menu
+- [x] Terrain painter (GPU, bit-exact hash2/fbm), atmosphere, FX, camera
+      (captures within ~1–4/255 mean of the original)
+- [x] Battle view: units, formations, playback, overlays, minimap, relief —
+      captures within 0.8–2.7/255 mean; 55–79 FPS with the full horde;
+      enemy turns on a worker thread; test_battle_view, test_formation
+- [x] Base view (~170 FPS), campaign view (~100 FPS)
+- [x] UI: title, top bar, garrison panels, roster, prep, campaign HUD with all
+      dialogs, battle HUD, report, manual, pause menu; every button audited
+      (test_screens, test_campaign_hud, test_battle_hud, test_hud_flow)
 
 ## Verification
-- [ ] Automated suite (20 areas in the brief) green
-- [ ] Graphical play-through: new game → expedition → battles → report
-- [ ] Performance at 1920×1080
-- [ ] Windows export builds, launches, plays
+- [~] Automated suite: 289 passed / 0 failed in the last full run reported by
+      the battle-view agent; lead's own final full run was started but its
+      result was not collected (rerun `tools/test.sh`).
+- [x] Windows export builds (168 MB, `tools/export.sh`); the exported exe ran
+      the smoke self-test: data, 1210 sprites, 31 sounds, AI expedition, all 11
+      encounters, garrison/campaign/battle screens. Rerun after the smoke fix:
+      passed in the editor build (13/13); re-export + rerun outstanding.
+- [ ] Input-driven graphical play-through (real clicks through the UI, full
+      battle to victory/defeat, restart, second expedition) with captures
+- [ ] Memory/leak check over several battles; ObjectDB leak warnings at exit
+- [ ] Polish requests: preload battle_view.tscn during boot (~280 ms first
+      compile); HUD mouse_filter over the minimap; button letter-spacing
+      (0.03em) and line-height calibration in the theme
+
+## Resume here
+1. `tools/test.sh` (full) — fix anything red.
+2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
+3. Play-through QA (open items above), then fix and commit on branch
+   `godot-migration`.

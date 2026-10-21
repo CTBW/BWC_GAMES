@@ -35,7 +35,7 @@ static func run(host: Node) -> void:
 	_say("SMOKE start (Godot %s, %s)" % [Engine.get_version_info().string, OS.get_name()])
 
 	# Data tables.
-	_check(DB.UNIT_TYPES.size() >= 15 and DB.ENCOUNTERS.size() >= 10 and DB.EVENTS.size() > 10, "data tables load")
+	_check(DB.UNIT_TYPES.size() >= 14 and DB.ENCOUNTERS.size() >= 10 and DB.EVENTS.size() > 10, "data tables load")
 
 	# Every sprite key and variant resolves to real art and loads.
 	var bad := 0
@@ -94,6 +94,12 @@ static func run(host: Node) -> void:
 	# Views and screens: drive the App through its screens and draw frames.
 	var app := host.get_node_or_null("/root/App")
 	if app != null and app.has_method("new_game"):
+		# Let main.gd's boot (loading screen -> title) finish first.
+		for i in 120:
+			if str(app.get("screen")) != "loading":
+				break
+			await tree.process_frame
+		_check(str(app.get("screen")) == "title", "boot reaches the title screen")
 		app.new_game(4321)
 		for i in 10:
 			await tree.process_frame

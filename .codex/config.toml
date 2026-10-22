@@ -1,2 +1,16 @@
-# Project-local MCP definitions can be added here after selecting a provider.
-# Account logins stay in the agent's own secure storage. Do not commit keys.
+# Project-local MCP definitions. Account logins stay in the agent's own secure storage. Do not commit keys.
+
+# fal.ai hosted MCP (sign in with: codex mcp login fal)
+[mcp_servers.fal]
+url = "https://mcp.fal.ai/mcp-relay"
+
+# Blender: needs uv and the "MCP for Blender" add-on running inside Blender
+[mcp_servers.blender]
+command = "uvx"
+args = ["mcp-for-blender"]
+
+# Godot: auto-detects Godot; set GODOT_PATH in your environment if it is installed elsewhere
+[mcp_servers.godot]
+command = "cmd"
+args = ["/c", "npx", "-y", "@coding-solo/godot-mcp"]
+env = { GODOT_PATH = 'C:\Users\calle\AppData\Local\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64.exe' }

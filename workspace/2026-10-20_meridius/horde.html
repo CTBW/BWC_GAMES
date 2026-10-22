@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · The endless horde</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .shots figure, .wide figure { margin: 0; }
+    .shots img, .wide img { width: 100%; border-radius: 6px; display: block; cursor: zoom-in; }
+    .shots figcaption, .wide figcaption { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+    .wide { display: grid; gap: 12px; }
+    .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); vertical-align: top; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: the endless horde</h1>
+  <p><strong>Status, 21 October 2026:</strong> battles, facing, maps and the campaign have been reworked around an endless horde of orcs and goblins. Every fight is outnumbered. Small battles are glimpses of the host, with a war horn or a second band coming. The campaign ends in a night-long last stand at Brannsted that lasts until dawn, in waves; at sunrise the Margrave's riders charge down the horde's own road into its rear. Facing now comes only from the last step of a move, and the game shows it before you commit. Units are still the drawn figures, as you decided; the new walls, gates, stakes and farm clutter are Blender renders. Not yet accepted by you.</p>
+
+  <h2>What it looks like</h2>
+  <div class="wide">
+    <figure><img src="media/horde-stand-night.jpg" alt="Night last stand at Brannsted: a sea of torches coming down the western road toward the walled steading" loading="lazy"><figcaption>The last stand, turn 2: the host comes by torchlight; the next waves mass beyond the edge with their arrival turn written over them.</figcaption></figure>
+    <figure><img src="media/horde-stand-assault.jpg" alt="Goblins and orcs assaulting the breach and gate of the steading while defenders hold inside; war horns banner" loading="lazy"><figcaption>Turn 5: war horns announce the warchief's own host. Red arrows mark where it will march in; goblins press the breach by the corner tower.</figcaption></figure>
+    <figure><img src="media/horde-stand-dawn.jpg" alt="At dawn, nineteen enemy squads crowd the north gate while the company holds the yard" loading="lazy"><figcaption>Turn 7, dawn breaking: nineteen squads at the walls, the warchief among them. One more turn until the Margrave's riders.</figcaption></figure>
+    <figure><img src="media/horde-relief.jpg" alt="Dozens of blue-clad horsemen with lances charge down the western road into the rear of the horde, which flees from the steading walls" loading="lazy"><figcaption>The relief: the Margrave's riders come down the road the horde came by and fall on its rear. The whole host breaks.</figcaption></figure>
+    <figure><img src="media/horde-victory.jpg" alt="Victory banner over the field: the riders hold the western approach and the battered company stands in the yard" loading="lazy"><figcaption>Victory at sunrise: one squad and one militia band lost, the yard held.</figcaption></figure>
+  </div>
+  <div class="shots" style="margin-top:12px">
+    <figure><img src="media/horde-scouts.jpg" alt="Small battle: a goblin scouting band with a horn-bearer marked HORN IN 2, the host visible in the far corner" loading="lazy"><figcaption>Small battle: kill the horn-bearer before his horn sounds. The rest of the host is visible beyond the far edge.</figcaption></figure>
+    <figure><img src="media/horde-wolves.jpg" alt="Wolf riders attacking crossbowmen from behind while a rabble wave masses at the east edge" loading="lazy"><figcaption>Wolf riders circle the line to the crossbowmen; more rabble is about to march in from the flank.</figcaption></figure>
+    <figure><img src="media/horde-ford.jpg" alt="Refugee stand at the Vattern ford: the horde crossing the river while the company holds the ridge and the road" loading="lazy"><figcaption>Mid-campaign stand at the Vattern ford: keep the horde off the refugee road for six turns.</figcaption></figure>
+    <figure><img src="media/horde-stand-warchief.jpg" alt="Close-up of the warchief's host attacking the gate at dawn" loading="lazy"><figcaption>Close-up at the gate, turn 6.</figcaption></figure>
+    <figure><img src="media/horde-campaign.jpg" alt="Campaign map: Brannsted with scorched land behind it, the host's warbands under red standards and burning farms" loading="lazy"><figcaption>Campaign map: the host's front creeps toward Brannsted with every march. Each expedition opens on it.</figcaption></figure>
+  </div>
+
+  <h2>Facing comes from movement</h2>
+  <ul>
+    <li>A squad faces the way it took its <b>last step</b>. Attacking and reactions (spearwall, overwatch) no longer turn it. The facing buttons are gone.</li>
+    <li>While you choose a destination you see the path, a ghost of the squad at the destination and a gold arrow for its facing. <b>Point at an edge of the tile</b> to arrive facing that edge, or press <b>Q / E</b>; faint arrows mark the other sides you can reach. Without a choice, the squad arrives facing the nearest enemy if any path allows. It never takes a path with more free attacks than the safest one.</li>
+    <li>To turn without moving, point at an edge of the squad's own tile: it steps out and back, which uses its move. The squad fades while you aim, so its ghost and the arrow show through.</li>
+    <li>Walls and trees in front of the destination fade, and the chosen arrow is drawn above everything, health bars included, a little larger when zoomed out. A play-test on the last-stand map showed the palisade hiding the arrow at a gateway; this fixes it.</li>
+    <li>Squads keep their shield on the left arm in all four directions, as in your two reference images. Mirrored views use new shield-leading poses instead of making the soldiers left-handed.</li>
+    <li>Rules that read facing: flank (+10%) and rear (+20%, +25% damage) attacks, shields and the shield wall, spearwall and overwatch (front and flanks only), first strike (front), and zones of control (no free attack for leaving a squad's rear).</li>
+    <li>The enemy follows the same rule and picks its approach path to show you as little flank as it can.</li>
+  </ul>
+  <div class="pair">
+    <figure><img src="media/horde-facing-reference.jpg" alt="Reference image: footmen moving right then up end facing away; front and back views" loading="lazy"><figcaption>Your reference: the last step decides front or back view.</figcaption></figure>
+    <figure><img src="media/horde-facing-sheet.jpg" alt="Footmen, royal guard, orc warriors, spearmen and crossbowmen in all four facings, idle and attacking" loading="lazy"><figcaption>All four facings, idle and attacking. The shield is on screen-right in front views and screen-left in back views.</figcaption></figure>
+  </div>
+  <figure style="margin-top:12px"><img src="media/horde-facing-preview.jpg" alt="Four previews of the same destination tile: arriving facing each edge, with the path, ghost squad and gold arrow" loading="lazy"><figcaption>The same destination reached from four sides: path, ghost squad and gold arrow, chosen by pointing at an edge.</figcaption></figure>
+  <figure style="margin-top:12px"><img src="media/horde-facing-gate.jpg" alt="Left: crossbowmen previewed in the west gateway, the palisade in front faded, a gold arrow pointing out of the gate. Right: footmen turning in place, faded, with the arrow showing their new facing" loading="lazy"><figcaption>On the last-stand map at its opening zoom: a move into a gateway (left) and a turn in place (right).</figcaption></figure>
+
+  <h2>The horde</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Enemy</th><th>Squad</th><th>Role</th></tr>
+    <tr><td>Goblin rabble (new)</td><td>9</td><td>Weak, many. Swarms round flanks and piles onto squads already engaged.</td></tr>
+    <tr><td>Goblin spearmen and archers</td><td>6</td><td>The body of the host. Spears now bite through armour.</td></tr>
+    <tr><td>Goblin wolf riders (new)</td><td>4</td><td>Goblins on great grey wargs. Move 7, slip away without free attacks, +30% damage into flanks and backs, hunt crossbowmen. Set spears stop them.</td></tr>
+    <tr><td>Orc brutes</td><td>6</td><td>Every hit smashes the squad back a tile and the brutes step into the gap.</td></tr>
+    <tr><td>Goblin horn-bearer (new)</td><td>4</td><td>Keeps out of reach and sounds the war horn on his turn unless killed first. If he escapes the field, he sounds it anyway.</td></tr>
+    <tr><td>Orc warchief</td><td>6</td><td>Leads the final wave of the last stand; his fall breaks the whole host.</td></tr>
+    <tr><td>Orc warriors, moss trolls</td><td>6 / 3</td><td>Unchanged; trolls come with the warchief.</td></tr>
+  </table>
+  </div>
+  <figure style="margin-top:12px"><img src="media/horde-enemies.jpg" alt="Drawn figures of goblin rabble, spearmen, archers, wolf riders, horn-bearer, orc brute, village militia and the Margrave's horsemen in four facings" loading="lazy"><figcaption>New drawn figures (rabble, wolf rider, horn-bearer, militia, and the Margrave's riders who relieve the last stand) beside the existing ones.</figcaption></figure>
+  <ul>
+    <li><b>Waves.</b> Battles carry their reinforcements as data. Coming squads wait beyond their edge, visible and darkened. Red arrows mark where a wave lands at the end of the turn, and the top of the screen gives the next wave's size, edge and turns left. A horn, drums and a roar announce them.</li>
+    <li><b>Swarm AI.</b> Archers loose first, the heavy orcs crash into the front, riders go round, and the swarm floods the gaps they opened. Swarms prefer sides and backs and pile onto beset squads; the horde goes for thinned, shaken squads and militia, and makes for the ground it must take. Horde squads never stand idle beside you.</li>
+    <li><b>Enemy turns play side by side.</b> Thirty squads move as one surge instead of one by one. A crowded enemy turn takes 9–12 seconds at normal speed.</li>
+  </ul>
+
+  <h2>Battles and how they end</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Battle</th><th>Field</th><th>Win</th><th>Lose</th></tr>
+    <tr><td>Scouts of the host</td><td>small</td><td>Rout them; kill the horn-bearer before turn 3 or 5–6 more squads come</td><td>Company destroyed or routed</td></tr>
+    <tr><td>Stragglers, raiders, wolf riders, vanguard, brutes, trolls, ambush</td><td>small</td><td>Rout them; a second band or flank wave arrives on turn 3–4</td><td>Company destroyed or routed</td></tr>
+    <tr><td>Cover the refugees (Vattern ford, optional)</td><td>large</td><td>Hold six turns</td><td>The road taken at the end of two enemy turns running, or the company destroyed</td></tr>
+    <tr><td>The last stand at Brannsted (objective)</td><td>large</td><td>Hold seven turns until dawn, when the Margrave's riders charge in, or slay the warchief</td><td>The yard taken at the end of two enemy turns running, or the company destroyed</td></tr>
+  </table>
+  </div>
+  <p>Morale and rout apply to both sides. Militia stand with the company in the stands; they can break, and the company has to hold without them. A skirmish that drags past turn 14 ends with the enemy giving up. The last stand starts at night and lightens each turn until the relief arrives at sunrise.</p>
+
+  <h2>Battlefields</h2>
+  <ul>
+    <li><b>Brannsted steading</b> (24 × 22): a palisaded farm on a rise, with two gates, a two-tile breach by the corner tower and a gap in the back fence. Stakes channel the north road; a stream with a bridge and a ford covers the west; a hill and a burned farm give the horde cover.</li>
+    <li><b>Vattern ford</b> (24 × 22): a river with one bridge and one ford, a ridge with ruins on the near bank, and the refugee road behind it. Late waves cross upstream and come along the near bank.</li>
+    <li>Both are drawn by hand and used as drawn or transposed, so each looks different from battle to battle. Small fields stay generated (14 × 12). Squads deploy into the gateways by default.</li>
+    <li>New Blender props: continuous palisade walls, open gateways with blue pennants, stake lines, an overturned cart, haystacks, a well, the horde's war standard, and Brannsted for the campaign map.</li>
+    <li>Camera: zooms out until the field fits and never shows past the forest ring. A minimap with click-to-jump sits on large fields, and arrows at the screen edge point to waves that are out of view.</li>
+  </ul>
+
+  <h2>The campaign: The Hillsvain Host</h2>
+  <ul>
+    <li>The host's front creeps toward Brannsted with every march: scorched land, warbands under standards and burning farms on the map. Each expedition opens on it.</li>
+    <li>One line of news per march, scout reports that count the host, and four new events: refugees on the road, drums in the night, riders shadowing the column, and a rider from Brannsted.</li>
+    <li>An optional stand at the Vattern ford midway, and the last stand at Brannsted as the objective (it replaces the war camp). A depleted company meets a slightly thinner host; the warchief and his monsters always come.</li>
+  </ul>
+
+  <h2>Verification</h2>
+  <ul>
+    <li>66 automated tests pass. New: facing from movement (11), and the horde (14): waves, the horn, held ground, relief, the warchief, brute smash, wolf riders, the give-up rule, and that every entry reaches the ground to hold on both large maps.</li>
+    <li>The facing preview was driven through the real UI on an open field and on the last-stand map at its opening zoom: pointing at each edge and cycling with E picks that facing, a squad moved into a gateway and a squad turned in place both ended facing the way the arrow showed.</li>
+    <li>A full seven-turn last stand was played to the dawn and filmed: the riders charge, the host breaks and the victory follows with no errors.</li>
+    <li>Two full expeditions were played through the UI with 0 errors and 0 failed requests. Every battle type was captured in the running game.</li>
+    <li>Frame rate in a real Edge window (RTX 4070): small field 70 FPS; last stand 61 FPS, 58 zoomed out, 70 with every wave on the field; ford 57. A last stand opens in about 1.2 seconds.</li>
+    <li>Enemy turns in the last stand take 4–9 seconds at normal speed, small battles about 6.</li>
+  </ul>
+
+  <h2>Balance (headless, AI on both sides)</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Battle (fresh six-squad company, level 1)</th><th>Win</th><th>Enemy squads</th><th>Soldiers lost</th></tr>
+    <tr><td>Small battles (8 kinds)</td><td>100%</td><td>6.5–10.5</td><td>2.5–7</td></tr>
+    <tr><td>Cover the refugees</td><td>100%</td><td>16</td><td>4.8</td></tr>
+    <tr><td>The last stand</td><td>85% (level 2: 95%)</td><td>24.5</td><td>12.9</td></tr>
+  </table>
+  </div>
+  <div class="table-wrap" style="margin-top:10px">
+  <table>
+    <tr><th>Campaign (60 companies × 6)</th><th>Success</th><th>Withdrew</th><th>Defeat</th><th>Squads lost</th><th>Silver after</th><th>Roster</th></tr>
+    <tr><td>1</td><td>48%</td><td>33%</td><td>18%</td><td>1.15</td><td>219</td><td>6.8</td></tr>
+    <tr><td>2</td><td>42%</td><td>42%</td><td>17%</td><td>1.00</td><td>218</td><td>6.6</td></tr>
+    <tr><td>3</td><td>55%</td><td>27%</td><td>18%</td><td>1.03</td><td>234</td><td>6.3</td></tr>
+    <tr><td>4</td><td>43%</td><td>42%</td><td>15%</td><td>1.05</td><td>228</td><td>6.2</td></tr>
+    <tr><td>5</td><td>45%</td><td>28%</td><td>27%</td><td>0.68</td><td>232</td><td>6.5</td></tr>
+    <tr><td>6</td><td>39%</td><td>37%</td><td>24%</td><td>0.85</td><td>241</td><td>6.5</td></tr>
+  </table>
+  </div>
+  <p>The campaign is harder than before the horde (60–79% success then). The company now arrives at Brannsted worn down from earlier fights, and the auto-player withdraws from battles it is losing. A player who holds the gates deliberately should do better than the auto-player. Economy and roster stay stable across six expeditions.</p>
+
+  <h2>What I took from the references</h2>
+  <ul>
+    <li><b>They Are Billions:</b> waves announced with a direction and a countdown, and a final swarm with the biggest monsters. Here: a wave counter, edge markers, and the warchief's wave with a troll.</li>
+    <li><b>Into the Breach:</b> arrivals shown a turn ahead on the tiles where they emerge. Here: red arrows on the entry tiles, and the waves visible beyond the edge.</li>
+    <li><b>Battle Brothers:</b> wolf riders circle a static line to reach the archers, orcs rush in, spears and shields hold. Here: wolf riders, brutes, and the spearwall as the answer.</li>
+    <li><b>Helm's Deep:</b> dread before contact, torches in the dark, a breach, and holding until relief at dawn. Here: the night last stand that lightens turn by turn.</li>
+    <li><b>Thermopylae, Rorke's Drift:</b> walls and narrow ground let a few hold many. Here: gates, a breach, stakes, a bridge and a ford.</li>
+  </ul>
+
+  <h2>Open items</h2>
+  <ul>
+    <li>Units are still drawn figures until fal is unlocked.</li>
+    <li>The campaign has only one tier; harder tiers could raise the host further.</li>
+    <li>Sound is still synthesised: the war horn, the horde's roar and the relief fanfare are placeholders.</li>
+  </ul>
+  <p>Plan, code map and lessons: <code>projects/meridius/docs/plan-horde.md</code>.</p>
+</main>
+</body>
+</html>

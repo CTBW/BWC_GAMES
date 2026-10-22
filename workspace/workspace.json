@@ -3,13 +3,21 @@
     {
       "id": "meridius",
       "title": "Meridius",
-      "description": "Isometric roguelike tactics RPG: Amberfeld Garrison, the Hillsvain Raids and turn-based battles. Blender environment art; drawn units until fal is unlocked.",
+      "description": "Isometric roguelike tactics RPG: Amberfeld Garrison against the endless Hillsvain Host, with turn-based squad battles, waves and a last stand until dawn. Blender environment art; drawn units until fal is unlocked.",
       "type": "group",
       "category": "project",
       "created": "2026-10-20",
-      "updated": "2026-10-20",
+      "updated": "2026-10-21",
       "folder": "2026-10-20_meridius",
       "steps": [
+        {
+          "name": "Magic and war machines",
+          "path": "magic.html"
+        },
+        {
+          "name": "The endless horde",
+          "path": "horde.html"
+        },
         {
           "name": "Phase one build",
           "path": "index.html"

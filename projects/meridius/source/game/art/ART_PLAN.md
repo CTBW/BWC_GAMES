@@ -21,6 +21,13 @@ Status, 20 October 2026:
   landmark for the campaign map (`node_objective`, replacing the war camp).
   Render with `R.render_asset(Hd.make(Hd.gate('x', 1), 'gate_x'), 'gate_x', 0)`,
   then `scripts/art/paint_all.py <prefix>`.
+- **Footman pixel-art squads made with Higgsfield (21 October 2026)**: eight
+  directions, six soldiers, in `art/sprites/footman_squad` (see
+  `knowledge/higgsfield-setup.md`). Animations (idle breathing, walk, strike
+  in four facings; death front and back) are in `art/sprites/footman_anim`
+  with `sprites.json`, built by `scripts/art/footman_anim.sh`. None of it is
+  registered in the manifest, so the game still draws the procedural
+  footmen; walk and death would also need game code.
 - **Units stay as the drawn (procedural) figures until fal is unlocked.** This
   is the user's decision. Blender unit renders exist in `art/raw/blender`
   (`meridius_chars.py`), but they are deliberately not registered in the

@@ -331,3 +331,252 @@ func test_formation_casualties_follow_attacks() -> void:
 			assert_false(m.dying, "every fall has settled")
 		assert_eq(standing, uv.alive, "members standing = alive shown")
 	assert_true(v.corpses.size() > 0, "the fallen lie on the field")
+
+
+# ---------------------------------------------------------------- spells, war machines, conditions
+
+const Setup = preload("res://scripts/rules/setup.gd")
+const Soldier = preload("res://scripts/meta/soldier.gd")
+const DBX = preload("res://scripts/data/db.gd")
+const Assets = preload("res://scripts/render/assets.gd")
+const SquadView = preload("res://scripts/render/squad_view.gd")
+
+## Tags of the squads staged by _lab -> uids.
+var _tags := {}
+
+
+## Squads staged on a flattened field (the original's magiclab.mjs `stage`):
+## [{tag, type, x, y, facing, alive?, hurt?, skill?, promoted?}]. Returns the view.
+func _lab(units: Array):
+	var roll: Dictionary = Setup.roll_encounter("orc_overseer", Rng.new(5), 2)
+	roll.mapId = "forest_clearing"
+	var army := [Soldier.soldier_to_unit(Soldier.new_soldier(Rng.new(3), "footman", 1, func(): return "army0", 0))]
+	var setup: Dictionary = Setup.build_battle(roll, army, {"survivalBonus": 0})
+	for t in setup.map.tiles:
+		t.erase("prop")
+		if t.terrain == "forest" or t.terrain == "brush" or t.terrain == "water":
+			t.terrain = "grass"
+		t.h = 0
+	setup.units = []
+	setup.waves = []
+	_tags = {}
+	for i in units.size():
+		var spec: Dictionary = units[i]
+		var u: Dictionary
+		if DBX.UNIT_TYPES[spec.type].faction == "player":
+			var id := "lab%d" % i
+			u = Soldier.soldier_to_unit(Soldier.new_soldier(Rng.new(40 + i), spec.type, 1, func(): return id, 0))
+		else:
+			u = Soldier.make_enemy(spec.type, 1, "lab-e%d" % i, Rng.new(60 + i))
+		u.uid = "lab-%s" % spec.tag
+		u.x = spec.x
+		u.y = spec.y
+		u.facing = spec.facing
+		if spec.has("alive"):
+			u.alive = spec.alive
+		u.hp = u.alive * u.hpPer - int(spec.get("hurt", 0))
+		if spec.has("skill"):
+			u.stats.melee = spec.skill
+			u.stats.ranged = spec.skill
+		if spec.get("promoted"):
+			u.abilities.append("mending_circle")
+		setup.units.append(u)
+		_tags[spec.tag] = u.uid
+	var v = _view_for(setup, false)
+	v.b.phase = "player"
+	return v
+
+
+func _unit(v, tag: String) -> Dictionary:
+	return v.b.unit(_tags[tag])
+
+
+## Every squad shown as the rules have it once playback is idle.
+func _views_agree(v, label: String) -> void:
+	for u in v.b.units:
+		var uv = v.views[u.uid]
+		if u.status == "active" or u.status == "routing":
+			assert_eq(uv.hp, u.hp, "%s: %s hp" % [label, u.uid])
+			assert_eq(uv.alive, u.alive, "%s: %s soldiers" % [label, u.uid])
+			var ids: Array = u.get("statuses", []).map(func(s): return s.id)
+			ids.sort()
+			var shown: Array = uv.statuses.duplicate()
+			shown.sort()
+			assert_eq(shown, ids, "%s: %s conditions" % [label, u.uid])
+
+
+func test_a_spell_is_chosen_aimed_by_hovering_and_cast_by_clicking() -> void:
+	var v = _lab([
+		{"tag": "m", "type": "battle_mage", "x": 5, "y": 9, "facing": 3, "skill": 400},
+		{"tag": "f", "type": "footman", "x": 5, "y": 7, "facing": 3},
+		{"tag": "g1", "type": "goblin_spear", "x": 5, "y": 4, "facing": 1},
+		{"tag": "g2", "type": "goblin_rabble", "x": 6, "y": 4, "facing": 1},
+		{"tag": "g3", "type": "goblin_spear", "x": 7, "y": 5, "facing": 1},
+	])
+	var m := _unit(v, "m")
+	v.select(m.uid)
+	v.key_action("ability_1", true)
+	assert_eq(v.ui.ability, "chain_lightning", "1 picks the first active ability, a spell")
+	v.pointer_move(_screen_of(v, 5, 4))
+	var sp = v.ui.hover.spell
+	assert_not_null(sp, "the forecast under the cursor")
+	if sp == null:
+		return
+	assert_true(sp.legal)
+	assert_eq(sp.hits.map(func(h): return h.role), ["main", "chain", "chain"], "the arcs it would jump along")
+	assert_true(v.ui.hover.preview == null, "no attack forecast while a spell is aimed")
+	# A click on another of the company's squads picks it instead.
+	v.pointer_down(_screen_of(v, 5, 7), 0)
+	assert_eq(v.ui.selected, _tags.f, "another squad selected")
+	assert_eq(v.ui.ability, null, "the spell is put away")
+	v.select(m.uid)
+	v.set_ability("chain_lightning")
+	v.pointer_move(_screen_of(v, 5, 4))
+	v.pointer_down(_screen_of(v, 5, 4), 0)
+	assert_true(m.hasActed, "cast")
+	assert_eq(v.ui.ability, null)
+	assert_true(_idle(v), "the lightning plays out")
+	_views_agree(v, "after the lightning")
+	assert_true(v.flash.a < 0.05, "the field's flash has faded")
+
+
+func test_frost_chills_on_screen_and_the_bleeding_tick_plays() -> void:
+	var v = _lab([
+		{"tag": "m", "type": "battle_mage", "x": 5, "y": 9, "facing": 3, "skill": 400},
+		{"tag": "o", "type": "orc_warrior", "x": 5, "y": 5, "facing": 1},
+		{"tag": "g", "type": "goblin_spear", "x": 6, "y": 5, "facing": 1},
+		{"tag": "s", "type": "goblin_shaman", "x": 5, "y": 1, "facing": 1, "skill": 400},
+		{"tag": "f", "type": "footman", "x": 3, "y": 4, "facing": 3},
+	])
+	assert_true(v.b.cast(_tags.m, "frost_blast", {"x": 5, "y": 5}))
+	v.pump()
+	assert_true(_idle(v))
+	assert_true(v.views[_tags.o].statuses.has("chilled"), "the orcs are shown chilled")
+	_views_agree(v, "after the frost")
+	v.b.phase = "enemy"
+	assert_true(v.b.cast(_tags.s, "gutripper", {"x": 3, "y": 4}))
+	v.pump()
+	assert_true(_idle(v))
+	assert_true(v.views[_tags.f].statuses.has("bleeding"), "the footmen are shown bleeding")
+	var hp0: int = _unit(v, "f").hp
+	v.b._start_turn("player")
+	v.pump()
+	assert_true(_idle(v))
+	assert_true(_unit(v, "f").hp < hp0, "the wound opens again")
+	_views_agree(v, "after the bleeding")
+
+
+func test_self_target_spell_casts_at_once_and_cancel_puts_a_spell_away() -> void:
+	var v = _lab([
+		{"tag": "m", "type": "battle_mage", "x": 5, "y": 8, "facing": 3, "promoted": true},
+		{"tag": "f", "type": "footman", "x": 5, "y": 7, "facing": 3, "alive": 4, "hurt": 20},
+		{"tag": "g", "type": "goblin_spear", "x": 5, "y": 3, "facing": 1},
+	])
+	var m := _unit(v, "m")
+	v.select(m.uid)
+	v.set_ability("frost_blast")
+	v.pointer_move(_screen_of(v, 5, 3))
+	assert_not_null(v.ui.hover.spell)
+	v.key_action("cancel", true)
+	assert_eq(v.ui.ability, null, "Esc puts the spell away")
+	assert_eq(v.ui.hover.spell, null, "and its forecast")
+	v.set_ability("healing_light")
+	v.pointer_down(Vector2(-500, -500), 2)
+	assert_eq(v.ui.ability, null, "right click puts it away too")
+	v.set_ability("mending_circle")
+	assert_true(m.hasActed, "the circle needs no aiming")
+	assert_true(_idle(v))
+	_views_agree(v, "after the circle")
+
+
+func test_a_war_machine_aims_its_stone_at_the_enemy_under_the_cursor() -> void:
+	var v = _lab([
+		{"tag": "m", "type": "mangonel", "x": 5, "y": 10, "facing": 3, "skill": 400},
+		{"tag": "f", "type": "footman", "x": 4, "y": 5, "facing": 3},
+		{"tag": "g1", "type": "goblin_rabble", "x": 5, "y": 5, "facing": 1},
+		{"tag": "g2", "type": "goblin_spear", "x": 5, "y": 9, "facing": 1},
+	])
+	var m := _unit(v, "m")
+	v.select(m.uid)
+	v.pointer_move(_screen_of(v, 5, 5))
+	var sp = v.ui.hover.spell
+	assert_not_null(sp, "the stone is forecast with no ability chosen")
+	if sp == null:
+		return
+	assert_eq(sp.ability, "hurl_stone")
+	assert_true(sp.hits.any(func(h): return h.uid == _tags.f and h.ally), "the footmen beside it are caught")
+	# Too close for a stone: the crew's own attack instead.
+	v.pointer_move(_screen_of(v, 5, 9))
+	assert_eq(v.ui.hover.spell, null, "no stone at an adjacent foe")
+	assert_not_null(v.ui.hover.preview, "the crew's attack is forecast")
+	v.pointer_move(_screen_of(v, 5, 5))
+	v.pointer_down(_screen_of(v, 5, 5), 0)
+	assert_true(m.hasActed, "the stone flies")
+	var saw_atk := false
+	var t := 0.0
+	while v.busy() and t < 10:
+		v.advance(DT)
+		t += DT
+		if v.views[m.uid].engine_atk > 0:
+			saw_atk = true
+	assert_true(saw_atk, "the engine shows its loosing pose")
+	assert_true(_idle(v))
+	_views_agree(v, "after the stone")
+
+
+func test_the_ballista_bolt_runs_through_and_a_destroyed_crew_leaves_a_wreck() -> void:
+	var v = _lab([
+		{"tag": "b", "type": "ballista", "x": 5, "y": 10, "facing": 3, "skill": 400},
+		{"tag": "g1", "type": "goblin_spear", "x": 5, "y": 6, "facing": 1},
+		{"tag": "g2", "type": "goblin_rabble", "x": 5, "y": 5, "facing": 1},
+	])
+	assert_true(v.b.attack(_tags.b, _tags.g1))
+	var through: Array = v.b.events.filter(func(e): return e.t == "attack" and e.get("via") != null)
+	assert_eq(through.size(), 1, "the bolt goes on through")
+	if through.size() == 1:
+		assert_true(v._involved(through[0]).has(_tags.g1), "the squad it passed through is part of it")
+	v.pump()
+	assert_true(_idle(v))
+	_views_agree(v, "after the bolt")
+	# A wrecked engine.
+	var w = _lab([
+		{"tag": "b", "type": "ballista", "x": 5, "y": 6, "facing": 3, "alive": 1, "hurt": 18},
+		{"tag": "o", "type": "orc_brute", "x": 5, "y": 5, "facing": 1, "skill": 400},
+	])
+	var uv = w.views[_tags.b]
+	var u := _unit(w, "b")
+	var eng = w._draw.engine_of(uv, u)
+	assert_not_null(eng, "the engine stands among its crew")
+	assert_eq(eng.s.key, "ballista_idle_b", "facing away: the back view")
+	# Pointing at the engine picks the squad.
+	var s: Dictionary = eng.s
+	var hit := false
+	for py in range(0, s.h, 6):
+		for px in range(0, s.w, 6):
+			if Assets.opaque_at(s, px, py):
+				var k: float = s.scale * SquadView.member_scale(u)
+				var wx: float = eng.x - (px - s.ax) * k if eng.flip else eng.x + (px - s.ax) * k
+				var wy: float = eng.y + (py - s.ay) * k
+				hit = w._draw.body_covers(uv, u, wx, wy)
+				break
+		if hit:
+			break
+	assert_true(hit, "the engine's pixels count for hit tests")
+	w.b.phase = "enemy"
+	assert_true(w.b.attack(_tags.o, _tags.b))
+	w.pump()
+	assert_true(_idle(w))
+	assert_ne(u.status, "active", "the crew are gone")
+	var wrecks: Array = w.corpses.filter(func(c): return c.type == "ballista")
+	assert_eq(wrecks.size(), 1, "the engine is left as a wreck")
+	assert_false(w._draw._engine_stands(uv), "and is no longer drawn standing")
+
+
+func test_the_danger_overlay_counts_a_lobbers_stones() -> void:
+	var v = _lab([
+		{"tag": "f", "type": "footman", "x": 5, "y": 11, "facing": 3},
+		{"tag": "r", "type": "rock_lobber", "x": 5, "y": 1, "facing": 1},
+	])
+	var d: Dictionary = v._draw._danger_tiles()
+	assert_true(d.has(Grid.key(5, 9)), "eight tiles away, beyond its march, a stone can fall")
+	assert_false(d.has(Grid.key(5, 11)), "ten tiles away it cannot")

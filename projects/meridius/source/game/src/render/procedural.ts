@@ -3,6 +3,7 @@
 
 import { Rng } from '../core/rng';
 import type { Sprite } from './assets';
+import { drawEngine, engineLooks } from './engines';
 import { drawFigure, type Pose } from './figures';
 
 /** World-pixel height of a standing figure by unit type. */
@@ -22,6 +23,13 @@ const FIGURE_SCALE: Record<string, number> = {
   wolf_rider: 0.76,
   margrave_rider: 0.76,
   militia: 0.76,
+  battle_mage: 0.76,
+  goblin_shaman: 0.76,
+  engineer: 0.76,
+  ballista: 0.76,
+  mangonel: 0.76,
+  rock_lobber: 0.76,
+  war_wagon: 0.76,
 };
 
 /**
@@ -34,6 +42,8 @@ function portraitFrame(type: string): { hx: number; hy: number; k: number } {
   if (type === 'goblin_rabble') return { hx: 0, hy: -(100 * 0.74 + 21) + 12, k: 2.25 };
   if (type === 'orc_brute') return { hx: -2, hy: -(100 * 1.2 + 21) - 6, k: 1.7 };
   if (type === 'collie_guard') return { hx: -6, hy: -121, k: 2.1 };
+  // The shaman's antlers and feathers stand tall over his head.
+  if (type === 'goblin_shaman') return { hx: 0, hy: -99, k: 1.85 };
   const h = type === 'orc_warlord' ? 1.3 : type === 'orc_warrior' ? 1.12 : type.startsWith('goblin') ? 0.8 : 1;
   const k = type === 'orc_warlord' ? 1.75 : type === 'orc_warrior' ? 1.95 : 2.25;
   return { hx: 0, hy: -(100 * h + 21) + (type.startsWith('goblin') ? 12 : 0), k };
@@ -67,6 +77,53 @@ function figureSprite(type: string, pose: Pose, v: number): Sprite {
   x.setTransform(1, 0, 0, 1, 0, 0);
   if (pose !== 'dead') lightFigure(c, W / 2, H - 26);
   return trimmed(c, W / 2, H - 26, (FIGURE_SCALE[type] ?? 0.76) / K * 1.4 * 0.62);
+}
+
+/**
+ * A war engine (engines.ts) on the figure scale, so it stands at the right size
+ * beside its crew: same units, lighting and trim, on a larger canvas. The
+ * anchor is the engine's ground centre. Null for variants that are not drawn.
+ */
+function engineSprite(type: string, pose: Pose, v: number): Sprite | null {
+  if (v >= engineLooks(type)) return null;
+  const K = 1.4;
+  const W = 680;
+  const H = 560;
+  const ax = W / 2;
+  const ay = H - 160;
+  const { c, x } = canvas(W, H);
+  x.translate(ax, ay);
+  x.scale(K, K);
+  x.lineJoin = 'round';
+  x.lineCap = 'round';
+  if (!drawEngine(x, type, pose, v)) return null;
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  // Light down to the nearest wheel rather than the anchor: the footprint reaches toward the camera.
+  if (pose !== 'dead') lightFigure(c, ax, lowestRow(c), 0.2);
+  return trimmed(c, ax, ay, (FIGURE_SCALE[type] ?? 0.76) / K * 1.4 * 0.62);
+}
+
+/** Portrait of an engine: the front idle sprite fitted to fill the frame. */
+function enginePortrait(type: string, v: number): Sprite | null {
+  const e = engineSprite(type, 'idle_f', v);
+  if (!e) return null;
+  const S = 160;
+  const { c, x } = canvas(S, S);
+  // Fit the engine, zooming in a little when it is compact so it fills the frame.
+  const k = Math.min((S - 4) / e.w, (S - 4) / e.h) * (e.w > e.h * 1.5 ? 1 : 1.1);
+  const w = e.w * k;
+  const h = e.h * k;
+  x.drawImage(e.img, (S - w) / 2, (S - h) / 2 + 6, w, h);
+  return sp(c, S / 2, S, 1);
+}
+
+/** The lowest canvas row with an opaque pixel. */
+function lowestRow(c: HTMLCanvasElement): number {
+  const d = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data;
+  for (let yy = c.height - 1; yy >= 0; yy--) {
+    for (let xx = 0; xx < c.width; xx += 2) if (d[(yy * c.width + xx) * 4 + 3] > 40) return yy;
+  }
+  return c.height - 1;
 }
 
 /**
@@ -109,7 +166,7 @@ function trimmed(c: HTMLCanvasElement, ax: number, ay: number, scale: number): S
  * Light the flat figure like the 3D props: warm key light from the upper left,
  * a thin rim on the lit edge, and shade gathering toward the feet.
  */
-function lightFigure(c: HTMLCanvasElement, fx: number, fy: number) {
+function lightFigure(c: HTMLCanvasElement, fx: number, fy: number, aoStrength = 0.32) {
   const x = c.getContext('2d')!;
   const w = c.width;
   const h = c.height;
@@ -137,7 +194,7 @@ function lightFigure(c: HTMLCanvasElement, fx: number, fy: number) {
   // Ground occlusion toward the feet.
   const ao = x.createLinearGradient(0, fy - tall * 0.28, 0, fy);
   ao.addColorStop(0, 'rgba(20,24,10,0)');
-  ao.addColorStop(1, 'rgba(20,24,10,0.32)');
+  ao.addColorStop(1, `rgba(20,24,10,${aoStrength})`);
   x.fillStyle = ao;
   x.fillRect(0, 0, w, h);
   x.restore();
@@ -1080,9 +1137,13 @@ export function proceduralSprite(key: string, v: number): Sprite | null {
   if (key === 'totem') return v === 0 ? totem() : null;
   if (key === 'campfire') return v === 0 ? campfire() : null;
   if (key === 'tuft' || key === 'flower' || key === 'pebble') return decal(key, v);
-  const um = key.match(/^(footman|spearman|crossbowman|collie_guard|goblin_spear|goblin_archer|orc_warrior|orc_brute|orc_warlord|troll|goblin_rabble|goblin_horn|wolf_rider|militia|margrave_rider)_(idle_fs|idle_bs|atk_fs|atk_bs|idle_f|idle_b|atk_f|atk_b|run_f|run_b|dead|flee_b)$/);
+  const um = key.match(/^(footman|spearman|crossbowman|collie_guard|goblin_spear|goblin_archer|orc_warrior|orc_brute|orc_warlord|troll|goblin_rabble|goblin_horn|wolf_rider|militia|margrave_rider|battle_mage|goblin_shaman|engineer)_(idle_fs|idle_bs|atk_fs|atk_bs|idle_f|idle_b|atk_f|atk_b|run_f|run_b|dead|flee_b)$/);
   if (um) return figureSprite(um[1], um[2] as Pose, v);
-  const pm = key.match(/^portrait_(footman|spearman|crossbowman|collie_guard|goblin_spear|goblin_archer|orc_warrior|orc_brute|orc_warlord|troll|goblin_rabble|goblin_horn|wolf_rider|militia)$/);
+  const em = key.match(/^(ballista|mangonel|rock_lobber|war_wagon)_(idle_fs|idle_bs|atk_fs|atk_bs|idle_f|idle_b|atk_f|atk_b|run_f|run_b|dead|flee_b)$/);
+  if (em) return engineSprite(em[1], em[2] as Pose, v);
+  const pe = key.match(/^portrait_(ballista|mangonel|rock_lobber|war_wagon)$/);
+  if (pe) return enginePortrait(pe[1], v);
+  const pm = key.match(/^portrait_(footman|spearman|crossbowman|collie_guard|goblin_spear|goblin_archer|orc_warrior|orc_brute|orc_warlord|troll|goblin_rabble|goblin_horn|wolf_rider|militia|battle_mage|goblin_shaman)$/);
   if (pm) return portraitSprite(pm[1], v);
   const bm = key.match(/^b_(\w+)_(\d)$/);
   if (bm) return v === 0 ? building(bm[1], Number(bm[2])) : null;

@@ -1,9 +1,10 @@
 ## The battle screen's HUD over the battle view: port of `BattleHud` in
 ## src/ui/screens/Battle.tsx (top bar with title, turn line, enemy count,
 ## grid / danger / speed / manual toggles, Retreat and Begin Battle / End Turn;
-## the objective panel; the company column; turn banners; the attack preview,
-## hovered squad and hovered tile panels; the selected squad's card; the battle
-## log; the retreat confirmation). The panels are built by hud_battle_panels.gd.
+## the objective panel; the company column; turn banners; the spell forecast
+## (ui.hover.spell, before the attack preview), the attack preview, hovered
+## squad and hovered tile panels; the selected squad's card; the battle log;
+## the retreat confirmation). The panels are built by hud_battle_panels.gd.
 ##
 ## Hosting (scripts/app/main.gd on the battle screen):
 ##   var hud = preload("res://scripts/ui/battle_hud.gd").new()
@@ -488,7 +489,7 @@ func _refresh_company() -> void:
 		var v = _v(u.uid)
 		var st: String = str(v.status) if v != null and v.status != null else str(u.status)
 		var done: bool = b.phase == "player" and bool(u.get("done", false))
-		var sig := str([view.ui.selected == u.uid, st, v.alive if v != null else u.alive, JS.rnd(float(v.hp if v != null else u.hp)), v.morale if v != null else u.morale, v.routing if v != null else false, u.get("stance"), done, u.name])
+		var sig := str([view.ui.selected == u.uid, st, v.alive if v != null else u.alive, JS.rnd(float(v.hp if v != null else u.hp)), v.morale if v != null else u.morale, v.routing if v != null else false, u.get("stance"), done, u.name, _view_statuses(u, v)])
 		var rec: Dictionary = _cards[u.uid]
 		if rec.sig == sig and rec.node != null and is_instance_valid(rec.node):
 			continue
@@ -503,6 +504,12 @@ func _refresh_company() -> void:
 		else:
 			_company.add_child(card)
 		rec.node = card
+
+
+## Conditions the card shows: the view's (played back) when it has them, else the rules'.
+func _view_statuses(u: Dictionary, v) -> Array:
+	var vs: Variant = v.get("statuses") if v != null else null
+	return Panels.status_ids(vs if vs is Array else u.get("statuses", []))
 
 
 func _mini_card(u: Dictionary, v, st: String, done: bool, selected: bool) -> Control:
@@ -554,6 +561,8 @@ func _mini_card(u: Dictionary, v, st: String, done: bool, selected: bool) -> Con
 		status = "Fleeing"
 	elif u.get("stance") != null:
 		status = str(DB.ABILITIES.get(u.stance, {}).get("name", ""))
+	elif not _view_statuses(u, v).is_empty():
+		status = Panels.status_name(_view_statuses(u, v)[0])
 	elif done:
 		status = "Done"
 	var sl := UI.label(status, "TinyLabel", 0, Color("#ff9a86") if routing else UI.DARK_MUTED)
@@ -630,7 +639,15 @@ func _refresh_info() -> void:
 	var sel: Variant = b.unit(view.ui.selected) if view.ui.selected != null else null
 	var kind := ""
 	var sig: Array = []
-	if h.get("preview") != null and sel != null:
+	if h.get("spell") != null and sel != null:
+		# What the chosen spell (or a machine's stone) would do here, before the attack preview.
+		kind = "spell"
+		var shown: Array = []
+		for hit in h.spell.get("hits", []):
+			var tv = _v(hit.uid)
+			shown.append([tv.hp, tv.alive] if tv != null else null)
+		sig = [h.spell, view.ui.selected, shown]
+	elif h.get("preview") != null and sel != null:
 		kind = "forecast"
 		var t: Variant = b.unit(h.preview.target)
 		var tv = _v(h.preview.target)
@@ -640,7 +657,8 @@ func _refresh_info() -> void:
 		kind = "unit"
 		var u: Variant = b.unit(h.unit)
 		var v = _v(h.unit)
-		sig = [h.unit, u.morale if u != null else null, u.status if u != null else null, [v.hp, v.alive, v.morale] if v != null else null]
+		sig = [h.unit, u.morale if u != null else null, u.status if u != null else null, [v.hp, v.alive, v.morale] if v != null else null,
+			u.get("statuses") if u != null else null, u.get("cooldowns") if u != null else null]
 	elif h.get("tile") != null:
 		kind = "tile"
 		sig = [h.tile, h.get("facing"), h.get("dest"), h.get("facings"), h.get("turn"), h.get("zoc")]
@@ -650,6 +668,8 @@ func _refresh_info() -> void:
 func _build_info(kind: String) -> void:
 	var c: Control = null
 	match kind:
+		"spell":
+			c = Panels.spell_forecast(view)
 		"forecast":
 			c = Panels.forecast(view)
 		"unit":
@@ -672,8 +692,8 @@ func _refresh_unit() -> void:
 	var sig: Array = [show]
 	if show:
 		var v = _v(sel.uid)
-		sig = [show, sel.uid, sel.hasMoved, sel.hasActed, sel.get("cooldowns"), sel.get("ammo"), sel.get("stance"), sel.morale, sel.level,
-			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(sel.uid)]
+		sig = [show, sel.uid, sel.hasMoved, sel.hasActed, sel.get("movedTiles"), sel.get("cooldowns"), sel.get("ammo"), sel.get("stance"), sel.morale, sel.level,
+			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(sel.uid), sel.get("statuses")]
 	_section("unit", sig, _build_unit.bind(sel if show else null))
 
 

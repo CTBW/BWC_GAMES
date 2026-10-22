@@ -1,22 +1,22 @@
 import { prefs } from '../core/prefs';
-import type { Dir } from '../core/types';
+import type { Dir, StatusId } from '../core/types';
 import { Rng, hash2 } from '../core/rng';
 import { OUTWARD } from '../battle/mapgen';
-import { ABILITIES } from '../data/abilities';
+import { ABILITIES, isActiveAbility } from '../data/abilities';
 import { PROPS, TERRAIN } from '../data/terrain';
-import { UNIT_TYPES } from '../data/units';
+import { UNIT_TYPES, isEngine } from '../data/units';
 import { EDGE_NAME, INWARD, type Battle, type FacingOption } from '../battle/battle';
 import { squadName } from '../battle/squad';
 import { runEnemyAi } from '../battle/ai';
-import { DIRS, dirTo, dist, key, manhattan, tileAt, tilePassable, unitAt } from '../battle/grid';
-import type { AttackPreview, BattleEvent, BattleUnit, Edge, MoraleState, Pt } from '../battle/types';
+import { DIRS, dirTo, dist, key, manhattan, neighbors, tileAt, tilePassable, unitAt } from '../battle/grid';
+import type { AttackPreview, BattleEvent, BattleUnit, Edge, MoraleState, Pt, SpellHit, SpellPreview } from '../battle/types';
 import { Atmosphere } from './atmosphere';
-import { drawCastShadow, drawSprite, flashOf, opaqueAt, shadowOf, sprite, type Sprite } from './assets';
+import { drawCastShadow, drawSprite, flashOf, opaqueAt, shadowOf, sprite, tintOf, type Sprite } from './assets';
 import type { PointerInfo, Scene } from './engine';
 import { Fx } from './fx';
 import { LH, TH, TW, clamp, easeInOutQuad, easeOutCubic, isoX, isoY, lerp, makeCamera, screenToWorld, updateCamera, worldToScreen, type Camera } from './iso';
 import { buildTerrain, type TerrainLayer } from './terrain';
-import { facesCamera, formationSlots } from './formation';
+import { engineOffset, facesCamera, formationSlots } from './formation';
 import { hasShieldPoses } from './figures';
 import { championOf, killMembers, makeMembers, memberHeight, memberScale, reform, standing, stepMembers, type Member } from './squadView';
 import { sfx } from '../audio/sfx';
@@ -66,12 +66,18 @@ export interface UnitView {
   visible: boolean;
   /** Still beyond the edge with a coming wave (drawn when the wave is near). */
   reserve: boolean;
+  /** Conditions as played back (chilled, frenzied, bleeding). */
+  statuses: StatusId[];
+  /** A war machine shows its loosing pose for this many seconds. */
+  engineAtk: number;
 }
 
 export interface HoverInfo {
   tile?: Pt;
   unit?: string;
   preview?: AttackPreview & { target: string; from?: Pt; ability?: string; moveFirst: boolean };
+  /** What the chosen spell (or a war machine's stone) would do cast at the hovered tile. */
+  spell?: SpellPreview;
   path?: Pt[];
   zoc?: number;
   /** Where the previewed move ends, the facing it arrives with, and the other facings that tile allows. */
@@ -134,6 +140,13 @@ interface ReliefRider {
 
 /** Most animations running at once (an enemy turn plays its squads side by side). */
 const MAX_ANIMS = 14;
+
+/** Labels and tints of lasting conditions. */
+const STATUS_COLOR: Record<StatusId, string> = { chilled: '#bfe6ff', bloodlust: '#ff6a50', bleeding: '#ff8a7a' };
+const STATUS_LABEL: Record<StatusId, string> = { chilled: 'CHILLED', bloodlust: 'FRENZY', bleeding: 'BLEEDING' };
+
+/** Colour of the damage numbers a spell throws up. */
+const SPELL_TEXT: Record<string, string> = { lightning: '#d8ecff', frost: '#cfeeff', fire: '#ffc060', gut: '#ff8a7a', stone: '#ffffff', rock: '#ffffff' };
 
 const MORALE_COLORS: Record<MoraleState, string> = {
   confident: '#9fe0ff',
@@ -203,6 +216,10 @@ export class BattleScene implements Scene {
   private hordeBroken = false;
   /** The relief of a last stand: riders charging in with the sunrise (drawn only, no rules). */
   private relief: { t: number; glow: number; edge: Edge; riders: ReliefRider[] } | null = null;
+  /** A flash over the whole field (lightning, a fireball bursting): strength and rgb colour. */
+  private flash = { a: 0, color: '255,255,255' };
+  /** Targets of the chosen spell, cached per squad and spell. */
+  private spellTargetCache: { key: string; list: BattleUnit[] } | null = null;
 
   constructor(b: Battle) {
     this.b = b;
@@ -481,6 +498,8 @@ export class BattleScene implements Scene {
       routing: u.status === 'routing',
       visible: u.status !== 'reserve',
       reserve: u.status === 'reserve',
+      statuses: u.statuses.map((s) => s.id),
+      engineAtk: 0,
     };
   }
 
@@ -564,6 +583,21 @@ export class BattleScene implements Scene {
       if (this.b.useStance(u.uid, id)) this.pump();
     } else if (ab.kind === 'shout') {
       if (this.b.shout(u.uid, id)) this.pump();
+    } else if (ab.kind === 'spell') {
+      if (!this.b.canCast(u, id).ok) {
+        sfx('deny');
+      } else if (ab.target === 'self') {
+        // Cast where the casters stand: no aiming needed.
+        if (this.b.cast(u.uid, id, { x: u.x, y: u.y })) {
+          this.ui.ability = undefined;
+          this.pump();
+          this.afterPlayerAction(u);
+        }
+      } else {
+        this.ui.ability = this.ui.ability === id ? undefined : id;
+        sfx('click');
+        this.refreshHover();
+      }
     } else {
       this.ui.ability = this.ui.ability === id ? undefined : id;
       sfx('click');
@@ -652,6 +686,7 @@ export class BattleScene implements Scene {
     this.statesCache = null;
     this.dangerCache = null;
     this.targetCache = null;
+    this.spellTargetCache = null;
     this.ui.busy = this.busy;
     this.notify();
   }
@@ -675,8 +710,13 @@ export class BattleScene implements Scene {
         this.cause = [e.uid];
         return [e.uid];
       case 'attack':
-        this.cause = [e.uid, e.target];
+        this.cause = [e.uid, e.target, ...(e.via ? [e.via] : [])];
         return this.cause.slice();
+      case 'spell':
+        this.cause = [...new Set([e.uid, ...e.hits.map((h) => h.uid)])];
+        return this.cause.slice();
+      case 'status':
+      case 'dot':
       case 'push':
       case 'heal':
       case 'morale':
@@ -877,6 +917,36 @@ export class BattleScene implements Scene {
       case 'attack':
         this.playAttack(e);
         return;
+      case 'spell':
+        this.playSpell(e);
+        return;
+      case 'status': {
+        const v = this.views.get(e.uid)!;
+        if (e.on) {
+          if (!v.statuses.includes(e.status)) v.statuses.push(e.status);
+          const hp = this.headPos(v);
+          const label = e.status === 'chilled' ? 'Chilled' : e.status === 'bloodlust' ? 'Bloodlust!' : 'Bleeding';
+          this.fx.text(hp.x, hp.y - 36, label, STATUS_COLOR[e.status], { size: 16, delay: 0.05 });
+        } else v.statuses = v.statuses.filter((s) => s !== e.status);
+        return;
+      }
+      case 'dot': {
+        // The hex's wound opens again: blood, and soldiers may die of it.
+        const v = this.views.get(e.uid)!;
+        v.hp = e.hp;
+        const hp = this.headPos(v);
+        this.fx.text(hp.x, hp.y - 4, `${e.damage}`, '#ff6a5a', { size: 22 });
+        for (const m of standing(v.members)) {
+          const q = this.memberPos(v, m);
+          m.flash = Math.max(m.flash, 0.3);
+          m.shake = 0.6;
+          this.fx.burst(q.x, q.y - 24, 0, 5, { shape: 'spark', colors: ['#b8291c', '#7d1a12', '#e05040'], speed: 60, vz: 30, gravity: 240, size: 2.6, max: 0.5 });
+        }
+        sfx('hit_flesh');
+        this.showCasualties(v, e.aliveBefore - e.aliveAfter, { x: 0, y: 1 });
+        this.anim = { t: 0, dur: 0.55, step: () => {} };
+        return;
+      }
       case 'push': {
         const v = this.views.get(e.uid)!;
         const from = { ...e.from };
@@ -936,9 +1006,19 @@ export class BattleScene implements Scene {
         const hp = this.headPos(v);
         v.status = e.dead ? 'dead' : 'downed';
         v.stance = undefined;
+        v.statuses = [];
         v.hp = 0;
         if (standing(v.members).length) this.showCasualties(v, standing(v.members).length, { x: 0, y: -1 });
         v.alive = 0;
+        if (isEngine(u.typeId)) {
+          // With its crew dead the engine is wrecked where it stood.
+          const p = this.viewPos(v);
+          const o = engineOffset(v.facing);
+          this.corpses.push({ wx: p.x + o.x, wy: p.y + o.y, d: Math.round(v.x) + Math.round(v.y) - 0.2, type: u.typeId, variant: u.variant, flip: v.facing === 0 || v.facing === 2, scale: memberScale(u) });
+          this.fx.burst(p.x, p.y - 10, 4, 14, { shape: 'spark', colors: ['#7a5532', '#5a3a22', '#c9ced4'], speed: 130, vz: 90, gravity: 260, size: 3, max: 0.8 });
+          this.fx.burst(p.x, p.y, 6, 8, { shape: 'puff', color: 'rgba(170,150,110,1)', speed: 50, vz: 30, gravity: 10, size: 9, max: 1.1 });
+          sfx('crash');
+        }
         const label = u.leader ? 'Slain' : e.dead ? 'Wiped out' : 'Broken';
         this.fx.text(hp.x, hp.y - 14, label, e.dead ? '#ff8a7a' : '#ffd27a', { size: 22 });
         sfx(u.faction === 'player' ? 'death_player' : 'death');
@@ -1165,7 +1245,48 @@ export class BattleScene implements Scene {
     return { nx: dx / len, ny: dy / len, len };
   }
 
+  /** A ballista bolt carrying on through the squad it struck into the one behind. */
+  private playThrough(e: Extract<BattleEvent, { t: 'attack' }>) {
+    const vv = this.views.get(e.via!)!;
+    const tv = this.views.get(e.target)!;
+    const a = this.viewPos(vv);
+    const b = this.viewPos(tv);
+    const nx = Math.sign(b.x - a.x) || 1;
+    const ny = Math.sign(b.y - a.y);
+    const victims = this.pickVictims(tv, Math.max(0, e.aliveBefore - e.aliveAfter), { x: -nx, y: -ny });
+    const dur = clamp(Math.hypot(b.x - a.x, b.y - a.y) / 1400, 0.08, 0.22);
+    this.fx.shoot({
+      x0: a.x,
+      y0: a.y - 22,
+      x1: b.x,
+      y1: b.y - 22,
+      t: 0,
+      dur,
+      arc: 0,
+      kind: 'bolt',
+      scale: 1.5,
+      onHit: () => {
+        tv.hp = e.targetHp;
+        const head = this.headPos(tv);
+        this.fx.text(head.x, head.y - 4, `${e.damage}`, '#ffffff', { size: 26 });
+        this.fx.text(head.x, head.y - 34, 'Run through!', '#ffd27a', { size: 15, delay: 0.05 });
+        for (const m of standing(tv.members)) {
+          m.flash = Math.max(m.flash, 0.42);
+          m.shake = 1;
+        }
+        sfx('bolt_hit');
+        for (const m of victims) this.dropVictim(tv, m, { x: -nx, y: -ny });
+        this.afterCasualties(tv, victims.length);
+      },
+    });
+    this.anim = { t: 0, dur: dur + 0.35, step: () => {} };
+  }
+
   private playAttack(e: Extract<BattleEvent, { t: 'attack' }>) {
+    if (e.via) {
+      this.playThrough(e);
+      return;
+    }
     const av = this.views.get(e.uid)!;
     const tv = this.views.get(e.target)!;
     const attacker = this.b.unit(e.uid);
@@ -1230,6 +1351,11 @@ export class BattleScene implements Scene {
     const victims = killed > 0 ? this.pickVictims(tv, killed, { x: -nx, y: -ny }) : [];
     let next = 0;
     sfx('swing');
+    // A war wagon lurches into its ram as the crew shove.
+    if (isEngine(attacker.typeId)) {
+      av.engineAtk = total;
+      sfx('smash');
+    }
     let swung2 = false;
     this.anim = {
       t: 0,
@@ -1345,15 +1471,22 @@ export class BattleScene implements Scene {
     len: number,
   ) {
     const attacker = this.b.unit(e.uid);
+    if (isEngine(attacker.typeId)) {
+      this.playEngineShot(e, av, tv, order, killed, showHit, nx, ny, len);
+      return;
+    }
+    // Mages and shamans loose bolts of their own power between spells.
+    const caster = attacker.tags.includes('caster');
+    const glow = attacker.faction === 'player' ? '#8fc8ff' : '#a6ff5a';
     const bolt = attacker.typeId === 'crossbowman';
     const flight = clamp(len / 1000, 0.2, 0.55);
-    const aim = 0.24;
-    const beat = bolt ? 0.07 : 0.05;
+    const aim = caster ? 0.34 : 0.24;
+    const beat = bolt ? 0.07 : caster ? 0.09 : 0.05;
     const shooters = order.map((m, i) => ({ m, at: aim + i * beat + Math.random() * 0.02, fired: false }));
     const victims = killed > 0 ? this.pickVictims(tv, killed, { x: -nx, y: -ny }) : [];
     const targets = standing(tv.members);
     const total = aim + (shooters.length - 1) * beat + flight + 0.3;
-    sfx(bolt ? 'crossbow' : 'bow');
+    sfx(caster ? 'cast' : bolt ? 'crossbow' : 'bow');
     let volleySound = false;
     this.anim = {
       t: 0,
@@ -1386,20 +1519,23 @@ export class BattleScene implements Scene {
             }
             this.fx.shoot({
               x0: from.x + nx * 8,
-              y0: from.y - 28,
+              y0: from.y - (caster ? 40 : 28),
               x1: to.x,
               y1: to.y,
               t: 0,
               dur: flight * (0.92 + Math.random() * 0.16),
-              arc: bolt ? len * 0.05 : len * 0.16,
-              kind: bolt ? 'bolt' : 'arrow',
-              scale: 0.62,
-              stick: !e.hit,
+              arc: bolt || caster ? len * 0.05 : len * 0.16,
+              kind: caster ? 'orb' : bolt ? 'bolt' : 'arrow',
+              color: caster ? glow : undefined,
+              scale: caster ? 0.8 : 0.62,
+              stick: !e.hit && !caster,
               onHit: () => {
                 showHit();
+                if (caster) this.fx.burst(to.x, to.y, 0, 6, { shape: 'glow', color: glow, speed: 70, vz: 0, gravity: 0, size: 3, max: 0.35 });
                 if (victim) this.dropVictim(tv, victim, { x: -nx, y: -ny });
               },
             });
+            if (caster) this.fx.burst(from.x + nx * 8, from.y - 40, 0, 5, { shape: 'glow', color: glow, speed: 40, vz: 0, gravity: 0, size: 3, max: 0.3 });
             if (!volleySound && i === Math.floor(shooters.length / 2) && shooters.length > 2) {
               volleySound = true;
               sfx(bolt ? 'crossbow' : 'bow');
@@ -1428,6 +1564,393 @@ export class BattleScene implements Scene {
     };
   }
 
+  /**
+   * A ballista looses: the crew heave on the windlass, the arms snap forward
+   * and one great bolt flies. Everyone it kills drops as it lands.
+   */
+  private playEngineShot(
+    e: Extract<BattleEvent, { t: 'attack' }>,
+    av: UnitView,
+    tv: UnitView,
+    crew: Member[],
+    killed: number,
+    showHit: () => void,
+    nx: number,
+    ny: number,
+    len: number,
+  ) {
+    const aim = 0.34;
+    const flight = clamp(len / 1500, 0.16, 0.42);
+    const victims = killed > 0 ? this.pickVictims(tv, killed, { x: -nx, y: -ny }) : [];
+    const total = aim + flight + 0.4;
+    let fired = false;
+    this.anim = {
+      t: 0,
+      dur: total,
+      step: (f) => {
+        const t = f * total;
+        for (const m of crew) m.pose = t < aim + 0.12 ? 'atk' : 'idle';
+        if (fired || t < aim) return;
+        fired = true;
+        av.engineAtk = 0.6;
+        const p = this.viewPos(av);
+        const o = engineOffset(av.facing);
+        const x0 = p.x + o.x + nx * 20;
+        const y0 = p.y + o.y - 24 + ny * 10;
+        const tp = this.viewPos(tv);
+        const to = e.hit ? { x: tp.x, y: tp.y - 22 } : { x: tp.x + (Math.random() - 0.5) * 120, y: tp.y + (Math.random() - 0.5) * 44 };
+        sfx('ballista');
+        this.cam.shake = Math.max(this.cam.shake, 0.12);
+        this.fx.burst(p.x + o.x, p.y + o.y, 0, 6, { shape: 'puff', color: 'rgba(190,165,120,1)', speed: 40, vz: 20, gravity: 10, size: 6, max: 0.6 });
+        this.fx.shoot({
+          x0,
+          y0,
+          x1: to.x,
+          y1: to.y,
+          t: 0,
+          dur: flight,
+          arc: len * 0.03,
+          kind: 'bolt',
+          scale: 1.5,
+          stick: !e.hit,
+          onHit: () => {
+            showHit();
+            if (!e.hit) return;
+            this.fx.burst(to.x, to.y, 0, 10, { shape: 'spark', colors: ['#d64a3a', '#a3261c', '#c9a27a'], speed: 170, vz: 60, gravity: 220, size: 3, max: 0.5 });
+            for (const m of victims) this.dropVictim(tv, m, { x: -nx, y: -ny });
+          },
+        });
+      },
+      done: () => {
+        showHit();
+        for (const m of victims) this.dropVictim(tv, m, { x: -nx, y: -ny });
+        this.afterCasualties(tv, victims.length);
+        for (const m of crew) m.pose = 'idle';
+      },
+    };
+  }
+
+  /** Where a caster's power gathers: the head of his staff. */
+  private staffTip(v: UnitView, m: Member) {
+    const q = this.memberPos(v, m);
+    const u = this.b.unit(v.uid);
+    const side = v.facing === 1 || v.facing === 2 ? -1 : 1;
+    return { x: q.x + side * 7, y: q.y - memberHeight(u.typeId) - 6 };
+  }
+
+  /**
+   * A spell or a war machine's stone, from the casters' wind-up to every
+   * squad it reaches. The rules rolled each squad's damage once; this only
+   * shows it, at the moment the effect arrives there.
+   */
+  private playSpell(e: Extract<BattleEvent, { t: 'spell' }>) {
+    const ab = ABILITIES[e.ability];
+    const av = this.views.get(e.uid)!;
+    const caster = this.b.unit(e.uid);
+    const kind = ab.fx ?? 'lightning';
+    const engine = isEngine(caster.typeId);
+    const casters = standing(av.members);
+    const ap = this.viewPos(av);
+    const ground = (p: Pt) => ({ x: isoX(p.x, p.y), y: isoY(p.x, p.y, tileAt(this.b.map, p.x, p.y)?.h ?? 0) });
+    const aimPt = ground(e.at);
+    const impPt = ground(e.impact);
+    const views = e.hits.map((h) => this.views.get(h.uid)!);
+    const body = (v: UnitView) => {
+      const p = this.viewPos(v);
+      return { x: p.x, y: p.y - 24 };
+    };
+    if (caster.faction === 'player' || e.hits.some((h) => this.b.unit(h.uid).faction === 'player')) this.focusOn((av.x + e.at.x) / 2, (av.y + e.at.y) / 2, false);
+    const glowOf: Record<string, string> = { lightning: '#8fc8ff', frost: '#cfeeff', heal: '#ffe48a', circle: '#ffe48a', fire: '#ff9a30', blood: '#ff4030', gut: '#c0ff60', stone: '#c9b79a', rock: '#c9b79a' };
+    const glow = glowOf[kind];
+    const applied = new Set<number>();
+    const apply = (i: number) => {
+      if (applied.has(i) || i >= e.hits.length) return;
+      applied.add(i);
+      const h = e.hits[i];
+      const v = views[i];
+      const tp = this.viewPos(v);
+      const src = h.role === 'main' || h.role === 'aura' ? ap : impPt;
+      const len = Math.hypot(src.x - tp.x, src.y - tp.y) || 1;
+      this.applySpellHit(e, h, { x: (src.x - tp.x) / len, y: (src.y - tp.y) / len });
+    };
+    const applyAll = () => e.hits.forEach((_, i) => apply(i));
+    const pose = (on: boolean) => {
+      for (const m of casters) m.pose = on ? 'atk' : 'idle';
+    };
+    const gather = (amount: number) => {
+      if (engine) return;
+      for (const m of casters) {
+        if (Math.random() > amount) continue;
+        const s = this.staffTip(av, m);
+        this.fx.burst(s.x + (Math.random() - 0.5) * 6, s.y + (Math.random() - 0.5) * 6, 0, 1, { shape: 'glow', color: glow, speed: 18, vz: 0, gravity: -30, size: 2.6, max: 0.45 });
+      }
+    };
+    let total = 1;
+    let step: (t: number) => void = () => {};
+    if (!engine) sfx('cast');
+
+    if (kind === 'lightning') {
+      const at = 0.5;
+      const gap = 0.16;
+      total = at + gap * Math.max(1, e.hits.length) + 0.45;
+      let done = 0;
+      step = (t) => {
+        pose(t < at + 0.35);
+        if (t < at) return gather(0.7);
+        if (!e.hit && done === 0) {
+          done = 1;
+          const miss = { x: aimPt.x + (Math.random() - 0.5) * 70, y: aimPt.y + (Math.random() - 0.5) * 26 };
+          for (const m of casters) {
+            const s = this.staffTip(av, m);
+            this.fx.lightning(s.x, s.y, miss.x, miss.y, { width: 2.4 });
+          }
+          this.fx.mark(miss.x, miss.y, 'scorch', 0.5);
+          this.flash = { a: 0.6, color: '170,200,255' };
+          sfx('lightning');
+          const tv = this.views.get(unitAt(this.b.units, e.at.x, e.at.y)?.uid ?? '') ?? av;
+          const head = this.headPos(tv);
+          this.fx.text(head.x, head.y - 4, 'Miss', '#c8c8c8', { size: 20 });
+          return;
+        }
+        while (e.hit && done < e.hits.length && t >= at + gap * done) {
+          const to = body(views[done]);
+          if (done === 0) {
+            for (const m of casters) {
+              const s = this.staffTip(av, m);
+              this.fx.lightning(s.x, s.y, to.x, to.y, { width: 2.8, branches: 2 });
+            }
+            this.flash = { a: 1, color: '170,200,255' };
+            this.cam.shake = Math.max(this.cam.shake, 0.3);
+          } else {
+            const from = body(views[done - 1]);
+            this.fx.lightning(from.x, from.y, to.x, to.y, { width: 2.2, branches: 1 });
+            this.flash = { a: Math.max(this.flash.a, 0.5), color: '170,200,255' };
+          }
+          this.fx.burst(to.x, to.y, 0, 14, { shape: 'glow', color: '#bcd8ff', speed: 150, vz: 0, gravity: 0, size: 3, max: 0.35 });
+          this.fx.mark(to.x, to.y + 24, 'scorch', 0.55);
+          sfx('lightning');
+          apply(done);
+          done++;
+        }
+      };
+    } else if (kind === 'frost') {
+      const at = 0.4;
+      const flight = 0.32;
+      total = at + flight + 0.55;
+      let fired = false;
+      let landed = false;
+      step = (t) => {
+        pose(t < at + 0.3);
+        if (t < at) return gather(0.7);
+        if (!fired) {
+          fired = true;
+          for (const m of casters) {
+            for (let k = 0; k < 2; k++) {
+              const s = this.staffTip(av, m);
+              const spread = e.hit ? 26 : 90;
+              this.fx.shoot({ x0: s.x, y0: s.y, x1: aimPt.x + (Math.random() - 0.5) * spread, y1: aimPt.y - 16 + (Math.random() - 0.5) * spread * 0.4, t: 0, dur: flight * (0.85 + Math.random() * 0.3), arc: 18, kind: 'shard', scale: 1 });
+            }
+          }
+        }
+        if (!landed && t >= at + flight) {
+          landed = true;
+          sfx('frost');
+          if (!e.hit) {
+            const tv = this.views.get(unitAt(this.b.units, e.at.x, e.at.y)?.uid ?? '') ?? av;
+            const head = this.headPos(tv);
+            this.fx.text(head.x, head.y - 4, 'Miss', '#c8c8c8', { size: 20 });
+            return;
+          }
+          this.fx.ring(aimPt.x, aimPt.y, 110, 'rgba(200,235,255,0.95)', 0.7);
+          this.fx.burst(aimPt.x, aimPt.y - 20, 0, 26, { shape: 'glow', colors: ['#e8f6ff', '#9fd8ff', '#ffffff'], speed: 170, vz: 0, gravity: 30, size: 3, max: 0.6 });
+          this.fx.burst(aimPt.x, aimPt.y - 10, 0, 14, { shape: 'spark', colors: ['#ffffff', '#cfeeff'], speed: 200, vz: 80, gravity: 260, size: 2.4, max: 0.5 });
+          for (const v of views) {
+            const p = this.viewPos(v);
+            this.fx.mark(p.x, p.y, 'frost', 1.1, 20);
+          }
+          this.flash = { a: 0.45, color: '210,240,255' };
+          applyAll();
+        }
+      };
+    } else if (kind === 'heal' || kind === 'circle') {
+      const at = kind === 'circle' ? 0.3 : 0.38;
+      total = at + 0.12 * e.hits.length + 0.6;
+      let started = false;
+      let done = 0;
+      step = (t) => {
+        pose(t < at + 0.4);
+        if (t < at) return gather(0.6);
+        if (!started) {
+          started = true;
+          sfx('heal');
+          if (kind === 'circle') {
+            this.fx.ring(ap.x, ap.y, TW * 2.2, 'rgba(255,225,140,0.9)', 0.9);
+            this.fx.ring(ap.x, ap.y, TW * 1.4, 'rgba(255,245,200,0.7)', 0.7);
+          }
+        }
+        while (done < e.hits.length && t >= at + 0.12 * done) {
+          const v = views[done];
+          const p = this.viewPos(v);
+          this.fx.ring(p.x, p.y, 70, 'rgba(255,230,150,0.85)', 0.6);
+          // Light falls on every soldier of the squad.
+          for (const m of standing(v.members)) {
+            const q = this.memberPos(v, m);
+            this.fx.burst(q.x, q.y - 50, 0, 4, { shape: 'glow', colors: ['#fff2b0', '#c8ff9a'], speed: 12, vz: 0, gravity: -40, size: 3, max: 0.9 });
+          }
+          apply(done);
+          done++;
+        }
+      };
+    } else if (kind === 'fire') {
+      const at = 0.42;
+      const len = Math.hypot(impPt.x - ap.x, impPt.y - ap.y);
+      const flight = clamp(len / 700, 0.35, 0.8);
+      total = at + flight + 0.65;
+      let fired = false;
+      const explode = () => {
+        this.flash = { a: 0.9, color: '255,170,80' };
+        this.cam.shake = Math.max(this.cam.shake, 0.5);
+        this.fx.ring(impPt.x, impPt.y, 130, 'rgba(255,150,60,0.9)', 0.6);
+        this.fx.burst(impPt.x, impPt.y - 16, 0, 36, { shape: 'glow', colors: ['#ffe080', '#ff9a30', '#ff5a20'], speed: 190, vz: 0, gravity: -40, size: 4.5, max: 0.6 });
+        this.fx.burst(impPt.x, impPt.y - 10, 0, 16, { shape: 'spark', colors: ['#ffd27a', '#ff7a2a'], speed: 230, vz: 120, gravity: 300, size: 2.6, max: 0.6 });
+        this.fx.burst(impPt.x, impPt.y - 20, 10, 10, { shape: 'puff', colors: ['rgba(60,48,40,1)', 'rgba(90,80,70,1)'], speed: 50, vz: 40, gravity: -20, size: 14, max: 1.6 });
+        this.fx.mark(impPt.x, impPt.y, 'scorch', 1.6, 40);
+        sfx('explosion');
+        applyAll();
+      };
+      step = (t) => {
+        pose(t < at + 0.25);
+        if (t < at) return gather(0.8);
+        if (fired) return;
+        fired = true;
+        sfx('fireball');
+        const s = casters[0] ? this.staffTip(av, casters[Math.floor(casters.length / 2)]) : { x: ap.x, y: ap.y - 40 };
+        this.fx.shoot({ x0: s.x, y0: s.y, x1: impPt.x, y1: impPt.y - 14, t: 0, dur: flight, arc: len * 0.22 + 20, kind: 'fireball', scale: 1.1, onHit: explode });
+      };
+    } else if (kind === 'blood' || kind === 'gut') {
+      const at = 0.4;
+      const strike = 0.62;
+      total = 1.15;
+      let lashed = false;
+      let struck = false;
+      const tv = views[0] ?? this.views.get(unitAt(this.b.units, e.at.x, e.at.y)?.uid ?? '') ?? av;
+      step = (t) => {
+        pose(t < strike + 0.2);
+        if (t < at) return gather(0.8);
+        if (!lashed) {
+          lashed = true;
+          sfx(kind === 'blood' ? 'bloodlust' : 'hex');
+          const to = body(tv);
+          for (const m of casters) {
+            const s = this.staffTip(av, m);
+            const end = { x: to.x + (Math.random() - 0.5) * 18, y: to.y + (Math.random() - 0.5) * 10 };
+            this.fx.tendril(s.x, s.y, end.x, end.y, kind === 'blood'
+              ? { color: '#d8261a', core: '#ffb08a', dark: '#4a0606', width: 2.2, amp: 10, life: 0.6 }
+              : { color: '#7a1424', core: '#c8ff70', dark: '#1e0408', width: 2.8, amp: 16, life: 0.65 });
+          }
+        }
+        if (struck || t < strike) return;
+        struck = true;
+        if (!e.hit) {
+          const head = this.headPos(tv);
+          this.fx.text(head.x, head.y - 4, 'Resisted', '#c8c8c8', { size: 20 });
+          return;
+        }
+        const p = this.viewPos(tv);
+        if (kind === 'blood') {
+          this.fx.ring(p.x, p.y, 80, 'rgba(255,60,40,0.9)', 0.7);
+          for (const m of standing(tv.members)) {
+            const q = this.memberPos(tv, m);
+            this.fx.burst(q.x, q.y - 30, 0, 5, { shape: 'glow', colors: ['#ff4030', '#ff9a60'], speed: 30, vz: 0, gravity: -50, size: 3, max: 0.8 });
+          }
+        } else {
+          for (const m of standing(tv.members)) {
+            const q = this.memberPos(tv, m);
+            this.fx.burst(q.x, q.y - 28, 0, 9, { shape: 'spark', colors: ['#b8291c', '#7d1a12', '#e05040'], speed: 120, vz: 70, gravity: 260, size: 3, max: 0.55 });
+          }
+          this.fx.burst(p.x, p.y - 26, 0, 12, { shape: 'glow', colors: ['#c0ff60', '#ff5040'], speed: 80, vz: 0, gravity: 0, size: 3, max: 0.45 });
+        }
+        applyAll();
+      };
+    } else {
+      // A war machine's stone: the arm swings, the stone tumbles high and smashes down.
+      const at = 0.32;
+      const len = Math.hypot(impPt.x - ap.x, impPt.y - ap.y);
+      const flight = clamp(len / 600, 0.7, 1.3);
+      total = at + flight + 0.7;
+      let fired = false;
+      const crash = () => {
+        this.cam.shake = Math.max(this.cam.shake, 0.5);
+        this.flash = { a: Math.max(this.flash.a, 0.25), color: '255,235,200' };
+        this.fx.ring(impPt.x, impPt.y, 150, 'rgba(160,130,90,0.9)', 0.7);
+        this.fx.ring(impPt.x, impPt.y, 90, 'rgba(240,225,190,0.8)', 0.5);
+        this.fx.burst(impPt.x, impPt.y, 8, 22, { shape: 'puff', colors: ['rgba(170,150,110,1)', 'rgba(130,110,80,1)', 'rgba(200,185,150,1)'], speed: 150, vz: 60, gravity: 15, size: 17, max: 1.5 });
+        this.fx.burst(impPt.x, impPt.y - 6, 0, 26, { shape: 'spark', colors: ['#8a8378', '#5a4a38', '#c9b79a', '#3a2c1e'], speed: 280, vz: 170, gravity: 400, size: 4.2, max: 0.8 });
+        // Chunks of the stone bounce away.
+        this.fx.burst(impPt.x, impPt.y - 4, 4, 6, { shape: 'dot', colors: ['#7d7568', '#9a9184'], speed: 170, vz: 150, gravity: 420, size: 5, max: 0.9 });
+        this.fx.mark(impPt.x, impPt.y, 'crater', 1.6, 60);
+        sfx('crash');
+        applyAll();
+      };
+      step = (t) => {
+        for (const m of casters) m.pose = t < at + 0.1 ? 'atk' : 'idle';
+        if (fired || t < at) return;
+        fired = true;
+        av.engineAtk = 0.8;
+        sfx('catapult');
+        const o = engineOffset(av.facing);
+        const d = DIRS[av.facing];
+        this.fx.shoot({
+          x0: ap.x + o.x - isoX(d.x, d.y) * 0.25,
+          y0: ap.y + o.y - 46,
+          x1: impPt.x,
+          y1: impPt.y - 10,
+          t: 0,
+          dur: flight,
+          arc: len * 0.45 + 90,
+          kind: 'stone',
+          scale: kind === 'rock' ? 2.1 : 1.8,
+          color: kind === 'rock' ? '#7d6e5a' : '#8a8378',
+          onHit: crash,
+        });
+      };
+    }
+    this.anim = {
+      t: 0,
+      dur: total,
+      step: (f) => step(f * total),
+      done: () => {
+        applyAll();
+        pose(false);
+      },
+    };
+  }
+
+  /** One squad takes what the spell brought it: a wound and its dead, healing, or a frenzy. */
+  private applySpellHit(e: Extract<BattleEvent, { t: 'spell' }>, h: SpellHit, from: Pt) {
+    const ab = ABILITIES[e.ability];
+    const v = this.views.get(h.uid)!;
+    const t = this.b.unit(h.uid);
+    const caster = this.b.unit(e.uid);
+    v.hp = h.hp;
+    const head = this.headPos(v);
+    if (h.damage > 0) {
+      const col = SPELL_TEXT[ab.fx ?? 'stone'] ?? '#ffffff';
+      this.fx.text(head.x, head.y - 4, `${h.damage}`, col, { size: h.role === 'main' ? 28 : 22 });
+      if (t.faction === caster.faction) this.fx.text(head.x, head.y - 34, 'Friendly fire!', '#ffb070', { size: 14, delay: 0.05 });
+      for (const m of standing(v.members)) {
+        m.flash = Math.max(m.flash, 0.55);
+        m.shake = 1;
+      }
+      sfx(t.stats.armor >= 2 && ab.fx !== 'gut' ? 'hit_metal' : 'hit_flesh');
+      this.showCasualties(v, h.aliveBefore - h.aliveAfter, from, { reformDelay: 0.55 });
+    } else if (ab.power && !h.damage) {
+      this.fx.text(head.x, head.y - 4, 'Unhurt', '#c8c8c8', { size: 18 });
+    }
+    if (h.heal > 0) this.fx.text(head.x, head.y - 4, `+${h.heal}`, '#9ff08a', { size: 24 });
+    else if (ab.heal) this.fx.text(head.x, head.y - 4, 'Unhurt', '#d8ecc8', { size: 16 });
+  }
+
   // ---------------------------------------------------------------- update
 
   update(dt: number, time: number) {
@@ -1441,11 +1964,14 @@ export class BattleScene implements Scene {
     updateCamera(this.cam, dt);
     this.fx.update(dt);
     this.atmo.update(dt, this.w, this.h);
+    this.flash.a = Math.max(0, this.flash.a - dt * 3.2);
     for (const v of this.views.values()) {
       v.shake = Math.max(0, v.shake - dt * 3);
+      v.engineAtk = Math.max(0, v.engineAtk - dt);
       stepMembers(v.members, dt, (m) => this.addCorpse(v, m));
       v.walking = clamp(v.walking + (v.marching ? dt * 6 : -dt * 4), 0, 1);
       if (v.walking > 0) v.walkT += dt;
+      if (v.statuses.length && v.visible && v.alive > 0) this.statusMotes(v, dt);
     }
     this.focusHold = Math.max(0, this.focusHold - dt);
     const rush = this.ui.side === 'enemy' ? clamp(1 + this.queue.length / 45, 1, 1.9) : 1;
@@ -1562,6 +2088,28 @@ export class BattleScene implements Scene {
     return { tile: ground };
   }
 
+  /**
+   * The spell the cursor aims: the one chosen from the squad's panel, or, with
+   * nothing chosen, a war machine's stone when the cursor is on an enemy.
+   */
+  private aimedSpell(sel: BattleUnit | undefined, under?: BattleUnit): string | undefined {
+    if (!sel) return undefined;
+    const id = this.ui.ability;
+    if (id) return ABILITIES[id]?.kind === 'spell' ? id : undefined;
+    const primary = UNIT_TYPES[sel.typeId]?.primary;
+    if (primary && under?.faction === 'enemy' && this.b.canCast(sel, primary).ok) return primary;
+    return undefined;
+  }
+
+  /** Where a spell would be cast with the cursor on tile `t` (over unit `u`), if it can be aimed there at all. */
+  private spellAim(spellId: string, t: Pt, u?: BattleUnit): Pt | undefined {
+    const ab = ABILITIES[spellId];
+    if (ab.target === 'tile') return u ? { x: u.x, y: u.y } : t;
+    if (ab.target === 'enemy' && u && u.faction === 'enemy') return { x: u.x, y: u.y };
+    if (ab.target === 'ally' && u && u.faction === 'player') return { x: u.x, y: u.y };
+    return undefined;
+  }
+
   private refreshHover() {
     const { tile: t, unit: picked } = this.resolvePointer(this.pointer.x, this.pointer.y);
     const hover: HoverInfo = { tile: t };
@@ -1569,7 +2117,16 @@ export class BattleScene implements Scene {
     if (t) {
       const u = picked;
       if (u) hover.unit = u.uid;
-      if (sel && !this.busy && this.b.phase === 'player') {
+      const spellId = sel && !this.busy && this.b.phase === 'player' ? this.aimedSpell(sel, u) : undefined;
+      if (sel && spellId) {
+        const at = this.spellAim(spellId, t, u);
+        if (at && !sel.hasActed) hover.spell = this.b.spellPreview(sel, spellId, at);
+        // A war machine's stone that cannot fly here (too close, just moved): its crew's own attack instead.
+        if (!this.ui.ability && u && hover.spell && !hover.spell.legal) {
+          hover.spell = undefined;
+          hover.preview = this.previewAgainst(sel, u);
+        }
+      } else if (sel && !this.busy && this.b.phase === 'player') {
         if (u && u.faction === 'enemy') {
           hover.preview = this.previewAgainst(sel, u);
           const from = hover.preview?.moveFirst ? hover.preview.from : undefined;
@@ -1742,6 +2299,27 @@ export class BattleScene implements Scene {
     }
     if (this.b.phase !== 'player') return;
     const sel = this.selectedUnit();
+    const spellId = this.aimedSpell(sel, u);
+    if (sel && spellId) {
+      const at = this.spellAim(spellId, t, u);
+      if (at && this.b.cast(sel.uid, spellId, at)) {
+        this.ui.ability = undefined;
+        this.pump();
+        this.afterPlayerAction(sel);
+        return;
+      }
+      // A chosen spell that cannot be cast here stops the click; a machine's stone gives way to its crew's attack.
+      if (at && this.ui.ability) {
+        sfx('deny');
+        return;
+      }
+      if (!at && this.ui.ability) {
+        // With a spell chosen, a click on another of the company's squads picks that squad instead.
+        if (u && u.faction === 'player') this.select(u.uid);
+        else sfx('deny');
+        return;
+      }
+    }
     if (u && u.faction === 'player') {
       if (sel && u.uid === sel.uid && hv.turn && hv.facing !== undefined) {
         // Step out and back to face the edge pointed at.
@@ -1846,7 +2424,7 @@ export class BattleScene implements Scene {
     if (n >= 1 && n <= 4) {
       const u = this.selectedUnit();
       if (u) {
-        const ab = u.abilities.filter((a) => ABILITIES[a].kind !== 'attack' || ABILITIES[a].damageMult)[n - 1];
+        const ab = u.abilities.filter(isActiveAbility)[n - 1];
         if (ab) this.setAbility(ab);
       }
     }
@@ -1858,6 +2436,12 @@ export class BattleScene implements Scene {
     if (this.dangerCache) return this.dangerCache;
     const out = new Set<number>();
     for (const e of this.b.active('enemy')) {
+      // A war machine's stones fall from where it stands now: it cannot move and loose in one turn.
+      const primary = UNIT_TYPES[e.typeId]?.primary;
+      const lob = primary ? ABILITIES[primary] : undefined;
+      if (lob?.range) {
+        for (const t of this.b.map.tiles) if (dist(t, e) <= lob.range && dist(t, e) >= (lob.minRange ?? 1)) out.add(key(t.x, t.y));
+      }
       const reach = this.b.reachableFull(e);
       for (const [k] of reach) {
         const p = { x: k % 1000, y: Math.floor(k / 1000) };
@@ -1908,6 +2492,14 @@ export class BattleScene implements Scene {
     this.drawSorted(ctx, time);
     this.fx.drawAir(ctx);
     ctx.restore();
+    if (this.flash.a > 0.01) {
+      // Lightning lights up the whole field for an instant; a fireball's burst warms it.
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = `rgba(${this.flash.color},${(this.flash.a * 0.2).toFixed(3)})`;
+      ctx.fillRect(0, 0, w, h);
+      ctx.restore();
+    }
     if (this.atmo.night) this.drawNight(ctx, w, h, time);
     if (this.relief && this.relief.glow > 0) this.drawSunrise(ctx, w, h);
     this.drawOverlays(ctx, w, h, time);
@@ -2200,26 +2792,77 @@ export class BattleScene implements Scene {
         const pulse = 0.26 + 0.05 * Math.sin(time * 3);
         this.fillTiles(ctx, tiles, `rgba(105,165,255,${pulse})`, 'rgba(200,225,255,0.6)', 0.06);
       }
-      if (sel.shot && !sel.hasActed && sel.stance !== 'overwatch') {
-        // Range ring hint: tiles within range (light).
+      const ring = (r: number, color: string) => {
         ctx.save();
         ctx.setLineDash([6, 8]);
-        ctx.strokeStyle = 'rgba(255,230,160,0.35)';
+        ctx.strokeStyle = color;
         ctx.lineWidth = 2;
-        const r = sel.shot.range;
         const cx = isoX(sel.x, sel.y);
         const cy = isoY(sel.x, sel.y, tileAt(b.map, sel.x, sel.y)!.h);
         ctx.beginPath();
         ctx.ellipse(cx, cy, r * TW * 0.7071, r * TH * 0.7071, 0, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
+      };
+      // The spell being aimed, or a war machine's stone: its reach and what it can be cast at.
+      const chosen = this.ui.ability && ABILITIES[this.ui.ability]?.kind === 'spell' ? this.ui.ability : undefined;
+      const primary = UNIT_TYPES[sel.typeId]?.primary;
+      const spellId = chosen ?? (primary && !this.ui.ability && b.canCast(sel, primary).ok ? primary : undefined);
+      if (spellId && !sel.hasActed) {
+        const ab = ABILITIES[spellId];
+        const magic = !ab.engine;
+        if (ab.range) ring(ab.range, magic ? 'rgba(200,170,255,0.55)' : 'rgba(255,210,140,0.5)');
+        if (ab.minRange) ring(ab.minRange - 0.5, 'rgba(255,140,110,0.4)');
+        const tkey = `${sel.uid}|${spellId}|${sel.x},${sel.y}|${b.turn}`;
+        if (!this.spellTargetCache || this.spellTargetCache.key !== tkey) this.spellTargetCache = { key: tkey, list: b.spellTargets(sel, spellId) };
+        const ally = ab.target === 'ally';
+        for (const t of this.spellTargetCache.list) {
+          this.fillTiles(ctx, [t], ally ? 'rgba(120,220,120,0.22)' : 'rgba(230,70,50,0.24)', ally ? 'rgba(160,240,150,0.8)' : 'rgba(255,120,90,0.8)', 0.08);
+        }
+      }
+      if (!chosen && sel.shot && !sel.hasActed && sel.stance !== 'overwatch') {
+        // Range ring hint: tiles within range (light).
+        ring(sel.shot.range, 'rgba(255,230,160,0.35)');
       }
       // Attackable enemies.
-      if (!sel.hasActed) {
+      if (!sel.hasActed && !chosen) {
         const tkey = `${sel.uid}|${this.ui.ability ?? ''}|${sel.x},${sel.y}`;
         if (!this.targetCache || this.targetCache.key !== tkey) this.targetCache = { key: tkey, list: b.targets(sel, sel, this.ui.ability) };
         const targets = this.targetCache.list;
         for (const t of targets) this.fillTiles(ctx, [t], 'rgba(230,70,50,0.28)', 'rgba(255,120,90,0.8)', 0.08);
+      }
+      // What the hovered spell would strike: the blast's ground, friends caught in it in orange.
+      const sp = this.ui.hover.spell;
+      if (sp?.legal && !this.busy) {
+        const ab = ABILITIES[sp.ability];
+        if (ab.splash) {
+          const area = [sp.at, ...neighbors(b.map, sp.at)];
+          this.fillTiles(ctx, area, 'rgba(255,170,80,0.12)', 'rgba(255,190,110,0.55)', 0.12);
+        }
+        for (const h of sp.hits) {
+          const u = b.unit(h.uid);
+          const good = h.heal || (h.ally && !h.max);
+          const fill = good ? 'rgba(140,240,130,0.32)' : h.ally ? 'rgba(255,150,40,0.42)' : 'rgba(255,80,50,0.36)';
+          this.fillTiles(ctx, [u], fill, good ? 'rgba(190,255,170,0.95)' : h.ally ? 'rgba(255,190,90,1)' : 'rgba(255,140,110,1)', 0.05);
+        }
+        // Lightning: the arcs it will jump along.
+        const chain = sp.hits.filter((h) => h.role === 'main' || h.role === 'chain').map((h) => b.unit(h.uid));
+        if (ab.chain && chain.length > 1) {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(190,215,255,0.85)';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([4, 6]);
+          ctx.lineDashOffset = -time * 40;
+          ctx.beginPath();
+          chain.forEach((u, i) => {
+            const x = isoX(u.x, u.y);
+            const y = isoY(u.x, u.y, tileAt(b.map, u.x, u.y)?.h ?? 0) - 20;
+            if (i) ctx.lineTo(x, y);
+            else ctx.moveTo(x, y);
+          });
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     }
     // Path preview.
@@ -2641,6 +3284,15 @@ export class BattleScene implements Scene {
   /** Whether a squad's drawn soldiers cover a world point (with a little tolerance). */
   private bodyCovers(v: UnitView, u: BattleUnit, wx: number, wy: number, tol = 4): boolean {
     const k0 = memberScale(u);
+    const engine = v.alive > 0 ? this.engineOf(v, u) : null;
+    if (engine) {
+      const k = engine.s.scale * k0;
+      for (const [ox, oy] of [[0, 0], [tol, 0], [-tol, 0], [0, tol], [0, -tol]]) {
+        const lx = engine.flip ? engine.s.ax - (wx + ox - engine.x) / k : engine.s.ax + (wx + ox - engine.x) / k;
+        const ly = engine.s.ay + (wy + oy - engine.y) / k;
+        if (opaqueAt(engine.s, lx, ly)) return true;
+      }
+    }
     for (const m of standing(v.members)) {
       const { s, flip } = this.memberSprite(v, m);
       const p = this.memberPos(v, m);
@@ -2675,9 +3327,49 @@ export class BattleScene implements Scene {
     };
   }
 
+  /** Lasting conditions show on the soldiers: frost glitter, the red haze of a frenzy, dripping blood. */
+  private statusMotes(v: UnitView, dt: number) {
+    const live = standing(v.members);
+    if (!live.length) return;
+    for (const s of v.statuses) {
+      if (Math.random() > (s === 'bleeding' ? 4 : 6) * dt) continue;
+      const m = live[Math.floor(Math.random() * live.length)];
+      const q = this.memberPos(v, m);
+      const x = q.x + (Math.random() - 0.5) * 14;
+      if (s === 'chilled') this.fx.burst(x, q.y - 8 - Math.random() * 34, 0, 1, { shape: 'glow', color: '#e6f6ff', speed: 6, vz: 0, gravity: -6, size: 2, max: 1 });
+      else if (s === 'bloodlust') this.fx.burst(x, q.y - 16 - Math.random() * 26, 0, 1, { shape: 'glow', color: '#ff3a20', speed: 10, vz: 0, gravity: -34, size: 2.6, max: 0.75 });
+      else this.fx.burst(x, q.y - 4, 14 + Math.random() * 10, 1, { shape: 'dot', color: '#9a1a12', speed: 4, vz: 0, gravity: 220, size: 2.2, max: 0.6 });
+    }
+  }
+
+  /** The war machine of a crew squad: its sprite, where it stands and which way it is drawn. */
+  private engineOf(v: UnitView, u: BattleUnit): { s: Sprite; flip: boolean; x: number; y: number; oy: number } | null {
+    if (!isEngine(u.typeId)) return null;
+    const p = this.viewPos(v);
+    const o = engineOffset(v.facing);
+    // The engine moves with its crew: shoved forward when they ram or heave, rocked when they are struck.
+    const live = standing(v.members);
+    let lx = 0;
+    let ly = 0;
+    for (const m of live) {
+      lx += m.lunge.x;
+      ly += m.lunge.y;
+    }
+    if (live.length) {
+      lx /= live.length;
+      ly /= live.length;
+    }
+    const pose = v.engineAtk > 0 && !v.routing ? 'atk' : 'idle';
+    const s = sprite(`${u.typeId}_${pose}_${facesCamera(v.facing) ? 'f' : 'b'}`, u.variant);
+    const shake = v.shake ? Math.sin(performance.now() * 0.055) * v.shake * 3 : 0;
+    return { s, flip: v.facing === 0 || v.facing === 2, x: p.x + o.x + lx + shake, y: p.y + o.y + ly - v.hop, oy: o.y };
+  }
+
   private drawSquadShadow(ctx: CanvasRenderingContext2D, v: UnitView, u: BattleUnit) {
     const k = memberScale(u);
-    const big = u.size <= 3 ? 1.5 : UNIT_TYPES[u.typeId].size === 'small' ? 0.8 : 1;
+    const def = UNIT_TYPES[u.typeId];
+    const big = def.crew ? 0.85 : u.size <= 3 && def.size === 'large' ? 1.5 : def.size === 'small' ? 0.8 : 1;
+    const engine = this.engineOf(v, u);
     ctx.save();
     ctx.globalAlpha = v.alpha;
     ctx.fillStyle = 'rgba(20,25,10,0.3)';
@@ -2686,6 +3378,11 @@ export class BattleScene implements Scene {
       const p = this.memberPos(v, m);
       ctx.beginPath();
       ctx.ellipse(p.x, p.y + 1, 14 * big, 6.5 * big, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (engine && v.alive > 0) {
+      ctx.beginPath();
+      ctx.ellipse(engine.x, engine.y + 2, 40, 17, 0, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
@@ -2697,6 +3394,19 @@ export class BattleScene implements Scene {
       const p = this.memberPos(v, m);
       drawCastShadow(ctx, s, p.x, p.y, flip, k, 0.16 * v.alpha);
     }
+    if (engine && v.alive > 0) drawCastShadow(ctx, engine.s, engine.x, engine.y, engine.flip, k, 0.18 * v.alpha);
+  }
+
+  /** Frost on a chilled squad, the red of a frenzy: a tinted copy of the figure over it. */
+  private drawTints(ctx: CanvasRenderingContext2D, v: UnitView, s: Sprite, x: number, y: number, opts: { flip: boolean; scale: number; sy?: number; rot?: number; alpha: number }, time: number, phase: number) {
+    for (const st of v.statuses) {
+      if (st === 'bleeding') continue;
+      const chill = st === 'chilled';
+      const a = chill ? 0.42 : 0.22 + 0.09 * Math.sin(time * 6 + phase);
+      drawSprite(ctx, s, x, y, { ...opts, alpha: opts.alpha * a, img: tintOf(s, chill ? '#7cc4ff' : '#c81e10') });
+      // Rime on the chilled: a faint frosty sheen over the blue.
+      if (chill) drawSprite(ctx, s, x, y, { ...opts, alpha: opts.alpha * 0.12, img: tintOf(s, '#ffffff') });
+    }
   }
 
   /** `dim` darkens the squad (a wave still massing beyond the edge). */
@@ -2707,7 +3417,27 @@ export class BattleScene implements Scene {
     const bodies = v.members.filter((m) => m.alive || m.dying).sort((a, b) => a.y + a.lunge.y - (b.y + b.lunge.y));
     const bearer = this.standardBearer(v, u);
     const champ = championOf(u);
+    // A war machine stands among its crew: those behind it are drawn first.
+    const engine = v.alive > 0 ? this.engineOf(v, u) : null;
+    let engineDrawn = !engine;
+    const drawEngine = () => {
+      if (engineDrawn || !engine) return;
+      engineDrawn = true;
+      const alpha = v.alpha * fade;
+      const o = { flip: engine.flip, scale: baseScale, alpha };
+      drawSprite(ctx, engine.s, engine.x, engine.y, o);
+      if (dim > 0) drawSprite(ctx, engine.s, engine.x, engine.y, { ...o, alpha: alpha * dim, img: shadowOf(engine.s) });
+      this.drawTints(ctx, v, engine.s, engine.x, engine.y, o, time, 0);
+      const flash = Math.max(0, ...standing(v.members).map((m) => m.flash));
+      if (flash > 0) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        drawSprite(ctx, engine.s, engine.x, engine.y, { ...o, alpha: flash * 0.6, img: flashOf(engine.s) });
+        ctx.restore();
+      }
+    };
     for (const m of bodies) {
+      if (engine && !engineDrawn && m.y + m.lunge.y > engine.oy) drawEngine();
       const { s, flip } = this.memberSprite(v, m);
       const q = this.memberPose(v, m, time);
       // The champion stands a head taller than his guard.
@@ -2730,6 +3460,7 @@ export class BattleScene implements Scene {
       }
       drawSprite(ctx, s, q.x, q.y, { flip, scale, sy: q.breathe, rot: q.rot, alpha });
       if (dim > 0) drawSprite(ctx, s, q.x, q.y, { flip, scale, sy: q.breathe, rot: q.rot, alpha: alpha * dim, img: shadowOf(s) });
+      if (v.statuses.length) this.drawTints(ctx, v, s, q.x, q.y, { flip, scale, sy: q.breathe, rot: q.rot, alpha }, time, m.phase);
       if (m.flash > 0) {
         ctx.save();
         ctx.globalCompositeOperation = 'lighter';
@@ -2738,6 +3469,7 @@ export class BattleScene implements Scene {
       }
       if (m === bearer && (fighting || v.reserve)) this.drawStandard(ctx, u, q.x, q.y, flip, time, alpha);
     }
+    drawEngine();
   }
 
   /** The soldier carrying the squad's standard: the middle of the rear rank. */
@@ -2860,6 +3592,7 @@ export class BattleScene implements Scene {
       else if (v.stance === 'shieldwall') icon('WALL', '#e9d58f');
       else if (v.stance === 'spearwall') icon('SPEARS', '#e9d58f');
       else if (v.stance === 'overwatch') icon('WATCH', '#e9d58f');
+      for (const st of v.statuses) icon(STATUS_LABEL[st], STATUS_COLOR[st]);
       if (u.leader) icon('★', '#ffcf5a');
       if (u.tags.includes('warchief')) icon('WARCHIEF', '#ffcf5a');
       if (u.tags.includes('herald') && this.b.horn === 'waiting' && this.b.objective.hornTurn !== undefined) {

@@ -16,6 +16,7 @@ const Grid = preload("res://scripts/rules/grid.gd")
 const MapGen = preload("res://scripts/rules/mapgen.gd")
 const Battle = preload("res://scripts/rules/battle.gd")
 const Soldier = preload("res://scripts/meta/soldier.gd")
+const Squad = preload("res://scripts/rules/squad.gd")
 
 
 static func roll_encounter(encounter_id: String, rng: RefCounted, depth: int) -> Dictionary:
@@ -78,7 +79,7 @@ static func roll_encounter(encounter_id: String, rng: RefCounted, depth: int) ->
 
 ## Deployment order: shields in front, then spears and levies, missiles at the back.
 static func _rank(u: Dictionary) -> int:
-	if u.get("shot") != null:
+	if Squad.is_backline(u):
 		return 3
 	if u.typeId == "footman" or u.typeId == "collie_guard":
 		return 0
@@ -108,8 +109,8 @@ static func deploy_player(map: Dictionary, units: Array, ambush: bool) -> void:
 		var mid := {"x": map.w / 2.0 - 0.5, "y": map.h / 2.0 - 0.5}
 		JS.sort(zone, func(a: Dictionary, b: Dictionary) -> float: return Grid.dist(a, mid) - Grid.dist(b, mid))
 		# Ranged in the middle, melee around them.
-		var order: Array = sorted.filter(func(u: Dictionary) -> bool: return u.get("shot") != null)
-		order.append_array(sorted.filter(func(u: Dictionary) -> bool: return u.get("shot") == null))
+		var order: Array = sorted.filter(func(u: Dictionary) -> bool: return Squad.is_backline(u))
+		order.append_array(sorted.filter(func(u: Dictionary) -> bool: return not Squad.is_backline(u)))
 		var i := 0
 		for u in order:
 			if i >= zone.size():
@@ -147,7 +148,7 @@ static func deploy_player(map: Dictionary, units: Array, ambush: bool) -> void:
 		# Only the narrow ways in: a long open edge is not a gate.
 		if ways.size() > 0 and ways.size() <= 8:
 			var used := {}
-			var holders: Array = sorted.filter(func(u: Dictionary) -> bool: return u.get("shot") == null and not u.tags.has("militia"))
+			var holders: Array = sorted.filter(func(u: Dictionary) -> bool: return not Squad.is_backline(u) and not u.tags.has("militia"))
 			var rest: Array = sorted.filter(func(u: Dictionary) -> bool: return not holders.has(u))
 			for i in ways.size():
 				if i < holders.size():
@@ -214,8 +215,8 @@ static func _take(used: Dictionary, p: Dictionary, u: Dictionary) -> void:
 
 static func deploy_enemies(map: Dictionary, units: Array, rng: RefCounted, ambush: bool) -> void:
 	var zone: Array = rng.shuffle(map.enemyDeploy.duplicate())
-	var melee: Array = units.filter(func(u: Dictionary) -> bool: return u.get("shot") == null)
-	var ranged: Array = units.filter(func(u: Dictionary) -> bool: return u.get("shot") != null)
+	var melee: Array = units.filter(func(u: Dictionary) -> bool: return not Squad.is_backline(u))
+	var ranged: Array = units.filter(func(u: Dictionary) -> bool: return Squad.is_backline(u))
 	var mid_y: float = map.h / 2.0
 	# Ranged prefer rows far from the player; melee the near rows.
 	var far := func(p: Dictionary) -> float: return -absf(p.y - mid_y) if ambush else float(p.y)

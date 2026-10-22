@@ -1,10 +1,42 @@
 ## Shared helpers for the world/meta parity tests (no tests of its own).
-## Golden files come from tools/parity/{maps,meta,setup,campaign}_golden.ts.
+## Golden files were first recorded from the archived TypeScript game by
+## tools/parity/{maps,meta,setup,campaign}_golden.ts; those whose tests can
+## re-record (`MERIDIUS_RECORD=1`) are now written by the port itself.
 extends RefCounted
 
 const JS = preload("res://scripts/core/js.gd")
 
 const GOLDEN := "res://tests/fixtures/golden/"
+
+
+## Whether this run re-records golden files (MERIDIUS_RECORD=1) instead of comparing.
+static func recording() -> bool:
+	return OS.get_environment("MERIDIUS_RECORD") == "1"
+
+
+## A deep copy as a golden file holds it (the live game goes on changing what
+## a snapshot refers to); non-finite numbers become null, as the original's
+## JSON.stringify wrote them.
+static func jsonable(v: Variant) -> Variant:
+	if v is float:
+		return v if is_finite(v) else null
+	if v is Array:
+		return v.map(func(x): return jsonable(x))
+	if v is Dictionary:
+		var d := {}
+		for k in v:
+			d[k] = jsonable(v[k])
+		return d
+	if typeof(v) >= TYPE_PACKED_BYTE_ARRAY and typeof(v) <= TYPE_PACKED_VECTOR4_ARRAY:
+		return jsonable(Array(v))
+	return v
+
+
+## Writes a golden file (compact, keys in their order, numbers in full precision).
+static func write_golden(path: String, data: Variant) -> void:
+	var f := FileAccess.open(path if path.begins_with("res://") else GOLDEN + path, FileAccess.WRITE)
+	f.store_string(JSON.stringify(data, "", false, true) + "\n")
+	f.close()
 
 
 ## Parses a golden JSON file. `normalize` turns integral numbers into ints (use

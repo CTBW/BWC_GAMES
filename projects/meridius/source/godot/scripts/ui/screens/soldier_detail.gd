@@ -74,6 +74,10 @@ func refresh() -> void:
 	var all: Dictionary = Game.can_reinforce(g, so, missing)
 	var times := func(r: Array) -> String:
 		return "%d–%d × %d = %d–%d" % [r[0], r[1], so.men, r[0] * so.men, r[1] * so.men]
+	var caster: bool = (def.get("tags", []) as Array).has("caster")
+	var crew: bool = def.has("crew")
+	var who := "crewmen" if crew else ("mages" if caster else "soldiers")
+	var lob: Dictionary = DB.ABILITIES.get(def.primary, {}) if def.get("primary") != null else {}
 
 	var d := Modal.dialog(760)
 	var col := UI.vbox(0)
@@ -95,16 +99,16 @@ func refresh() -> void:
 	name_edit.text_submitted.connect(func(_t): close())
 	id_col.add_child(name_edit)
 	id_col.add_child(UI.gap(0, 4))
-	var who := UI.hbox(6)
-	who.add_child(Icon.type_icon(so.typeId, 18))
-	who.add_child(UI.rich("[b]%s[/b] %s [color=#8a7356]· %s[/color]" % [UI.rank_name(so.level), def.plural, def.role], "BodyText"))
-	(who.get_child(1) as RichTextLabel).autowrap_mode = TextServer.AUTOWRAP_OFF
-	(who.get_child(1) as RichTextLabel).size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	who.add_child(MenPips.make(so.men, size))
+	var who_row := UI.hbox(6)
+	who_row.add_child(Icon.type_icon(so.typeId, 18))
+	who_row.add_child(UI.rich("[b]%s[/b] %s [color=#8a7356]· %s[/color]" % [UI.rank_name(so.level), def.plural, def.role], "BodyText"))
+	(who_row.get_child(1) as RichTextLabel).autowrap_mode = TextServer.AUTOWRAP_OFF
+	(who_row.get_child(1) as RichTextLabel).size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	who_row.add_child(MenPips.make(so.men, size))
 	if so.get("promoted"):
-		who.add_child(Tag.make("Promoted", "gold"))
-	who.add_child(Tag.make("%d CP" % Soldier.command_cost(so), "blue", "cp"))
-	id_col.add_child(who)
+		who_row.add_child(Tag.make("Promoted", "gold"))
+	who_row.add_child(Tag.make("%d CP" % Soldier.command_cost(so), "blue", "cp"))
+	id_col.add_child(who_row)
 	id_col.add_child(UI.gap(0, 6))
 	id_col.add_child(UI.rich(UI.esc(def.blurb), "SmallText"))
 	id_col.add_child(UI.gap(0, 8))
@@ -136,11 +140,17 @@ func refresh() -> void:
 	var stats := UI.vbox(4)
 	col.add_child(stats)
 	var ranged: Variant = st.get("ranged", 0)
+	# A mangonel's stone in place of a shot; mages loose arcane bolts, a ballista its bolt.
+	var missile: Array
+	if lob.get("power") != null:
+		missile = ["Stone", times.call(lob.power), "%s: %d–%d per crewman at the engine, half to everyone beside the squad struck." % [lob.name, lob.power[0], lob.power[1]]]
+	else:
+		missile = ["Arcane bolt" if caster else ("Bolt" if crew else "Shot damage"), times.call(dmg.shot) if dmg.get("shot") != null else "–",
+			("Each of the %d %s looses for %d–%d before armour." % [so.men, who, dmg.shot[0], dmg.shot[1]]) if dmg.get("shot") != null else "No missile weapon."]
 	var cells := [
-		[["Melee", str(st.melee)], ["Ranged", str(ranged) if ranged else "–"], ["Defense", str(st.defense)], ["vs. missiles", str(st.rangedDefense)]],
-		[["Armour", JS.to_fixed(st.armor * so.armorCondition, 1)], ["Move", str(st.move)], ["Shield", ("+%d" % def.shieldFront) if def.get("shieldFront") else "–"], ["Soldiers", "%d/%d" % [so.men, size]]],
-		[["Melee damage", times.call(dmg.melee), "Each of the %d soldiers strikes for %d–%d before armour." % [so.men, dmg.melee[0], dmg.melee[1]]],
-			["Shot damage", times.call(dmg.shot) if dmg.get("shot") != null else "–", ("Each of the %d soldiers looses a bolt for %d–%d before armour." % [so.men, dmg.shot[0], dmg.shot[1]]) if dmg.get("shot") != null else "No missile weapon."]],
+		[["Melee", str(st.melee)], ["Spell skill" if caster else ("Crew skill" if crew else "Ranged"), str(ranged) if ranged else "–"], ["Defense", str(st.defense)], ["vs. missiles", str(st.rangedDefense)]],
+		[["Armour", JS.to_fixed(st.armor * so.armorCondition, 1)], ["Move", str(st.move)], ["Shield", ("+%d" % def.shieldFront) if def.get("shieldFront") else "–"], ["Crew" if crew else ("Mages" if caster else "Soldiers"), "%d/%d" % [so.men, size]]],
+		[["Melee damage", times.call(dmg.melee), "Each of the %d %s strikes for %d–%d before armour." % [so.men, who, dmg.melee[0], dmg.melee[1]]], missile],
 		[["Fatigue", Soldier.fatigue_label(so.fatigue)], ["Battles", str(so.battles)], ["Squads slain", str(so.kills), "Enemy squads destroyed"], null],
 	]
 	for row_cells in cells:
@@ -158,9 +168,21 @@ func refresh() -> void:
 	var eqc := UI.vbox(0)
 	eq.add_child(eqc)
 	eqc.add_child(UI.label("Equipment", "H4Label"))
-	eqc.add_child(_icon_line("sword", "%s [color=#8a7356](tier %d)[/color]" % [weapon.name if weapon != null else "", so.weaponTier]))
-	eqc.add_child(_icon_line("shield", "%s [color=#8a7356](tier %d, %d%%)[/color]" % [armor.name if armor != null else "", so.armorTier, JS.rnd(so.armorCondition * 100.0)]))
-	if def.get("shot"):
+	if weapon != null:
+		eqc.add_child(_icon_line("sword", "%s [color=#8a7356](tier %d)[/color]" % [weapon.name, so.weaponTier]))
+	else:
+		# Squads with no weapon line: the engine and its tackle, staves and spellbooks.
+		var gear := "–"
+		if crew:
+			gear = "The %s and its tackle" % str(def.name).to_lower()
+		elif caster:
+			gear = "Staves and spellbooks"
+		eqc.add_child(_icon_line("engine" if crew else ("staff" if caster else "sword"), "%s [color=#8a7356](not forged at the armoury)[/color]" % gear))
+	if armor != null:
+		eqc.add_child(_icon_line("shield", "%s [color=#8a7356](tier %d, %d%%)[/color]" % [armor.name, so.armorTier, JS.rnd(so.armorCondition * 100.0)]))
+	else:
+		eqc.add_child(_icon_line("shield", "Robes, no armour" if caster else "Leather aprons"))
+	if def.get("shot") != null and def.shot.get("ammo") != null:
 		eqc.add_child(_icon_line("bolts", "%d bolts in the quiver" % so.ammo))
 	var ab := UI.panel("ParchmentCard")
 	var abc := UI.vbox(0)
@@ -176,6 +198,10 @@ func refresh() -> void:
 		abc.add_child(UI.label("Promotion unlocks: %s" % DB.ABILITIES[def.promotion].name, "SmallMutedLabel"))
 	if (def.get("tags", []) as Array).has("firstStrike"):
 		abc.add_child(UI.rich("Passive: strikes first at enemies that close in from the front.", "SmallMutedText"))
+	if (def.get("tags", []) as Array).has("impale"):
+		abc.add_child(UI.rich("Passive: a bolt that strikes home goes on into the next foe behind, at half force.", "SmallMutedText"))
+	if crew:
+		abc.add_child(UI.rich("A war machine: it cannot loose in a turn it has moved.", "SmallMutedText"))
 	col.add_child(UI.equal_grid([eq, ab], 2, 8, 8))
 
 	# Lasting injuries.

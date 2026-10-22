@@ -216,5 +216,59 @@ export function sfx(name: string) {
       burst(c, { dur: 0.3, type: 'lowpass', freq: 220, gain: 0.5, sweep: 80 });
       tone(c, { freq: 70, dur: 0.3, gain: 0.25, slide: 40 });
       break;
+    case 'cast':
+      // Power gathering: a rising hum and a breath of air.
+      tone(c, { freq: 220, dur: 0.45, type: 'sine', gain: 0.06, attack: 0.15, slide: 440 });
+      burst(c, { dur: 0.45, type: 'bandpass', freq: 400, sweep: 1600, q: 3, gain: 0.08, attack: 0.15 });
+      break;
+    case 'lightning':
+      // A crack and the crackle of the arc, then thunder rolling.
+      burst(c, { dur: 0.06, type: 'highpass', freq: 2500, gain: 0.45 });
+      for (let i = 0; i < 5; i++) burst(c, { dur: 0.04, type: 'highpass', freq: 1800 + i * 300, gain: 0.18, delay: 0.04 + i * 0.05 + Math.random() * 0.02 });
+      burst(c, { dur: 1.1, type: 'lowpass', freq: 260, sweep: 70, gain: 0.35, attack: 0.05, delay: 0.08 });
+      break;
+    case 'frost':
+      [1760, 2350, 2960].forEach((f, i) => tone(c, { freq: f * r(), dur: 0.5, type: 'sine', gain: 0.03, attack: 0.01, delay: i * 0.05 }));
+      burst(c, { dur: 0.25, type: 'bandpass', freq: 3200, q: 2, gain: 0.2, delay: 0.05 });
+      burst(c, { dur: 0.12, type: 'highpass', freq: 1500, gain: 0.25, delay: 0.02 });
+      break;
+    case 'heal':
+      [659, 880, 1109, 1319].forEach((f, i) => tone(c, { freq: f, dur: 0.7, type: 'triangle', gain: 0.035, attack: 0.03, delay: i * 0.08 }));
+      break;
+    case 'fireball':
+      burst(c, { dur: 0.5, type: 'bandpass', freq: 500, sweep: 1400, q: 1.2, gain: 0.2, attack: 0.08 });
+      tone(c, { freq: 160, dur: 0.4, type: 'sawtooth', gain: 0.03, slide: 240 });
+      break;
+    case 'explosion':
+      burst(c, { dur: 0.9, type: 'lowpass', freq: 900, sweep: 70, gain: 0.6 });
+      tone(c, { freq: 64, dur: 0.6, type: 'sine', gain: 0.35, slide: 34 });
+      burst(c, { dur: 0.5, type: 'bandpass', freq: 1800, sweep: 600, gain: 0.12, delay: 0.05 });
+      break;
+    case 'bloodlust':
+      tone(c, { freq: 82, dur: 0.8, type: 'sawtooth', gain: 0.08, attack: 0.08, slide: 123 });
+      tone(c, { freq: 123, dur: 0.7, type: 'sawtooth', gain: 0.04, attack: 0.1, slide: 165, delay: 0.1 });
+      for (const d of [0, 0.18]) tone(c, { freq: 95, dur: 0.2, gain: 0.25, slide: 50, delay: d });
+      break;
+    case 'hex':
+      tone(c, { freq: 233, dur: 0.8, type: 'sine', gain: 0.06, attack: 0.1, slide: 175 });
+      tone(c, { freq: 247, dur: 0.8, type: 'sine', gain: 0.05, attack: 0.1, slide: 185 });
+      burst(c, { dur: 0.6, type: 'bandpass', freq: 2400, sweep: 900, q: 4, gain: 0.07, attack: 0.15 });
+      break;
+    case 'catapult':
+      // Timber groans, the arm slams the crossbar.
+      tone(c, { freq: 140, dur: 0.25, type: 'square', gain: 0.03, slide: 85 });
+      burst(c, { dur: 0.18, type: 'lowpass', freq: 500, gain: 0.45, delay: 0.18 });
+      tone(c, { freq: 90, dur: 0.2, gain: 0.2, slide: 55, delay: 0.18 });
+      break;
+    case 'crash':
+      burst(c, { dur: 0.55, type: 'lowpass', freq: 420, sweep: 60, gain: 0.6 });
+      tone(c, { freq: 55, dur: 0.4, gain: 0.3, slide: 32 });
+      for (let i = 0; i < 4; i++) burst(c, { dur: 0.05, type: 'bandpass', freq: 900 + i * 200, gain: 0.15, delay: 0.08 + i * 0.06 });
+      break;
+    case 'ballista':
+      tone(c, { freq: 150, dur: 0.22, type: 'sawtooth', gain: 0.1, slide: 60 });
+      burst(c, { dur: 0.14, type: 'highpass', freq: 900, gain: 0.4 });
+      burst(c, { dur: 0.3, type: 'lowpass', freq: 300, gain: 0.3, delay: 0.02 });
+      break;
   }
 }

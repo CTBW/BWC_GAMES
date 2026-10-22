@@ -56,6 +56,14 @@ export interface UnitTypeDef {
   squad?: number;
   /** Rank-and-file figure for a squad whose first soldier is a champion (the warlord's guard). */
   escort?: string;
+  /**
+   * A war machine: one engine (drawn with this type's own sprite) worked by a
+   * crew of `squad` soldiers drawn as this figure. The crew is the squad: its
+   * HP pool, its casualties and its strength.
+   */
+  crew?: string;
+  /** The ability used when the squad simply attacks an enemy (a mangonel's stone). */
+  primary?: AbilityId;
   ai?: AiProfile;
   /** Enemy loot and xp value. */
   value?: number;
@@ -74,10 +82,20 @@ export interface AiProfile {
    * flankers hunt missile troops and exposed sides, shock troops break the
    * front, heralds keep out of reach.
    */
-  role?: 'swarm' | 'flanker' | 'shock' | 'line' | 'missile' | 'herald' | 'leader';
+  role?: 'swarm' | 'flanker' | 'shock' | 'line' | 'missile' | 'herald' | 'leader' | 'caster' | 'artillery';
 }
 
-export type AbilityKind = 'stance' | 'attack' | 'shout';
+/**
+ * `spell`: a targeted power cast at a tile (spells and war-machine shots).
+ * Its effects are rolled once by the rules, however many casters it takes.
+ */
+export type AbilityKind = 'stance' | 'attack' | 'shout' | 'spell';
+
+/** Lasting conditions on a squad. */
+export type StatusId = 'chilled' | 'bloodlust' | 'bleeding';
+
+/** How a spell looks when cast (the renderer picks its effects by this). */
+export type SpellFx = 'lightning' | 'frost' | 'heal' | 'circle' | 'fire' | 'blood' | 'gut' | 'stone' | 'rock';
 
 export interface AbilityDef {
   id: AbilityId;
@@ -101,6 +119,38 @@ export interface AbilityDef {
   stance?: StanceId;
   cooldown?: number;
   requiresNoMove?: boolean;
+
+  // Spells (kind 'spell'). Amounts are per caster and scale with the casters standing.
+  /** What it is cast at: a foe, a friendly squad, any tile, or the caster's own ground. */
+  target?: 'enemy' | 'ally' | 'tile' | 'self';
+  range?: number;
+  minRange?: number;
+  /** Needs a clear line of sight to the target (lobbed stones do not). */
+  sight?: boolean;
+  /** Damage per caster. */
+  power?: [number, number];
+  /** Healing per caster (the dead are never raised). */
+  heal?: [number, number];
+  /** Fraction of armour ignored (1 = all; `ignoreArmor` also means all). */
+  pierce?: number;
+  /** Fraction of the damage dealt to every squad on a tile next to the one struck. */
+  splash?: number;
+  /** The splash strikes friend and foe alike. */
+  friendly?: boolean;
+  /** Arcs on from the squad struck to the nearest other foes. */
+  chain?: { jumps: number; reach: number; falloff: number };
+  /** Every friendly squad within this many tiles of the caster (Mending Circle). */
+  aura?: number;
+  status?: { id: StatusId; turns: number };
+  /** Bleeding: this fraction of the damage again at the start of each of the victim's next two turns. */
+  bleed?: number;
+  /** A miss lands a tile astray instead of fizzling (lobbed stones, fireballs). */
+  scatter?: boolean;
+  /** A war machine's shot: it cannot loose in a turn the machine has moved. */
+  engine?: boolean;
+  /** Accuracy bonus or penalty on top of the caster's skill. */
+  hitBonus?: number;
+  fx?: SpellFx;
 }
 
 export type StanceId = 'shieldwall' | 'spearwall' | 'overwatch';

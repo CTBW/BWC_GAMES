@@ -1,17 +1,30 @@
-import type { AiProfile, Dir } from '../core/types';
+import type { AbilityDef, AiProfile, Dir } from '../core/types';
 import { ABILITIES } from '../data/abilities';
 import { PROPS } from '../data/terrain';
 import { UNIT_TYPES } from '../data/units';
 import type { Battle, ReachInfo } from './battle';
 import { DIRS, canStep, dist, key, lineOfSight, manhattan, moveCost, neighbors, tileAt, tilePassable } from './grid';
-import type { BattleUnit, Pt } from './types';
+import { hasStatus, isBackline, moveOf } from './squad';
+import type { BattleUnit, Pt, SpellPreview } from './types';
 
 const PLAYER_PROFILES: Record<string, AiProfile> = {
   footman: { aggression: 0.55, caution: 0.45, swarm: 0.5 },
   spearman: { aggression: 0.45, caution: 0.5, swarm: 0.5 },
   crossbowman: { aggression: 0.2, caution: 0.8, preferRange: 5, swarm: 0.2 },
   collie_guard: { aggression: 0.6, caution: 0.4, swarm: 0.5 },
+  battle_mage: { aggression: 0.2, caution: 0.95, preferRange: 5, swarm: 0.25, role: 'caster' },
+  ballista: { aggression: 0.1, caution: 0.85, preferRange: 6, swarm: 0.2, role: 'artillery' },
+  mangonel: { aggression: 0.1, caution: 0.85, preferRange: 6, swarm: 0.2, role: 'artillery' },
 };
+
+/** What a squad can hurl at range: its missiles, or a war machine's stones. Per soldier. */
+function missileOf(f: BattleUnit): { avg: number; range: number; min: number } | undefined {
+  if (f.shot && f.ammo !== 0) return { avg: (f.shot.damage[0] + f.shot.damage[1]) / 2, range: f.shot.range, min: f.shot.minRange };
+  const primary = UNIT_TYPES[f.typeId]?.primary;
+  const ab = primary ? ABILITIES[primary] : undefined;
+  if (ab?.power) return { avg: (ab.power[0] + ab.power[1]) / 2, range: ab.range ?? 1, min: ab.minRange ?? 1 };
+  return undefined;
+}
 
 export function profileOf(u: BattleUnit): AiProfile {
   return UNIT_TYPES[u.typeId]?.ai ?? PLAYER_PROFILES[u.typeId] ?? { aggression: 0.5, caution: 0.5 };
@@ -22,6 +35,77 @@ interface Plan {
   tile: Pt;
   target?: BattleUnit;
   ability?: string;
+  /** A spell (or a war machine's stone) and the tile it is cast at. */
+  spell?: { id: string; at: Pt };
+}
+
+/**
+ * Worth of a spell in the terms attacks are weighed in (squad damage in one
+ * caster's share). Harm to foes counts, harm to friends counts against it
+ * half again; healing counts where wounds are open; a chill or a frenzy counts
+ * by the blows it will change.
+ */
+function spellValue(b: Battle, u: BattleUnit, ab: AbilityDef, pv: SpellPreview): number {
+  const p = pv.chance / 100;
+  let s = 0;
+  for (const h of pv.hits) {
+    const t = b.unit(h.uid);
+    const avg = (h.min + h.max) / 2 / u.size;
+    if (h.heal) {
+      // Wounds that would cost soldiers soon are worth closing first.
+      const low = t.hp / Math.max(1, t.alive * t.hpPer) < 0.6 ? 1.3 : 1;
+      s += avg * 0.75 * low * (b.isAdjacentEnemy(t) ? 1.3 : 1);
+      continue;
+    }
+    if (ab.power) {
+      const reach = h.role === 'splash' && pv.scatter ? 0.5 + p * 0.5 : p;
+      if (h.ally) s -= reach * avg * 1.6 + h.kill * 30;
+      else s += reach * avg * targetWeight(b, u, t) + h.kill * 22;
+      if (!h.ally && ab.bleed) s += p * avg * ab.bleed * 2;
+      if (!h.ally && ab.status?.id === 'chilled') s += p * 3 * (t.alive / t.size) * (manhattan(t, u) <= moveOf(t) + 2 ? 1.5 : 1);
+      continue;
+    }
+    if (ab.status?.id === 'bloodlust' && h.ally && !t.shot && !hasStatus(t, 'bloodlust')) {
+      // A frenzy is worth the extra blows of a squad about to fight.
+      const foes = b.enemiesOf(t);
+      const near = foes.some((f) => manhattan(f, t) <= moveOf(t) + 1);
+      if (!near) continue;
+      const blows = t.alive * (3 + ((t.melee[0] + t.melee[1]) / 2) * 0.1);
+      s += (blows / u.size) * (t.hasActed ? 0.7 : 1.4) - 1.5;
+    }
+  }
+  return s + p * pv.moraleHit * 0.35;
+}
+
+/** Tiles worth aiming a spell of this kind at: squads to strike or bless, and for blasts the ground beside foes. */
+function spellAims(b: Battle, u: BattleUnit, ab: AbilityDef, from: Pt): Pt[] {
+  const range = (ab.range ?? 1) + 0.01;
+  if (ab.target === 'self') return [{ x: from.x, y: from.y }];
+  if (ab.target === 'ally') return b.active(u.faction).filter((a) => dist(a, from) <= range);
+  const foes = b.living().filter((f) => f.faction !== u.faction && dist(f, from) <= range + 1);
+  if (ab.target === 'enemy') return foes.filter((f) => dist(f, from) <= range);
+  const out = new Map<number, Pt>();
+  for (const f of foes) {
+    out.set(key(f.x, f.y), { x: f.x, y: f.y });
+    if (ab.splash) for (const n of neighbors(b.map, f)) if (dist(n, from) <= range) out.set(key(n.x, n.y), n);
+  }
+  return [...out.values()].filter((q) => dist(q, from) <= range);
+}
+
+/** The best spell to cast from `from`, if any is worth casting. */
+function bestSpell(b: Battle, u: BattleUnit, spells: string[], from: Pt, moved: number): { id: string; at: Pt; s: number; pv: SpellPreview } | null {
+  let best: { id: string; at: Pt; s: number; pv: SpellPreview } | null = null;
+  for (const id of spells) {
+    const ab = ABILITIES[id];
+    if (ab.engine && moved > 0) continue;
+    for (const at of spellAims(b, u, ab, from)) {
+      const pv = b.spellPreview(u, id, at, { from, movedTiles: moved });
+      if (!pv.legal || !pv.hits.length) continue;
+      const s = spellValue(b, u, ab, pv);
+      if (!best || s > best.s) best = { id, at: { x: at.x, y: at.y }, s, pv };
+    }
+  }
+  return best;
 }
 
 /** Expected damage a faction could inflict on each tile next turn. */
@@ -34,10 +118,11 @@ function dangerMap(b: Battle, from: 'player' | 'enemy'): Map<number, number> {
       // Weapon damage is per soldier; a depleted squad threatens less.
       const strength = f.alive / f.size;
       const m = manhattan(f, t);
-      if (m <= f.stats.move + 1) d += ((f.melee[0] + f.melee[1]) / 2) * 0.6 * (m <= 1 ? 1.2 : 1) * strength;
-      if (f.shot && f.ammo !== 0) {
+      if (m <= moveOf(f) + 1) d += ((f.melee[0] + f.melee[1]) / 2) * 0.6 * (m <= 1 ? 1.2 : 1) * strength;
+      const miss = missileOf(f);
+      if (miss) {
         const r = dist(f, t);
-        if (r >= f.shot.minRange && r <= f.shot.range) d += ((f.shot.damage[0] + f.shot.damage[1]) / 2) * 0.45 * strength;
+        if (r >= miss.min && r <= miss.range) d += miss.avg * 0.45 * strength;
       }
     }
     out.set(key(t.x, t.y), d);
@@ -188,8 +273,9 @@ export function exposure(at: Pt, dir: Dir, foes: BattleUnit[]): number {
     const strength = e.alive / e.size;
     const m = manhattan(e, at);
     let threat = 0;
-    if (m <= e.stats.move + 1) threat = ((e.melee[0] + e.melee[1]) / 2) * strength * (m <= 1 ? 1.5 : 1);
-    if (e.shot && e.ammo !== 0 && dist(e, at) <= e.shot.range) threat = Math.max(threat, ((e.shot.damage[0] + e.shot.damage[1]) / 2) * strength * 0.5);
+    if (m <= moveOf(e) + 1) threat = ((e.melee[0] + e.melee[1]) / 2) * strength * (m <= 1 ? 1.5 : 1);
+    const miss = missileOf(e);
+    if (miss && dist(e, at) <= miss.range) threat = Math.max(threat, miss.avg * strength * 0.5);
     if (!threat) continue;
     const dx = e.x - at.x;
     const dy = e.y - at.y;
@@ -268,6 +354,9 @@ export function actUnit(b: Battle, u: BattleUnit, opts: { useStances?: boolean; 
       if (def?.kind === 'attack' && def.damageMult && (u.cooldowns[ab] ?? 0) === 0) attackOptions.push(ab);
     }
   }
+  // Spells ready to cast (a war machine's stone is its plain attack and needs no nerve).
+  const spells = u.hasActed ? [] : u.abilities.filter((id) => ABILITIES[id]?.kind === 'spell' && b.canCast(u, id).ok);
+  const ranged = isBackline(u);
 
   for (const [k, info] of reach) {
     const tile = { x: k % 1000, y: Math.floor(k / 1000) };
@@ -281,11 +370,19 @@ export function actUnit(b: Battle, u: BattleUnit, opts: { useStances?: boolean; 
     let posScore = -zocCost - guard - dng + (prof.swarm ?? 0) * adjAllies * 3 + tileH * 1.5 - outside(k);
     // The horn-bearer keeps well out of reach.
     if (role === 'herald') posScore -= Math.max(0, 6 - nearestFoe(tile)) * 4;
-    if (u.shot) {
+    if (ranged) {
       const nf = nearestFoe(tile);
       if (nf <= 1.01) posScore -= 12;
       if (prof.preferRange) posScore -= Math.abs(nf - prof.preferRange) * 1.2;
       posScore += coverAt(b, tile, foes[0]) * 0.15;
+    }
+
+    if (spells.length) {
+      const sp = bestSpell(b, u, spells, tile, moved);
+      if (sp) {
+        const score = sp.s * (0.6 + aggression) + posScore;
+        if ((timid ? score : sp.s) >= minAttack && (!best || score > best.score)) best = { score, tile, spell: { id: sp.id, at: sp.at } };
+      }
     }
 
     if (!u.hasActed && role !== 'herald') {
@@ -337,10 +434,13 @@ export function actUnit(b: Battle, u: BattleUnit, opts: { useStances?: boolean; 
         tileAt(b.map, tile.x, tile.y)!.h * 1.5 -
         outside(k);
       if (role === 'herald') s -= Math.max(0, 6 - nearestFoe(tile)) * 4;
-      if (u.shot && prof.preferRange) {
+      // A war machine that moves cannot loose this turn or be laid well: it shifts only when it must.
+      if (u.tags.includes('engine') && role !== 'shock' && k !== key(u.x, u.y)) s -= 4;
+      if (ranged && prof.preferRange) {
         const nf = nearestFoe(tile);
         s -= Math.abs(nf - prof.preferRange) * 2;
-        const seen = foes.some((f) => !lineOfSight(b.map, tile, f).blocked && dist(tile, f) <= u.shot!.range);
+        const reachOf = u.shot?.range ?? missileOf(u)?.range ?? 5;
+        const seen = foes.some((f) => (u.tags.includes('artillery') || !lineOfSight(b.map, tile, f).blocked) && dist(tile, f) <= reachOf);
         if (seen) s += 4;
         s += coverAt(b, tile, foes[0]) * 0.15;
       }
@@ -356,6 +456,16 @@ export function actUnit(b: Battle, u: BattleUnit, opts: { useStances?: boolean; 
     if (!home || (facing !== undefined && facing !== u.facing)) b.move(u.uid, best.tile.x, best.tile.y, facing);
   }
   if (u.status !== 'active' || b.isOver()) return;
+
+  if (best.spell && !u.hasActed) {
+    // Cast as planned; if the target moved or fell on the way, choose again from here.
+    if (!b.cast(u.uid, best.spell.id, best.spell.at)) {
+      const again = u.abilities.filter((id) => ABILITIES[id]?.kind === 'spell' && b.canCast(u, id).ok);
+      const sp = bestSpell(b, u, again, u, u.movedTiles);
+      if (sp && sp.s >= minAttack) b.cast(u.uid, sp.id, sp.at);
+    }
+    if (u.status !== 'active' || b.isOver()) return;
+  }
 
   if (best.target && !u.hasActed) {
     let target = best.target;
@@ -396,7 +506,7 @@ export function actUnit(b: Battle, u: BattleUnit, opts: { useStances?: boolean; 
  * front, riders slip round it, the swarm floods the gaps they opened, and the
  * leaders and the horn-bearer come last.
  */
-const ROLE_ORDER: Record<string, number> = { missile: 0, shock: 1, line: 2, flanker: 3, swarm: 4, leader: 5, herald: 6 };
+const ROLE_ORDER: Record<string, number> = { missile: 0, caster: 0, artillery: 0, shock: 1, line: 2, flanker: 3, swarm: 4, leader: 5, herald: 6 };
 
 export function runEnemyAi(b: Battle) {
   const rank = (u: BattleUnit) => {
@@ -433,7 +543,7 @@ export function runPlayerAuto(b: Battle) {
   const order = b
     .active('player')
     .slice()
-    .sort((a, c) => (a.shot ? 0 : 1) - (c.shot ? 0 : 1));
+    .sort((a, c) => (isBackline(a) ? 0 : 1) - (isBackline(c) ? 0 : 1));
   for (const u of order) {
     if (b.isOver()) return;
     if (u.status !== 'active') continue;

@@ -73,7 +73,7 @@ const FONT_FILES := {
 
 static var _fonts: Dictionary = {}
 
-const SHORT_PLURAL := {"collie_guard": "Royal Guards"}
+const SHORT_PLURAL := {"collie_guard": "Royal Guards", "war_wagon": "War Wagons"}
 
 
 ## A colour from hex with an alpha (CSS rgba()).
@@ -328,12 +328,20 @@ static func rank_name(level: int) -> String:
 
 ## "Footmen", with rank when given: "Veteran Footmen". `short` uses compact names for long types.
 static func squad_type_label(type_id: String, level := 0, short := false) -> String:
+	var def: Dictionary = DB.UNIT_TYPES.get(type_id, {})
 	var plural: String = ""
-	if short and SHORT_PLURAL.has(type_id):
+	if def.has("crew"):
+		# One war machine and its crew: "Veteran Ballista Crew".
+		var nm := ""
+		if short and SHORT_PLURAL.has(type_id):
+			nm = SHORT_PLURAL[type_id]
+			if nm.ends_with("s"):
+				nm = nm.left(-1)
+		plural = "%s Crew" % (nm if nm != "" else str(def.get("name", type_id)))
+	elif short and SHORT_PLURAL.has(type_id):
 		plural = SHORT_PLURAL[type_id]
 	else:
-		var t: Dictionary = DB.UNIT_TYPES.get(type_id, {})
-		plural = t.get("plural", type_id)
+		plural = def.get("plural", type_id)
 	return "%s %s" % [rank_name(level), plural] if level else plural
 
 

@@ -4,7 +4,7 @@ import type { SupplyId } from '../core/types';
 import { Battle } from '../battle/battle';
 import { runPlayerAuto } from '../battle/ai';
 import { buildBattle, rollEncounter } from '../battle/setup';
-import { soldierToUnit } from '../meta/soldier';
+import { newSoldier, soldierToUnit } from '../meta/soldier';
 import {
   applyBattle,
   battleArmy,
@@ -264,12 +264,16 @@ class AppStore {
 
   debug = {
     /** Start a stand-alone battle for review, outside any expedition. */
-    testBattle: (encounterId: string, opts: { seed?: number; night?: boolean; darkness?: boolean; mapId?: string } = {}) => {
+    testBattle: (encounterId: string, opts: { seed?: number; night?: boolean; darkness?: boolean; mapId?: string; army?: string[]; level?: number } = {}) => {
       const g = this.game;
       if (!g) return;
       const roll = rollEncounter(encounterId, new Rng(opts.seed ?? 7), 2);
       if (opts.mapId) roll.mapId = opts.mapId;
-      const army = g.roster.slice(0, 6).map((so) => soldierToUnit(so));
+      // A chosen army of fresh squads (review captures), or the roster's first six.
+      let n = 0;
+      const army = opts.army
+        ? opts.army.map((t, i) => soldierToUnit(newSoldier(new Rng((opts.seed ?? 7) * 31 + i), t, opts.level ?? 1, () => `t${n++}`, 0)))
+        : g.roster.slice(0, 6).map((so) => soldierToUnit(so));
       const battle = new Battle(buildBattle(roll, army, { survivalBonus: 0, darkness: opts.darkness }));
       this.battleInfo = null;
       this.battleScene = new BattleScene(battle);

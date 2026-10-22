@@ -25,8 +25,11 @@ function footmen(seed = 1): BattleUnit {
 }
 
 describe('squad size', () => {
-  it('squads have six soldiers unless the type says otherwise (trolls 3, wolf riders 4, rabble 9)', () => {
-    const special: Record<string, number> = { troll: 3, wolf_rider: 4, goblin_horn: 4, goblin_rabble: 9 };
+  it('squads have six soldiers unless the type says otherwise (trolls 3, wolf riders 4, rabble 9, casters and engine crews 3)', () => {
+    const special: Record<string, number> = {
+      troll: 3, wolf_rider: 4, goblin_horn: 4, goblin_rabble: 9,
+      battle_mage: 3, goblin_shaman: 3, ballista: 3, mangonel: 3, rock_lobber: 3, war_wagon: 3,
+    };
     for (const id of Object.keys(UNIT_TYPES)) {
       expect(squadSize(id)).toBe(special[id] ?? DEFAULT_SQUAD_SIZE);
     }

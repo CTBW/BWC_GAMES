@@ -530,6 +530,160 @@
    }
   },
   {
+   "id": "shaman_fire",
+   "name": "Shamans of the host",
+   "tier": 1,
+   "kind": "skirmish",
+   "units": [
+    [
+     "goblin_shaman",
+     1,
+     1
+    ],
+    [
+     "goblin_spear",
+     2,
+     2
+    ],
+    [
+     "goblin_rabble",
+     1,
+     2
+    ],
+    [
+     "goblin_archer",
+     0,
+     1
+    ]
+   ],
+   "level": [
+    1,
+    1
+   ],
+   "maps": [
+    "forest_clearing",
+    "river_ruins"
+   ],
+   "weight": 2,
+   "minDepth": 1,
+   "goal": {
+    "kind": "rout",
+    "title": "Silence the shamans",
+    "brief": "Goblin witch-doctors walk with this band. Their fire falls on your ranks, careless of their own, and their hexes drive the goblins mad. Get at the shamans before they burn the company."
+   },
+   "waves": [
+    {
+     "turn": 4,
+     "edge": "main",
+     "units": [
+      [
+       "goblin_rabble",
+       1,
+       1
+      ],
+      [
+       "goblin_spear",
+       0,
+       1
+      ]
+     ],
+     "label": "More of the band"
+    }
+   ],
+   "intel": "Goblin shamans with fire and hexes.",
+   "loot": {
+    "silver": [
+     35,
+     55
+    ],
+    "iron": [
+     0,
+     1
+    ],
+    "timber": [
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "id": "siege_train",
+   "name": "The host's war engines",
+   "tier": 1,
+   "kind": "skirmish",
+   "units": [
+    [
+     "rock_lobber",
+     1,
+     1
+    ],
+    [
+     "war_wagon",
+     1,
+     1
+    ],
+    [
+     "goblin_spear",
+     1,
+     2
+    ],
+    [
+     "goblin_rabble",
+     1,
+     1
+    ]
+   ],
+   "level": [
+    1,
+    1
+   ],
+   "maps": [
+    "forest_clearing",
+    "river_ruins"
+   ],
+   "weight": 1,
+   "minDepth": 2,
+   "goal": {
+    "kind": "rout",
+    "title": "Wreck the engines",
+    "brief": "The host is dragging its war engines to the front: a rock lobber and a spiked war wagon, with spears to guard them. Meet the wagon's charge with set spears, then rush the lobber before it pounds your line flat."
+   },
+   "waves": [
+    {
+     "turn": 4,
+     "edge": "flank",
+     "units": [
+      [
+       "goblin_rabble",
+       1,
+       1
+      ],
+      [
+       "wolf_rider",
+       0,
+       1
+      ]
+     ],
+     "label": "Outriders of the train"
+    }
+   ],
+   "intel": "A goblin rock lobber and a spiked war wagon.",
+   "loot": {
+    "silver": [
+     60,
+     85
+    ],
+    "iron": [
+     2,
+     3
+    ],
+    "timber": [
+     2,
+     3
+    ]
+   }
+  },
+  {
    "id": "road_ambush",
    "name": "Ambush on the road",
    "tier": 1,
@@ -669,8 +823,8 @@
        2
       ],
       [
-       "goblin_spear",
-       1,
+       "goblin_shaman",
+       0,
        1
       ]
      ],
@@ -917,7 +1071,7 @@
        1
       ],
       [
-       "troll",
+       "goblin_shaman",
        1,
        1
       ],

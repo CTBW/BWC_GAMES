@@ -6,6 +6,7 @@
 // (|x|/64 + |y|/32 < 0.92 for a 128×64 tile).
 
 import type { Dir } from '../core/types';
+import { UNIT_TYPES } from '../data/units';
 
 export interface Slot {
   x: number;
@@ -39,6 +40,50 @@ function sideSign(f: Dir): number {
   return f === 1 || f === 2 ? -1 : 1;
 }
 
+const GRID_DIRS: readonly { x: number; y: number }[] = [
+  { x: 1, y: 0 },
+  { x: 0, y: 1 },
+  { x: -1, y: 0 },
+  { x: 0, y: -1 },
+];
+
+/** A point on the ground in grid units (along the facing, to its left) as a screen offset. */
+function groundOffset(facing: Dir, along: number, left: number): Slot {
+  const d = GRID_DIRS[facing];
+  const gx = d.x * along + d.y * left;
+  const gy = d.y * along - d.x * left;
+  return { x: (gx - gy) * 64, y: (gx + gy) * 32 };
+}
+
+/** Where a war machine stands on its tile: a little forward of the centre, its crew behind it. */
+export function engineOffset(facing: Dir): Slot {
+  return groundOffset(facing, ENGINE_FORWARD, 0);
+}
+
+/** How far forward of the tile centre the engine stands (grid units). */
+const ENGINE_FORWARD = 0.1;
+
+/**
+ * Crew around a war machine. Facing the camera, two work the windlass at the
+ * back corners and the third stands at its side. Facing away, the back of the
+ * engine is nearest the camera, so the crew stand at its flanks where they do
+ * not hide it. A war wagon's crew always shove it from behind.
+ */
+function crewSlots(n: number, facing: Dir, pushed: boolean): Slot[] {
+  if (n <= 0) return [];
+  if (pushed) {
+    const back = -0.32;
+    if (n === 1) return [groundOffset(facing, back, 0)];
+    const all = [groundOffset(facing, back, 0.17), groundOffset(facing, back, -0.17), groundOffset(facing, back - 0.1, 0)];
+    return all.slice(0, n);
+  }
+  const all = facesCamera(facing)
+    ? [groundOffset(facing, -0.3, 0.21), groundOffset(facing, -0.3, -0.21), groundOffset(facing, 0.02, 0.36)]
+    : [groundOffset(facing, -0.1, 0.37), groundOffset(facing, -0.1, -0.37), groundOffset(facing, 0.24, 0.37)];
+  if (n === 1) return [facesCamera(facing) ? groundOffset(facing, -0.3, 0) : all[0]];
+  return all.slice(0, n);
+}
+
 /**
  * Slots for `n` standing soldiers of a squad whose full strength is `size`,
  * front rank first. Six stand in two ranks of three; casualties close up the
@@ -48,6 +93,8 @@ function sideSign(f: Dir): number {
 export function formationSlots(n: number, size: number, facing: Dir, tight = 1, typeId?: string): Slot[] {
   const fs = facesCamera(facing) ? 1 : -1; // +y is the front rank
   const ls = sideSign(facing);
+  const def = typeId ? UNIT_TYPES[typeId] : undefined;
+  if (def?.crew) return crewSlots(n, facing, typeId === 'war_wagon');
   if (typeId === 'wolf_rider') {
     const col = MOUNT_COL * tight;
     const row = MOUNT_ROW * tight;
@@ -70,7 +117,8 @@ export function formationSlots(n: number, size: number, facing: Dir, tight = 1, 
     const back = rest === 3 ? [-col, 0, col] : rest === 2 ? [-col / 2, col / 2] : [0];
     return [...rank([-col, 0, col], 1), ...rank([-col, 0, col], 0), ...rank(back, -1)];
   }
-  const big = size <= 3;
+  // Three-strong squads of great beasts (trolls) stand wide; three mages stand like men.
+  const big = size <= 3 && (!def || def.size === 'large');
   const col = (big ? BIG_COL : COL) * tight;
   const row = (big ? BIG_ROW : ROW) * tight;
   const lean = LEAN * tight;

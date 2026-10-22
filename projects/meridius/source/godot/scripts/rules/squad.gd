@@ -43,15 +43,17 @@ static func kills_from(s: Dictionary, damage: Variant) -> int:
 	return s.alive - alive_for(s.hp - damage, s.hpPer, s.alive)
 
 
-## "soldier" or "soldiers" in the unit's own words: "goblin spearman", "moss trolls".
+## "soldier" or "soldiers" in the unit's own words: "goblin spearman", "moss trolls", "crewman" of a war machine.
 static func member_noun(type_id: String, n: int) -> String:
 	var def: Variant = DB.UNIT_TYPES.get(type_id)
 	if def == null:
 		return "soldier" if n == 1 else "soldiers"
+	if def.has("crew"):
+		return "crewman" if n == 1 else "crewmen"
 	return (def.name if n == 1 else def.plural).to_lower()
 
 
-## How the battle log names a squad: "Aldric's footmen", "Grukk's goblin spearmen", "Warlord Uzgash".
+## How the battle log names a squad: "Aldric's footmen", "Grukk's goblin spearmen", "Warlord Uzgash", "Hild's ballista crew".
 static func squad_name(u: Dictionary) -> String:
 	var name: String = u.name
 	if u.get("leader", false):
@@ -65,4 +67,33 @@ static func squad_name(u: Dictionary) -> String:
 	if cm >= 0:
 		cut = mini(cut, cm)
 	var first := name.substr(0, cut)
+	var def: Variant = DB.UNIT_TYPES.get(u.typeId)
+	if def != null and def.has("crew"):
+		return "%s's %s crew" % [first, String(def.name).to_lower()]
 	return "%s's %s" % [first, member_noun(u.typeId, 2)]
+
+
+# ---------------------------------------------------------------- conditions
+
+## The squad's condition of this kind (chilled, bloodlust, bleeding), or null.
+static func status_of(u: Dictionary, id: String) -> Variant:
+	for s in u.get("statuses", []):
+		if s.id == id:
+			return s
+	return null
+
+
+static func has_status(u: Dictionary, id: String) -> bool:
+	return status_of(u, id) != null
+
+
+## Squads that fight from the back: missile troops, casters and war machines that lob stones.
+static func is_backline(u: Dictionary) -> bool:
+	return u.get("shot") != null or u.tags.has("artillery") or u.tags.has("caster")
+
+
+## Tiles the squad can march this turn: a chilled squad drags itself half as far.
+static func move_of(u: Dictionary) -> int:
+	if has_status(u, "chilled"):
+		return maxi(1, ceili(float(u.stats.move) / 2.0))
+	return u.stats.move

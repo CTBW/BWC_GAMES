@@ -28,7 +28,7 @@
 ##   has_save(), save(), load_save() -> bool
 ##   use_views := true   false: no world views are created (store-only tests).
 ##   manual_seen() / mark_manual_seen() (prefs key "manualSeen").
-## AUTOMATION (store.debug.*): debug_test_battle(encounter_id, opts := {seed, night, darkness, mapId}),
+## AUTOMATION (store.debug.*): debug_test_battle(encounter_id, opts := {seed, night, darkness, mapId, army: [typeId…], level}),
 ##   debug_player_turn(), debug_auto_battle(), debug_auto_expedition(seed := 1),
 ##   debug_auto_prepare(seed := 1) -> bool
 ## VIEWS  main.gd sets `world_host` (a Node2D); views are created here and shown
@@ -465,9 +465,20 @@ func debug_test_battle(encounter_id: String, opts: Dictionary = {}) -> void:
 	if opts.get("mapId") != null:
 		roll.mapId = opts.mapId
 	var Soldier = Deps.soldier()
+	# A chosen army of fresh squads (review captures), or the roster's first six.
 	var army: Array = []
-	for so in g.roster.slice(0, 6):
-		army.append(Soldier.soldier_to_unit(so))
+	if opts.get("army") != null:
+		var seed: int = JS.get_or(opts, "seed", 7)
+		var n := [0]
+		var next_id := func() -> String:
+			n[0] += 1
+			return "t%d" % (n[0] - 1)
+		var types: Array = opts.army
+		for i in types.size():
+			army.append(Soldier.soldier_to_unit(Soldier.new_soldier(Rng.new(seed * 31 + i), str(types[i]), int(JS.get_or(opts, "level", 1)), next_id, 0)))
+	else:
+		for so in g.roster.slice(0, 6):
+			army.append(Soldier.soldier_to_unit(so))
 	var bopts := {"survivalBonus": 0}
 	if opts.get("darkness") != null:
 		bopts.darkness = opts.darkness

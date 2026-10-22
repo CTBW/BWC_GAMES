@@ -221,7 +221,8 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 	var shot: Variant = def.get("shot")
 	if shot != null and dmg.get("shot") != null:
 		u.shot = {"damage": dmg.shot, "range": shot.range, "minRange": JS.get_or(shot, "minRange", 2), "pierce": shot.pierce}
-	u.ammo = s.ammo if shot != null else -1
+	# Only crossbows draw on the bolt supply; arcane bolts and ballista bolts never run out.
+	u.ammo = s.ammo if shot != null and shot.get("ammo") != null else -1
 	u.shieldFront = JS.get_or(def, "shieldFront", 0)
 	u.abilities = abilities_of(s)
 	u.cooldowns = {}
@@ -238,6 +239,7 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 	u.variant = s.variant
 	u.struck = []
 	u.startMorale = s.morale
+	u.statuses = []
 	return u
 
 
@@ -293,4 +295,5 @@ static func make_enemy(type_id: String, level: int, uid: String, rng: RefCounted
 	u.variant = rng.rint(0, 2)
 	u.struck = []
 	u.startMorale = st.morale
+	u.statuses = []
 	return u

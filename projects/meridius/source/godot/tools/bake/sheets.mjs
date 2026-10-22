@@ -32,11 +32,15 @@ function flow(entries, maxW, pad = 14) {
 export function buildSheets(manifest, groups) {
   const sheets = [];
   const poses = [...new Set(groups.figures.map((k) => k.replace(/^.*?_(idle_fs|idle_bs|atk_fs|atk_bs|idle_f|idle_b|atk_f|atk_b|run_f|run_b|dead|flee_b)$/, '$1')))];
-  const types = [...new Set(groups.figures.map((k) => k.slice(0, k.length - poses.find((p) => k.endsWith('_' + p)).length - 1)))];
+  const typesOf = (keys) => [...new Set(keys.map((k) => k.slice(0, k.length - poses.find((p) => k.endsWith('_' + p)).length - 1)))];
+  const types = typesOf(groups.figures);
+  const engines = typesOf(groups.engines ?? []);
 
   // Figures: one sheet per unit type, poses across, the six looks down.
   // Looks 3–5 are mirrored; cast shadows as the battle draws them (not for the dead).
-  for (const t of types) {
+  // War engines: one sheet per engine, its (three) looks, then the same mirrored.
+  for (const t of [...types, ...engines]) {
+    const engine = engines.includes(t);
     let half = 0;
     let up = 0;
     let down = 0;
@@ -50,13 +54,17 @@ export function buildSheets(manifest, groups) {
     const cw = Math.ceil(half * 2) + 6;
     const ch = Math.ceil(up + down) + 8;
     const items = [];
+    let rows = 0;
     poses.forEach((p, c) => {
       const list = manifest[`${t}_${p}`];
-      for (let r = 0; r < list.length; r++) {
-        items.push({ key: `${t}_${p}`, v: r, x: 16 + c * cw + Math.round(half), y: 16 + r * ch + Math.round(up), flip: r >= 3, scale: 1, shadow: p === 'dead' ? 0 : 0.16 });
+      const n = engine ? 2 * list.length : list.length;
+      rows = Math.max(rows, n);
+      for (let r = 0; r < n; r++) {
+        const flip = engine ? r >= list.length : r >= 3;
+        items.push({ key: `${t}_${p}`, v: r % list.length, x: 16 + c * cw + Math.round(half), y: 16 + r * ch + Math.round(up), flip, scale: 1, shadow: p === 'dead' ? 0 : 0.16 });
       }
     });
-    sheets.push({ name: `fig_${t}`, w: 32 + poses.length * cw, h: 32 + 6 * ch, bg: BG, items });
+    sheets.push({ name: `${engine ? 'engine' : 'fig'}_${t}`, w: 32 + poses.length * cw, h: 32 + (engine ? rows : 6) * ch, bg: BG, items });
   }
 
   // Props, decals and the 'missing' sprite (procedural ones mirrored on odd variants).

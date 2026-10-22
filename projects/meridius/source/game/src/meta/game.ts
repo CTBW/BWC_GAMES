@@ -158,6 +158,9 @@ export function upgradeBuilding(g: GameState, id: string): boolean {
 /** Chance that a recruit squad is the elite Border Collie Royal Guard (Barracks level 2+). */
 export const ELITE_RECRUIT_CHANCE = 0.22;
 
+/** Squads that answer the muster one at a time: a circle of battle mages or a war machine and its crew. */
+export const SPECIALIST_TYPES = ['battle_mage', 'battle_mage', 'ballista', 'mangonel'] as const;
+
 export function rollRecruits(g: GameState) {
   const pool = effect(g, 'barracks', 'pool');
   const vet = effect(g, 'barracks', 'veteranChance');
@@ -169,6 +172,8 @@ export function rollRecruits(g: GameState) {
       const lvl = rng.chance(vet) ? (rng.chance(vet * 0.4) ? 3 : 2) : 1;
       out.push(newSoldier(rng, t, lvl, nextId(g), g.cycle));
     }
+    // One specialist squad is on offer each cycle as well.
+    out.push(newSoldier(rng, rng.pick(SPECIALIST_TYPES), rng.chance(vet) ? 2 : 1, nextId(g), g.cycle));
     // A thin company draws volunteers from the steadings: one joins for free.
     if (g.roster.length < 6) {
       const v = newSoldier(rng, 'spearman', 1, nextId(g), g.cycle);

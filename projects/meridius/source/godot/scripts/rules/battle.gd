@@ -315,12 +315,15 @@ static func unkey_state(s: int) -> Dictionary:
 
 
 ## Dijkstra over (tile, facing on arrival): the facing is always the
-## direction of the last step. Allies can be passed through, not enemies.
+## direction of the last step. Allies can be passed through, not enemies
+## (routing ones included: `walk` stops in front of any enemy, so a path
+## through one would cut the move short, possibly on an ally's tile; the
+## archived original searched through them).
 ## Cheapest first, then fewest free attacks provoked.
 ## Returns state key -> {cost, prev, zoc} (state key = tile key * 4 + facing).
 func reach_states(u: Dictionary, budget: Variant = null) -> Dictionary:
 	if budget == null:
-		budget = u.stats.move
+		budget = Squad.move_of(u)
 	var out := {}
 	var s0 := skey(u.x, u.y, u.facing)
 	out[s0] = {"cost": 0, "prev": -1, "zoc": 0}
@@ -335,8 +338,9 @@ func reach_states(u: Dictionary, budget: Variant = null) -> Dictionary:
 	var o_c := PackedFloat64Array([0.0])
 	var o_z := PackedFloat64Array([0.0])
 	var foe_at := {}
-	for f in enemies_of(u):
-		foe_at[Grid.key(f.x, f.y)] = true
+	for f in units:
+		if f.faction != u.faction and (f.status == "active" or f.status == "routing"):
+			foe_at[Grid.key(f.x, f.y)] = true
 	var zt := zoc_tiles(u)
 	var w: int = map.w
 	var h: int = map.h
@@ -612,9 +616,17 @@ func preview_legal(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> bool:
 	var memo: Array = []
 	var ranged: bool = bool(ab.get("ranged", false)) if ab != null else (not opts.get("forceMelee", false) and _would_shoot(a, t, from, memo))
 	if ranged:
-		return _can_shoot(a, t, from, memo).ok
+		return _can_shoot(a, t, from, memo).ok and not _unbraced(a, opts)
 	var reach: int = JS.get_or(ab, "reach", 1) if ab != null else 1
 	return can_melee(a, t, from, reach)
+
+
+## A war machine has to be braced and laid before it can loose: not in a turn it has moved.
+func _unbraced(a: Dictionary, opts: Dictionary) -> bool:
+	if not a.tags.has("engine") or opts.get("reaction"):
+		return false
+	var mtv: Variant = opts.get("movedTiles")
+	return (a.movedTiles if mtv == null else mtv) > 0
 
 
 ## AttackOpts: {from?: Pt, ability?: String, reaction?: String, forceMelee?: bool, movedTiles?: int}.
@@ -636,6 +648,10 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 		if not s.ok:
 			legal = false
 			reason = s.reason
+		elif _unbraced(a, opts):
+			# A war machine has to be braced and laid before it can loose.
+			legal = false
+			reason = "Cannot loose in a turn it has moved"
 	else:
 		var reach: int = JS.get_or(ab, "reach", 1) if ab != null else 1
 		if not can_melee(a, t, from, reach):
@@ -672,6 +688,12 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 		def -= 10
 	chance -= def
 	mods.append(["Target defense", -def])
+	if Squad.has_status(t, "chilled"):
+		chance += 10
+		mods.append(["Target chilled", 10])
+	if Squad.has_status(t, "bloodlust"):
+		chance += 8
+		mods.append(["Target in a frenzy", 8])
 
 	if t.status == "routing":
 		chance += 15
@@ -694,6 +716,12 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	if am:
 		chance += am
 		mods.append(["Confident" if ams == "confident" else "Shaken" if ams == "shaken" else "Wavering", am])
+	if Squad.has_status(a, "chilled"):
+		chance -= 10
+		mods.append(["Chilled", -10])
+	if not ranged and Squad.has_status(a, "bloodlust"):
+		chance += 10
+		mods.append(["Bloodlust", 10])
 
 	if ranged and legal:
 		var d := Grid.dist(from, t)
@@ -775,6 +803,9 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	var charging: bool = not ranged and a.abilities.has("charge") and moved_tiles >= 2 and not reaction
 	if charging:
 		flat += 3
+	# Frenzied soldiers put everything into every blow.
+	if not ranged and Squad.has_status(a, "bloodlust"):
+		flat += 3
 	var pierce = 1 if (ab != null and ab.get("ignoreArmor")) else (a.shot.pierce if ranged else a.meleePierce)
 	var armor = t.stats.armor * (1 - pierce)
 	var strikers: int = maxi(1, a.alive)
@@ -837,6 +868,9 @@ func _log(text: String, tone: String = "neutral") -> void:
 func change_morale(u: Dictionary, delta: Variant, reason: String) -> void:
 	if u.status != "active" or delta == 0:
 		return
+	# A frenzied squad barely notices what would shake it.
+	if delta < 0 and Squad.has_status(u, "bloodlust"):
+		delta = mini(-1, JS.rnd(delta / 2.0))
 	var before := morale_state(u)
 	u.morale = maxi(0, mini(u.maxMorale, JS.rnd(u.morale + delta)))
 	_emit({"t": "morale", "uid": u.uid, "delta": JS.rnd(delta), "value": u.morale, "reason": reason})
@@ -876,6 +910,7 @@ func _fall(u: Dictionary, killer: Variant = null) -> void:
 	u.erase("stance")
 	u.hp = 0
 	u.alive = 0
+	u["statuses"] = []
 	_emit({"t": "down", "uid": u.uid, "dead": dead})
 	var name := Squad.squad_name(u)
 	var text := ""
@@ -963,11 +998,15 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 		_log("%s miss %s%s (%s%%)." % [Squad.squad_name(a), Squad.squad_name(t), how, JS.num_str(pv.chance)], tone)
 	if not hit:
 		return false
+	# A ballista bolt carries on through into the next foe behind.
+	var through: Variant = impale_target(a, t) if ranged and not reaction and a.tags.has("impale") else null
 	if t.hp <= 0:
 		if t.status == "routing":
 			# Cut down while fleeing.
 			t.status = "active"
 		_fall(t, a)
+		if through != null:
+			_impale(a, t, through, damage, pv.strikers)
 		return true
 	if t.status == "active":
 		var mtv: Variant = opts.get("movedTiles")
@@ -993,7 +1032,75 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 	# Brutes smash a squad out of the line and shoulder into the gap.
 	elif not ranged and not reaction and a.tags.has("smash") and t.status == "active":
 		_push(a, t, true)
+	if through != null:
+		_impale(a, t, through, damage, pv.strikers)
 	return true
+
+
+## The next foe behind `t` on the line of a ballista's shot, within two tiles,
+## or null. A wall stops the bolt, and so does one of the company's own squads.
+func impale_target(a: Dictionary, t: Dictionary) -> Variant:
+	var dx: int = t.x - a.x
+	var dy: int = t.y - a.y
+	var len: float = JS.hypot(dx, dy)
+	if len == 0:
+		len = 1.0
+	var last := {"x": t.x, "y": t.y}
+	for k in range(1, 3):
+		var p := {"x": JS.rnd(t.x + (dx / len) * k), "y": JS.rnd(t.y + (dy / len) * k)}
+		if p.x == last.x and p.y == last.y:
+			continue
+		last = p
+		var tl: Variant = Grid.tile_at(map, p.x, p.y)
+		if tl == null:
+			return null
+		var prop: Variant = tl.get("prop")
+		if prop and DB.PROPS[prop].los == 2:
+			return null
+		var u: Variant = Grid.unit_at(units, p.x, p.y)
+		if u != null:
+			return u if u.faction != a.faction else null
+	return null
+
+
+## The bolt goes on through `via` into `t` at half force (no new roll: it is the same bolt).
+func _impale(a: Dictionary, via: Dictionary, t: Dictionary, damage: int, strikers: int) -> void:
+	if t.status != "active" and t.status != "routing":
+		return
+	var dmg: int = mini(t.hp, maxi(1, JS.rnd(damage * 0.5)))
+	var alive_before: int = t.alive
+	hits_taken[t.uid] = JS.get_or(hits_taken, t.uid, 0) + 1
+	Squad.damage_squad(t, dmg)
+	a.damageDealt += dmg
+	var lost: int = alive_before - t.alive
+	_emit({
+		"t": "attack", "uid": a.uid, "target": t.uid, "ranged": true, "ability": "impale", "hit": true, "damage": dmg,
+		"chance": 100, "arc": arc_of(t, a), "targetHp": t.hp, "strikers": strikers,
+		"aliveBefore": alive_before, "aliveAfter": t.alive, "via": via.uid,
+	})
+	var fallen := ""
+	if lost > 0 and t.alive > 0:
+		fallen = " %s %s %s." % ["One" if lost == 1 else str(lost), Squad.member_noun(t.typeId, lost), "falls" if lost == 1 else "fall"]
+	_log("The bolt goes on through into %s for %d.%s" % [Squad.squad_name(t), dmg, fallen], "good" if a.faction == "player" else "bad")
+	_after_damage(a, t, dmg, lost, 4, "Impaled")
+
+
+## What follows damage outside a plain attack (spells, a bolt carrying on,
+## bleeding): the squad falls, or its morale takes the wound and the losses.
+## Friendly fire earns nobody a kill.
+func _after_damage(by: Variant, t: Dictionary, damage: int, lost: int, extra: int, reason: String) -> void:
+	if t.hp <= 0:
+		if t.status == "routing":
+			t.status = "active"
+		_fall(t, by if by != null and by.faction != t.faction and by.status == "active" else null)
+		return
+	if t.status != "active":
+		return
+	var loss: int = JS.rnd((float(damage) / t.maxHp) * 28) + extra + JS.rnd(float(lost * 6) / t.size)
+	var why := reason
+	if lost > 0:
+		why = "Lost a soldier" if lost == 1 else "Lost %d soldiers" % lost
+	change_morale(t, -loss, why)
 
 
 func _push(a: Dictionary, t: Dictionary, follow := false) -> void:
@@ -1081,6 +1188,7 @@ func begin(run_ai: Callable) -> void:
 		run_ai.call(self)
 		if is_over():
 			return
+		_end_of_turn("enemy")
 	phase = "player"
 	_start_turn("player")
 
@@ -1116,7 +1224,8 @@ func move(uid: String, x: int, y: int, facing: Variant = null, states: Variant =
 	var clean: bool = rng.state == rng_before
 	if clean:
 		for i in range(mark, events.size()):
-			if events[i].t != "move":
+			# A walk cut short and fallen back is no clean move either.
+			if events[i].t != "move" or events[i].get("backward", false):
 				clean = false
 				break
 	if u.faction == "player":
@@ -1177,9 +1286,18 @@ func _stopped(u: Dictionary, fleeing: bool) -> bool:
 	return u.status == "dead" or u.status == "downed" or u.status == "fled" or (not fleeing and u.status != "active")
 
 
+## Whether a squad other than `u` stands on `p`.
+func _held_by_other(u: Dictionary, p: Dictionary) -> bool:
+	for w in units:
+		if not is_same(w, u) and w.x == p.x and w.y == p.y and (w.status == "active" or w.status == "routing"):
+			return true
+	return false
+
+
 ## Walk a path step by step, resolving reactions. Returns tiles moved.
 func walk(u: Dictionary, path: Array) -> int:
 	var seg: Array = [[{"x": u.x, "y": u.y}]]
+	var trail: Array = [{"x": u.x, "y": u.y}]
 	var moved := 0
 	var fleeing: bool = u.status == "routing"
 	for i in range(1, path.size()):
@@ -1208,6 +1326,7 @@ func walk(u: Dictionary, path: Array) -> int:
 		u.y = b.y
 		u.facing = Grid.dir_to(a, b)
 		seg[0].append({"x": b.x, "y": b.y})
+		trail.append({"x": b.x, "y": b.y})
 		moved += 1
 		# Spearwall: entering a guarded tile.
 		if u.status == "active":
@@ -1252,6 +1371,22 @@ func walk(u: Dictionary, path: Array) -> int:
 			if _stopped(u, fleeing):
 				break
 	_flush(u, seg)
+	# Cut short while passing through allies (a free attack broke the squad, a
+	# spearwall halted it, a foe stood in the way): it falls back along its
+	# path, still facing its way, to the last tile it had to itself, so no two
+	# squads ever share a tile. (Not in the archived original, which left both
+	# squads on the one tile.)
+	if u.status == "active" or u.status == "routing":
+		var j := trail.size() - 1
+		while j > 0 and _held_by_other(u, trail[j]):
+			j -= 1
+		if j < trail.size() - 1:
+			var back: Array = trail.slice(j)
+			back.reverse()
+			u.x = trail[j].x
+			u.y = trail[j].y
+			moved = j
+			_emit({"t": "move", "uid": u.uid, "path": back, "backward": true})
 	u.movedTiles += moved
 	return moved
 
@@ -1339,6 +1474,404 @@ func shout(uid: String, ability: String) -> bool:
 	return true
 
 
+# ---------------------------------------------------------------- spells and war machines
+
+## The squads a spell aimed at `at` would touch, in the order it reaches them,
+## with the share of its force each takes: `[{u, role, factor}]`. Lightning
+## arcs from the squad struck to the nearest other foes; blasts and stones
+## catch every squad on the tiles beside the one struck.
+func spell_reach(a: Dictionary, ab: Dictionary, at: Dictionary, from: Variant = null) -> Array:
+	var fp: Dictionary = a if from == null else from
+	var out: Array = []
+	if ab.has("aura"):
+		for u in active(a.faction):
+			if Grid.manhattan(u, fp) <= ab.aura:
+				out.append({"u": u, "role": "aura", "factor": 1})
+		return out
+	var main: Variant = Grid.unit_at(units, at.x, at.y)
+	if main != null and (ab.target == "tile" or ((main.faction != a.faction) if ab.target == "enemy" else (main.faction == a.faction))):
+		out.append({"u": main, "role": "main", "factor": 1})
+	if ab.get("splash"):
+		for n in Grid.neighbors(map, at):
+			var u: Variant = Grid.unit_at(units, n.x, n.y)
+			if u == null or (not ab.get("friendly", false) and u.faction == a.faction):
+				continue
+			out.append({"u": u, "role": "splash", "factor": ab.splash})
+	if ab.has("chain") and not out.is_empty() and out[0].role == "main":
+		var last: Dictionary = out[0].u
+		var factor = 1
+		var struck := {last.uid: true}
+		for j in ab.chain.jumps:
+			var near: Array = []
+			for u in units:
+				if (u.status == "active" or u.status == "routing") and u.faction != a.faction and not struck.has(u.uid) and Grid.manhattan(u, last) <= ab.chain.reach:
+					near.append(u)
+			if near.is_empty():
+				break
+			var anchor := last
+			near = JS.sort(near, func(p, q): return _chain_order(p, q, anchor))
+			var nxt: Dictionary = near[0]
+			factor *= ab.chain.falloff
+			struck[nxt.uid] = true
+			out.append({"u": nxt, "role": "chain", "factor": factor})
+			last = nxt
+	return out
+
+
+## Lightning arcs to the nearest foe, the most hurt first, then by uid.
+static func _chain_order(p: Dictionary, q: Dictionary, last: Dictionary) -> int:
+	var d: int = Grid.manhattan(p, last) - Grid.manhattan(q, last)
+	if d != 0:
+		return d
+	if p.hp != q.hp:
+		return p.hp - q.hp
+	return -1 if String(p.uid) < String(q.uid) else 1
+
+
+## Damage range a spell's share `factor` does to `t`: each caster's blow less armour, times the casters standing.
+func _spell_damage(a: Dictionary, ab: Dictionary, t: Dictionary, factor: Variant) -> Array:
+	var casters: int = maxi(1, a.alive)
+	var pierce = 1 if ab.get("ignoreArmor") else JS.get_or(ab, "pierce", 0)
+	var armor = t.stats.armor * (1 - pierce)
+	var lo: int = maxi(1, JS.rnd(ab.power[0] * factor - armor)) * casters
+	var hi: int = maxi(1, JS.rnd(ab.power[1] * factor - armor)) * casters
+	return [lo, hi]
+
+
+## What casting `ability_id` at the tile `at` would do now (opts: from?, movedTiles?).
+## SpellPreview `{legal, reason?, ability, at, chance, mods, casters, hits, scatter, moraleHit}`.
+func spell_preview(a: Dictionary, ability_id: String, at: Dictionary, opts: Dictionary = {}) -> Dictionary:
+	var ab: Variant = DB.ABILITIES.get(ability_id)
+	var fv: Variant = opts.get("from")
+	var from: Dictionary = {"x": a.x, "y": a.y} if fv == null else fv
+	var casters: int = maxi(1, a.alive)
+	var mods: Array = []
+	var base := {"legal": true, "ability": ability_id, "at": {"x": at.x, "y": at.y}, "chance": 100, "mods": mods, "casters": casters, "hits": [], "scatter": ab != null and bool(ab.get("scatter", false)), "moraleHit": 0}
+	if ab == null or ab.kind != "spell":
+		return _spell_fail(base, "Not a spell")
+	if not a.abilities.has(ability_id):
+		return _spell_fail(base, "Not known to this squad")
+	if Grid.tile_at(map, at.x, at.y) == null:
+		return _spell_fail(base, "Off the field")
+	var target: Variant = Grid.unit_at(units, at.x, at.y)
+	var mtv: Variant = opts.get("movedTiles")
+	var moved: bool = (a.movedTiles if mtv == null else mtv) > 0
+	if ab.get("engine") and moved:
+		return _spell_fail(base, "Cannot loose in a turn it has moved")
+	var hostile: bool = ab.has("power")
+	var range_v = JS.get_or(ab, "range", 1)
+	if ab.target == "self":
+		if at.x != from.x or at.y != from.y:
+			return _spell_fail(base, "Cast where the casters stand")
+	else:
+		if ab.target == "enemy" and (target == null or target.faction == a.faction):
+			return _spell_fail(base, "Choose an enemy squad")
+		if ab.target == "ally" and (target == null or target.faction != a.faction or target.status != "active"):
+			return _spell_fail(base, "Choose a friendly squad")
+		var d0 := Grid.dist(from, at)
+		if hostile and d0 < maxi(1, JS.get_or(ab, "minRange", 1)):
+			return _spell_fail(base, "Too close")
+		if d0 > range_v + 0.01:
+			return _spell_fail(base, "Out of range")
+		if ab.get("sight") and d0 > 0 and Grid.line_of_sight(map, from, at).blocked:
+			return _spell_fail(base, "No line of sight")
+		if hostile and setup.get("darkness") and d0 > range_v - 2:
+			return _spell_fail(base, "Too dark to see")
+	var chance = 100
+	if hostile:
+		chance = a.stats.ranged
+		mods.append(["Crew skill" if ab.get("engine") else "Spell skill", chance])
+		if target != null and target.faction != a.faction:
+			# Squads dodge a spell; nobody dodges a falling stone, only its aim.
+			var def: int = JS.rnd(float(target.stats.rangedDefense) / (2 if ab.get("engine") else 1))
+			chance -= def
+			mods.append(["Target defense", -def])
+			if target.status == "routing":
+				chance += 15
+				mods.append(["Fleeing target", 15])
+		if ab.get("hitBonus"):
+			chance += ab.hitBonus
+			mods.append(["Crude engine" if ab.get("engine") else "The spell seeks its mark", ab.hitBonus])
+		var d := Grid.dist(from, at)
+		if ab.get("engine") and d > 5:
+			var m := -JS.rnd((d - 5) * 3)
+			chance += m
+			mods.append(["Long range", m])
+		var ams := morale_state(a)
+		var am := 5 if ams == "confident" else -8 if ams == "shaken" else -15 if ams == "wavering" else 0
+		if am:
+			chance += am
+			mods.append(["Confident" if ams == "confident" else "Shaken" if ams == "shaken" else "Wavering", am])
+		if _enemy_beside(a, from):
+			chance -= 15
+			mods.append(["Engaged in melee", -15])
+		if Squad.has_status(a, "chilled"):
+			chance -= 10
+			mods.append(["Chilled", -10])
+		if setup.get("darkness"):
+			chance -= 10
+			mods.append(["Darkness", -10])
+		chance = maxi(5, mini(95, JS.rnd(chance)))
+	var p: float = float(chance) / 100.0
+	var hits: Array = []
+	for r in spell_reach(a, ab, at, from):
+		var u: Dictionary = r.u
+		var ally: bool = u.faction == a.faction
+		if ab.has("heal"):
+			var missing = u.alive * u.hpPer - u.hp
+			var lo = min(missing, ab.heal[0] * casters)
+			var hi = min(missing, ab.heal[1] * casters)
+			hits.append({"uid": u.uid, "role": r.role, "min": lo, "max": hi, "heal": true, "ally": ally, "soldiers": [0, 0], "kill": 0})
+			continue
+		if not hostile:
+			hits.append({"uid": u.uid, "role": r.role, "min": 0, "max": 0, "heal": false, "ally": ally, "soldiers": [0, 0], "kill": 0})
+			continue
+		var dm := _spell_damage(a, ab, u, r.factor)
+		var killing := 0
+		for dmg in range(dm[0], dm[1] + 1):
+			if dmg >= u.hp:
+				killing += 1
+		# Splash from a stone that strays still lands somewhere near; the rest needs the spell to strike home.
+		var reach: float = 0.5 + p * 0.5 if r.role == "splash" and ab.get("scatter") else p
+		hits.append({"uid": u.uid, "role": r.role, "min": dm[0], "max": dm[1], "heal": false, "ally": ally, "soldiers": [Squad.kills_from(u, dm[0]), Squad.kills_from(u, dm[1])], "kill": (float(killing) / (dm[1] - dm[0] + 1)) * reach})
+	var morale_hit := 0
+	if target != null:
+		for h in hits:
+			if h.role == "main" and not h.heal:
+				morale_hit = JS.rnd(((h.min + h.max) / 2.0 / target.maxHp) * 28) + JS.get_or(ab, "moraleDamage", 0)
+				break
+	base.chance = chance
+	base.hits = hits
+	base.moraleHit = morale_hit
+	return base
+
+
+static func _spell_fail(base: Dictionary, reason: String) -> Dictionary:
+	base.legal = false
+	base["reason"] = reason
+	return base
+
+
+## Squads (or the caster's own tile) a spell could be cast at right now.
+func spell_targets(u: Dictionary, ability_id: String, from: Variant = null) -> Array:
+	var ab: Variant = DB.ABILITIES.get(ability_id)
+	if ab == null or ab.kind != "spell":
+		return []
+	if ab.target == "self":
+		return [u]
+	var fp: Dictionary = u if from == null else from
+	var pool: Array = []
+	if ab.target == "ally":
+		pool = active(u.faction)
+	else:
+		for x in living():
+			if x.faction != u.faction:
+				pool.append(x)
+	var out: Array = []
+	for t in pool:
+		if spell_preview(u, ability_id, t, {"from": fp}).legal:
+			out.append(t)
+	return out
+
+
+## Whether the squad may use this spell at all now (cooldown, nerve, having acted): `{ok, reason?}`.
+func can_cast(u: Dictionary, ability_id: String) -> Dictionary:
+	var ab: Variant = DB.ABILITIES.get(ability_id)
+	if ab == null or ab.kind != "spell" or not u.abilities.has(ability_id):
+		return {"ok": false, "reason": "Not known to this squad"}
+	if not can_act(u) or u.hasActed:
+		return {"ok": false, "reason": "Has already acted"}
+	var cd: int = JS.get_or(u.cooldowns, ability_id, 0)
+	if cd > 0:
+		return {"ok": false, "reason": "Ready in %d turns" % cd}
+	# A war machine's shot is its plain attack; spells need a steady nerve.
+	var def: Variant = DB.UNIT_TYPES.get(u.typeId)
+	var primary: Variant = def.get("primary") if def != null else null
+	if morale_state(u) == "wavering" and primary != ability_id:
+		return {"ok": false, "reason": "Too shaken"}
+	if ab.get("engine") and u.movedTiles > 0:
+		return {"ok": false, "reason": "Cannot loose in a turn it has moved"}
+	return {"ok": true}
+
+
+## Cast a spell (or loose a war machine's stone) at the tile `at`.
+func cast(uid: String, ability_id: String, at: Dictionary) -> bool:
+	var a: Dictionary = unit(uid)
+	if not can_cast(a, ability_id).ok:
+		return false
+	var pv := spell_preview(a, ability_id, at)
+	if not pv.legal:
+		return false
+	move_records.erase(uid)
+	var ab: Dictionary = DB.ABILITIES[ability_id]
+	_resolve_spell(a, ab, at, pv)
+	if ab.get("cooldown"):
+		a.cooldowns[ability_id] = ab.cooldown
+	a.hasActed = true
+	_after_action(a)
+	return true
+
+
+## The spell takes effect. One roll decides whether it strikes home; a stone
+## or fireball that misses lands a tile astray. Each squad touched then takes
+## one damage roll (or one healing roll): the casters' power is rolled once
+## per squad, never per caster.
+func _resolve_spell(a: Dictionary, ab: Dictionary, at: Dictionary, pv: Dictionary) -> void:
+	var hostile: bool = ab.has("power")
+	var hit: bool = not hostile or rng.next() * 100 < pv.chance
+	var impact := {"x": at.x, "y": at.y}
+	if not hit and ab.get("scatter"):
+		var astray: Array = []
+		for dd in [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]:
+			var q := {"x": at.x + dd[0], "y": at.y + dd[1]}
+			if Grid.tile_at(map, q.x, q.y) != null and not (q.x == a.x and q.y == a.y):
+				astray.append(q)
+		if not astray.is_empty():
+			impact = astray[rng.rint(0, astray.size() - 1)]
+	# A stray stone or fireball strikes whoever stands where it lands, in full.
+	var reach: Array = spell_reach(a, ab, impact) if hit or ab.get("scatter") else []
+	var casters: int = maxi(1, a.alive)
+	var hits: Array = []
+	var after: Array = []
+	for r in reach:
+		var t: Dictionary = r.u
+		if t.status != "active" and t.status != "routing":
+			continue
+		var alive_before: int = t.alive
+		var damage := 0
+		var heal = 0
+		if ab.has("power"):
+			var dm := _spell_damage(a, ab, t, r.factor)
+			damage = mini(t.hp, rng.rint(dm[0], dm[1]))
+			hits_taken[t.uid] = JS.get_or(hits_taken, t.uid, 0) + 1
+			Squad.damage_squad(t, damage)
+			if t.faction != a.faction:
+				a.damageDealt += damage
+		if ab.has("heal"):
+			heal = Squad.heal_squad(t, rng.rint(ab.heal[0] * casters, ab.heal[1] * casters))
+			# Healers learn from the wounds they close.
+			if a.faction == "player":
+				a.damageDealt += JS.rnd(heal * 0.5)
+		var status: Variant = null
+		if ab.has("status") and t.hp > 0:
+			status = ab.status.id
+		elif ab.get("bleed") and damage > 0 and t.hp > 0:
+			status = "bleeding"
+		var h := {"uid": t.uid, "role": r.role, "damage": damage, "heal": heal, "hp": t.hp, "aliveBefore": alive_before, "aliveAfter": t.alive}
+		if status != null:
+			h["status"] = status
+		hits.append(h)
+		after.append({"t": t, "role": r.role, "damage": damage, "heal": heal, "lost": alive_before - t.alive})
+	_emit({"t": "spell", "uid": a.uid, "ability": ab.id, "at": {"x": at.x, "y": at.y}, "impact": impact, "hit": hit, "chance": pv.chance, "casters": casters, "hits": hits})
+	if hostile and not hit:
+		if ab.get("scatter"):
+			_log("%s: %s goes astray%s (%s%%)." % [Squad.squad_name(a), ab.name, "" if not hits.is_empty() else " and lands on empty ground", JS.num_str(pv.chance)], "neutral")
+		else:
+			var aimed: Variant = Grid.unit_at(units, at.x, at.y)
+			_log("%s: %s misses %s (%s%%)." % [Squad.squad_name(a), ab.name, Squad.squad_name(a if aimed == null else aimed), JS.num_str(pv.chance)], "neutral")
+	elif not hostile and not ab.has("heal"):
+		_log("%s: %s!" % [Squad.squad_name(a), ab.name], "good" if a.faction == "player" else "bad")
+	for f in after:
+		_spell_aftermath(a, ab, f)
+
+
+## One squad's consequences of a spell, after the spell event: the log, falls
+## and morale, healing's cheer, and the conditions it lays on.
+func _spell_aftermath(a: Dictionary, ab: Dictionary, f: Dictionary) -> void:
+	var t: Dictionary = f.t
+	var damage: int = f.damage
+	var lost: int = f.lost
+	if ab.has("power"):
+		var fallen := ""
+		if lost > 0 and t.alive > 0:
+			fallen = " %s %s %s." % ["One" if lost == 1 else str(lost), Squad.member_noun(t.typeId, lost), "falls" if lost == 1 else "fall"]
+		var friendly := " (their own side!)" if t.faction == a.faction else ""
+		var lead := "The lightning arcs to" if f.role == "chain" else "The blast catches" if f.role == "splash" else "%s strikes" % ab.name
+		_log("%s %s%s for %d.%s" % [lead, Squad.squad_name(t), friendly, damage, fallen], "bad" if t.faction == "player" else "good")
+		var md: int = JS.get_or(ab, "moraleDamage", 0)
+		_after_damage(a, t, damage, lost, md if f.role == "main" else JS.rnd(md / 2.0), ab.name)
+	if ab.has("heal"):
+		if f.heal > 0:
+			_log("%s: the wounds of %s close (+%s)." % [ab.name, Squad.squad_name(t), JS.num_str(f.heal)], "good" if t.faction == "player" else "bad")
+		if ab.get("moraleGain"):
+			change_morale(t, ab.moraleGain, ab.name)
+	if t.status != "active" and t.status != "routing":
+		return
+	if ab.has("status"):
+		_add_status(t, ab.status.id, ab.status.turns, a.uid)
+		if ab.status.id == "bloodlust":
+			_log("%s %s seized by bloodlust!" % [Squad.squad_name(t), "is" if t.leader else "are"], "good" if t.faction == "player" else "bad")
+		if not ab.has("heal") and ab.get("moraleGain"):
+			change_morale(t, ab.moraleGain, ab.name)
+	if ab.get("bleed") and damage > 0:
+		_add_status(t, "bleeding", 2, a.uid, maxi(1, JS.rnd(damage * ab.bleed)))
+
+
+## Lay a condition on a squad (renewing it if it is already there).
+func _add_status(t: Dictionary, id: String, turns: int, by: Variant = null, power: Variant = null) -> void:
+	var cur: Variant = Squad.status_of(t, id)
+	if cur != null:
+		cur.turns = maxi(cur.turns, turns)
+		if power:
+			cur["power"] = maxi(JS.get_or(cur, "power", 0), power)
+		if by != null:
+			cur["by"] = by
+	else:
+		var s := {"id": id, "turns": turns}
+		if by != null:
+			s["by"] = by
+		if power != null:
+			s["power"] = power
+		if not t.has("statuses"):
+			t["statuses"] = []
+		t.statuses.append(s)
+	_emit({"t": "status", "uid": t.uid, "status": id, "on": true, "turns": turns})
+
+
+## Chill and frenzy wear off at the end of the squad's own turn once their time is up.
+func _end_of_turn(faction: String) -> void:
+	for u in units:
+		if u.faction != faction or u.get("statuses", []).is_empty():
+			continue
+		for s in u.statuses.duplicate():
+			if s.id == "bleeding":
+				continue
+			s.turns -= 1
+			if s.turns > 0:
+				continue
+			u.statuses.erase(s)
+			if u.status == "active" or u.status == "routing":
+				_emit({"t": "status", "uid": u.uid, "status": s.id, "on": false, "turns": 0})
+
+
+## Bleeding wounds open again at the start of the squad's turn.
+func _bleed(u: Dictionary) -> void:
+	var s: Variant = Squad.status_of(u, "bleeding")
+	if s == null or (u.status != "active" and u.status != "routing"):
+		return
+	var alive_before: int = u.alive
+	var damage: int = mini(u.hp, JS.get_or(s, "power", 1))
+	Squad.damage_squad(u, damage)
+	_emit({"t": "dot", "uid": u.uid, "status": "bleeding", "damage": damage, "hp": u.hp, "aliveBefore": alive_before, "aliveAfter": u.alive})
+	var lost: int = alive_before - u.alive
+	var fallen := ""
+	if lost > 0 and u.alive > 0:
+		fallen = " %s %s %s." % ["One" if lost == 1 else str(lost), Squad.member_noun(u.typeId, lost), "dies" if lost == 1 else "die"]
+	_log("%s bleed from the gutripper hex (−%d).%s" % [Squad.squad_name(u), damage, fallen], "bad" if u.faction == "player" else "good")
+	s.turns -= 1
+	if s.turns <= 0:
+		u.statuses.erase(s)
+		if u.hp > 0:
+			_emit({"t": "status", "uid": u.uid, "status": "bleeding", "on": false, "turns": 0})
+	var by: Variant = null
+	if s.has("by"):
+		for x in units:
+			if x.uid == s.by:
+				by = x
+				break
+	_after_damage(by, u, damage, lost, 3, "Bleeding")
+
+
 func end_unit(uid: String) -> void:
 	var u: Dictionary = unit(uid)
 	u.done = true
@@ -1354,6 +1887,7 @@ func end_turn(run_ai: Callable) -> void:
 	if phase != "player":
 		return
 	move_records.clear()
+	_end_of_turn("player")
 	phase = "enemy"
 	_start_turn("enemy")
 	if is_over():
@@ -1361,6 +1895,7 @@ func end_turn(run_ai: Callable) -> void:
 	run_ai.call(self)
 	if is_over():
 		return
+	_end_of_turn("enemy")
 	_after_enemy_turn()
 	if is_over():
 		return
@@ -1585,6 +2120,8 @@ func _start_turn(faction: String) -> void:
 		if u.get("stance"):
 			u.erase("stance")
 			_emit({"t": "stance", "uid": u.uid, "stance": null})
+		if not u.get("statuses", []).is_empty():
+			_bleed(u)
 		# Trolls knit their wounds closed, but a fallen troll stays down.
 		if u.status == "active" and u.tags.has("regenerate"):
 			var healed = Squad.heal_squad(u, JS.rnd(u.hpPer * 0.12) * u.alive)

@@ -10,6 +10,8 @@ const Game = preload("res://scripts/meta/game.gd")
 const DB = preload("res://scripts/data/db.gd")
 const Prefs = preload("res://scripts/core/prefs.gd")
 const Card = preload("res://scripts/ui/widgets/card.gd")
+const Soldier = preload("res://scripts/meta/soldier.gd")
+const Rng = preload("res://scripts/core/rng.gd")
 
 const SAVE := "user://test_screens_save.json"
 const SCREENS := {
@@ -237,6 +239,90 @@ func test_barracks_actions() -> void:
 		assert_eq(so.men, DB.squad_size(so.typeId), "every squad refilled")
 
 
+## Every muster has a specialist (mages or a war machine): the recruit card
+## tags it and tells what it does; the Barracks says one answers each muster.
+func test_barracks_specialist() -> void:
+	var g := fixture()
+	var spec: Dictionary = Soldier.new_soldier(Rng.new(5), "battle_mage", 1, func(): return "spec_mage", 0)
+	var ball: Dictionary = Soldier.new_soldier(Rng.new(6), "ballista", 1, func(): return "spec_ballista", 0)
+	g.recruits = g.recruits.filter(func(r): return not DB.UNIT_TYPES[r.typeId].has("crew") and not (DB.UNIT_TYPES[r.typeId].get("tags", []) as Array).has("caster"))
+	g.recruits.append(spec)
+	g.recruits.append(ball)
+	var s := _mount("base")
+	App.panel = "barracks"
+	s.refresh()
+	var po: Control = s.panel_overlay
+	var card: Node = po.find_child("Recruit_spec_mage", true, false)
+	if assert_not_null(card, "the mages' card"):
+		var tag: Node = card.find_child("Specialist", true, false)
+		assert_not_null(tag, "specialist tag")
+		assert_eq(tag.find_children("*", "Label", true, false)[0].text, "Mages")
+		var blurb: RichTextLabel = card.find_child("SpecialistBlurb", true, false)
+		assert_true(blurb != null and blurb.get_parsed_text() == DB.UNIT_TYPES.battle_mage.blurb, "blurb")
+		assert_true(_texts(card).contains("Battle Mages"), "type label")
+	var card2: Node = po.find_child("Recruit_spec_ballista", true, false)
+	if assert_not_null(card2, "the ballista's card"):
+		assert_eq(card2.find_child("Specialist", true, false).find_children("*", "Label", true, false)[0].text, "War machine")
+		assert_true(_texts(card2).contains("Recruit Ballista Crew"), "crew label: " + _texts(card2))
+	var other: Node = po.find_child("Recruit_" + str(g.recruits[0].id), true, false)
+	assert_true(other.find_child("Specialist", true, false) == null, "no tag on a line squad")
+	assert_true(_texts(po).contains("Each muster one specialist squad also offers its service: three battle mages, or a ballista or mangonel with its crew."), "the muster note")
+
+
+## Text of every Label and RichTextLabel under `n`.
+func _texts(n: Node) -> String:
+	var out := ""
+	for c in n.find_children("*", "", true, false):
+		if c is Label:
+			out += (c as Label).text + "
+"
+		elif c is RichTextLabel:
+			out += (c as RichTextLabel).get_parsed_text() + "
+"
+	return out
+
+
+## Mages, a ballista and a mangonel in the roster detail: their skills, their
+## missiles, gear that is not forged at the armoury, and their passives.
+func test_soldier_detail_specialists() -> void:
+	var g := fixture()
+	var ids := {}
+	for t in ["battle_mage", "ballista", "mangonel"]:
+		var so: Dictionary = Soldier.new_soldier(Rng.new(9), t, 2, func(): return "sp_" + t, 0)
+		g.roster.append(so)
+		ids[t] = so.id
+	var s := _mount("base")
+	var detail := func(t: String) -> String:
+		App.soldier = ids[t]
+		s.refresh()
+		assert_not_null(s.soldier_overlay, "detail of " + t)
+		return _texts(s.soldier_overlay)
+	var m: String = detail.call("battle_mage")
+	for want in ["Spell skill", "Mages", "Arcane bolt", "5–7 × 3 = 15–21", "Staves and spellbooks", "(not forged at the armoury)", "Robes, no armour", "Chain Lightning", "Promotion unlocks: Mending Circle"]:
+		assert_true(m.contains(want), "mage: %s" % want)
+	assert_false(m.contains("bolts in the quiver"), "mages carry no bolts")
+	assert_false(m.contains("Ranged"), "no Ranged line for mages")
+	var b: String = detail.call("ballista")
+	for want in ["Crew skill", "Crew", "Bolt", "20–26 × 3 = 60–78", "The ballista and its tackle", "Leather aprons", "Passive: a bolt that strikes home goes on into the next foe behind, at half force.", "A war machine: it cannot loose in a turn it has moved."]:
+		assert_true(b.contains(want), "ballista: %s" % want)
+	assert_false(b.contains("bolts in the quiver"), "a ballista counts no bolts")
+	var g2: String = detail.call("mangonel")
+	for want in ["Stone", "10–14 × 3 = 30–42", "The mangonel and its tackle", "Hurl Stone", "A war machine: it cannot loose in a turn it has moved."]:
+		assert_true(g2.contains(want), "mangonel: %s" % want)
+	assert_false(g2.contains("Shot damage"), "the stone replaces the shot line")
+	# A crossbowman still counts his bolts.
+	App.soldier = null
+	for so in g.roster:
+		if so.typeId == "crossbowman":
+			App.soldier = so.id
+	if App.soldier != null:
+		s.refresh()
+		var x := _texts(s.soldier_overlay)
+		assert_true(x.contains("bolts in the quiver"), "crossbow bolts")
+		assert_true(x.contains("Shot damage") and x.contains("Ranged"), "crossbow lines")
+	App.soldier = null
+
+
 func test_soldier_detail() -> void:
 	var g := fixture()
 	var s := _mount("base")
@@ -333,7 +419,14 @@ func test_manual_pages() -> void:
 	var closed := [false]
 	var m: Control = load("res://scripts/ui/screens/manual.gd").make("battle", func(): closed[0] = true)
 	host.add_child(m)
-	assert_eq(_audit(m, "manual"), 8, "seven tabs and To the field")
+	assert_eq(_audit(m, "manual"), 9, "eight tabs and To the field")
+	var magic: Array = m.pages().filter(func(p): return p.id == "magic")
+	if assert_eq(magic.size(), 1, "the Magic & Machines page"):
+		assert_eq(magic[0].title, "Magic & Machines")
+		assert_eq(magic[0].body.size(), 5, "five paragraphs")
+		assert_true(str(magic[0].body[1]).contains("res://assets/icons/staff.svg"), "staff icon")
+		assert_true(str(magic[0].body[3]).contains("res://assets/icons/engine.svg"), "engine icon")
+		assert_true(str(magic[0].body[0]).contains("Esc"), "the Esc key")
 	for p in m.pages():
 		m.find_child("Tab_" + p.id, true, false).pressed.emit()
 		assert_eq(m.page, p.id)

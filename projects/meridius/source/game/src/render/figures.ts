@@ -57,15 +57,15 @@ interface Style {
   /** Hood worn down: a bunched cowl around the neck instead of a scarf. */
   cowl?: string;
   helmet?: 'none' | 'kettle' | 'goblin' | 'orc' | 'horned';
-  hairStyle?: 'cap' | 'spiky' | 'long' | 'shaved';
-  beardStyle?: 'full' | 'chin';
+  hairStyle?: 'cap' | 'spiky' | 'long' | 'shaved' | 'bald';
+  beardStyle?: 'full' | 'chin' | 'long';
   plume?: string;
   /** Feather crest over a bare scalp (savage orcs); value scales its height. */
   mohawk?: number;
   rags?: string;
   pauldrons?: 'spiked' | 'leather' | 'brute' | 'plate' | 'none';
   fur?: string;
-  weapon: 'sword' | 'spear' | 'crossbow' | 'gspear' | 'bow' | 'cleaver' | 'mace' | 'club' | 'log' | 'knife' | 'horn';
+  weapon: 'sword' | 'spear' | 'crossbow' | 'gspear' | 'bow' | 'cleaver' | 'mace' | 'club' | 'log' | 'knife' | 'horn' | 'staff' | 'skullstaff' | 'mallet';
   /** A pitchfork rather than a spearhead (village militia). */
   fork?: boolean;
   /** The goblin riding a wolf rider's wolf, or the knight on a horse. */
@@ -97,20 +97,45 @@ interface Style {
   earring?: boolean;
   dog?: DogCoat;
   troll?: TrollLook;
+  /** Ankle-length robe over the legs (battle mage); the robe colour is `tunic`, this is its front band. */
+  robe?: string;
+  /** The hood without its point, edged in gold (battle mage). */
+  hoodRound?: boolean;
+  /** Gold circlet across the brow. */
+  circlet?: string;
+  /** Close cap over the hair: linen coif, felt cap, leather cap, knotted scarf or a mage's skullcap. */
+  cap?: 'coif' | 'felt' | 'leather' | 'scarf' | 'skullcap';
+  capColor?: string;
+  female?: boolean;
+  /** Head of a mage's staff, and the colour of the light it gives. */
+  staffHead?: 'crystal' | 'orb' | 'crook' | 'ring';
+  glow?: string;
+  /** Goblin shaman's headdress. */
+  headdress?: 'antlers' | 'feathers' | 'skull' | 'antlerFeathers' | 'skullFeathers';
+  /** Long ragged cloak hanging from the shoulders (shaman's furs). */
+  cloak?: string;
+  /** Necklace of teeth and finger bones over the chest. */
+  necklace?: boolean;
+  /** Bundles of feathers, bones and a little skull tied to the belt. */
+  fetishes?: boolean;
+  /** Leather work apron with a tool belt (engineer). */
+  apron?: string;
+  /** Sleeves rolled to the elbow, forearms bare. */
+  rolled?: boolean;
 }
 
-const INK = '#2a1a10';
-const STEEL = '#c9ced4';
-const STEEL_D = '#7d858e';
-const WOOD = '#7a5532';
-const LEATHER = '#6b4426';
-const BONE = '#e6dcc2';
-const GOLD = '#d2a63c';
+export const INK = '#2a1a10';
+export const STEEL = '#c9ced4';
+export const STEEL_D = '#7d858e';
+export const WOOD = '#7a5532';
+export const LEATHER = '#6b4426';
+export const BONE = '#e6dcc2';
+export const GOLD = '#d2a63c';
 
 const HAIRS = ['#5a3a1e', '#d9b25a', '#2b211a', '#8a4a22', '#6e4b2a', '#3a2a1a'];
 const SKINS = ['#e9bf98', '#dcab84', '#c9926a', '#efc7a4', '#b07a52', '#f4d2b2'];
 
-function shade(col: string, f: number): string {
+export function shade(col: string, f: number): string {
   // Accepts '#rrggbb' or a previous result of shade() ('rgb(r,g,b)').
   let rgb: number[];
   if (col.startsWith('rgb')) rgb = col.slice(col.indexOf('(') + 1, -1).split(',').map(Number);
@@ -305,6 +330,60 @@ export function styleFor(type: string, variant: number): Style {
         weapon: 'log', shield: 'none', emblem: 'none', pauldrons: 'none', troll: looks[v],
       };
     }
+    case 'battle_mage': {
+      // Amberfeld battle mages: blue robes to the ankle with a deep blue band edged
+      // in gold, bare hands, a tall staff with a pale-blue focus. Hooded or bare-headed,
+      // an old greybeard or two, two women.
+      const looks: Partial<Style>[] = [
+        { skin: SKINS[0], hair: '#6e4b2a', hood: '#24479a', hoodRound: true, beard: true, beardStyle: 'full', staffHead: 'orb' },
+        { skin: SKINS[3], hair: '#ece8de', hairStyle: 'bald', beard: true, beardStyle: 'long', staffHead: 'crystal' },
+        { skin: SKINS[5], hair: '#8a4a22', hairStyle: 'long', female: true, beard: false, circlet: GOLD, staffHead: 'crook' },
+        { skin: SKINS[4], hair: '#2b211a', hood: '#24479a', hoodRound: true, beard: false, staffHead: 'ring' },
+        { skin: SKINS[1], hair: '#d8d4ca', hairStyle: 'cap', cap: 'skullcap', capColor: '#1f3f8c', beard: true, beardStyle: 'long', staffHead: 'orb' },
+        { skin: SKINS[2], hair: '#3a2a1a', hairStyle: 'long', female: true, beard: false, cowl: '#24479a', staffHead: 'crystal' },
+      ];
+      const lk = looks[v];
+      return human({
+        tunic: '#2f58b8', tabard: '#2f58b8', robe: '#1f3f8c', trim: GOLD, trousers: '#1f3f8c', boots: '#4a3220', belt: '#5a3a22',
+        scarf: undefined, emblem: 'none', weapon: 'staff', glow: '#a8e0ff', hairStyle: 'cap', bulk: 0.98,
+        ...lk, gauntlet: lk.skin,
+      });
+    }
+    case 'goblin_shaman':
+      // The horde's witch-doctors: hide vest, a long ragged fur cloak, bones and
+      // fetishes, war paint, an antler, feather or skull-mask headdress and a
+      // crooked staff topped with a horned skull that glows green or orange.
+      return {
+        kind: 'goblin', height: 0.84, bulk: 0.95, skin: goblinSkin, hair: '#1c1612', beard: false,
+        tunic: ['#7a5636', '#6e4c30', '#80603c', '#735234', '#6a4a2e', '#7c5838'][v], tabard: '#5a3e26', trim: '#a3261c',
+        trousers: '#3a2c20', boots: '#3b2a1d', belt: '#4a2f1c', helmet: 'none', hairStyle: 'shaved',
+        cloak: ['#5c4c3c', '#4e4236', '#66523e', '#56483a', '#5e4c3a', '#4a3e32'][v], fur: '#3a2c22',
+        rags: v % 2 ? '#b3261c' : '#c8862a', weapon: 'skullstaff', shield: 'none', emblem: 'none', pauldrons: 'none',
+        glow: v % 2 ? '#ffa040' : '#9cf05a',
+        headdress: (['antlers', 'skull', 'feathers', 'antlerFeathers', 'skullFeathers', 'antlers'] as const)[v],
+        warpaint: ['#b3261c', '#c8862a', '#b3261c', '#e0d8c0', '#c8862a', '#b3261c'][v],
+        paint: (['mask', 'claw', 'stripe', 'mask', 'claw', 'claw'] as const)[v],
+        necklace: true, fetishes: true,
+        nose: [1.2, 1, 1.35, 1.1, 0.9, 1.25][v], ears: [1.1, 1.25, 1, 1.3, 1.15, 0.95][v],
+      };
+    case 'engineer': {
+      // The company's engine crews: blue tunic, leather apron and tool belt,
+      // sleeves rolled to the elbow, a big wooden mallet.
+      const looks: Partial<Style>[] = [
+        { cap: 'coif', capColor: '#e6dcc4', beard: false },
+        { hair: '#5a3a1e', beard: true, beardStyle: 'full' },
+        { cap: 'felt', capColor: '#24479a', beard: true, beardStyle: 'chin' },
+        { hairStyle: 'bald', hair: '#6e4b2a', beard: true, beardStyle: 'full' },
+        { cap: 'leather', capColor: '#6b4426', beard: false },
+        { cap: 'scarf', capColor: '#8e2f22', hair: '#2b211a', beard: true, beardStyle: 'chin' },
+      ];
+      const sk = SKINS[(v + 2) % SKINS.length];
+      return human({
+        skin: sk, gauntlet: sk, tunic: '#2f58b8', tabard: '#2f58b8', trim: '#1f3f8c', trousers: '#4e4232', boots: '#5a3820', belt: '#3e2a1a',
+        scarf: undefined, emblem: 'none', weapon: 'mallet', apron: '#9a6a3c', rolled: true, hairStyle: 'cap', bulk: 1.04,
+        ...looks[v],
+      });
+    }
     default:
       return human({});
   }
@@ -312,7 +391,7 @@ export function styleFor(type: string, variant: number): Style {
 
 // ---------------------------------------------------------------- primitives
 
-function poly(x: CanvasRenderingContext2D, pts: number[][], fill: string, lw = 2.4, stroke = INK) {
+export function poly(x: CanvasRenderingContext2D, pts: number[][], fill: string, lw = 2.4, stroke = INK) {
   x.beginPath();
   pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
   x.closePath();
@@ -821,7 +900,7 @@ function spiral(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, 
 }
 
 /** Small bone skull trophy. */
-function skull(x: CanvasRenderingContext2D, cx: number, cy: number, s = 1) {
+export function skull(x: CanvasRenderingContext2D, cx: number, cy: number, s = 1) {
   x.fillStyle = '#ece4cc';
   x.beginPath();
   x.ellipse(cx, cy, 5 * s, 6 * s, 0, 0, Math.PI * 2);
@@ -926,6 +1005,280 @@ function warHorn(x: CanvasRenderingContext2D, mx: number, my: number, cx: number
   x.ellipse(1, 0, 2.2, 8, 0, 0, Math.PI * 2);
   x.fillStyle = '#2a1a10';
   x.fill();
+  x.restore();
+}
+
+/** '#rrggbb' as rgba() with alpha `a`. */
+function rgba(hex: string, a: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/** Soft light baked into the sprite around a glowing focus. */
+function halo(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, col: string, a: number) {
+  const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+  g.addColorStop(0, rgba(col, a));
+  g.addColorStop(0.3, rgba(col, a * 0.55));
+  g.addColorStop(0.65, rgba(col, a * 0.16));
+  g.addColorStop(1, rgba(col, 0));
+  x.fillStyle = g;
+  x.fillRect(cx - r, cy - r, r * 2, r * 2);
+}
+
+/** A four-pointed glint of light. */
+function glint(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, col: string) {
+  const k = r * 0.16;
+  x.fillStyle = col;
+  x.beginPath();
+  x.moveTo(cx, cy - r);
+  x.lineTo(cx + k, cy - k);
+  x.lineTo(cx + r, cy);
+  x.lineTo(cx + k, cy + k);
+  x.lineTo(cx, cy + r);
+  x.lineTo(cx - k, cy + k);
+  x.lineTo(cx - r, cy);
+  x.lineTo(cx - k, cy - k);
+  x.closePath();
+  x.fill();
+}
+
+/**
+ * A battle mage's staff held at (hx, hy) and leaning by `ang`: dark wood with
+ * gold collars and an iron foot, topped by a pale-blue crystal shard, an orb in
+ * a gold cage, a crook or a ring. `blaze` 0 is dark (dead), 1 a steady glow,
+ * 2 blazing (casting). Returns the focus of the light in the caller's space.
+ */
+function mageStaff(x: CanvasRenderingContext2D, hx: number, hy: number, ang: number, s: Style, blaze: number): number[] {
+  const L = 150;
+  const top = -L * 0.62;
+  const bot = L * 0.38;
+  const kind = s.staffHead ?? 'crystal';
+  const fl = kind === 'crook' ? [9, top - 6] : kind === 'ring' ? [0, top - 13] : kind === 'orb' ? [0, top - 10] : [0, top - 15];
+  const c = Math.cos(ang);
+  const sn = Math.sin(ang);
+  const focus = [hx + fl[0] * c - fl[1] * sn, hy + fl[0] * sn + fl[1] * c];
+  const glow = s.glow ?? '#a8e0ff';
+  if (blaze > 0) halo(x, focus[0], focus[1], blaze > 1 ? 44 : 22, glow, blaze > 1 ? 0.8 : 0.5);
+  const lit = blaze > 1 ? '#f2fbff' : blaze > 0 ? '#c4ecff' : '#8aa4b2';
+  const deep = blaze > 1 ? '#9ad6ff' : blaze > 0 ? '#5aa8de' : '#4c6270';
+  const WOODS = '#5e3c22';
+  x.save();
+  x.translate(hx, hy);
+  x.rotate(ang);
+  const shaftTop = kind === 'crook' ? top - 10 : top + 2;
+  poly(x, [[-2.8, bot], [2.8, bot], [2.4, shaftTop], [-2.4, shaftTop]], WOODS, 1.8);
+  x.fillStyle = shade(WOODS, 0.35);
+  x.fillRect(-1.9, shaftTop + 2, 1.3, bot - shaftTop - 6);
+  poly(x, [[-3.2, bot - 9], [3.2, bot - 9], [2.4, bot + 2], [-2.4, bot + 2]], STEEL_D, 1.4);
+  poly(x, [[-3.4, -10], [3.4, -10], [3.4, 10], [-3.4, 10]], LEATHER, 1.4);
+  for (const gy of [top + 14, top + 21]) poly(x, [[-3.8, gy], [3.8, gy], [3.8, gy + 3.4], [-3.8, gy + 3.4]], GOLD, 1.1);
+  const gem = (pts: number[][], light: number[][]) => {
+    poly(x, pts, lit, 1.8);
+    poly(x, light, deep, 0);
+    x.beginPath();
+    pts.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+    x.closePath();
+    x.lineWidth = 1.8;
+    x.strokeStyle = INK;
+    x.stroke();
+  };
+  if (kind === 'crystal') {
+    // A tall shard gripped in three gold claws.
+    poly(x, [[-1.5, top + 4], [-8, top - 6], [-6, top - 12], [-3, top - 4]], GOLD, 1.3);
+    gem([[0, top - 34], [6, top - 24], [5.5, top - 6], [0, top + 1], [-5.5, top - 6], [-6, top - 24]], [[0, top - 34], [6, top - 24], [5.5, top - 6], [0, top + 1]]);
+    x.strokeStyle = 'rgba(255,255,255,0.85)';
+    x.lineWidth = 1.4;
+    x.beginPath();
+    x.moveTo(-3, top - 22);
+    x.lineTo(-2.6, top - 8);
+    x.stroke();
+    poly(x, [[1.5, top + 4], [8, top - 6], [6, top - 12], [3, top - 4]], GOLD, 1.3);
+  } else if (kind === 'orb') {
+    // An orb in a gold cage of three prongs.
+    poly(x, [[-1, top + 3], [1, top + 3], [1.4, top - 20], [-1.4, top - 20]], GOLD, 1.1);
+    x.beginPath();
+    x.arc(0, top - 10, 8.5, 0, Math.PI * 2);
+    const g = x.createRadialGradient(-2.5, top - 13, 1, 0, top - 10, 9);
+    g.addColorStop(0, '#ffffff');
+    g.addColorStop(0.45, lit);
+    g.addColorStop(1, deep);
+    x.fillStyle = g;
+    x.fill();
+    x.lineWidth = 1.8;
+    x.strokeStyle = INK;
+    x.stroke();
+    for (const k of [-1, 1]) {
+      x.lineCap = 'round';
+      for (const [col, w] of [[INK, 4.4], [GOLD, 2.4]] as [string, number][]) {
+        x.strokeStyle = col;
+        x.lineWidth = w;
+        x.beginPath();
+        x.moveTo(k * 2, top + 3);
+        x.quadraticCurveTo(k * 13, top - 8, k * 3, top - 20);
+        x.stroke();
+      }
+    }
+  } else if (kind === 'crook') {
+    // The shaft curls over into a crook, a crystal drop hanging in its curl.
+    x.lineCap = 'round';
+    for (const [col, w] of [[INK, 7.2], [WOODS, 4.4]] as [string, number][]) {
+      x.strokeStyle = col;
+      x.lineWidth = w;
+      x.beginPath();
+      x.moveTo(0, top + 2);
+      x.lineTo(0, top - 14);
+      x.arc(9, top - 14, 9, Math.PI, Math.PI * 2.15);
+      x.quadraticCurveTo(19, top - 2, 15, top + 1);
+      x.stroke();
+    }
+    x.strokeStyle = GOLD;
+    x.lineWidth = 1.4;
+    x.beginPath();
+    x.moveTo(9, top - 23);
+    x.lineTo(9, top - 12);
+    x.stroke();
+    gem([[9, top - 12], [13, top - 6], [9, top + 2], [5, top - 6]], [[9, top - 12], [13, top - 6], [9, top + 2]]);
+  } else {
+    // An iron-and-gold ring with a crystal floating at its heart.
+    for (const [col, w] of [[INK, 5.6], [GOLD, 3.2]] as [string, number][]) {
+      x.strokeStyle = col;
+      x.lineWidth = w;
+      x.beginPath();
+      x.arc(0, top - 13, 10.5, 0, Math.PI * 2);
+      x.stroke();
+    }
+    gem([[0, top - 20], [4.5, top - 13], [0, top - 6], [-4.5, top - 13]], [[0, top - 20], [4.5, top - 13], [0, top - 6]]);
+  }
+  x.restore();
+  if (blaze > 1) {
+    // Motes of light drifting off the focus.
+    x.fillStyle = 'rgba(235,250,255,0.9)';
+    for (const [dx, dy, r] of [[-14, -10, 2.2], [12, -16, 1.8], [-6, -24, 1.6], [16, 4, 1.4]]) {
+      x.beginPath();
+      x.arc(focus[0] + dx, focus[1] + dy, r, 0, Math.PI * 2);
+      x.fill();
+    }
+  }
+  return focus;
+}
+
+/**
+ * A goblin shaman's crooked staff: knotted wood bound with rags, feathers on
+ * thongs, a horned beast skull on top with its eyes lit. Returns the focus.
+ */
+function skullStaff(x: CanvasRenderingContext2D, hx: number, hy: number, ang: number, s: Style, blaze: number): number[] {
+  const L = 124;
+  const top = -L * 0.6;
+  const bot = L * 0.36;
+  const cy = top - 9;
+  const c = Math.cos(ang);
+  const sn = Math.sin(ang);
+  const focus = [hx - (cy + 1) * sn, hy + (cy + 1) * c];
+  const glow = s.glow ?? '#9cf05a';
+  if (blaze > 0) halo(x, focus[0], focus[1], blaze > 1 ? 40 : 18, glow, blaze > 1 ? 0.75 : 0.45);
+  const W = '#6e5236';
+  x.save();
+  x.translate(hx, hy);
+  x.rotate(ang);
+  const knots = [[0, bot], [2.4, bot * 0.45], [-2, -4], [2.6, top * 0.42], [-2.2, top * 0.75], [0, top + 2]];
+  x.lineCap = 'round';
+  x.lineJoin = 'round';
+  for (const [col, w] of [[INK, 7.6], [W, 4.6]] as [string, number][]) {
+    x.strokeStyle = col;
+    x.lineWidth = w;
+    x.beginPath();
+    knots.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+    x.stroke();
+  }
+  x.strokeStyle = shade(W, 0.3);
+  x.lineWidth = 1.3;
+  x.beginPath();
+  knots.forEach(([px, py], i) => (i ? x.lineTo(px - 1.2, py) : x.moveTo(px - 1.2, py)));
+  x.stroke();
+  // Knots in the wood and a rag binding under the skull.
+  for (const [px, py] of [[2.4, bot * 0.45], [-2.2, top * 0.75]]) {
+    x.beginPath();
+    x.arc(px, py, 3.2, 0, Math.PI * 2);
+    x.fillStyle = shade(W, -0.2);
+    x.fill();
+    x.lineWidth = 1.4;
+    x.strokeStyle = INK;
+    x.stroke();
+  }
+  poly(x, [[-4, top + 8], [4, top + 6], [4, top + 12], [-4, top + 14]], s.rags ?? '#b3261c', 1.2);
+  poly(x, [[3, top + 9], [12, top + 18], [9, top + 21], [2, top + 13]], s.rags ?? '#b3261c', 1.2);
+  // Feathers hanging on a thong.
+  x.strokeStyle = '#3a2614';
+  x.lineWidth = 1.2;
+  x.beginPath();
+  x.moveTo(-3, top + 4);
+  x.lineTo(-8, top + 16);
+  x.stroke();
+  feather(x, -8, top + 15, -10, top + 31, '#1e1814', 2.8);
+  feather(x, -7, top + 15, -4, top + 29, '#ece4cc', 2.6);
+  // Horns, curving up and out.
+  for (const k of [-1, 1]) {
+    const spine = [[k * 5, cy - 4], [k * 13, cy - 9], [k * 17, cy - 18], [k * 14, cy - 27]];
+    const { L: hl, R: hr } = tubeSides(spine, [6, 4.6, 3.2, 1]);
+    poly(x, [...hl, ...hr.reverse()], '#cbb98e', 1.6);
+    x.strokeStyle = shade('#cbb98e', -0.35);
+    x.lineWidth = 1;
+    for (let i = 1; i < 3; i++) {
+      x.beginPath();
+      x.moveTo(hl[i][0], hl[i][1]);
+      x.lineTo(hr[hr.length - 1 - i][0], hr[hr.length - 1 - i][1]);
+      x.stroke();
+    }
+  }
+  // Cranium and long snout.
+  const cran = () => {
+    x.beginPath();
+    x.ellipse(0, cy - 1, 8.5, 7.5, 0, 0, Math.PI * 2);
+  };
+  cel(x, cran, BONE, 3, 2, -0.25, 0.15);
+  poly(x, [[-5, cy + 3], [5, cy + 3], [3.4, cy + 15], [-3.4, cy + 15]], BONE, 1.8);
+  x.fillStyle = INK;
+  x.fillRect(-2, cy + 11, 1.4, 2);
+  x.fillRect(0.8, cy + 11, 1.4, 2);
+  const eye = blaze > 0 ? glow : '#1a120c';
+  for (const ex of [-3.6, 3.6]) {
+    x.beginPath();
+    x.ellipse(ex, cy + 1, 2.8, 2.4, 0, 0, Math.PI * 2);
+    x.fillStyle = '#1a120c';
+    x.fill();
+    x.fillStyle = eye;
+    x.fillRect(ex - 1.1, cy, 2.2, 2.2);
+  }
+  x.restore();
+  return focus;
+}
+
+/** A big wooden mallet held at (hx, hy): banded drum head 66 units up the handle. */
+function mallet(x: CanvasRenderingContext2D, hx: number, hy: number, ang: number) {
+  x.save();
+  x.translate(hx, hy);
+  x.rotate(ang);
+  poly(x, [[-2.8, 14], [2.8, 14], [2.6, -58], [-2.6, -58]], '#9a7040', 1.8);
+  x.fillStyle = shade('#9a7040', 0.3);
+  x.fillRect(-1.9, -56, 1.2, 66);
+  const head = () => {
+    x.beginPath();
+    x.moveTo(-17, -76);
+    x.lineTo(17, -76);
+    x.quadraticCurveTo(20, -66, 17, -56);
+    x.lineTo(-17, -56);
+    x.quadraticCurveTo(-20, -66, -17, -76);
+    x.closePath();
+  };
+  cel(x, head, '#8a6038', 6, 2.4, -0.3, 0.2);
+  for (const bx of [-11, 11]) poly(x, [[bx - 2, -77], [bx + 2, -77], [bx + 2, -55], [bx - 2, -55]], STEEL_D, 1.4);
+  x.beginPath();
+  x.ellipse(-17.5, -66, 2.8, 9.2, 0, 0, Math.PI * 2);
+  x.fillStyle = '#c9a36a';
+  x.fill();
+  x.lineWidth = 1.6;
+  x.strokeStyle = INK;
+  x.stroke();
   x.restore();
 }
 
@@ -1176,6 +1529,9 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
     x.strokeStyle = INK;
     x.stroke();
   }
+  // A fan of feathers rises behind the head (in front of it, seen from behind).
+  const fan = s.headdress === 'feathers' || s.headdress === 'skullFeathers' || s.headdress === 'antlerFeathers';
+  if (fan && !back) featherFan(x, cx, cy, r, s.headdress === 'antlerFeathers' ? 5 : 7);
   // Ears behind the head for goblins and orcs.
   const earLen = (s.kind === 'goblin' ? 18 : 10) * (s.ears ?? 1);
   if (s.kind === 'goblin' || s.kind === 'orc') {
@@ -1187,7 +1543,7 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
     x.beginPath();
     x.ellipse(cx, cy, r, r * 1.08, 0, 0, Math.PI * 2);
   };
-  cel(x, skull, back ? (s.hood ?? (s.hairStyle === 'shaved' || s.mohawk ? s.skin : s.hair)) : s.skin, cx + r * 0.25, 2.4, -0.25, 0.12);
+  cel(x, skull, back ? (s.hood ?? (s.hairStyle === 'shaved' || s.hairStyle === 'bald' || s.mohawk ? s.skin : s.hair)) : s.skin, cx + r * 0.25, 2.4, -0.25, 0.12);
   if (s.earring) {
     x.strokeStyle = GOLD;
     x.lineWidth = 2;
@@ -1246,17 +1602,44 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
       poly(x, [[fx + 6 - 2 * tk, cy + 9], [fx + 6, cy + 9 - 8 * tk], [fx + 6 + 2 * tk, cy + 9]], '#efe6cf', 1.4);
     } else {
       x.fillStyle = '#2a1a10';
-      x.fillRect(fx - 5, cy - 3, 3, 3.5);
-      x.fillRect(fx + 4, cy - 3, 3, 3.5);
+      if (s.female) {
+        // Larger eyes with a lash flick, a touch of colour on the lips.
+        x.fillRect(fx - 5.5, cy - 3.5, 3.5, 4);
+        x.fillRect(fx + 4, cy - 3.5, 3.5, 4);
+        x.fillRect(fx - 7, cy - 4.5, 2, 1.5);
+        x.fillRect(fx + 7, cy - 4.5, 2, 1.5);
+      } else {
+        x.fillRect(fx - 5, cy - 3, 3, 3.5);
+        x.fillRect(fx + 4, cy - 3, 3, 3.5);
+      }
       x.fillStyle = shade(s.skin, -0.18);
       x.fillRect(fx - 1, cy + 1, 3, 5);
-      x.strokeStyle = shade(s.skin, -0.45);
-      x.lineWidth = 1.6;
+      x.strokeStyle = s.female ? '#b0524a' : shade(s.skin, -0.45);
+      x.lineWidth = s.female ? 2.2 : 1.6;
       x.beginPath();
       x.moveTo(fx - 3, cy + 8);
       x.lineTo(fx + 3, cy + 8);
       x.stroke();
-      if (s.beard && s.beardStyle === 'chin') {
+      if (s.beard && s.beardStyle === 'long') {
+        // A long beard flowing down over the chest, moustache drooping into it.
+        const pts: number[][] = [[cx - r * 0.98, cy + 1], [cx + r * 0.62, cy + 2], [cx + r * 0.78, cy + r * 0.9]];
+        for (let i = 0; i <= 6; i++) {
+          const f = i / 6;
+          pts.push([cx + r * 0.6 - f * r * 1.6, cy + r * 1.55 + Math.sin(f * Math.PI) * r * 0.85 + (i % 2 ? -3 : 0)]);
+        }
+        pts.push([cx - r * 1.1, cy + r * 0.8]);
+        poly(x, pts, s.hair, 2);
+        x.strokeStyle = shade(s.hair, -0.22);
+        x.lineWidth = 1.3;
+        for (let i = 0; i < 4; i++) {
+          const px = cx - r * 0.7 + i * r * 0.42;
+          x.beginPath();
+          x.moveTo(px, cy + r * 0.55);
+          x.lineTo(px - 2, cy + r * 1.7 + (i === 1 || i === 2 ? 6 : 0));
+          x.stroke();
+        }
+        poly(x, [[fx - 8, cy + 9], [fx - 2, cy + 6], [fx + 1, cy + 6.5], [fx + 7, cy + 9], [fx + 6, cy + 12], [fx, cy + 9], [fx - 6, cy + 13]], shade(s.hair, -0.06), 1.4);
+      } else if (s.beard && s.beardStyle === 'chin') {
         // Moustache and pointed chin beard.
         poly(x, [[fx - 6, cy + 6.5], [fx + 5, cy + 6.5], [fx + 3, cy + 9], [fx - 4, cy + 9]], s.hair, 1.4);
         poly(x, [[fx - 5, cy + 10], [fx + 4, cy + 10], [fx - 1, cy + 19]], s.hair, 1.6);
@@ -1311,12 +1694,32 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
     }
     x.fillStyle = s.hood;
     x.fill('evenodd');
+    if (s.hoodRound) {
+      // Cel shadow down the far side of the cowl.
+      x.save();
+      x.clip('evenodd');
+      x.fillStyle = shade(s.hood, -0.3);
+      x.fillRect(cx + r * 0.5, cy - r * 2, r * 2, r * 3);
+      x.restore();
+    }
     x.lineWidth = 2.4;
     x.strokeStyle = INK;
     x.stroke();
     x.restore();
-    // Hood point.
-    poly(x, [[cx + r * 0.4, cy - r * 1.25], [cx + r * 1.4, cy - r * 1.6], [cx + r * 1.1, cy - r * 0.8]], s.hood, 2);
+    if (s.hoodRound) {
+      // A deep rounded cowl, the face opening edged in gold.
+      x.strokeStyle = s.trim;
+      x.lineWidth = 2.2;
+      x.beginPath();
+      if (back) {
+        x.moveTo(cx + 1, cy - r * 1.3);
+        x.lineTo(cx + 1, cy + r * 0.85);
+      } else x.ellipse(cx - r * 0.3, cy + 1, r * 0.8, r * 0.9, 0, Math.PI * 0.98, Math.PI * 2.02);
+      x.stroke();
+    } else {
+      // Hood point.
+      poly(x, [[cx + r * 0.4, cy - r * 1.25], [cx + r * 1.4, cy - r * 1.6], [cx + r * 1.1, cy - r * 0.8]], s.hood, 2);
+    }
     if (s.hornHood) {
       // Bone horns lashed to the hood.
       poly(x, [[cx - r * 0.65, cy - r * 1.0], [cx - r * 0.95, cy - r * 1.6], [cx - r * 0.75, cy - r * 2.4], [cx - r * 0.45, cy - r * 1.7], [cx - r * 0.2, cy - r * 1.2]], BONE, 1.6);
@@ -1393,7 +1796,53 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
     x.ellipse(cx, cy - 3.6, hr * 1.36, hr * 0.2, 0, Math.PI * 1.05, Math.PI * 1.6);
     x.stroke();
   } else if (s.kind === 'human') {
-    if (s.hairStyle === 'shaved') {
+    if (s.hairStyle === 'bald' && !s.cap) {
+      // Bald crown with a fringe of hair round the back and over the ears.
+      const flowing = s.beardStyle === 'long';
+      if (back && flowing) {
+        // An old man's long hair falling from the bald crown onto the shoulders.
+        const pts: number[][] = [[cx - r * 1.04, cy - r * 0.3], [cx, cy - r * 0.12], [cx + r * 1.04, cy - r * 0.3], [cx + r * 1.25, cy + r * 1.1]];
+        for (let i = 1; i < 6; i++) pts.push([cx + r * 1.25 - (i / 6) * r * 2.5, cy + r * (i % 2 ? 1.55 : 1.35)]);
+        pts.push([cx - r * 1.25, cy + r * 1.1]);
+        poly(x, pts, s.hair, 2);
+        x.strokeStyle = shade(s.hair, -0.25);
+        x.lineWidth = 1.2;
+        for (let i = 0; i < 4; i++) {
+          x.beginPath();
+          x.moveTo(cx - r * 0.6 + i * r * 0.4, cy + r * 0.05);
+          x.lineTo(cx - r * 0.7 + i * r * 0.45, cy + r * 1.3);
+          x.stroke();
+        }
+      } else if (back) {
+        // The fringe covers the back of the head from the ears down.
+        x.save();
+        skull();
+        x.clip();
+        x.beginPath();
+        x.moveTo(cx - r - 2, cy - r * 0.3);
+        x.quadraticCurveTo(cx, cy - r * 0.1, cx + r + 2, cy - r * 0.3);
+        x.lineTo(cx + r + 2, cy + r * 1.2);
+        x.lineTo(cx - r - 2, cy + r * 1.2);
+        x.closePath();
+        x.fillStyle = s.hair;
+        x.fill();
+        x.lineWidth = 1.6;
+        x.strokeStyle = INK;
+        x.stroke();
+        x.restore();
+      } else if (flowing) {
+        // Long hair behind the ear, falling to the shoulder.
+        poly(x, [[cx + r * 0.2, cy - r * 0.5], [cx + r * 0.8, cy - r * 0.72], [cx + r * 1.12, cy - r * 0.05], [cx + r * 1.3, cy + r * 1.35], [cx + r * 0.85, cy + r * 1.2], [cx + r * 0.62, cy + r * 0.2], [cx + r * 0.5, cy - r * 0.15]], s.hair, 1.8);
+        poly(x, [[cx - r * 0.98, cy - r * 0.35], [cx - r * 0.8, cy - r * 0.42], [cx - r * 0.74, cy + r * 0.15], [cx - r * 0.98, cy + r * 0.2]], s.hair, 1.6);
+      } else {
+        poly(x, [[cx + r * 0.35, cy - r * 0.35], [cx + r * 0.85, cy - r * 0.6], [cx + r * 1.07, cy - r * 0.05], [cx + r * 0.98, cy + r * 0.5], [cx + r * 0.62, cy + r * 0.35], [cx + r * 0.58, cy - r * 0.02]], s.hair, 1.6);
+        poly(x, [[cx - r * 0.98, cy - r * 0.35], [cx - r * 0.84, cy - r * 0.4], [cx - r * 0.8, cy + r * 0.1], [cx - r * 0.98, cy + r * 0.15]], s.hair, 1.4);
+      }
+      x.fillStyle = 'rgba(255,255,255,0.35)';
+      x.beginPath();
+      x.ellipse(cx - r * 0.35, cy - r * 0.68, r * 0.3, r * 0.14, -0.3, 0, Math.PI * 2);
+      x.fill();
+    } else if (s.hairStyle === 'shaved') {
       // Close-cropped scalp: a stubble tint over the top of the skull.
       x.save();
       skull();
@@ -1442,6 +1891,21 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
         x.stroke();
       }
     }
+    if (s.cap) headCap(x, cx, cy, r, s, back);
+    if (s.circlet) {
+      // A thin gold band round the brow with a pale stone at the front.
+      x.strokeStyle = INK;
+      x.lineWidth = 4;
+      x.beginPath();
+      x.ellipse(cx, cy - r * 0.42, r * 1.02, r * 0.3, 0, 0, Math.PI);
+      x.stroke();
+      x.strokeStyle = s.circlet;
+      x.lineWidth = 2.2;
+      x.stroke();
+      if (!back) {
+        poly(x, [[cx - r * 0.32, cy - r * 0.32], [cx - r * 0.18, cy - r * 0.14], [cx - r * 0.32, cy + r * 0.0], [cx - r * 0.46, cy - r * 0.14]], s.glow ?? '#a8e0ff', 1.2);
+      }
+    }
   } else if (s.kind === 'orc') {
     if (s.mohawk) {
       // Black hair tail at the back of the head, then a tall red feather crest over the scalp.
@@ -1478,6 +1942,277 @@ function head(x: CanvasRenderingContext2D, cx: number, cy: number, s: Style, bac
     poly(x, [[kx, y0], [kx + 16, y0 + 8], [kx + 10, y0 + 11], [kx + 1, y0 + 6]], s.headRag, 1.4);
     poly(x, [[kx, y0 + 4], [kx + 8, y0 + 20], [kx + 3, y0 + 19], [kx - 2, y0 + 8]], shade(s.headRag, -0.25), 1.4);
   }
+  if (s.headdress) {
+    if (fan && back) featherFan(x, cx, cy, r, s.headdress === 'antlerFeathers' ? 5 : 7);
+    if (s.headdress === 'antlers' || s.headdress === 'antlerFeathers') antlers(x, cx, cy, r, back, s);
+    if (s.headdress === 'skull' || s.headdress === 'skullFeathers') skullMask(x, cx, cy, r, back, s);
+  }
+}
+
+/** One feather from its quill end (bx, by) to its tip, barbs as a long leaf. */
+function feather(x: CanvasRenderingContext2D, bx: number, by: number, tx: number, ty: number, col: string, w = 4.6) {
+  const dx = tx - bx;
+  const dy = ty - by;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = (-dy / len) * w;
+  const ny = (dx / len) * w;
+  poly(x, [[bx, by], [bx + dx * 0.25 + nx, by + dy * 0.25 + ny], [bx + dx * 0.8 + nx * 0.8, by + dy * 0.8 + ny * 0.8], [tx, ty], [bx + dx * 0.8 - nx * 0.7, by + dy * 0.8 - ny * 0.7], [bx + dx * 0.25 - nx, by + dy * 0.25 - ny]], col, 1.5);
+  // Dark tip band on pale feathers, the quill down the middle.
+  if (col === BONE || col === '#ece4cc') poly(x, [[bx + dx * 0.72 + nx * 0.85, by + dy * 0.72 + ny * 0.85], [tx, ty], [bx + dx * 0.72 - nx * 0.75, by + dy * 0.72 - ny * 0.75]], '#2a211c', 0);
+  x.strokeStyle = shade(col, col === '#1e1814' ? 0.45 : -0.35);
+  x.lineWidth = 1.1;
+  x.beginPath();
+  x.moveTo(bx + dx * 0.1, by + dy * 0.1);
+  x.lineTo(bx + dx * 0.9, by + dy * 0.9);
+  x.stroke();
+}
+
+/** A fan of black, red and bone-white feathers standing up from the back of the head. */
+function featherFan(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, n: number) {
+  const cols = ['#1e1814', '#b3261c', '#ece4cc'];
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (i - (n - 1) / 2) * 0.3;
+    const len = r * (1.95 + (i % 2) * 0.4 - Math.abs(i - (n - 1) / 2) * 0.12);
+    const ox = cx + 3;
+    const oy = cy - r * 0.35;
+    feather(x, ox + Math.cos(a) * r * 0.45, oy + Math.sin(a) * r * 0.45, ox + Math.cos(a) * len, oy + Math.sin(a) * len, cols[(i + 1) % 3]);
+  }
+}
+
+/** Branching antlers on a fur band, lashed over a goblin shaman's brow. */
+function antlers(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, back: boolean, s: Style) {
+  const ANT = '#d6c49a';
+  for (const side of [-1, 1]) {
+    const bx = cx + side * r * 0.5 + (back ? 0 : -2);
+    const by = cy - r * 0.78;
+    const m = [bx + side * r * 0.62, by - r * 0.85];
+    const t = [bx + side * r * 0.42, by - r * 2.0];
+    const segs = [
+      [[bx, by], m],
+      [m, [m[0] + side * r * 0.08, by - r * 1.45]],
+      [[m[0] + side * r * 0.08, by - r * 1.45], t],
+      [m, [bx + side * r * 1.32, by - r * 1.15]],
+      [[m[0] + side * r * 0.08, by - r * 1.45], [bx + side * r * 1.12, by - r * 2.0]],
+      [[bx + side * r * 0.3, by - r * 0.42], [bx - side * r * 0.08, by - r * 0.95]],
+    ];
+    for (const [col, lw] of [[INK, 6.2], [ANT, 3.6]] as const) {
+      x.strokeStyle = col;
+      x.lineWidth = lw;
+      x.lineCap = 'round';
+      x.beginPath();
+      for (const [a, b] of segs) {
+        x.moveTo(a[0], a[1]);
+        x.lineTo(b[0], b[1]);
+      }
+      x.stroke();
+    }
+    x.strokeStyle = shade(ANT, 0.4);
+    x.lineWidth = 1.2;
+    x.beginPath();
+    x.moveTo(bx - side * 1, by - 2);
+    x.lineTo(m[0] - side * 1, m[1] - 1);
+    x.stroke();
+  }
+  // Fur band across the brow, with a red bead.
+  const y0 = cy - r * 0.62;
+  poly(x, [[cx - r * 1.08, y0 + 2], [cx - r * 0.5, y0 - 4], [cx + r * 0.5, y0 - 4], [cx + r * 1.1, y0 + 1], [cx + r * 1.1, y0 + 7], [cx - r * 1.08, y0 + 8]], s.fur ?? '#3a2c22', 1.8);
+  x.strokeStyle = shade(s.fur ?? '#3a2c22', 0.35);
+  x.lineWidth = 1.1;
+  for (let i = 0; i < 6; i++) {
+    x.beginPath();
+    x.moveTo(cx - r * 0.9 + i * r * 0.36, y0 - 1);
+    x.lineTo(cx - r * 0.95 + i * r * 0.36, y0 + 5);
+    x.stroke();
+  }
+  if (!back) {
+    x.fillStyle = '#b3261c';
+    x.beginPath();
+    x.arc(cx - r * 0.32, y0 + 3, 2.4, 0, Math.PI * 2);
+    x.fill();
+    x.lineWidth = 1.2;
+    x.strokeStyle = INK;
+    x.stroke();
+  }
+}
+
+/**
+ * A horned beast's skull worn as a mask over the upper face, its beak over the
+ * goblin's nose and the eyes glowing through the sockets.
+ */
+function skullMask(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, back: boolean, s: Style) {
+  // Curling horns sweeping back from the temples.
+  for (const side of back ? [1, -1] : [-1, 1]) {
+    const bx = cx + side * r * 0.55;
+    const by = cy - r * 0.75;
+    const spine = [[bx, by], [bx + side * r * 0.75, by - r * 0.75], [bx + side * r * 1.35, by - r * 0.45], [bx + side * r * 1.4, by + r * 0.2], [bx + side * r * 1.1, by + r * 0.45]];
+    const { L, R } = tubeSides(spine, [r * 0.42, r * 0.36, r * 0.28, r * 0.2, r * 0.1]);
+    poly(x, [...L, ...R.reverse()], '#cbb98e', 1.8);
+    x.strokeStyle = shade('#cbb98e', -0.35);
+    x.lineWidth = 1.1;
+    for (let i = 1; i < 4; i++) {
+      x.beginPath();
+      x.moveTo(L[i][0], L[i][1]);
+      x.lineTo(R[R.length - 1 - i][0], R[R.length - 1 - i][1]);
+      x.stroke();
+    }
+  }
+  const cranium = () => {
+    x.beginPath();
+    x.ellipse(cx + (back ? 0 : 1), cy - r * 0.55, r * 1.02, r * 0.68, 0, 0, Math.PI * 2);
+  };
+  cel(x, cranium, BONE, cx + r * 0.3, 2.2, -0.25, 0.15);
+  if (back) {
+    // Thong tying the mask on, knotted at the nape.
+    x.strokeStyle = '#3a2614';
+    x.lineWidth = 2.4;
+    x.beginPath();
+    x.moveTo(cx - r, cy - r * 0.2);
+    x.quadraticCurveTo(cx, cy + r * 0.25, cx + r, cy - r * 0.2);
+    x.stroke();
+    return;
+  }
+  const fx = cx - r * 0.32;
+  // A long hooked beak curving down over the nose toward the facing side.
+  const beak = [[fx - r * 0.4, cy - r * 0.42], [fx + r * 0.5, cy - r * 0.4], [fx + r * 0.15, cy + r * 0.15], [fx - r * 0.55, cy + r * 0.62], [fx - r * 1.0, cy + r * 1.0], [fx - r * 1.05, cy + r * 0.7], [fx - r * 0.75, cy + r * 0.1]];
+  poly(x, beak, BONE, 2);
+  poly(x, [[fx - r * 0.3, cy + r * 0.25], [fx + r * 0.1, cy + r * 0.2], [fx - r * 0.55, cy + r * 0.62], [fx - r * 1.0, cy + r * 1.0], [fx - r * 0.7, cy + r * 0.5]], shade(BONE, -0.2), 1.2);
+  x.fillStyle = '#1a120c';
+  x.beginPath();
+  x.ellipse(fx - r * 0.42, cy + r * 0.12, r * 0.14, r * 0.07, -0.7, 0, Math.PI * 2);
+  x.fill();
+  // Deep sockets with the eyes glowing in them.
+  for (const ex of [fx - r * 0.42, fx + r * 0.4]) {
+    x.beginPath();
+    x.ellipse(ex, cy - r * 0.38, r * 0.3, r * 0.27, 0, 0, Math.PI * 2);
+    x.fillStyle = '#1a120c';
+    x.fill();
+    x.fillStyle = s.glow ?? '#ffd94a';
+    x.beginPath();
+    x.arc(ex + 0.5, cy - r * 0.36, 1.9, 0, Math.PI * 2);
+    x.fill();
+  }
+  // Cracks across the brow.
+  x.strokeStyle = shade(BONE, -0.45);
+  x.lineWidth = 1.2;
+  x.beginPath();
+  x.moveTo(fx + r * 0.05, cy - r * 1.2);
+  x.lineTo(fx + r * 0.2, cy - r * 0.92);
+  x.lineTo(fx + r * 0.02, cy - r * 0.72);
+  x.moveTo(fx + r * 0.75, cy - r * 1.05);
+  x.lineTo(fx + r * 0.95, cy - r * 0.8);
+  x.stroke();
+}
+
+/** Caps worn over the hair: linen coif, felt cap, leather cap, knotted scarf, skullcap. */
+function headCap(x: CanvasRenderingContext2D, cx: number, cy: number, r: number, s: Style, back: boolean) {
+  const col = s.capColor ?? '#e6dcc4';
+  if (s.cap === 'coif') {
+    // A close linen cap over the crown and ears, tied under the chin.
+    x.save();
+    x.beginPath();
+    if (back) x.ellipse(cx, cy - 1, r * 1.08, r * 1.14, 0, 0, Math.PI * 2);
+    else {
+      x.ellipse(cx + 1, cy - 2, r * 1.1, r * 1.08, 0, Math.PI * 0.92, Math.PI * 2.12);
+      x.quadraticCurveTo(cx + r * 0.9, cy + r * 0.85, cx + r * 0.5, cy + r * 0.8);
+      x.quadraticCurveTo(cx + r * 0.42, cy - r * 0.35, cx - r * 0.4, cy - r * 0.42);
+      x.quadraticCurveTo(cx - r * 0.95, cy - r * 0.35, cx - r * 1.0, cy + r * 0.05);
+    }
+    x.closePath();
+    x.fillStyle = col;
+    x.fill();
+    x.clip();
+    x.fillStyle = shade(col, -0.25);
+    x.fillRect(cx + r * 0.55, cy - r * 2, r * 2, r * 3);
+    x.restore();
+    x.lineWidth = 2.2;
+    x.strokeStyle = INK;
+    x.stroke();
+    // Seam over the crown.
+    x.strokeStyle = shade(col, -0.35);
+    x.lineWidth = 1.2;
+    x.beginPath();
+    x.moveTo(cx - r * 0.1, cy - r * 1.08);
+    x.quadraticCurveTo(cx + r * 0.2, cy - r * 0.4, cx + (back ? 0 : r * 0.1), back ? cy + r * 1.0 : cy - r * 0.38);
+    x.stroke();
+    if (!back) {
+      x.strokeStyle = shade(col, -0.4);
+      x.lineWidth = 1.6;
+      x.beginPath();
+      x.moveTo(cx + r * 0.5, cy + r * 0.78);
+      x.quadraticCurveTo(cx - r * 0.1, cy + r * 1.15, cx - r * 0.6, cy + r * 0.7);
+      x.stroke();
+    }
+    return;
+  }
+  if (s.cap === 'felt') {
+    // A soft felt cap slouched to the back, with a rolled brim.
+    poly(x, [[cx - r * 0.95, cy - r * 0.55], [cx - r * 0.55, cy - r * 1.25], [cx + r * 0.3, cy - r * 1.4], [cx + r * 1.25, cy - r * 1.05], [cx + r * 1.4, cy - r * 0.5], [cx + r * 1.05, cy - r * 0.38]], col, 2);
+    x.save();
+    x.beginPath();
+    x.ellipse(cx + 1, cy - r * 0.48, r * 1.12, r * 0.26, -0.06, 0, Math.PI * 2);
+    x.fillStyle = shade(col, -0.18);
+    x.fill();
+    x.lineWidth = 2;
+    x.strokeStyle = INK;
+    x.stroke();
+    x.restore();
+    x.fillStyle = shade(col, 0.25);
+    x.fillRect(cx - r * 0.45, cy - r * 1.18, r * 0.5, 2.5);
+    return;
+  }
+  if (s.cap === 'leather') {
+    // A round leather cap with a seam and a short brim.
+    const dome = () => {
+      x.beginPath();
+      x.ellipse(cx + 1, cy - r * 0.35, r * 1.08, r * 0.95, 0, Math.PI, 0);
+      x.closePath();
+    };
+    cel(x, dome, col, cx + r * 0.35, 2.2, -0.3, 0.2);
+    x.strokeStyle = shade(col, -0.45);
+    x.lineWidth = 1.2;
+    x.beginPath();
+    x.moveTo(cx - r * 0.05, cy - r * 1.28);
+    x.lineTo(cx + r * 0.1, cy - r * 0.38);
+    x.stroke();
+    if (!back) poly(x, [[cx - r * 1.12, cy - r * 0.42], [cx - r * 0.1, cy - r * 0.4], [cx - r * 0.3, cy - r * 0.22], [cx - r * 1.22, cy - r * 0.26]], shade(col, -0.15), 1.6);
+    else poly(x, [[cx - r * 1.08, cy - r * 0.4], [cx + r * 1.1, cy - r * 0.4], [cx + r * 1.05, cy - r * 0.25], [cx - r * 1.04, cy - r * 0.25]], shade(col, -0.15), 1.4);
+    return;
+  }
+  if (s.cap === 'scarf') {
+    // A scarf knotted at the back of the head, its tails hanging.
+    const top = () => {
+      x.beginPath();
+      x.ellipse(cx + 1, cy - r * 0.3, r * 1.1, r * 0.98, 0, Math.PI * 1.0, Math.PI * 2.0);
+      x.lineTo(cx + r * 1.12, cy - r * 0.05);
+      x.lineTo(cx - r * 1.08, cy - r * 0.15);
+      x.closePath();
+    };
+    cel(x, top, col, cx + r * 0.35, 2.2, -0.3, 0.18);
+    x.fillStyle = '#ece2c6';
+    for (const [dx, dy] of [[-0.5, -0.75], [0.1, -0.95], [0.6, -0.6], [-0.1, -0.45]]) {
+      x.beginPath();
+      x.arc(cx + r * dx, cy + r * dy, 1.6, 0, Math.PI * 2);
+      x.fill();
+    }
+    const kx = back ? cx : cx + r * 1.05;
+    const ky = cy - r * 0.2;
+    poly(x, [[kx, ky], [kx + 7, ky + 16], [kx + 2, ky + 15], [kx - 3, ky + 4]], shade(col, -0.2), 1.4);
+    poly(x, [[kx, ky], [kx + 13, ky + 9], [kx + 9, ky + 13], [kx + 1, ky + 5]], col, 1.4);
+    return;
+  }
+  // Skullcap: a dome over the crown with a gold band at its rim.
+  const dome = () => {
+    x.beginPath();
+    x.ellipse(cx + 1, cy - r * 0.45, r * 1.0, r * 0.75, 0, Math.PI, 0);
+    x.closePath();
+  };
+  cel(x, dome, col, cx + r * 0.35, 2.2, -0.3, 0.2);
+  x.strokeStyle = s.trim;
+  x.lineWidth = 2.4;
+  x.beginPath();
+  x.moveTo(cx - r * 0.98, cy - r * 0.5);
+  x.lineTo(cx + r * 1.0, cy - r * 0.5);
+  x.stroke();
 }
 
 /** Border collie head: black (or brown) skull, white blaze and muzzle, folded or pricked ears. */
@@ -1692,11 +2427,42 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     x.restore();
   }
 
+  // A long ragged fur cloak hangs behind the body (over the back, seen from behind).
+  const cloak = () => {
+    if (!s.cloak) return;
+    const cr = new Rng(rng.state + 3);
+    const top = shoulder - 2;
+    const pts: number[][] = [[lean - sw - 3, top], [lean + sw + 3, top], [lean + sw + 11, hip - 4]];
+    const n = 9;
+    for (let i = 0; i <= n; i++) {
+      const f = i / n;
+      pts.push([lean + sw + 14 - f * (2 * sw + 28), -20 + (i % 2 ? 9 : 0) + cr.range(-3, 3) + (flee ? -6 : 0)]);
+    }
+    pts.push([lean - sw - 11, hip - 4]);
+    poly(x, pts, back ? s.cloak : shade(s.cloak, -0.18), 2.2);
+    x.strokeStyle = shade(s.cloak, back ? 0.3 : 0.15);
+    x.lineWidth = 1.3;
+    for (let i = 0; i < 7; i++) {
+      const px = lean - sw - 4 + i * ((2 * sw + 8) / 6);
+      x.beginPath();
+      x.moveTo(px, top + 14 + (i % 2) * 8);
+      x.lineTo(px + (i - 3) * 1.4, -26 + (i % 3) * 3);
+      x.stroke();
+    }
+  };
+  if (!back) cloak();
+
   // Legs and boots.
   const lx = -legSpread * 0.5 * B;
   const rx = legSpread * 0.5 * B;
   const footDir = back ? 1 : -1;
   const kneeOut = flee ? 10 : 4;
+  const robe = s.robe !== undefined;
+  if (robe) {
+    // Only the toes of the boots show under the hem of the robe.
+    boot(x, rx + kneeOut * 0.3, flee ? -6 : 0, footDir, s);
+    boot(x, lx - kneeOut * 0.4, flee ? 2 : 0, footDir, s);
+  }
   const kneeCop = (ax: number, ay: number, bx: number, by: number) => {
     // Plate knee guard halfway down the leg.
     if (!s.plate) return;
@@ -1710,18 +2476,20 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     x.strokeStyle = gold;
     x.stroke();
   };
-  limb(x, rx * 0.6, hip + 4, rx + kneeOut * 0.3, -18, 19 * B, s.trousers);
-  kneeCop(rx * 0.6, hip + 4, rx + kneeOut * 0.3, -18);
-  boot(x, rx + kneeOut * 0.3, flee ? -6 : 0, footDir, s);
-  limb(x, lx * 0.6, hip + 4, lx - kneeOut * 0.4, -18, 19 * B, s.trousers);
-  kneeCop(lx * 0.6, hip + 4, lx - kneeOut * 0.4, -18);
-  boot(x, lx - kneeOut * 0.4, flee ? 2 : 0, footDir, s);
+  if (!robe) {
+    limb(x, rx * 0.6, hip + 4, rx + kneeOut * 0.3, -18, 19 * B, s.trousers);
+    kneeCop(rx * 0.6, hip + 4, rx + kneeOut * 0.3, -18);
+    boot(x, rx + kneeOut * 0.3, flee ? -6 : 0, footDir, s);
+    limb(x, lx * 0.6, hip + 4, lx - kneeOut * 0.4, -18, 19 * B, s.trousers);
+    kneeCop(lx * 0.6, hip + 4, lx - kneeOut * 0.4, -18);
+    boot(x, lx - kneeOut * 0.4, flee ? 2 : 0, footDir, s);
+  }
 
   // Back arm (behind the torso).
   const backArm = () => {
     if (back) {
       // From behind: the shield (or bow) arm is on the left.
-      if (s.shield === 'kite' || s.shield === 'round' || s.weapon === 'club') return;
+      if (s.shield === 'kite' || s.shield === 'round' || s.weapon === 'club' || s.weapon === 'staff' || s.weapon === 'skullstaff' || s.weapon === 'mallet') return;
       limb(x, -sw + 4, shoulder + 6, -sw - 6, shoulder + 34, 11 * B, s.tunic);
     } else {
       // From the front, the weapon arm is on the left (toward the facing side).
@@ -1730,14 +2498,23 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
   backArm();
 
   // Torso: tunic, tabard, belt.
+  const flare = flee ? 9 : atk ? 5 : 0;
   const torso = () => {
     x.beginPath();
     x.moveTo(-sw + lean, shoulder + hunch * 0.4);
     x.quadraticCurveTo(lean, shoulder - 6, sw + lean, shoulder + hunch * 0.4);
-    x.lineTo(hw + 3, hip + 8);
-    x.lineTo(hw + 6, hip + 26);
-    x.lineTo(-hw - 6, hip + 26);
-    x.lineTo(-hw - 3, hip + 8);
+    if (robe) {
+      // The robe falls from the waist and flares to a hem just above the ground.
+      x.lineTo(hw + 2, hip + 6);
+      x.lineTo(hw + 14 + flare, -9);
+      x.quadraticCurveTo(lean, -1, -hw - 14 - flare, -9);
+      x.lineTo(-hw - 2, hip + 6);
+    } else {
+      x.lineTo(hw + 3, hip + 8);
+      x.lineTo(hw + 6, hip + 26);
+      x.lineTo(-hw - 6, hip + 26);
+      x.lineTo(-hw - 3, hip + 8);
+    }
     x.closePath();
   };
   if (s.fur) {
@@ -1776,6 +2553,111 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     }
     x.fillStyle = 'rgba(255,255,255,0.16)';
     x.fillRect(lean - sw * 0.62, shoulder + 12, 4, (hip - shoulder) * 0.55);
+  }
+  if (robe) {
+    const band = s.robe!;
+    x.save();
+    torso();
+    x.clip();
+    // Fold lines in the skirt and a gold hem.
+    x.strokeStyle = shade(s.tunic, -0.32);
+    x.lineWidth = 1.4;
+    for (const k of [-0.62, 0.55]) {
+      x.beginPath();
+      x.moveTo(lean + k * hw, hip + 12);
+      x.lineTo(lean + k * (hw + 12 + flare), -8);
+      x.stroke();
+    }
+    x.strokeStyle = s.trim;
+    x.lineWidth = 3.2;
+    x.beginPath();
+    x.moveTo(-hw - 24 - flare, -13);
+    x.quadraticCurveTo(lean, -5, hw + 24 + flare, -13);
+    x.stroke();
+    x.restore();
+    if (!back) {
+      // Deep blue front band edged in gold, from the cream V of the undertunic to the hem.
+      const bx = lean - 3;
+      const pts = [[bx - 6, shoulder + 14], [bx + 5, shoulder + 14], [bx + 8, -5], [bx - 9, -5]];
+      poly(x, pts, band, 1.6);
+      x.strokeStyle = s.trim;
+      x.lineWidth = 1.6;
+      x.beginPath();
+      x.moveTo(bx - 4.6, shoulder + 16);
+      x.lineTo(bx - 7.4, -6.5);
+      x.moveTo(bx + 3.8, shoulder + 16);
+      x.lineTo(bx + 6.4, -6.5);
+      x.stroke();
+      poly(x, [[lean - 11, shoulder + 1], [lean + 8, shoulder + 1], [lean - 2, shoulder + 17]], '#ece2c6', 1.6);
+      x.strokeStyle = s.trim;
+      x.lineWidth = 2;
+      x.beginPath();
+      x.moveTo(lean - 12, shoulder);
+      x.lineTo(lean - 2, shoulder + 18);
+      x.lineTo(lean + 9, shoulder);
+      x.stroke();
+    } else {
+      // A gold seam down the back.
+      x.strokeStyle = shade(s.tunic, -0.3);
+      x.lineWidth = 1.6;
+      x.beginPath();
+      x.moveTo(lean, shoulder + 10);
+      x.lineTo(lean + 1, -5);
+      x.stroke();
+    }
+  }
+  if (s.apron) {
+    const ap = s.apron;
+    if (!back) {
+      // Leather apron: a bib over the chest, a skirt to the knees, a pocket and a neck strap.
+      const ax = lean - 2;
+      const bib = () => {
+        x.beginPath();
+        x.moveTo(ax - 12, shoulder + 14);
+        x.lineTo(ax + 11, shoulder + 14);
+        x.lineTo(ax + 13, hip - 2);
+        x.lineTo(ax + hw + 3, hip + 2);
+        x.lineTo(ax + hw + 5, -24);
+        x.quadraticCurveTo(ax, -18, ax - hw - 5, -24);
+        x.lineTo(ax - hw - 3, hip + 2);
+        x.lineTo(ax - 13, hip - 2);
+        x.closePath();
+      };
+      cel(x, bib, ap, ax + 7, 2.2, -0.28, 0.16);
+      x.strokeStyle = shade(ap, -0.4);
+      x.lineWidth = 1.2;
+      x.setLineDash([2.5, 2.5]);
+      x.strokeRect(ax - 8, shoulder + 18, 15, 11);
+      x.setLineDash([]);
+      x.strokeStyle = INK;
+      x.lineWidth = 3.4;
+      x.beginPath();
+      x.moveTo(ax - 11, shoulder + 15);
+      x.lineTo(ax - 8, neck + 4);
+      x.moveTo(ax + 10, shoulder + 15);
+      x.lineTo(ax + 7, neck + 4);
+      x.stroke();
+      x.strokeStyle = shade(ap, -0.25);
+      x.lineWidth = 1.8;
+      x.stroke();
+      poly(x, [[ax - 14, hip + 14], [ax - 2, hip + 14], [ax - 2, hip + 26], [ax - 14, hip + 26]], shade(ap, -0.12), 1.4);
+    } else {
+      // Straps crossing on the back, tied at the waist.
+      x.lineCap = 'round';
+      for (const [col, w] of [[INK, 5], [shade(ap, -0.1), 3]] as [string, number][]) {
+        x.strokeStyle = col;
+        x.lineWidth = w;
+        x.beginPath();
+        x.moveTo(lean - sw * 0.62, shoulder + 2);
+        x.lineTo(lean + hw * 0.7, hip);
+        x.moveTo(lean + sw * 0.62, shoulder + 2);
+        x.lineTo(lean - hw * 0.7, hip);
+        x.stroke();
+      }
+      // Apron skirt edges showing at the sides of the legs.
+      poly(x, [[-hw - 5, hip + 4], [-hw + 3, hip + 4], [-hw + 1, -22], [-hw - 6, -24]], shade(ap, -0.15), 1.6);
+      poly(x, [[hw - 3, hip + 4], [hw + 5, hip + 4], [hw + 6, -24], [hw - 1, -22]], shade(ap, -0.28), 1.6);
+    }
   }
   if (s.bare) {
     // Bare muscled torso under a crossed leather harness.
@@ -1830,7 +2712,7 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     }
   }
   // Tabard panel.
-  if ((s.kind === 'human' || s.kind === 'orc' || s.kind === 'dog') && !s.bare) {
+  if ((s.kind === 'human' || s.kind === 'orc' || s.kind === 'dog') && !s.bare && !robe && !s.apron) {
     const tx = back ? lean + 2 : lean - 4;
     const tw = (s.kind === 'orc' ? 10 : 11) * B;
     const tab = () => {
@@ -1874,6 +2756,49 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
   x.fillStyle = s.plate ? gold : '#c8a23a';
   x.fillRect(lean - 3, hip - 2, 6, 7);
   poly(x, [[hw - 6, hip + 4], [hw + 6, hip + 4], [hw + 6, hip + 16], [hw - 6, hip + 16]], shade(s.belt, 0.15), 1.6);
+  if (robe) {
+    // A second pouch, and the sash end hanging from the buckle with a gold tassel.
+    poly(x, [[-hw - 3, hip + 4], [-hw + 7, hip + 4], [-hw + 7, hip + 14], [-hw - 3, hip + 14]], shade(s.belt, 0.25), 1.6);
+    if (!back) {
+      poly(x, [[lean - 5, hip + 4], [lean + 1, hip + 4], [lean + 3, hip + 30], [lean - 6, hip + 29]], s.robe!, 1.6);
+      poly(x, [[lean - 6, hip + 29], [lean + 3, hip + 30], [lean + 2, hip + 36], [lean - 5, hip + 35]], s.trim, 1.2);
+    }
+  }
+  if (s.apron) {
+    // Tools hung from the belt: a hammer on the near hip, pincers on the far side.
+    const side = back ? 1 : -1;
+    const tx = lean + side * (hw + 1);
+    poly(x, [[tx - 1.6, hip + 2], [tx + 1.6, hip + 2], [tx + 1.6, hip + 22], [tx - 1.6, hip + 22]], WOOD, 1.4);
+    poly(x, [[tx - 6, hip + 19], [tx + 6, hip + 19], [tx + 6, hip + 25], [tx - 6, hip + 25]], STEEL_D, 1.4);
+    if (!back) {
+      x.strokeStyle = INK;
+      x.lineWidth = 3;
+      x.beginPath();
+      x.moveTo(hw - 9, hip + 4);
+      x.lineTo(hw - 12, hip + 22);
+      x.moveTo(hw - 6, hip + 4);
+      x.lineTo(hw - 4, hip + 22);
+      x.stroke();
+      x.strokeStyle = STEEL;
+      x.lineWidth = 1.4;
+      x.stroke();
+    }
+  }
+  if (s.fetishes) {
+    // Feathers, a finger bone and a tiny skull dangling on thongs from the belt.
+    const fx0 = back ? lean + hw * 0.4 : lean - hw * 0.55;
+    x.strokeStyle = '#3a2614';
+    x.lineWidth = 1.2;
+    x.beginPath();
+    x.moveTo(fx0, hip + 4);
+    x.lineTo(fx0 - 2, hip + 14);
+    x.moveTo(fx0 + 6, hip + 4);
+    x.lineTo(fx0 + 8, hip + 18);
+    x.stroke();
+    skull(x, fx0 - 2, hip + 18, 0.85);
+    feather(x, fx0 + 8, hip + 16, fx0 + 11, hip + 32, '#ece4cc', 2.6);
+    feather(x, fx0 + 6, hip + 16, fx0 + 3, hip + 30, '#b3261c', 2.4);
+  }
   if (s.skulls) {
     for (const sx of s.skulls >= 3 ? [-hw + 2, lean + 2, hw - 4] : [lean + 2]) skull(x, sx, hip + 12);
   }
@@ -1884,6 +2809,7 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
       poly(x, [[rx2 - 4, hip + 4], [rx2 + 4, hip + 4], [rx2 + 3 + rng.range(-2, 2), hip + 26 + rng.range(0, 8)], [rx2, hip + 20], [rx2 - 3, hip + 28]], i % 2 ? s.rags : shade(s.rags, -0.25), 1.4);
     }
   }
+  if (back) cloak();
   // Bushy tail over the back of the legs (back views).
   if (dog && back) {
     fluffy(x, [[lean + 2, hip + 2], [lean - 4, hip + 14], [lean - 14, hip + 24], [lean - 26, hip + 32], [lean - 36, hip + 38], [lean - 44, hip + 40]], [5, 8, 10, 11, 10, 7], dog.coat, dog.white, 4);
@@ -2018,6 +2944,33 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     // Tail.
     poly(x, back ? [[lean - 6, neck + 10], [lean + 6, neck + 10], [lean + 9, shoulder + 34], [lean - 2, shoulder + 30]] : [[lean + 8, neck + 8], [lean + 18, neck + 10], [lean + 24, shoulder + 22], [lean + 14, shoulder + 18]], s.scarf, 2);
   }
+  if (s.necklace && !back) {
+    // A string of teeth and finger bones with a little skull at the middle.
+    const nx0 = lean - 2;
+    const ny0 = neck + 8;
+    x.strokeStyle = '#3a2614';
+    x.lineWidth = 1.4;
+    x.beginPath();
+    x.moveTo(nx0 - 14, ny0);
+    x.quadraticCurveTo(nx0, ny0 + 16, nx0 + 14, ny0);
+    x.stroke();
+    for (let i = 0; i < 7; i++) {
+      const t = (i + 0.5) / 7;
+      const px = nx0 - 14 + 28 * t;
+      const py = ny0 + 16 * 2 * t * (1 - t);
+      if (i === 3) continue;
+      poly(x, [[px - 1.8, py], [px + 1.8, py], [px, py + (i % 2 ? 6 : 4.5)]], BONE, 1);
+    }
+    skull(x, nx0, ny0 + 11, 0.95);
+  }
+  // A mallet carried over the shoulder sits behind the head.
+  if (s.weapon === 'mallet' && !back && !atk && !flee) {
+    const hx = lean + 4;
+    const hy = shoulder + 32;
+    const tx = lean + sw + 5;
+    const ty = shoulder - 16;
+    mallet(x, hx, hy, Math.atan2(tx - hx, hy - ty));
+  }
 
   // Head.
   head(x, lean - (back ? 0 : 2), headY, s, back, rng);
@@ -2029,11 +2982,61 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
   const sleeve = s.kind === 'human' || s.kind === 'dog' ? s.tunic : s.skin;
   const glove = s.gauntlet ?? (s.kind === 'human' ? LEATHER : s.skin);
   const arm = (ax: number, ay: number, bx: number, by: number) => {
-    limb(x, ax, ay, bx, by, armW, sleeve);
     const len = Math.hypot(bx - ax, by - ay) || 1;
     const nx = -(by - ay) / len;
     const ny = (bx - ax) / len;
     const at = (f: number, o: number) => [ax + (bx - ax) * f + nx * o, ay + (by - ay) * f + ny * o];
+    if (s.rolled) {
+      // Bare forearm below a sleeve rolled up past the elbow.
+      capsule(x, ax, ay, bx, by, armW * 0.86, s.skin);
+      capsule(x, ax, ay, ax + (bx - ax) * 0.46, ay + (by - ay) * 0.46, armW * 1.04, sleeve);
+      poly(x, [at(0.36, armW * 0.6), at(0.52, armW * 0.56), at(0.52, -armW * 0.56), at(0.36, -armW * 0.6)], '#ddd2b6', 1.6);
+      return;
+    }
+    if (robe) {
+      // A wide bell sleeve opening into a gold hem over the hand.
+      capsule(x, ax, ay, ax + (bx - ax) * 0.6, ay + (by - ay) * 0.6, armW, sleeve);
+      const w = armW * 0.5;
+      const bell = [at(0.38, w), at(0.66, w * 1.2), at(0.86, w * 1.72), at(0.95, w * 1.62), at(0.97, 0), at(0.95, -w * 1.62), at(0.86, -w * 1.72), at(0.66, -w * 1.2), at(0.38, -w)];
+      x.save();
+      x.beginPath();
+      bell.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+      x.closePath();
+      x.fillStyle = sleeve;
+      x.fill();
+      x.clip();
+      x.fillStyle = shade(sleeve, -0.28);
+      // Shade the side facing away from the upper-left light.
+      const ds = nx + ny * 0.5 >= 0 ? 1 : -1;
+      const [d0x, d0y] = at(0.3, ds * w * 2.2);
+      const [d1x, d1y] = at(1.1, ds * w * 2.2);
+      const [d2x, d2y] = at(1.1, ds * w * 0.3);
+      const [d3x, d3y] = at(0.3, ds * w * 0.3);
+      x.beginPath();
+      x.moveTo(d0x, d0y);
+      x.lineTo(d1x, d1y);
+      x.lineTo(d2x, d2y);
+      x.lineTo(d3x, d3y);
+      x.closePath();
+      x.fill();
+      x.restore();
+      x.beginPath();
+      bell.forEach(([px, py], i) => (i ? x.lineTo(px, py) : x.moveTo(px, py)));
+      x.closePath();
+      x.lineWidth = 2;
+      x.strokeStyle = INK;
+      x.stroke();
+      const [g0x, g0y] = at(0.88, w * 1.66);
+      const [g1x, g1y] = at(0.88, -w * 1.66);
+      x.strokeStyle = s.trim;
+      x.lineWidth = 2.4;
+      x.beginPath();
+      x.moveTo(g0x, g0y);
+      x.lineTo(g1x, g1y);
+      x.stroke();
+      return;
+    }
+    limb(x, ax, ay, bx, by, armW, sleeve);
     if (s.armPaint) {
       // Two painted stripes slanting across the upper arm.
       x.strokeStyle = s.armPaint;
@@ -2079,6 +3082,24 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
     x.lineWidth = 2;
     x.strokeStyle = INK;
     x.stroke();
+  };
+  // Where a casting staff's light and the free hand's spark are (screen space).
+  let focus: number[] | null = null;
+  let spark: number[] | null = null;
+  /** An open hand raised palm out, fingers spread. */
+  const palm = (hx: number, hy: number) => {
+    for (const [dx, dy] of [[-6, -9], [-2, -12], [2.5, -12], [6.5, -9]]) poly(x, [[hx + dx * 0.4 - 1.8, hy - 2], [hx + dx - 1.4, hy + dy], [hx + dx + 1.4, hy + dy], [hx + dx * 0.4 + 1.8, hy - 2]], glove, 1.4);
+    poly(x, [[hx + 5, hy + 1], [hx + 11, hy - 3], [hx + 11, hy + 1], [hx + 6, hy + 5]], glove, 1.4);
+    hand(hx, hy);
+  };
+  /** A clawed hand flung out toward `dir` (-1 left, 1 right), talons spread. */
+  const claw = (hx: number, hy: number, dir: number) => {
+    for (const a of [-0.7, -0.2, 0.3]) {
+      const ca = Math.cos(a);
+      const sa = Math.sin(a);
+      poly(x, [[hx + dir * 4 - sa * 2.4, hy + ca * 2.4 * 0.5], [hx + dir * (13 * ca), hy + 13 * sa], [hx + dir * 4 + sa * 2.4, hy - ca * 2.4 * 0.5]], shade(glove, 0.05), 1.3);
+    }
+    hand(hx, hy);
   };
   const swordLen = s.plate ? 62 : 54;
   const blade = (hx: number, hy: number, ang: number) => {
@@ -2183,6 +3204,51 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
       hand(hx, hy);
       arm(shoulderR.x, shoulderR.y, atk ? shoulderR.x + 2 : shoulderR.x - 4, hy + (atk ? -2 : 18));
       hand(atk ? shoulderR.x + 2 : shoulderR.x - 4, hy + (atk ? -2 : 18));
+    } else if (s.weapon === 'staff' || s.weapon === 'skullstaff') {
+      const gob = s.weapon === 'skullstaff';
+      const staff = gob ? skullStaff : mageStaff;
+      if (atk) {
+        // Casting: the staff thrust up toward the enemy, the free hand raised (or a claw flung out).
+        const hx = shoulderL.x - (gob ? 10 : 16);
+        const hy = shoulder - (gob ? 16 : 6);
+        focus = staff(x, hx, hy, gob ? -0.34 : -0.44, s, 2);
+        arm(shoulderL.x, shoulderL.y, hx, hy);
+        hand(hx, hy);
+        const fx = gob ? shoulderR.x + 20 : shoulderR.x + 6;
+        const fy = gob ? shoulder + 4 : shoulder - 26;
+        arm(shoulderR.x, shoulderR.y, fx, fy);
+        if (gob) claw(fx, fy, 1);
+        else palm(fx, fy);
+        spark = [fx + (gob ? 8 : 0), fy - (gob ? 2 : 9)];
+      } else {
+        const hx = shoulderL.x - 8;
+        const hy = shoulderL.y + 28;
+        staff(x, hx, hy, -0.06, s, pose === 'dead' ? 0 : 1);
+        arm(shoulderL.x, shoulderL.y, hx, hy);
+        hand(hx, hy);
+        arm(shoulderR.x, shoulderR.y, shoulderR.x + 2, shoulderR.y + 30);
+        hand(shoulderR.x + 2, shoulderR.y + 30);
+      }
+    } else if (s.weapon === 'mallet') {
+      if (atk) {
+        // Raised overhead in both hands for the blow.
+        const ang = -0.42;
+        const ux = Math.sin(ang);
+        const uy = -Math.cos(ang);
+        const p = { x: lean - 12, y: shoulder - 6 };
+        const q = { x: p.x - ux * 22, y: p.y - uy * 22 };
+        arm(shoulderR.x, shoulderR.y, q.x, q.y);
+        mallet(x, q.x, q.y, ang);
+        hand(q.x, q.y);
+        arm(shoulderL.x, shoulderL.y, p.x, p.y);
+        hand(p.x, p.y);
+      } else {
+        // Carried on the shoulder (drawn behind the head), steadied by the near hand.
+        arm(shoulderL.x, shoulderL.y, shoulderL.x - 4, shoulderL.y + 30);
+        hand(shoulderL.x - 4, shoulderL.y + 30);
+        arm(shoulderR.x, shoulderR.y, lean + 4, shoulder + 32);
+        hand(lean + 4, shoulder + 32);
+      }
     }
     // Off arm with shield.
     if (s.shield === 'kite') {
@@ -2267,10 +3333,68 @@ function drawBody(x: CanvasRenderingContext2D, s: Style, pose: Pose, rng: Rng) {
       hand(hx, hy);
       arm(shoulderL.x, shoulderL.y, shoulderL.x - 6, hy + 10);
       hand(shoulderL.x - 6, hy + 10);
+    } else if (s.weapon === 'staff' || s.weapon === 'skullstaff') {
+      const gob = s.weapon === 'skullstaff';
+      const staff = gob ? skullStaff : mageStaff;
+      if (atk) {
+        const hx = shoulderR.x + (gob ? 10 : 16);
+        const hy = shoulder - (gob ? 16 : 6);
+        const fx = gob ? shoulderL.x - 18 : shoulderL.x - 6;
+        const fy = gob ? shoulder + 4 : shoulder - 26;
+        arm(shoulderL.x, shoulderL.y, fx, fy);
+        if (gob) claw(fx, fy, -1);
+        else palm(fx, fy);
+        focus = staff(x, hx, hy, gob ? 0.34 : 0.44, s, 2);
+        arm(shoulderR.x, shoulderR.y, hx, hy);
+        hand(hx, hy);
+        spark = [fx - (gob ? 8 : 0), fy - (gob ? 2 : 9)];
+      } else {
+        const hx = shoulderR.x + 8;
+        const hy = shoulderR.y + 28;
+        arm(shoulderL.x, shoulderL.y, shoulderL.x - 2, shoulderL.y + 30);
+        hand(shoulderL.x - 2, shoulderL.y + 30);
+        staff(x, hx, hy, 0.06, s, 1);
+        arm(shoulderR.x, shoulderR.y, hx, hy);
+        hand(hx, hy);
+      }
+    } else if (s.weapon === 'mallet') {
+      if (atk) {
+        const ang = 0.42;
+        const ux = Math.sin(ang);
+        const uy = -Math.cos(ang);
+        const p = { x: lean + 12, y: shoulder - 6 };
+        const q = { x: p.x - ux * 22, y: p.y - uy * 22 };
+        mallet(x, q.x, q.y, ang);
+        arm(shoulderL.x, shoulderL.y, q.x, q.y);
+        hand(q.x, q.y);
+        arm(shoulderR.x, shoulderR.y, p.x, p.y);
+        hand(p.x, p.y);
+      } else {
+        // Resting with its head on the ground beside him.
+        const hx = shoulderR.x + 10;
+        const hy = hip - 2;
+        const ang = Math.PI - 0.2;
+        // Gripped partway down the handle, the head resting on the ground.
+        mallet(x, hx - Math.sin(ang) * 30, hy + Math.cos(ang) * 30, ang);
+        arm(shoulderR.x, shoulderR.y, hx, hy);
+        hand(hx, hy);
+        arm(shoulderL.x, shoulderL.y, shoulderL.x - 4, shoulderL.y + 30);
+        hand(shoulderL.x - 4, shoulderL.y + 30);
+      }
     }
     if (s.weapon === 'sword' && s.shield !== 'kite') {
       arm(shoulderL.x, shoulderL.y, shoulderL.x - 4, shoulderL.y + 28);
     }
+  }
+  // Light from a casting staff spills over the figure and the raised hand.
+  if (focus && s.glow) {
+    x.save();
+    x.globalCompositeOperation = 'lighter';
+    halo(x, focus[0], focus[1], 30, s.glow, 0.35);
+    if (spark) halo(x, spark[0], spark[1], 14, s.glow, 0.5);
+    x.restore();
+    glint(x, focus[0], focus[1], 15, 'rgba(255,255,255,0.95)');
+    if (spark) glint(x, spark[0], spark[1], 7, 'rgba(255,255,255,0.9)');
   }
 }
 

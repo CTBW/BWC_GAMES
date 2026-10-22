@@ -3,6 +3,10 @@
 ## movement, attack legality, damage, turns, victory/defeat and retreat.
 extends "res://tests/unit/test_battle_base.gd"
 
+const Setup = preload("res://scripts/rules/setup.gd")
+const Game = preload("res://scripts/meta/game.gd")
+const Soldier = preload("res://scripts/meta/soldier.gd")
+
 
 # ------------------------------------------------------------------ battle.test.ts: combat rules
 
@@ -162,21 +166,113 @@ func test_one_squad_per_tile() -> void:
 	assert_eq(Grid.unit_at(b.units, 5, 7), null)
 
 
-func test_a_walk_cut_short_on_an_allys_tile_leaves_both_there() -> void:
-	# The original's rule, kept as is: a path may cross an ally's tile and a
-	# fleeing enemy's tile (only standing foes block planning), but the walk
-	# stops before any enemy; stopped on the ally's tile, both squads share it.
+## Living squads sharing a tile, as "a and b on x,y" ("" when none do).
+static func _shared_tile(b) -> String:
+	var seen := {}
+	for u in b.units:
+		if u.status != "active" and u.status != "routing":
+			continue
+		var k := Grid.key(u.x, u.y)
+		if seen.has(k):
+			return "%s and %s on %d,%d" % [seen[k], u.uid, u.x, u.y]
+		seen[k] = u.uid
+	return ""
+
+
+func test_a_routing_enemy_blocks_the_way_like_any_other() -> void:
+	# A path may cross an ally's tile but no enemy's, fleeing or not: the walk
+	# stops in front of any enemy. (The archived original planned through
+	# routing foes, so the walk could end short on the ally's tile.)
 	var s := soldier("spearman", 5, "s")
 	s.x = 5; s.y = 8; s.facing = 3
 	var g := enemy_f("goblin_spear", "g", 6, 5, 1)
+	g.uid = "g2"
 	g.x = 5; g.y = 7
 	g.status = "routing"
 	var b = _duel([s, g])
 	var f: Dictionary = b.unit("f")
-	assert_true(b.reachable(f).has(Grid.key(5, 6)))
-	assert_true(b.move("f", 5, 6))
-	assert_eq([f.x, f.y], [5, 8])
-	assert_eq(b.living().filter(func(u): return u.x == 5 and u.y == 8).size(), 2)
+	assert_false(b.reachable_full(f).has(Grid.key(5, 7)), "the routing goblins' tile is not crossed")
+	var reach: Dictionary = b.reachable(f)
+	if reach.has(Grid.key(5, 6)):
+		assert_false(b.path_from(reach, 5, 6).has({"x": 5, "y": 7}), "the way round, not through")
+	if b.move("f", 5, 6):
+		assert_eq([f.x, f.y], [5, 6])
+	else:
+		assert_eq([f.x, f.y], [5, 9])
+	assert_eq(_shared_tile(b), "")
+
+
+func test_a_walk_stopped_on_an_allys_tile_falls_back_to_the_last_free_one() -> void:
+	# A foe in the way (put there by hand: planning never paths through one)
+	# stops the walk on the ally's tile; the squad backs off to its own,
+	# still facing its way.
+	var s := soldier("spearman", 5, "s")
+	s.x = 5; s.y = 8; s.facing = 3
+	var g := enemy_f("goblin_spear", "g", 6, 5, 3)
+	g.uid = "g2"
+	g.x = 5; g.y = 7 # facing -y: the ally's tile is behind it, so no free attack
+	var b = _duel([s, g])
+	var f: Dictionary = b.unit("f")
+	b.drain()
+	var moved: int = b.walk(f, [{"x": 5, "y": 9}, {"x": 5, "y": 8}, {"x": 5, "y": 7}, {"x": 5, "y": 6}])
+	assert_eq(moved, 0)
+	assert_eq([f.x, f.y, f.facing, f.movedTiles], [5, 9, 3, 0])
+	var moves: Array = events_of(b.drain(), "move")
+	assert_eq(moves.size(), 2)
+	assert_eq(moves[0].path, [{"x": 5, "y": 9}, {"x": 5, "y": 8}])
+	assert_eq(moves[1].path, [{"x": 5, "y": 8}, {"x": 5, "y": 9}])
+	assert_true(moves[1].get("backward", false), "marked as backing off")
+	assert_eq(_shared_tile(b), "")
+
+
+func test_a_squad_broken_on_an_allys_tile_falls_back_too() -> void:
+	# Leaving the ally's tile costs a free attack that breaks the footmen.
+	var s := soldier("spearman", 5, "s")
+	s.x = 5; s.y = 8; s.facing = 3
+	var g := enemy_f("goblin_spear", "g", 6, 5, 2)
+	g.uid = "g2"
+	g.x = 6; g.y = 8 # facing -x: the ally's tile is its front
+	g.stats.melee = 300 # always hit
+	var b = _duel([s, g])
+	var f: Dictionary = b.unit("f")
+	f.morale = 1
+	b.walk(f, [{"x": 5, "y": 9}, {"x": 5, "y": 8}, {"x": 4, "y": 8}])
+	assert_eq(f.status, "routing", "the free attack broke them")
+	assert_eq([f.x, f.y], [5, 9])
+	assert_eq(_shared_tile(b), "")
+
+
+func test_no_two_squads_ever_share_a_tile() -> void:
+	# Every encounter, both sides on automation: after each squad's action and
+	# each enemy turn, every living squad has its tile to itself.
+	if slow():
+		return
+	for seed in [1, 2]:
+		var g := Game.new_game(seed)
+		var army: Array = []
+		for s in g.roster:
+			army.append(Soldier.soldier_to_unit(s))
+		for enc in DB.ENCOUNTERS:
+			var roll := Setup.roll_encounter(enc.id, Rng.new(seed * 131 + 7), 1)
+			var b = Battle.new(Setup.build_battle(roll, army.duplicate(true), {"survivalBonus": 0, "title": enc.id, "darkness": false}))
+			b.begin(Ai.run_enemy_ai)
+			var where := ""
+			while not b.is_over() and b.turn <= 30 and where == "":
+				for u in b.active("player"):
+					if b.is_over() or u.status != "active":
+						continue
+					Ai.act_unit(b, u, {"useStances": true})
+					where = _shared_tile(b)
+					if where != "":
+						where = "after %s acted: %s" % [u.uid, where]
+						break
+				if where != "" or b.is_over():
+					break
+				b.end_turn(Ai.run_enemy_ai)
+				where = _shared_tile(b)
+				if where != "":
+					where = "after the enemy turn: " + where
+			assert_eq(where, "", "%s seed %d turn %d" % [enc.id, seed, b.turn])
 
 
 func test_movement_validation() -> void:

@@ -194,7 +194,8 @@ func test_after_an_enemy_turn_every_squad_faces_its_last_step() -> void:
 			assert_false(has_event(ev, func(e): return e.t == "face"), "seed %d: no turning on the spot" % seed)
 			var last_step := {}
 			for e in ev:
-				if e.t == "move" and e.path.size() > 1:
+				# A squad falling back off an ally's tile backs away facing its last step forward.
+				if e.t == "move" and e.path.size() > 1 and not e.get("backward", false):
 					last_step[e.uid] = Grid.dir_to(e.path[e.path.size() - 2], e.path[e.path.size() - 1])
 			for u in b.units:
 				if u.status == "dead" or u.status == "fled":

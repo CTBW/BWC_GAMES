@@ -169,6 +169,75 @@ const ICONS: Record<string, (c: string) => ReactNode> = {
   mute: () => <path d="M4 9 H8 L13 5 V19 L8 15 H4 Z M16 9 L21 15 M21 9 L16 15" fill="none" stroke="currentColor" strokeWidth="1.8" />,
   grid: () => <path d="M12 3 L21 12 L12 21 L3 12 Z M7.5 7.5 L16.5 16.5 M16.5 7.5 L7.5 16.5" fill="none" stroke="currentColor" strokeWidth="1.6" />,
   danger: () => <path d="M12 3 L22 20 H2 Z M12 9 V14 M12 16.5 V17.5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinejoin="round" />,
+  // Spells and war machines.
+  lightning: () => (
+    <>
+      <path d="M14 2 L5 13 H11 L8 22 L19 9 H13 L16 2 Z" fill="#9fd0ff" stroke="#1d3a6a" strokeWidth="1.3" strokeLinejoin="round" />
+      <path d="M13.5 4 L8 11.5 H12" fill="none" stroke="#ffffff" strokeWidth="1" />
+    </>
+  ),
+  frost: () => (
+    <>
+      <path d="M12 2 V22 M3.5 7 L20.5 17 M3.5 17 L20.5 7" stroke="#2a5a8a" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M12 2 V22 M3.5 7 L20.5 17 M3.5 17 L20.5 7" stroke="#d4f0ff" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9.5 4 L12 6.5 L14.5 4 M9.5 20 L12 17.5 L14.5 20" fill="none" stroke="#d4f0ff" strokeWidth="1.3" />
+    </>
+  ),
+  heal: () => (
+    <>
+      <circle cx="12" cy="12" r="9" fill="#fff0b0" stroke="#8a6a18" strokeWidth="1.2" />
+      <path d="M10 6.5 H14 V10 H17.5 V14 H14 V17.5 H10 V14 H6.5 V10 H10 Z" fill="#5aa83a" stroke="#2b4a12" strokeWidth="1" />
+    </>
+  ),
+  circle: () => (
+    <>
+      <ellipse cx="12" cy="14" rx="9.5" ry="5" fill="none" stroke="#c99a3c" strokeWidth="2.2" />
+      <ellipse cx="12" cy="14" rx="5.5" ry="2.8" fill="#fff0b0" stroke="#8a6a18" strokeWidth="1" />
+      <path d="M12 3 V9 M9 6 H15" stroke="#5aa83a" strokeWidth="2.2" />
+    </>
+  ),
+  fire: () => (
+    <>
+      <path d="M12 2 C17 7 19 11 18 15 C17 19 14.5 21 12 21 C8 21 5.5 18 6 14 C6.5 11 9 10 9 6 C11 8 11.5 9 11.5 11 C13 9 13 5 12 2 Z" fill="#ff8a2a" stroke="#7a2a0a" strokeWidth="1.2" strokeLinejoin="round" />
+      <path d="M12 12 C14.5 14 15 16 14 18 C13 19.5 11 19.5 10 18.2 C9 16.5 10.5 15 12 12 Z" fill="#ffe08a" />
+    </>
+  ),
+  blood: () => (
+    <>
+      <path d="M12 2.5 C15.5 8 18.5 11 18.5 15 C18.5 18.6 15.6 21.5 12 21.5 C8.4 21.5 5.5 18.6 5.5 15 C5.5 11 8.5 8 12 2.5 Z" fill="#c8241a" stroke="#4a0a06" strokeWidth="1.2" />
+      <path d="M8.5 13 L10.5 15 L8.5 17 M15.5 13 L13.5 15 L15.5 17" fill="none" stroke="#ffd0b0" strokeWidth="1.4" />
+    </>
+  ),
+  gut: () => (
+    <>
+      <path d="M4 20 C6 14 4 9 8 6 C11 4 13 8 11 10 C9 12 12 14 15 12 C18 10 17 5 21 4" fill="none" stroke="#4a0a14" strokeWidth="3.4" strokeLinecap="round" />
+      <path d="M4 20 C6 14 4 9 8 6 C11 4 13 8 11 10 C9 12 12 14 15 12 C18 10 17 5 21 4" fill="none" stroke="#d04050" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="18" cy="17" r="2.6" fill="#a6ff5a" stroke="#2b4a12" />
+    </>
+  ),
+  stone: () => (
+    <>
+      <path d="M3 20 C6 12 10 8 16 6" fill="none" stroke="#c9b79a" strokeWidth="1.6" strokeDasharray="2 2.5" />
+      <path d="M15 3 L20.5 4.5 L22 9.5 L18.5 13 L13.5 12 L12 7.5 Z" fill="#8a8378" stroke="#2b1d10" strokeWidth="1.3" strokeLinejoin="round" />
+      <circle cx="15.5" cy="6.5" r="1.3" fill="#c9c2b4" />
+    </>
+  ),
+  staff: () => (
+    <>
+      <path d="M6 21 L15 8" stroke="#6b4426" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="16.5" cy="6" r="3.6" fill="#9fd0ff" stroke="#1d3a6a" strokeWidth="1.2" />
+      <path d="M16.5 1 V3 M21.5 6 H19.5 M20 2.5 L18.8 3.7" stroke="#e8f4ff" strokeWidth="1.2" />
+    </>
+  ),
+  engine: () => (
+    <>
+      <path d="M3 16 H21 L19 12 H5 Z" fill="#9a6a3a" stroke="#2b1d10" strokeWidth="1.2" strokeLinejoin="round" />
+      <circle cx="7" cy="18" r="2.6" fill="#6b4426" stroke="#2b1d10" />
+      <circle cx="17" cy="18" r="2.6" fill="#6b4426" stroke="#2b1d10" />
+      <path d="M8 12 L17 3" stroke="#7a5532" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="17.5" cy="3.5" r="2" fill="#8a8378" stroke="#2b1d10" />
+    </>
+  ),
 };
 
 export function Icon({ name, size = 18, title }: { name: string; size?: number; title?: string }) {
@@ -238,11 +307,13 @@ export function RosterSquadBar({ so, height }: { so: Soldier; height?: number })
 }
 
 /** Shorter squad names for tight rows (cards, lists, the battle HUD). */
-const SHORT_PLURAL: Record<string, string> = { collie_guard: 'Royal Guards' };
+const SHORT_PLURAL: Record<string, string> = { collie_guard: 'Royal Guards', war_wagon: 'War Wagons' };
 
 /** "Footmen", with rank when given: "Veteran Footmen". `short` uses compact names for long types. */
 export function squadTypeLabel(typeId: string, level?: number, short = false): string {
-  const plural = (short && SHORT_PLURAL[typeId]) || UNIT_TYPES[typeId]?.plural || typeId;
+  const def = UNIT_TYPES[typeId];
+  // One war machine and its crew: "Veteran Ballista Crew".
+  const plural = def?.crew ? `${(short && SHORT_PLURAL[typeId]?.replace(/s$/, '')) || def.name} Crew` : (short && SHORT_PLURAL[typeId]) || def?.plural || typeId;
   return level ? `${rankName(level)} ${plural}` : plural;
 }
 
@@ -319,7 +390,12 @@ export function Portrait({ typeId, variant = 0, size = 56, dead = false }: { typ
 }
 
 export function TypeIcon({ typeId, size = 16 }: { typeId: string; size?: number }) {
-  const name = typeId === 'footman' || typeId === 'collie_guard' ? 'shield' : typeId === 'spearman' ? 'spear' : typeId === 'crossbowman' ? 'crossbow' : typeId.includes('archer') ? 'crossbow' : 'sword';
+  const def = UNIT_TYPES[typeId];
+  const name = def?.crew
+    ? 'engine'
+    : def?.tags?.includes('caster')
+      ? 'staff'
+      : typeId === 'footman' || typeId === 'collie_guard' ? 'shield' : typeId === 'spearman' ? 'spear' : typeId === 'crossbowman' ? 'crossbow' : typeId.includes('archer') ? 'crossbow' : 'sword';
   return <Icon name={name} size={size} title={UNIT_TYPES[typeId]?.name} />;
 }
 

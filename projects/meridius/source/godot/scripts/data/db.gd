@@ -108,6 +108,19 @@ static func squad_size(type_id: String) -> int:
 	return t.get("squad", DEFAULT_SQUAD_SIZE)
 
 
+## War machines: an engine and its crew (src/data/units.ts isEngine).
+static func is_engine(type_id: String) -> bool:
+	var t: Dictionary = UNIT_TYPES.get(type_id, {})
+	return t.has("crew")
+
+
+## Abilities a squad uses from its panel: stances, shouts, spells and attack
+## abilities with their own damage (src/data/abilities.ts isActiveAbility).
+static func is_active_ability(id: String) -> bool:
+	var ab: Dictionary = ABILITIES.get(id, {})
+	return not ab.is_empty() and (ab.kind != "attack" or ab.has("damageMult"))
+
+
 static func building_by_id(id: String) -> Dictionary:
 	for b in BUILDINGS:
 		if b.id == id:

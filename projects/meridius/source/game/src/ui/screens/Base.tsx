@@ -334,7 +334,9 @@ function BuildingBody({ id, g }: { id: string; g: GameState }) {
                     <MenPips men={r.men} size={squadSize(r.typeId)} />
                     <span className="row" style={{ gap: 3, whiteSpace: 'nowrap' }}><Icon name="cp" size={14} /> {commandCost(r)} CP</span>
                     {r.typeId === 'collie_guard' && <span className="tag gold" style={{ fontSize: 10 }}>Elite</span>}
+                    {(def.crew || def.tags?.includes('caster')) && <span className="tag blue" style={{ fontSize: 10 }}>{def.crew ? 'War machine' : 'Mages'}</span>}
                   </div>
+                  {(def.crew || def.tags?.includes('caster')) && <div className="tiny muted" style={{ marginTop: 2 }}>{def.blurb}</div>}
                 </div>
                 <button className="btn sm gold" disabled={g.resources.silver < cost || g.roster.length >= cap} onClick={() => act(hire(g, r.id))}>
                   {cost === 0 ? 'Take on volunteer' : <>Hire <Icon name="silver" size={14} /> {cost}</>}
@@ -344,6 +346,7 @@ function BuildingBody({ id, g }: { id: string; g: GameState }) {
           })}
         </div>
         {level(g, 'barracks') < 2 && <div className="small muted">A proper Barracks (level 2) draws the Border Collie Royal Guard to the gate now and then.</div>}
+        <div className="small muted">Each muster one specialist squad also offers its service: three battle mages, or a ballista or mangonel with its crew.</div>
         <div className="flourish" />
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <h3 style={{ fontSize: 17 }}>Reinforcements</h3>

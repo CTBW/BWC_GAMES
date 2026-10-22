@@ -19,6 +19,8 @@
 ##   Assets.draw_cast_shadow(self, s, x, y, flip, scale, alpha)
 ##   drawSprite(..., {img: shadowOf(s), alpha}) -> Assets.draw_silhouette(self, s, x, y, flip, scale, alpha, sy, rot)
 ##   drawSprite(..., {img: flashOf(s), alpha})  -> Assets.draw_flash(self, s, x, y, flip, scale, alpha, sy, rot)
+##   drawSprite(..., {img: tintOf(s, c), alpha}) -> Assets.draw_tint(self, s, x, y, flip, scale, c, alpha, sy, rot)
+##     (needs a material that reads the TINT flag; see draw_tint)
 ## draw_flash needs `material = Assets.sprite_material()` on the drawing
 ## CanvasItem for an exact white silhouette (without it, an over-bright modulate
 ## gives nearly the same white, except on pure-black pixels). The garrison's
@@ -32,6 +34,9 @@ const MANIFEST := "res://assets/sprites.json"
 const MISSING := "missing"
 ## Red channel of the vertex colour that marks a flash draw (sprite_flash.gdshader).
 const FLASH := 64.0
+## Green channel offset of the vertex colour that marks a tint draw (tintOf):
+## green = TINT + the tint's green (see draw_tint).
+const TINT := 4.0
 const SHADER_FLASH := "res://assets/shaders/sprite_flash.gdshader"
 const SHADER_FLASH_ADD := "res://assets/shaders/sprite_flash_add.gdshader"
 
@@ -301,6 +306,23 @@ static func draw_silhouette(ci: CanvasItem, s: Dictionary, x: float, y: float, f
 	if s.is_empty():
 		return
 	_blit(ci, s, _xf(s, x, y, flip, scale, sy, rot), Color(0, 0, 0, alpha))
+
+
+## drawSprite with img: tintOf(s, color): the sprite's silhouette in one colour
+## at `alpha` (frost on a chilled squad, the red of a frenzy). The colour rides
+## in the vertex colour (tint_modulate); the drawing CanvasItem's material must
+## read it, as the battle view's sorted pass does (scenes/battle/battle_sorted.gdshader:
+## green above 2 is a tint, its colour (r, g - TINT, b)). Without such a
+## material the draw comes out over-bright green.
+static func draw_tint(ci: CanvasItem, s: Dictionary, x: float, y: float, flip := false, scale := 1.0, color := Color.WHITE, alpha := 1.0, sy := 1.0, rot := 0.0) -> void:
+	if s.is_empty():
+		return
+	_blit(ci, s, _xf(s, x, y, flip, scale, sy, rot), tint_modulate(color, alpha))
+
+
+## The modulate of a tint draw (draw_tint) for callers that blit sprites themselves.
+static func tint_modulate(color: Color, alpha: float) -> Color:
+	return Color(color.r, color.g + TINT, color.b, alpha)
 
 
 ## Cast shadow: the silhouette flattened and skewed away from the upper-left

@@ -46,6 +46,15 @@ function battleStats(encId: string, types: string[], level: number, N = 200) {
 }
 
 const std = ['footman', 'footman', 'spearman', 'spearman', 'crossbowman'];
-for (const e of ENCOUNTERS) battleStats(e.id, std, 1);
-battleStats('warband_camp', std, 2);
-battleStats('warband_camp', ['footman', 'spearman', 'spearman', 'crossbowman', 'crossbowman'], 2);
+const only = process.argv.includes('specialists');
+if (!only) {
+  for (const e of ENCOUNTERS) battleStats(e.id, std, 1);
+  battleStats('warband_camp', std, 2);
+  battleStats('warband_camp', ['footman', 'spearman', 'spearman', 'crossbowman', 'crossbowman'], 2);
+}
+// The specialists in place of the crossbowmen (`npm run sim -- specialists` for these alone).
+const specs = process.argv.slice(2).filter((a) => a !== 'specialists');
+for (const spec of specs.length ? specs : ['crossbowman', 'battle_mage', 'ballista', 'mangonel']) {
+  console.log(`-- with ${spec}`);
+  for (const id of ['raiding_party', 'orc_overseer', 'shaman_fire', 'siege_train', 'moss_trolls']) battleStats(id, ['footman', 'footman', 'spearman', 'spearman', spec], 1, 120);
+}

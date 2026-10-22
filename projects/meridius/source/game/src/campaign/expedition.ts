@@ -960,7 +960,8 @@ export function applyBattle(g: GameState, b: Battle, title: string, objective: b
     s.fatigue = Math.min(100, s.fatigue + 6);
     const hits = b.hitsTaken[u.uid] ?? 0;
     s.armorCondition = Math.max(0.3, s.armorCondition - hits * 0.05);
-    if (UNIT_TYPES[s.typeId].shot) {
+    // Only crossbows draw on the bolt supply (arcane and ballista bolts never run out).
+    if (UNIT_TYPES[s.typeId].shot?.ammo !== undefined) {
       report.boltsUsed += Math.max(0, s.ammo - Math.max(0, u.ammo));
       s.ammo = Math.max(0, u.ammo);
     }

@@ -74,6 +74,29 @@ const PAGES: { id: string; title: string; body: React.ReactNode }[] = [
     ),
   },
   {
+    id: 'magic',
+    title: 'Magic & Machines',
+    body: (
+      <>
+        <p>
+          <b>Spells.</b> Mages and shamans come three to a squad. Choose a spell from the squad's panel (or press its number), then click what to cast it at; right-click or <kbd>Esc</kbd> puts it away. The forecast lists every squad the spell would touch. Spells are <b>per caster</b>: three mages cast three times as hard as one, so every mage lost weakens the circle. Each spell then needs a few turns before it can be cast again; between spells the casters loose weak bolts of their own power. A wavering squad cannot cast.
+        </p>
+        <p>
+          <Icon name="staff" /> <b>Battle Mages</b> (Amberfeld): <i>Chain Lightning</i> strikes a squad in sight and arcs on to two more foes nearby, ignoring armour. <i>Frost Blast</i> freezes a squad and those beside it: <b>chilled</b> squads move half as far, hit worse and are easier to hit until the end of their next turn. <i>Healing Light</i> closes a squad's wounds; promoted mages learn the <i>Mending Circle</i> that heals everyone close by. Healing never raises the dead.
+        </p>
+        <p>
+          <b>Goblin Shamans</b> (the host): a <i>Fireball</i> bursts on a tile and burns <b>friend and foe</b> beside it; a miss lands a tile astray. <i>Bloodlust</i> drives a goblin squad into a frenzy (harder blows, no fear, but careless of its guard) until the end of its next turn. <i>Gutripper</i> tears at a squad's insides: it ignores armour and the squad <b>bleeds</b> at the start of its next two turns. Kill the shamans first.
+        </p>
+        <p>
+          <Icon name="engine" /> <b>War machines</b> are one engine and its crew of three; the crew is the squad, its health and its strength, and when the last of them falls the engine is wrecked. A machine <b>cannot loose in a turn it has moved</b>: place it, then let it work. The <i>Ballista</i> shoots a great bolt that goes on through into the foe behind. The <i>Mangonel</i> lobs a stone over walls and heads (no line of sight needed, nothing closer than three tiles): it smashes the squad it lands on and half as hard everyone beside it, <b>your own squads too</b>, and a miss lands a tile astray. The host fields <i>Rock Lobbers</i>, cruder and less accurate, and <i>Spiked War Wagons</i> that ram a squad back out of the line; meet them with set spears.
+        </p>
+        <p>
+          The Barracks offers one specialist squad each muster: battle mages, a ballista or a mangonel.
+        </p>
+      </>
+    ),
+  },
+  {
     id: 'units',
     title: 'Your Troops',
     body: (

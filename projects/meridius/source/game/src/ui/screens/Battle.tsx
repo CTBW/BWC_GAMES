@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { setPref } from '../../core/prefs';
-import type { Dir } from '../../core/types';
-import { ABILITIES } from '../../data/abilities';
+import type { Dir, StatusId } from '../../core/types';
+import { ABILITIES, isActiveAbility } from '../../data/abilities';
 import { PROPS, TERRAIN } from '../../data/terrain';
 import { UNIT_TYPES } from '../../data/units';
 import { tileAt } from '../../battle/grid';
@@ -18,6 +18,34 @@ const MORALE_LABEL: Record<string, string> = {
   wavering: 'Wavering',
   broken: 'Broken',
 };
+
+const STATUS_INFO: Record<StatusId, { name: string; color: string; text: string }> = {
+  chilled: { name: 'Chilled', color: '#bfe6ff', text: 'Half movement, −10 to hit and −10 defense until the end of its turn.' },
+  bloodlust: { name: 'Bloodlust', color: '#ff8a6a', text: '+10 to hit and +3 damage per soldier in melee, morale losses halved, −8 defense.' },
+  bleeding: { name: 'Bleeding', color: '#ff9a8a', text: 'Loses HP (and soldiers) at the start of each of its turns.' },
+};
+
+/** Chips for a squad's lasting conditions (chilled, frenzied, bleeding), with what each does. */
+function StatusChips({ u }: { u: BattleUnit }) {
+  if (!u.statuses.length) return null;
+  return (
+    <span className="row" style={{ gap: 4, flexWrap: 'wrap' }}>
+      {u.statuses.map((s) => (
+        <Tip key={s.id} text={<><b>{STATUS_INFO[s.id].name}</b>{s.id === 'bleeding' && s.power ? ` (−${s.power} a turn, ${s.turns} more)` : ''}<br />{STATUS_INFO[s.id].text}</>}>
+          <span className="tag" style={{ background: 'rgba(15,10,6,0.75)', color: STATUS_INFO[s.id].color, fontSize: 10 }}>{STATUS_INFO[s.id].name}</span>
+        </Tip>
+      ))}
+    </span>
+  );
+}
+
+/** What the squad's missile weapon is called: crossbow bolts, arcane bolts, hexes, a ballista's bolt. */
+function shotName(u: BattleUnit): string {
+  if (u.typeId === 'battle_mage') return 'Arcane bolt';
+  if (u.typeId === 'goblin_shaman') return 'Hex bolt';
+  if (u.typeId === 'ballista') return 'Bolt';
+  return 'Shot';
+}
 
 export function BattleHud() {
   const s = useStore();
@@ -114,7 +142,9 @@ export function BattleHud() {
       )}
 
       {/* Forecast / hover info */}
-      {ui.hover.preview && sel ? (
+      {ui.hover.spell && sel ? (
+        <SpellForecast />
+      ) : ui.hover.preview && sel ? (
         <Forecast />
       ) : hoverUnit ? (
         <UnitInfo u={hoverUnit} />
@@ -214,7 +244,7 @@ function MiniCard({ u, selected, onClick, done }: { u: BattleUnit; selected: boo
         <div className="row" style={{ justifyContent: 'space-between', gap: 4 }}>
           <span className="cinzel" style={{ fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#f0e2c0' }}>{u.name.split(/[ ,]/)[0]}</span>
           <span className="tiny" style={{ color: v.routing || st === 'routing' ? '#ff9a86' : '#b8a27c', whiteSpace: 'nowrap' }}>
-            {st === 'dead' ? 'Slain' : st === 'downed' ? 'Cut down' : st === 'fled' ? 'Fled' : v.routing || st === 'routing' ? 'Fleeing' : u.stance ? ABILITIES[u.stance]?.name ?? '' : done ? 'Done' : ''}
+            {st === 'dead' ? 'Slain' : st === 'downed' ? 'Cut down' : st === 'fled' ? 'Fled' : v.routing || st === 'routing' ? 'Fleeing' : u.stance ? ABILITIES[u.stance]?.name ?? '' : v.statuses.length ? STATUS_INFO[v.statuses[0]].name : done ? 'Done' : ''}
           </span>
         </div>
         <SquadBar hp={v.hp} hpPer={u.hpPer} size={u.size} alive={v.alive} height={7} />
@@ -236,8 +266,10 @@ function UnitPanel({ u }: { u: BattleUnit }) {
   const v = scene.views.get(u.uid)!;
   const ms = b.moraleState(u);
   const myTurn = b.phase === 'player' && !scene.ui.busy;
-  const abilities = u.abilities.filter((a) => ABILITIES[a].kind !== 'attack' || ABILITIES[a].damageMult);
+  const abilities = u.abilities.filter(isActiveAbility);
   const n = Math.max(0, v.alive);
+  const def = UNIT_TYPES[u.typeId];
+  const caster = u.tags.includes('caster');
   const dmg = (r: [number, number]) => (
     <>
       {r[0]}–{r[1]} × {n} = <b>{r[0] * n}–{r[1] * n}</b>
@@ -256,7 +288,7 @@ function UnitPanel({ u }: { u: BattleUnit }) {
         </div>
         <div className="small row" style={{ justifyContent: 'space-between', marginTop: 3 }}>
           <span className="row" style={{ gap: 5 }}>
-            Soldiers <MenPips men={n} size={u.size} />
+            {def.crew ? 'Crew' : caster ? 'Casters' : 'Soldiers'} <MenPips men={n} size={u.size} />
           </span>
           <span className="row" style={{ gap: 3 }} title={`${u.hpPer} HP per soldier`}>
             <Icon name="hp" size={14} /> {Math.max(0, Math.round(v.hp))}/{u.maxHp}
@@ -266,13 +298,15 @@ function UnitPanel({ u }: { u: BattleUnit }) {
         <div style={{ height: 3 }} />
         <Bar value={v.morale} max={u.maxMorale} kind="morale" height={6} />
         <div className="tiny" style={{ marginTop: 5 }} title="Per soldier × soldiers standing = squad damage, before armour">
-          {u.shot && <div>Shot {dmg(u.shot.damage)}{u.ammo >= 0 && ` · Bolts ${u.ammo}`}</div>}
-          <div>{u.shot ? 'Melee' : 'Damage'} {dmg(u.melee)}</div>
+          {u.shot && <div>{shotName(u)} {dmg(u.shot.damage)}{u.ammo >= 0 && ` · Bolts ${u.ammo}`}</div>}
+          {def.primary && ABILITIES[def.primary].power && <div>{ABILITIES[def.primary].name} {dmg(ABILITIES[def.primary].power!)}</div>}
+          <div>{u.shot || def.primary ? 'Melee' : 'Damage'} {dmg(u.melee)}</div>
         </div>
         <div className="tiny">
-          Melee {u.stats.melee}{u.shot && ` · Ranged ${u.stats.ranged}`} · Def {u.stats.defense}
+          Melee {u.stats.melee}{(u.shot || def.primary) && ` · ${caster ? 'Spell' : def.crew ? 'Crew' : 'Ranged'} ${u.stats.ranged}`} · Def {u.stats.defense}
           {u.shieldFront ? ` (+${u.shieldFront} shield)` : ''} · Armour {u.stats.armor.toFixed(1)} · Move {u.stats.move}
         </div>
+        <StatusChips u={u} />
       </div>
       <div className="col" style={{ gap: 6, justifyContent: 'center', maxWidth: 210 }}>
         <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
@@ -284,9 +318,11 @@ function UnitPanel({ u }: { u: BattleUnit }) {
           {abilities.map((a, i) => {
             const ab = ABILITIES[a];
             const cd = u.cooldowns[a] ?? 0;
-            const disabled = !myTurn || u.hasActed || cd > 0 || ms === 'wavering' || (ab.ammoCost !== undefined && u.ammo >= 0 && u.ammo < ab.ammoCost) || (a === 'overwatch' && u.ammo === 0);
+            const cast = ab.kind === 'spell' ? b.canCast(u, a) : undefined;
+            const disabled = !myTurn || u.hasActed || cd > 0 || (cast ? !cast.ok : ms === 'wavering') || (ab.ammoCost !== undefined && u.ammo >= 0 && u.ammo < ab.ammoCost) || (a === 'overwatch' && u.ammo === 0);
+            const why = cast && !cast.ok && myTurn && !u.hasActed && cd === 0 ? cast.reason : ms === 'wavering' && !cast ? 'Too shaken to use abilities.' : undefined;
             return (
-              <Tip key={a} text={<><b>{ab.name}</b> <span className="muted">[{i + 1}]</span><br />{ab.description}{ms === 'wavering' && <div style={{ color: '#ffb0a0' }}>Too shaken to use abilities.</div>}</>} wide>
+              <Tip key={a} text={<><b>{ab.name}</b> <span className="muted">[{i + 1}]</span>{ab.cooldown && ab.cooldown > 1 ? <span className="muted"> · every {ab.cooldown === 2 ? 'other turn' : `${ab.cooldown} turns`}</span> : null}<br />{ab.description}{why && <div style={{ color: '#ffb0a0' }}>{why}</div>}{ab.kind === 'spell' && ab.target !== 'self' && <div className="muted" style={{ marginTop: 3 }}>Choose it, then click {ab.target === 'ally' ? 'a friendly squad' : ab.target === 'tile' ? 'a squad or a tile' : 'an enemy squad'}.</div>}</>} wide>
                 <button className={`ability ${scene.ui.ability === a ? 'active' : ''}`} disabled={disabled} onClick={() => scene.setAbility(a)}>
                   <span className="key">{i + 1}</span>
                   <Icon name={ab.icon} size={26} />
@@ -432,6 +468,93 @@ function Forecast() {
   );
 }
 
+/**
+ * What a spell (or a war machine's stone) would do: its chance, and every
+ * squad it would touch with the damage, the dead and the healing, friends
+ * caught in a blast called out in orange.
+ */
+function SpellForecast() {
+  const s = useStore();
+  const scene = s.battleScene!;
+  const b = scene.b;
+  const pv = scene.ui.hover.spell!;
+  const ab = ABILITIES[pv.ability];
+  const caster = scene.ui.selected ? b.unit(scene.ui.selected) : undefined;
+  const hostile = !!ab.power;
+  const roleName = { main: '', splash: 'beside', chain: 'arc', aura: '' } as const;
+  const friendly = pv.hits.filter((h) => h.ally && !h.heal && h.max > 0);
+  return (
+    <div className="panel forecast">
+      <div className="row" style={{ justifyContent: 'space-between' }}>
+        <div style={{ minWidth: 0 }}>
+          <div className="cinzel" style={{ fontWeight: 700 }}>{ab.name}</div>
+          <div className="tiny muted">
+            {caster ? `${pv.casters} ${memberNoun(caster.typeId, pv.casters)} ${ab.engine ? 'at the engine' : pv.casters === 1 ? 'casts' : 'cast'}` : ''}
+            {ab.power ? ` · ${ab.power[0]}–${ab.power[1]} each` : ab.heal ? ` · heals ${ab.heal[0]}–${ab.heal[1]} each` : ''}
+          </div>
+        </div>
+        <Icon name={ab.icon} size={34} />
+      </div>
+      <div className="flourish" />
+      {!pv.legal ? (
+        <div className="neg">{pv.reason}</div>
+      ) : (
+        <>
+          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div>
+              <div className="tiny muted">{hostile ? 'Strikes home' : 'Certain'}</div>
+              <div className="big" style={{ color: pv.chance >= 70 ? '#2d5a1a' : pv.chance >= 45 ? '#6b4a10' : '#8a1f15' }}>{pv.chance}%</div>
+            </div>
+            {pv.scatter && <div className="tiny muted" style={{ maxWidth: 150, textAlign: 'right' }}>A miss lands one tile astray, and still strikes whoever stands there.</div>}
+          </div>
+          {pv.hits.length === 0 && <div className="small muted" style={{ marginTop: 4 }}>Nobody stands where it would land.</div>}
+          <div style={{ marginTop: 4 }}>
+            {pv.hits.map((h) => {
+              const t = b.unit(h.uid);
+              const tv = scene.views.get(t.uid);
+              const own = h.ally && !h.heal && h.max > 0;
+              const alive = tv?.alive ?? t.alive;
+              return (
+                <div key={h.uid} className="small row" style={{ justifyContent: 'space-between', gap: 8, color: own ? '#b4520e' : undefined }} title={`${squadName(t)}: ${alive}/${t.size} standing`}>
+                  <span style={{ minWidth: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {roleName[h.role] && <span className="muted">{roleName[h.role]}: </span>}
+                    {squadName(t)}
+                  </span>
+                  <span style={{ whiteSpace: 'nowrap', flex: 'none' }}>
+                    {h.heal ? (
+                      <b className="pos">+{h.min}–{h.max}</b>
+                    ) : h.max > 0 ? (
+                      <>
+                        <b>{h.min}–{h.max}</b>
+                        {h.soldiers[1] > 0 && <span className={own ? '' : 'pos'}> · slays {h.soldiers[0] === h.soldiers[1] ? h.soldiers[1] : `${h.soldiers[0]}–${h.soldiers[1]}`}</span>}
+                      </>
+                    ) : (
+                      <span className="muted">{ab.status ? STATUS_INFO[ab.status.id].name : '—'}</span>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {friendly.length > 0 && <div className="tiny" style={{ marginTop: 4, color: '#b4520e' }}>Your own {friendly.length === 1 ? 'squad stands' : 'squads stand'} in the blast!</div>}
+          {ab.status && hostile && <div className="tiny" style={{ marginTop: 4 }}>Everyone struck is {STATUS_INFO[ab.status.id].name.toLowerCase()}: {STATUS_INFO[ab.status.id].text}</div>}
+          {ab.bleed && <div className="tiny" style={{ marginTop: 4 }}>The wound bleeds for {Math.round(ab.bleed * 100)}% of the damage at the start of its next two turns.</div>}
+          {pv.mods.length > 0 && (
+            <div className="mods">
+              {pv.mods.map(([k, v]) => (
+                <div key={k}>
+                  <span>{k}</span>
+                  <span className={v > 0 && !k.endsWith('skill') ? 'pos' : v < 0 ? 'neg' : ''}>{v > 0 && !k.endsWith('skill') ? `+${v}` : v}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 /** Which way the squad will face after its move-and-strike, relative to its target. */
 function ArrivalNote() {
   const s = useStore();
@@ -480,17 +603,23 @@ function UnitInfo({ u }: { u: BattleUnit }) {
         HP {hp}/{u.maxHp} · Morale {MORALE_LABEL[scene.b.moraleState(u)]} ({morale})
       </div>
       <div className="tiny" style={{ marginTop: 3 }} title="Per soldier × soldiers standing, before armour">
-        {u.shot ? `Shot ${per(u.shot.damage)} · ` : ''}Melee {per(u.melee)}
+        {u.shot ? `${shotName(u)} ${per(u.shot.damage)} · ` : ''}
+        {def.primary && ABILITIES[def.primary].power ? `${ABILITIES[def.primary].name} ${per(ABILITIES[def.primary].power!)} · ` : ''}
+        Melee {per(u.melee)}
       </div>
       <div className="tiny" style={{ marginTop: 4 }}>
         Melee {u.stats.melee} · Def {u.stats.defense}{u.shieldFront ? ` (+${u.shieldFront})` : ''} · Armour {u.stats.armor.toFixed(1)} · Move {u.stats.move}
-        {u.shot && ` · Bow ${u.stats.ranged}, range ${u.shot.range}`}
+        {u.shot && ` · ${u.tags.includes('caster') ? 'Spells' : 'Bow'} ${u.stats.ranged}, range ${u.shot.range}`}
       </div>
       {u.abilities.length > 0 && (
         <div className="tiny" style={{ marginTop: 4 }}>
-          {u.abilities.map((a) => ABILITIES[a].name).join(', ')}
+          {u.abilities.map((a) => {
+            const cd = u.cooldowns[a] ?? 0;
+            return `${ABILITIES[a].name}${cd > 0 ? ` (ready in ${cd})` : ''}`;
+          }).join(', ')}
         </div>
       )}
+      <div style={{ marginTop: 4 }}><StatusChips u={u} /></div>
       {u.leader && <div className="small" style={{ marginTop: 4, color: '#8a1f15' }}>Warband leader: if he falls, his followers lose heart.</div>}
     </div>
   );

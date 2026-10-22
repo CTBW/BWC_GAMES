@@ -86,11 +86,12 @@ rules emit, so art and animation changes cannot alter combat outcomes.
 ## Changing content
 
 - Numbers and content live in `data/*.json` (loaded by `scripts/data/db.gd`).
-  Edit them directly; the JSON is now the source of truth. Parity tests compare
-  against golden traces of the original, so a deliberate balance change will
-  make them fail: regenerate the goldens only if the original is changed the
-  same way, otherwise treat the parity suite as frozen at the port and rely on
-  the unit tests (see MIGRATION.md).
+  Edit them directly; the JSON is now the source of truth. Parity tests replay
+  golden traces first recorded from the original (now archived), so a
+  deliberate rules or balance change will make them fail: re-record the battle
+  traces and campaign runs from the port with
+  `MERIDIUS_RECORD=1 tools/test.sh test_battle_parity test_campaign_parity`,
+  review what changed, and note it in MIGRATION.md.
 - Sprites: Blender renders go in `assets/sprites/blender/` with an entry in
   `assets/sprites.json` (`file`, anchor `ax`/`ay`, `scale`). The procedural
   figures were baked from the original with `tools/bake/` (see its README).

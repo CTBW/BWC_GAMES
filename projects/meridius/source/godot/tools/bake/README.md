@@ -25,9 +25,9 @@ so unchanged assets are not re-imported. Override the browser with
 | Output | Contents |
 | --- | --- |
 | `assets/sprites/blender/*.webp` | The original's Blender sprites (`public/assets/sprites/blender`), copied as is |
-| `assets/sprites/baked/*.png` | Procedural art packed into atlases: `fig_<type>.png` (12 poses × 6 looks per unit type; the troll needs two pages), `portraits.png`, `misc.png` (ground decals, the fallen log, the unexplored node icon, `missing`) |
+| `assets/sprites/baked/*.png` | Procedural art packed into atlases: `fig_<type>.png` (12 poses × 6 looks per unit type; the troll needs two pages), `engine_<type>.png` (war engines: 12 poses × 3 looks; poses the original draws alike, such as `run_f` / `idle_fs` / `idle_f`, share one region), `portraits.png`, `misc.png` (ground decals, the fallen log, the unexplored node icon, `missing`) |
 | `assets/sprites.json` | `key → [{file, region?: [x, y, w, h], ax, ay, scale, w, h, noShadow, art?}]`, one entry per variant, exactly what the original's `sprite(key, v)` returns |
-| `assets/audio/<name>_<i>.wav`, `sfx.json` | Every `sfx(name)` recipe rendered with `OfflineAudioContext` (44.1 kHz mono 16-bit, master gain 0.55 included); four takes for recipes that use `Math.random`, one otherwise |
+| `assets/audio/<name>_<i>.wav`, `sfx.json` | Every `sfx(name)` recipe rendered with `OfflineAudioContext` (44.1 kHz mono 16-bit, master gain 0.55 included); four takes for recipes that use `Math.random`, one otherwise. The browser's rendering jitters a few samples by one LSB between runs; a take within ±1 of its existing file keeps that file |
 | `tests/fixtures/assets/variant_counts.json` | The original's `variantCount()` per key, `hasArt()` keys, and the key groups |
 | `tests/fixtures/assets/hit_masks.json` | The original's `opaqueAt()` on a grid for a few sprites |
 | `tests/fixtures/assets/sfx_names.json` | Sound names, takes, master gain and gaps from `sfx.ts` |
@@ -37,8 +37,9 @@ so unchanged assets are not re-imported. Override the browser with
 ## How keys are found
 
 `bake.mjs` enumerates every key the original can request at runtime from its
-sources: the figure and portrait key regexes in `procedural.ts` (15 unit types ×
-the 12 poses of `figures.ts`'s `Pose` type, 14 portrait types), `PROPS[*].sprite`
+sources: the figure, war engine and portrait key regexes in `procedural.ts` (`um`:
+18 figure types and `em`: 4 engines, each × the 12 poses of `figures.ts`'s `Pose`
+type; `pm` + `pe`: 20 portrait types), `PROPS[*].sprite`
 and the prop ids the garrison and campaign scenes name directly, `b_<id>_<1..levels>`
 from `BUILDINGS`, `node_<type>` from `NODE_INFO` plus `node_unknown`, the terrain
 decals, literal `sprite('…')` / `hasArt('…')` keys in `src/render` and `src/ui`, and

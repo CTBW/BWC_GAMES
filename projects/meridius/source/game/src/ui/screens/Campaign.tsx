@@ -92,7 +92,7 @@ export function Campaign() {
                     {so.injuries.map((i) => (
                       <span key={i} className="tag" style={{ fontSize: 9, color: '#ffb0a0' }}>{INJURIES[i].name}</span>
                     ))}
-                    {UNIT_TYPES[so.typeId].shot && <span className="tiny muted">{so.ammo} bolts</span>}
+                    {UNIT_TYPES[so.typeId].shot?.ammo !== undefined && <span className="tiny muted">{so.ammo} bolts</span>}
                   </div>
                 </div>
                 {hurt && ex.supplies.bandages > 0 && !ex.pending && (

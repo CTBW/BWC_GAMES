@@ -173,6 +173,23 @@ export function flashOf(s: Sprite): HTMLCanvasElement {
   return s.flash;
 }
 
+const tints = new WeakMap<Sprite, Map<string, HTMLCanvasElement>>();
+
+/** The sprite's silhouette in one colour (frost on a chilled squad, the red of a frenzy). */
+export function tintOf(s: Sprite, color: string): HTMLCanvasElement {
+  let m = tints.get(s);
+  if (!m) {
+    m = new Map();
+    tints.set(s, m);
+  }
+  let c = m.get(color);
+  if (!c) {
+    c = silhouette(s, color);
+    m.set(color, c);
+  }
+  return c;
+}
+
 /**
  * Draw a sprite anchored at world point (x, y). `flip` mirrors horizontally.
  * `scale` multiplies the sprite's own scale.

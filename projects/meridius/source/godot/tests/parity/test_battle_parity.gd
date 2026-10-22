@@ -1,10 +1,14 @@
-## Battle rules and AI parity with the original TypeScript game.
+## Battle rules and AI regression traces.
 ##
-## Golden data: tools/parity/battle_traces.ts -> tests/fixtures/golden/battle/*.json
-## (run from ../game: npx vite-node ../godot/tools/parity/battle_traces.ts).
-## Each trace holds a BattleSetup built by the original (rollEncounter +
-## buildBattle with a newGame company) and the steps of a whole battle:
-## - "auto" traces: the loop of autoBattle (campaign/autoplay.ts) with the AI
+## Golden data: tests/fixtures/golden/battle/*.json, first recorded from the
+## original TypeScript game by tools/parity/battle_traces.ts, which proved the
+## port identical to it. The original is archived; since then the port owns
+## the traces: after a deliberate rule change, re-record them with
+##   MERIDIUS_RECORD=1 tools/test.sh test_battle_parity
+## (same replays; what the port does is written back), review the diff, commit.
+## Each trace holds a BattleSetup (rollEncounter + buildBattle with a newGame
+## company) and the steps of a whole battle:
+## - "auto" traces: the loop of autoBattle (campaign/autoplay.gd) with the AI
 ##   on both sides; after every step the drained events and a state snapshot
 ##   must match exactly.
 ## - "script" traces: explicit API calls (queries with their results, actions
@@ -12,6 +16,7 @@
 ## The first divergence is reported with its context.
 extends "res://tests/test_case.gd"
 
+const H = preload("res://tests/parity/test_meta_support.gd")
 const JS = preload("res://scripts/core/js.gd")
 const Battle = preload("res://scripts/rules/battle.gd")
 const Ai = preload("res://scripts/rules/ai.gd")
@@ -20,6 +25,9 @@ const Grid = preload("res://scripts/rules/grid.gd")
 const DIR := "res://tests/fixtures/golden/battle/"
 
 var stats := {"traces": 0, "steps": 0, "events": 0, "queries": 0}
+## Re-recording: replays write their results into the traces instead of comparing.
+var recording := H.recording()
+var _rec: Array = []
 
 
 func test_goblin_scouts() -> void:
@@ -52,6 +60,19 @@ func test_moss_trolls() -> void:
 
 func test_road_ambush() -> void:
 	_run_group("road_ambush")
+
+
+func test_shaman_fire() -> void:
+	_run_group("shaman_fire")
+
+
+func test_siege_train() -> void:
+	_run_group("siege_train")
+
+
+## Battle mages, ballistae and mangonels with the company (auto battles and scripted spells).
+func test_magic() -> void:
+	_run_group("magic")
 
 
 func test_refugee_stand() -> void:
@@ -111,13 +132,16 @@ func _run_group(group: String) -> void:
 			fail("%s: %s" % [trace.name, err])
 		else:
 			stats.traces += 1
-			print("      %s ok (%d steps, %d ms)" % [trace.name, trace.steps.size(), ms])
+			print("      %s %s (%d steps, %d ms)" % [trace.name, "recorded" if recording else "ok", trace.steps.size(), ms])
+	if recording:
+		H.write_golden(path, data)
 
 
 ## The autoBattle loop of campaign/autoplay.ts, checked step by step.
 func _replay_auto(trace: Dictionary) -> String:
-	var b = Battle.new(trace.setup)
+	var b = Battle.new(trace.setup.duplicate(true))
 	var steps: Array = trace.steps
+	_rec = []
 	var idx := 0
 	var err := ""
 	if b.phase == "deploy":
@@ -155,6 +179,11 @@ func _replay_auto(trace: Dictionary) -> String:
 		idx += 1
 		if err != "":
 			return err
+	if recording:
+		trace.steps = _rec
+		trace.result = b.result
+		trace.turns = b.turn
+		return ""
 	if idx != steps.size():
 		return "the port ended after %d steps, the original after %d" % [idx, steps.size()]
 	if not _same(b.result, trace.result):
@@ -163,6 +192,9 @@ func _replay_auto(trace: Dictionary) -> String:
 
 
 func _check(b, steps: Array, idx: int, op: String) -> String:
+	if recording:
+		_rec.append({"op": op, "events": H.jsonable(b.drain()), "state": H.jsonable(snapshot(b))})
+		return ""
 	if idx >= steps.size():
 		return "the port takes an extra step '%s' (turn %d)" % [op, b.turn]
 	var s: Dictionary = steps[idx]
@@ -202,7 +234,7 @@ func _context(evs: Array, i: int) -> String:
 # ------------------------------------------------------------------ scripted
 
 func _replay_script(trace: Dictionary) -> String:
-	var b = Battle.new(trace.setup)
+	var b = Battle.new(trace.setup.duplicate(true))
 	var steps: Array = trace.steps
 	for idx in steps.size():
 		var s: Dictionary = steps[idx]
@@ -233,6 +265,10 @@ func _replay_script(trace: Dictionary) -> String:
 				b.retreat()
 			"playerAuto":
 				Ai.run_player_auto(b)
+			"cast":
+				ret = b.cast(args[0], args[1], {"x": args[2], "y": args[3]})
+			"actUnit":
+				Ai.act_unit(b, b.unit(args[0]), {"useStances": true})
 			"setPhase":
 				b.phase = args[0]
 			"setFlag":
@@ -293,8 +329,23 @@ func _replay_script(trace: Dictionary) -> String:
 				ret = b.can_redo(args[0])
 			"los":
 				ret = Grid.line_of_sight(b.map, {"x": args[0], "y": args[1]}, {"x": args[2], "y": args[3]})
+			"canCast":
+				ret = b.can_cast(b.unit(args[0]), args[1])
+			"spellTargets":
+				ret = b.spell_targets(b.unit(args[0]), args[1], args[2]).map(func(u): return u.uid)
+			"spellPreview":
+				ret = b.spell_preview(b.unit(args[0]), args[1], {"x": args[2], "y": args[3]}, args[4])
+			"impaleTarget":
+				var it: Variant = b.impale_target(b.unit(args[0]), b.unit(args[1]))
+				ret = null if it == null else it.uid
 			_:
 				return "step %d: unknown op '%s'" % [idx, s.op]
+		if recording:
+			s.ret = H.jsonable(ret)
+			if is_action:
+				s.events = H.jsonable(b.drain())
+				s.state = H.jsonable(snapshot(b))
+			continue
 		var d := _diff(ret, s.get("ret"), "ret")
 		if d != "":
 			return "step %d '%s' %s: result differs at %s\n          expected %s\n          got      %s" % [idx, s.op, _show(args), d, _show(s.get("ret")), _show(ret)]
@@ -305,6 +356,9 @@ func _replay_script(trace: Dictionary) -> String:
 				return err
 		else:
 			stats.queries += 1
+	if recording:
+		trace.result = b.result
+		return ""
 	if not _same(b.result, trace.result):
 		return "result %s, expected %s" % [b.result, trace.result]
 	return ""
@@ -333,7 +387,7 @@ static func snapshot(b) -> Dictionary:
 	for u in b.units:
 		units.append([
 			u.uid, u.x, u.y, u.facing, u.hp, u.alive, u.morale, u.status, u.get("stance"), u.hasMoved, u.hasActed, u.done,
-			u.movedTiles, u.kills, u.damageDealt, u.xp, u.ammo, u.cooldowns, u.struck,
+			u.movedTiles, u.kills, u.damageDealt, u.xp, u.ammo, u.cooldowns, u.struck, u.get("statuses", []),
 		])
 	return {
 		"turn": b.turn, "phase": b.phase, "result": b.result, "horn": b.horn, "overrun": b.overrun, "rng": b.rng.state,

@@ -224,3 +224,69 @@ func test_fall_and_reform_sequence_matches_the_original() -> void:
 				assert_almost(m.t, want[k][4], 1e-9, label + " t")
 	assert_eq(corpses, JS.normalize(s.corpses))
 	assert_eq(SquadView.standing(ms).size(), int(s.standing))
+
+
+# ---------------------------------------------------------------- war machines and casters
+
+func _engines() -> Dictionary:
+	var f := FileAccess.open("res://tests/fixtures/battle_view/formation_engines.json", FileAccess.READ)
+	return JSON.parse_string(f.get_as_text())
+
+
+func test_engine_and_caster_slots_match_the_original() -> void:
+	# tools/parity/battleview_engines.ts: crews around their engines, casters in the
+	# ordinary triangle, trolls in the wide one.
+	var g := _engines()
+	for c in g.slots:
+		var got := Formation.formation_slots(int(c.n), int(c.size), int(c.f), float(c.tight), c.type)
+		var label := "%s n%d f%d t%s" % [c.type, c.n, c.f, c.tight]
+		if not assert_eq(got.size(), c.slots.size(), label + " count"):
+			continue
+		for i in got.size():
+			assert_almost(got[i].x, c.slots[i].x, 1e-9, label + " x%d" % i)
+			assert_almost(got[i].y, c.slots[i].y, 1e-9, label + " y%d" % i)
+	for e in g.engine:
+		var o := Formation.engine_offset(int(e.f))
+		assert_almost(o.x, e.offset.x, 1e-9, "engine offset x f%d" % e.f)
+		assert_almost(o.y, e.offset.y, 1e-9, "engine offset y f%d" % e.f)
+
+
+func test_crews_scales_heights_and_members_match_the_original() -> void:
+	var g := _engines()
+	for c in g.members:
+		var u: Dictionary = JS.normalize(c.unit)
+		assert_almost(SquadView.member_scale(u), c.scale, 1e-12, u.typeId + " scale")
+		assert_almost(SquadView.member_height(u.typeId), c.height, 1e-12, u.typeId + " height")
+		var ms := SquadView.make_members(u)
+		assert_eq(ms.size(), c.members.size(), u.typeId + " members")
+		for i in mini(ms.size(), c.members.size()):
+			var w: Dictionary = c.members[i]
+			var label := "%s #%d" % [u.typeId, i]
+			assert_eq(ms[i].type, w.type, label + " type")
+			assert_eq(ms[i].alive, w.alive, label + " alive")
+			assert_almost(ms[i].x, w.x, 1e-9, label + " x")
+			assert_almost(ms[i].y, w.y, 1e-9, label + " y")
+			assert_eq(ms[i].variant, w.variant, label + " variant")
+
+
+func test_crews_stand_on_their_tile_and_a_wagon_is_shoved_from_behind() -> void:
+	for type in ["ballista", "mangonel", "rock_lobber", "war_wagon"]:
+		for f in 4:
+			var fwd := Formation.ground_offset(f, 1, 0)
+			var eo := Formation.engine_offset(f)
+			assert_true(eo.x * fwd.x + eo.y * fwd.y > 0, "%s f%d: the engine stands forward of the centre" % [type, f])
+			for n in range(1, 4):
+				var slots := Formation.formation_slots(n, 3, f, 1.0, type)
+				assert_eq(slots.size(), n, "%s n%d f%d" % [type, n, f])
+				for s in slots:
+					assert_true(_inside(s.x, s.y), "%s n%d f%d inside %s" % [type, n, f, s])
+					if type == "war_wagon":
+						assert_true(s.x * fwd.x + s.y * fwd.y < 0, "the wagon's crew push from behind (f%d)" % f)
+	# Three mages stand like three men, not like trolls.
+	var mages := Formation.formation_slots(3, 3, 1, 1.0, "battle_mage")
+	var trolls := Formation.formation_slots(3, 3, 1, 1.0, "troll")
+	assert_ne(mages, trolls, "casters do not take the trolls' wide triangle")
+	assert_almost(absf(mages[0].x - mages[1].x), Formation.COL, 1e-9, "front pair a column apart")
+	var crew := SquadView.make_members({"uid": "c1", "typeId": "rock_lobber", "size": 3, "alive": 3, "facing": 1, "variant": 0})
+	for m in crew:
+		assert_eq(m.type, "goblin_rabble", "a lobber's crew are goblins")

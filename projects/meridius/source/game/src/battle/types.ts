@@ -1,4 +1,4 @@
-import type { Dir, Faction, Range, StanceId, Stats } from '../core/types';
+import type { Dir, Faction, Range, StanceId, Stats, StatusId } from '../core/types';
 
 export interface Pt {
   x: number;
@@ -103,6 +103,54 @@ export interface BattleUnit {
   struck: string[];
   /** Morale at which the unit started the battle (for reports). */
   startMorale: number;
+  /** Chilled, frenzied by bloodlust, bleeding. */
+  statuses: Status[];
+}
+
+/**
+ * A lasting condition. Chill and bloodlust wear off at the end of the squad's
+ * own turn once `turns` runs out; bleeding strikes at the start of each of its
+ * turns for `turns` turns.
+ */
+export interface Status {
+  id: StatusId;
+  turns: number;
+  /** Bleeding: damage per turn. */
+  power?: number;
+  /** Who laid it on (credited with a kill if it finishes the squad). */
+  by?: string;
+}
+
+/** One squad touched by a spell. */
+export interface SpellHit {
+  uid: string;
+  /** The squad aimed at, one caught beside it, one the lightning arced to, or one in a healing circle. */
+  role: 'main' | 'splash' | 'chain' | 'aura';
+  damage: number;
+  heal: number;
+  /** HP and soldiers standing after this effect. */
+  hp: number;
+  aliveBefore: number;
+  aliveAfter: number;
+  status?: StatusId;
+}
+
+/** What a spell would do if cast now. */
+export interface SpellPreview {
+  legal: boolean;
+  reason?: string;
+  ability: string;
+  /** Tile aimed at. */
+  at: Pt;
+  /** Chance it strikes home (100 for healing and blessings). */
+  chance: number;
+  mods: [string, number][];
+  /** Casters standing (the effect scales with them). */
+  casters: number;
+  hits: { uid: string; role: SpellHit['role']; min: number; max: number; heal: boolean; ally: boolean; soldiers: [number, number]; kill: number }[];
+  /** A miss lands a tile astray. */
+  scatter: boolean;
+  moraleHit: number;
 }
 
 export interface WaveUnit {
@@ -186,7 +234,17 @@ export type BattleEvent =
       /** Target soldiers standing before and after the blow. */
       aliveBefore: number;
       aliveAfter: number;
+      /** A ballista bolt that went on through this squad first. */
+      via?: string;
     }
+  /**
+   * A spell or a war machine's stone. Every squad it touched is in `hits`, in
+   * the order the effect reaches them; the damage was rolled once per squad.
+   */
+  | { t: 'spell'; uid: string; ability: string; at: Pt; impact: Pt; hit: boolean; chance: number; casters: number; hits: SpellHit[] }
+  | { t: 'status'; uid: string; status: StatusId; on: boolean; turns: number }
+  /** Bleeding at the start of the squad's turn. */
+  | { t: 'dot'; uid: string; status: StatusId; damage: number; hp: number; aliveBefore: number; aliveAfter: number }
   | { t: 'heal'; uid: string; amount: number; hp: number; reason: string }
   | { t: 'push'; uid: string; from: Pt; to: Pt; blocked: boolean; hp: number; alive: number }
   | { t: 'morale'; uid: string; delta: number; value: number; reason: string }

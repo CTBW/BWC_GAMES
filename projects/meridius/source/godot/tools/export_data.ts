@@ -1,3 +1,7 @@
+// ARCHIVED (21 Oct 2026): do not re-run. data/*.json is now edited directly and
+// is the source of truth; running this would overwrite it with the archived
+// original's tables.
+//
 // Exports the original game's data tables (src/data/*.ts) to JSON for the Godot
 // port. Run from the TypeScript project so its toolchain resolves:
 //   cd projects/meridius/source/game && npx vite-node ../godot/tools/export_data.ts

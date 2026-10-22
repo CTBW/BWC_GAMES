@@ -98,6 +98,70 @@ export const UNIT_TYPES: Record<string, UnitTypeDef> = {
     sprite: 'collie_guard',
     size: 'medium',
   },
+  battle_mage: {
+    id: 'battle_mage',
+    name: 'Battle Mage',
+    plural: 'Battle Mages',
+    faction: 'player',
+    role: 'Spellcaster',
+    blurb:
+      'Three magi of the Amberfeld circle in the company blue. They call down chain lightning, freeze a charge in its tracks and close the wounds of the line, but an enemy blade within reach of them is a disaster.',
+    base: { hp: 25, morale: 70, melee: 40, ranged: 70, defense: 8, rangedDefense: 12, armor: 0, move: 4 },
+    perLevel: { hp: 3, ranged: 4, defense: 1, morale: 4 },
+    melee: [3, 5],
+    // Arcane bolts between spells: weak, but they never run out.
+    shot: { damage: [5, 7], range: 5, minRange: 2, pierce: 0.5 },
+    abilities: ['chain_lightning', 'frost_blast', 'healing_light'],
+    promotion: 'mending_circle',
+    commandCost: 3,
+    recruitCost: 80,
+    sprite: 'battle_mage',
+    size: 'medium',
+    squad: 3,
+    tags: ['caster'],
+  },
+  ballista: {
+    id: 'ballista',
+    name: 'Ballista',
+    plural: 'Ballistae',
+    faction: 'player',
+    role: 'War machine',
+    blurb:
+      'A great bolt-thrower on a wheeled carriage, worked by a crew of three. Its bolt punches through one squad and into the next one behind it. It cannot loose in a turn it has been moved, and its crew are no fighters.',
+    base: { hp: 23, morale: 64, melee: 36, ranged: 66, defense: 4, rangedDefense: 8, armor: 2, move: 3 },
+    perLevel: { hp: 3, ranged: 4, morale: 3 },
+    melee: [2, 4],
+    shot: { damage: [20, 26], range: 9, minRange: 2, pierce: 0.8 },
+    abilities: [],
+    commandCost: 3,
+    recruitCost: 90,
+    sprite: 'ballista',
+    size: 'large',
+    squad: 3,
+    crew: 'engineer',
+    tags: ['engine', 'impale'],
+  },
+  mangonel: {
+    id: 'mangonel',
+    name: 'Mangonel',
+    plural: 'Mangonels',
+    faction: 'player',
+    role: 'War machine',
+    blurb:
+      'A torsion catapult that lobs stones over walls and heads into the enemy ranks. A stone smashes the squad it lands on and everyone beside it, friend or foe, and a miss lands a tile astray. It cannot loose in a turn it has been moved, nor at anything closer than three tiles.',
+    base: { hp: 20, morale: 60, melee: 36, ranged: 58, defense: 4, rangedDefense: 8, armor: 2, move: 3 },
+    perLevel: { hp: 3, ranged: 4, morale: 3 },
+    melee: [2, 4],
+    abilities: ['hurl_stone'],
+    primary: 'hurl_stone',
+    commandCost: 4,
+    recruitCost: 100,
+    sprite: 'mangonel',
+    size: 'large',
+    squad: 3,
+    crew: 'engineer',
+    tags: ['engine', 'artillery'],
+  },
 
   goblin_spear: {
     id: 'goblin_spear',
@@ -284,6 +348,75 @@ export const UNIT_TYPES: Record<string, UnitTypeDef> = {
     value: 30,
     leader: true,
   },
+  goblin_shaman: {
+    id: 'goblin_shaman',
+    name: 'Goblin Shaman',
+    plural: 'Goblin Shamans',
+    faction: 'enemy',
+    role: 'Hexer',
+    blurb:
+      'Bone-hung witch-doctors of the host, three to a fire. They hurl fireballs into packed ranks, careless of their own, whip the horde into a killing frenzy and tear at a squad\'s insides with the gutripper hex.',
+    base: { hp: 16, morale: 50, melee: 40, ranged: 64, defense: 6, rangedDefense: 10, armor: 0, move: 5 },
+    perLevel: { hp: 2, ranged: 3, morale: 2 },
+    melee: [2, 4],
+    // Hex bolts between spells.
+    shot: { damage: [3, 5], range: 5, minRange: 2, pierce: 0.5 },
+    abilities: ['fireball', 'bloodlust', 'gutripper'],
+    commandCost: 0,
+    recruitCost: 0,
+    sprite: 'goblin_shaman',
+    size: 'small',
+    squad: 3,
+    ai: { aggression: 0.35, caution: 0.7, preferRange: 4, swarm: 0.15, carelessness: 0.15, role: 'caster' },
+    value: 14,
+    tags: ['caster'],
+  },
+  rock_lobber: {
+    id: 'rock_lobber',
+    name: 'Rock Lobber',
+    plural: 'Rock Lobbers',
+    faction: 'enemy',
+    role: 'War machine',
+    blurb:
+      'A crooked goblin catapult lashed together from stolen timber. It lobs boulders into the enemy ranks and anyone near them, its own kind included, and as often as not lands them a tile off. It cannot loose in a turn it has moved.',
+    base: { hp: 15, morale: 44, melee: 40, ranged: 56, defense: 6, rangedDefense: 8, armor: 1, move: 3 },
+    perLevel: { hp: 2, ranged: 2, morale: 2 },
+    melee: [2, 4],
+    abilities: ['lob_rock'],
+    primary: 'lob_rock',
+    commandCost: 0,
+    recruitCost: 0,
+    sprite: 'rock_lobber',
+    size: 'large',
+    squad: 3,
+    crew: 'goblin_rabble',
+    ai: { aggression: 0.15, caution: 0.7, preferRange: 6, swarm: 0.05, carelessness: 0.3, role: 'artillery' },
+    value: 14,
+    tags: ['engine', 'artillery'],
+  },
+  war_wagon: {
+    id: 'war_wagon',
+    name: 'Spiked War Wagon',
+    plural: 'Spiked War Wagons',
+    faction: 'enemy',
+    role: 'War machine',
+    blurb:
+      'A heavy cart bristling with iron spikes, shoved at a run by its goblin crew. It rams into the line, smashes a squad back out of it and rolls into the gap. Set spears still hurt it.',
+    base: { hp: 38, morale: 62, melee: 60, ranged: 0, defense: 8, rangedDefense: 14, armor: 5, move: 5 },
+    perLevel: { hp: 4, melee: 2, morale: 2 },
+    melee: [12, 17],
+    meleePierce: 0.25,
+    abilities: ['charge'],
+    commandCost: 0,
+    recruitCost: 0,
+    sprite: 'war_wagon',
+    size: 'large',
+    squad: 3,
+    crew: 'goblin_rabble',
+    ai: { aggression: 1, caution: 0.1, swarm: 0.05, carelessness: 0.6, role: 'shock' },
+    value: 16,
+    tags: ['engine', 'smash'],
+  },
 };
 
 /** Villagers who stand with the company in a last stand. Not part of the roster. */
@@ -307,6 +440,11 @@ UNIT_TYPES.militia = {
 };
 
 export const PLAYER_TYPES = ['footman', 'spearman', 'crossbowman'] as const;
+
+/** War machines: an engine and its crew. */
+export function isEngine(typeId: string): boolean {
+  return !!UNIT_TYPES[typeId]?.crew;
+}
 
 export const RANKS = ['Recruit', 'Soldier', 'Veteran', 'Sergeant', 'Champion'];
 /** Total XP required to reach level index+1 (level 1 needs 0). */

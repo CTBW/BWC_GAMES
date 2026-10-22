@@ -20,7 +20,7 @@ func test_autoload_present() -> void:
 
 
 func test_every_original_sound_has_streams() -> void:
-	assert_eq(fx.names.size(), 31, "sfx.ts names")
+	assert_eq(fx.names.size(), 42, "sfx.ts names")
 	assert_eq(Array(sfx.names()).size(), fx.names.size(), "no extra or missing names")
 	for n in fx.names:
 		var takes := int(fx.takes[n])

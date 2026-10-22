@@ -30,7 +30,18 @@
   "roar",
   "relief",
   "hooves",
-  "smash"
+  "smash",
+  "cast",
+  "lightning",
+  "frost",
+  "heal",
+  "fireball",
+  "explosion",
+  "bloodlust",
+  "hex",
+  "catapult",
+  "crash",
+  "ballista"
  ],
  "master": 0.55,
  "minGapMs": {
@@ -68,6 +79,17 @@
   "roar": 4,
   "relief": 1,
   "hooves": 4,
-  "smash": 4
+  "smash": 4,
+  "cast": 4,
+  "lightning": 4,
+  "frost": 4,
+  "heal": 1,
+  "fireball": 4,
+  "explosion": 4,
+  "bloodlust": 1,
+  "hex": 4,
+  "catapult": 4,
+  "crash": 4,
+  "ballista": 4
  }
 }

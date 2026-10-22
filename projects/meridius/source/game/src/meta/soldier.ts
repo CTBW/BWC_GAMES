@@ -212,7 +212,8 @@ export function soldierToUnit(s: Soldier): BattleUnit {
     melee: dmg.melee,
     meleePierce: def.meleePierce ?? 0,
     shot: def.shot && dmg.shot ? { damage: dmg.shot, range: def.shot.range, minRange: def.shot.minRange ?? 2, pierce: def.shot.pierce } : undefined,
-    ammo: def.shot ? s.ammo : -1,
+    // Only crossbows draw on the bolt supply; arcane bolts and ballista bolts never run out.
+    ammo: def.shot?.ammo !== undefined ? s.ammo : -1,
     shieldFront: def.shieldFront ?? 0,
     abilities: abilitiesOf(s),
     cooldowns: {},
@@ -229,6 +230,7 @@ export function soldierToUnit(s: Soldier): BattleUnit {
     variant: s.variant,
     struck: [],
     startMorale: s.morale,
+    statuses: [],
   };
 }
 
@@ -276,5 +278,6 @@ export function makeEnemy(typeId: string, level: number, uid: string, rng: Rng):
     variant: rng.int(0, 2),
     struck: [],
     startMorale: st.morale,
+    statuses: [],
   };
 }

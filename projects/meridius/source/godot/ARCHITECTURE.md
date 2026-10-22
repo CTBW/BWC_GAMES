@@ -1,9 +1,11 @@
 # Meridius (Godot 4.7) — architecture and porting contract
 
 This project is the Godot port of the TypeScript/Canvas game in
-`../game` (the "original"; kept intact as the reference). Godot is the runtime;
-nothing of the original runs at play time. The original's TypeScript is used
-only by offline tools (data export, sprite baking, golden traces for parity tests).
+`../game` (the "original"; archived on 21 Oct 2026 and kept intact, see
+`../game/ARCHIVED.md`). Godot is the runtime and, since the archive, the only
+version developed; nothing of the original runs at play time. The original's
+TypeScript is used only by offline tools (sprite baking; earlier also the data
+export and the first golden traces for the parity tests).
 
 Godot: 4.7.2 stable, `tools/godot.sh` (WinGet console binary). Renderer: GL
 Compatibility. Base resolution 1920×1080, stretch `canvas_items`/`expand`.
@@ -79,7 +81,10 @@ plays back rule events; it never changes rule outcomes (the original's
     `tests/fixtures/golden/*.json`; run them from `../game` with
     `npx vite-node ../godot/tools/parity/<file>.ts`). When comparing, absent
     and null are equal, and floats may differ by 1e-12 relative (Godot's
-    parsing of 17-digit numbers).
+    parsing of 17-digit numbers). Since the original was archived the battle
+    traces and campaign runs are re-recorded by the port itself after a
+    deliberate rule change (`MERIDIUS_RECORD=1`, see README); the TypeScript
+    generators must not be re-run for them.
 
 ## Runtime architecture
 

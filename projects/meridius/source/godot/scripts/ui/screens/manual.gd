@@ -1,6 +1,6 @@
 ## Port of src/ui/screens/Manual.tsx: the Captain's Field Manual — page tabs
-## (Battle, The Horde, Squads, Your Troops, Morale and Rout, Expeditions,
-## Amberfeld), the page text, "To the field". It opens on its own the first time
+## (Battle, The Horde, Squads, Magic & Machines, Your Troops, Morale and Rout,
+## Expeditions, Amberfeld), the page text, "To the field". It opens on its own the first time
 ## a battle starts (App.start_battle, prefs "manualSeen").
 ##
 ##   const Manual = preload("res://scripts/ui/screens/manual.gd")
@@ -20,7 +20,10 @@ static func kbd(k: String) -> String:
 
 
 static func ico(name: String) -> String:
-	return "[img=18x18]res://assets/icons/%s.svg[/img]" % name
+	var path := "res://assets/icons/%s.svg" % name
+	if not ResourceLoader.exists(path):
+		path = "res://assets/icons/missing.svg"
+	return "[img=18x18]%s[/img]" % path
 
 
 static func pages() -> Array:
@@ -45,6 +48,13 @@ static func pages() -> Array:
 			"[b]Shared health.[/b] The squad has one pool of HP, split into a share per soldier (the segments of its health bar). Each time the pool drops past a share, a soldier [b]falls[/b]; one heavy blow can cut down several. When the last share is gone the squad is destroyed.",
 			"[b]Damage is soldiers × blows.[/b] Every soldier still standing strikes: a squad of five footmen dealing 7–10 each hits for 35–50 before armour (armour is taken off each blow). A thinned squad hits softer, so wearing an enemy down pays. The forecast shows how many soldiers strike, how many of the target a hit would slay, and the chance to destroy the squad outright.",
 			"[b]The dead stay dead.[/b] Camps, bandages and the trip home heal the survivors, never the fallen. Only the [b]Barracks[/b] at Amberfeld can refill a squad's empty places, for a little silver per soldier. A squad cut down in battle may still keep its sergeant, gravely hurt; he can rebuild it.\n[b]Field triage.[/b] Right after a battle the surgeons search the fallen. Each soldier who fell has the same chance to be found alive as a lone soldier always had (better at higher rank, with bandages and a better Infirmary, and when you hold the field). Those found rejoin their squad badly hurt. Nobody else comes back.",
+		]},
+		{"id": "magic", "title": "Magic & Machines", "body": [
+			"[b]Spells.[/b] Mages and shamans come three to a squad. Choose a spell from the squad's panel (or press its number), then click what to cast it at; right-click or%s puts it away. The forecast lists every squad the spell would touch. Spells are [b]per caster[/b]: three mages cast three times as hard as one, so every mage lost weakens the circle. Each spell then needs a few turns before it can be cast again; between spells the casters loose weak bolts of their own power. A wavering squad cannot cast." % kbd("Esc"),
+			"%s [b]Battle Mages[/b] (Amberfeld): [i]Chain Lightning[/i] strikes a squad in sight and arcs on to two more foes nearby, ignoring armour. [i]Frost Blast[/i] freezes a squad and those beside it: [b]chilled[/b] squads move half as far, hit worse and are easier to hit until the end of their next turn. [i]Healing Light[/i] closes a squad's wounds; promoted mages learn the [i]Mending Circle[/i] that heals everyone close by. Healing never raises the dead." % ico("staff"),
+			"[b]Goblin Shamans[/b] (the host): a [i]Fireball[/i] bursts on a tile and burns [b]friend and foe[/b] beside it; a miss lands a tile astray. [i]Bloodlust[/i] drives a goblin squad into a frenzy (harder blows, no fear, but careless of its guard) until the end of its next turn. [i]Gutripper[/i] tears at a squad's insides: it ignores armour and the squad [b]bleeds[/b] at the start of its next two turns. Kill the shamans first.",
+			"%s [b]War machines[/b] are one engine and its crew of three; the crew is the squad, its health and its strength, and when the last of them falls the engine is wrecked. A machine [b]cannot loose in a turn it has moved[/b]: place it, then let it work. The [i]Ballista[/i] shoots a great bolt that goes on through into the foe behind. The [i]Mangonel[/i] lobs a stone over walls and heads (no line of sight needed, nothing closer than three tiles): it smashes the squad it lands on and half as hard everyone beside it, [b]your own squads too[/b], and a miss lands a tile astray. The host fields [i]Rock Lobbers[/i], cruder and less accurate, and [i]Spiked War Wagons[/i] that ram a squad back out of the line; meet them with set spears." % ico("engine"),
+			"The Barracks offers one specialist squad each muster: battle mages, a ballista or a mangonel.",
 		]},
 		{"id": "units", "title": "Your Troops", "body": [
 			"%s [b]Footmen[/b] hold the line. Their kite shields add defense against attacks from the front. [b]Shield Wall[/b] makes them very hard to hit and protects adjacent comrades." % ico("shield"),

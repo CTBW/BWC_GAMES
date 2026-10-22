@@ -39,7 +39,8 @@ func test_after_an_enemy_turn_every_squad_faces_its_last_step_and_nothing_turned
 			var last_step := {}
 			var pushed := {}
 			for e in ev:
-				if e.t == "move" and e.path.size() > 1:
+				# A squad falling back off an ally's tile backs away facing its last step forward.
+				if e.t == "move" and e.path.size() > 1 and not e.get("backward", false):
 					last_step[e.uid] = Grid.dir_to(e.path[e.path.size() - 2], e.path[e.path.size() - 1])
 				if e.t == "push":
 					pushed[e.uid] = true

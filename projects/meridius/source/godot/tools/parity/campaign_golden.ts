@@ -1,3 +1,8 @@
+// ARCHIVED (21 Oct 2026): do not re-run. The original is archived and the Godot
+// rules have since changed on purpose; the driven runs and autoplay campaigns
+// are re-recorded by the port (MERIDIUS_RECORD=1 tools/test.sh
+// test_campaign_parity, which carries a port of this driver).
+//
 // Golden campaign data from the original (src/campaign/expedition.ts and
 // autoplay.ts), recording the full GameState after every step:
 // - generateExpedition for many seeds, with nodeView of every node;

@@ -1,9 +1,9 @@
 import { Rng } from '../core/rng';
-import type { AbilityDef, Dir, Faction } from '../core/types';
+import type { AbilityDef, Dir, Faction, StatusId } from '../core/types';
 import { ABILITIES } from '../data/abilities';
 import { UNIT_TYPES } from '../data/units';
 import { PROPS, TERRAIN } from '../data/terrain';
-import { damageSquad, healSquad, killsFrom, memberNoun, squadName } from './squad';
+import { damageSquad, hasStatus, healSquad, killsFrom, memberNoun, moveOf, squadName, statusOf } from './squad';
 import {
   DIRS,
   canStep,
@@ -31,6 +31,8 @@ import type {
   Edge,
   MoraleState,
   Pt,
+  SpellHit,
+  SpellPreview,
   Wave,
 } from './types';
 
@@ -199,7 +201,7 @@ export class Battle {
   }
 
   /** Destinations the unit can end its move on. */
-  reachable(u: BattleUnit, budget = u.stats.move): Map<number, ReachInfo> {
+  reachable(u: BattleUnit, budget = moveOf(u)): Map<number, ReachInfo> {
     const out = this.reachableFull(u, budget);
     const start = key(u.x, u.y);
     for (const [k] of out) {
@@ -259,7 +261,7 @@ export class Battle {
    * direction of the last step. Allies can be passed through, not enemies.
    * Cheapest first, then fewest free attacks provoked.
    */
-  reachStates(u: BattleUnit, budget = u.stats.move): Map<number, ReachInfo> {
+  reachStates(u: BattleUnit, budget = moveOf(u)): Map<number, ReachInfo> {
     const out = new Map<number, ReachInfo>();
     const s0 = skey(u.x, u.y, u.facing);
     out.set(s0, { cost: 0, prev: -1, zoc: 0 });
@@ -300,7 +302,7 @@ export class Battle {
   }
 
   /** Cheapest way to each tile, whatever the facing (prev links follow tiles). */
-  reachableFull(u: BattleUnit, budget = u.stats.move): Map<number, ReachInfo> {
+  reachableFull(u: BattleUnit, budget = moveOf(u)): Map<number, ReachInfo> {
     const states = this.reachStates(u, budget);
     const out = new Map<number, ReachInfo>();
     out.set(key(u.x, u.y), { cost: 0, prev: -1, zoc: 0 });
@@ -429,6 +431,10 @@ export class Battle {
       if (!s.ok) {
         legal = false;
         reason = s.reason;
+      } else if (a.tags.includes('engine') && !opts.reaction && (opts.movedTiles ?? a.movedTiles) > 0) {
+        // A war machine has to be braced and laid before it can loose.
+        legal = false;
+        reason = 'Cannot loose in a turn it has moved';
       }
     } else {
       const reach = ab?.reach ?? 1;
@@ -460,6 +466,14 @@ export class Battle {
     if (tms === 'wavering') def -= 10;
     chance -= def;
     mods.push(['Target defense', -def]);
+    if (hasStatus(t, 'chilled')) {
+      chance += 10;
+      mods.push(['Target chilled', 10]);
+    }
+    if (hasStatus(t, 'bloodlust')) {
+      chance += 8;
+      mods.push(['Target in a frenzy', 8]);
+    }
 
     if (t.status === 'routing') {
       chance += 15;
@@ -485,6 +499,14 @@ export class Battle {
     if (am) {
       chance += am;
       mods.push([ams === 'confident' ? 'Confident' : ams === 'shaken' ? 'Shaken' : 'Wavering', am]);
+    }
+    if (hasStatus(a, 'chilled')) {
+      chance -= 10;
+      mods.push(['Chilled', -10]);
+    }
+    if (!ranged && hasStatus(a, 'bloodlust')) {
+      chance += 10;
+      mods.push(['Bloodlust', 10]);
     }
 
     if (ranged && legal) {
@@ -568,6 +590,8 @@ export class Battle {
     const movedTiles = opts.movedTiles ?? a.movedTiles;
     const charging = !ranged && a.abilities.includes('charge') && movedTiles >= 2 && !opts.reaction;
     if (charging) flat += 3;
+    // Frenzied soldiers put everything into every blow.
+    if (!ranged && hasStatus(a, 'bloodlust')) flat += 3;
     const pierce = ab?.ignoreArmor ? 1 : ranged ? a.shot!.pierce : a.meleePierce;
     const armor = t.stats.armor * (1 - pierce);
     const strikers = Math.max(1, a.alive);
@@ -614,6 +638,8 @@ export class Battle {
 
   changeMorale(u: BattleUnit, delta: number, reason: string) {
     if (u.status !== 'active' || delta === 0) return;
+    // A frenzied squad barely notices what would shake it.
+    if (delta < 0 && hasStatus(u, 'bloodlust')) delta = Math.min(-1, Math.round(delta / 2));
     const before = this.moraleState(u);
     u.morale = Math.max(0, Math.min(u.maxMorale, Math.round(u.morale + delta)));
     this.emit({ t: 'morale', uid: u.uid, delta: Math.round(delta), value: u.morale, reason });
@@ -652,6 +678,7 @@ export class Battle {
     u.stance = undefined;
     u.hp = 0;
     u.alive = 0;
+    u.statuses = [];
     this.emit({ t: 'down', uid: u.uid, dead });
     const name = squadName(u);
     this.log(
@@ -728,12 +755,15 @@ export class Battle {
       a.faction === 'player' ? (hit ? 'good' : 'neutral') : hit ? 'bad' : 'neutral',
     );
     if (!hit) return false;
+    // A ballista bolt carries on through into the next foe behind.
+    const through = ranged && !opts.reaction && a.tags.includes('impale') ? this.impaleTarget(a, t) : undefined;
     if (t.hp <= 0) {
       if (t.status === 'routing') {
         // Cut down while fleeing.
         t.status = 'active';
       }
       this.fall(t, a);
+      if (through) this.impale(a, t, through, damage, pv.strikers);
       return true;
     }
     if (t.status === 'active') {
@@ -758,7 +788,75 @@ export class Battle {
     if (ab?.push && t.status !== 'dead' && t.status !== 'downed') this.push(a, t);
     // Brutes smash a squad out of the line and shoulder into the gap.
     else if (!ranged && !opts.reaction && a.tags.includes('smash') && t.status === 'active') this.push(a, t, true);
+    if (through) this.impale(a, t, through, damage, pv.strikers);
     return true;
+  }
+
+  /**
+   * The next foe behind `t` on the line of a ballista's shot, within two tiles.
+   * A wall stops the bolt, and so does one of the company's own squads.
+   */
+  impaleTarget(a: BattleUnit, t: Pt): BattleUnit | undefined {
+    const dx = t.x - a.x;
+    const dy = t.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    let last = { x: t.x, y: t.y };
+    for (let k = 1; k <= 2; k++) {
+      const p = { x: Math.round(t.x + (dx / len) * k), y: Math.round(t.y + (dy / len) * k) };
+      if (p.x === last.x && p.y === last.y) continue;
+      last = p;
+      const tile = tileAt(this.map, p.x, p.y);
+      if (!tile || (tile.prop && PROPS[tile.prop].los === 2)) return undefined;
+      const u = unitAt(this.units, p.x, p.y);
+      if (u) return u.faction !== a.faction ? u : undefined;
+    }
+    return undefined;
+  }
+
+  /** The bolt goes on through `via` into `t` at half force (no new roll: it is the same bolt). */
+  private impale(a: BattleUnit, via: BattleUnit, t: BattleUnit, damage: number, strikers: number) {
+    if (t.status !== 'active' && t.status !== 'routing') return;
+    const dmg = Math.min(t.hp, Math.max(1, Math.round(damage * 0.5)));
+    const aliveBefore = t.alive;
+    this.hitsTaken[t.uid] = (this.hitsTaken[t.uid] ?? 0) + 1;
+    damageSquad(t, dmg);
+    a.damageDealt += dmg;
+    const lost = aliveBefore - t.alive;
+    this.emit({
+      t: 'attack',
+      uid: a.uid,
+      target: t.uid,
+      ranged: true,
+      ability: 'impale',
+      hit: true,
+      damage: dmg,
+      chance: 100,
+      arc: this.arcOf(t, a),
+      targetHp: t.hp,
+      strikers,
+      aliveBefore,
+      aliveAfter: t.alive,
+      via: via.uid,
+    });
+    const fallen = lost > 0 && t.alive > 0 ? ` ${lost === 1 ? 'One' : lost} ${memberNoun(t.typeId, lost)} ${lost === 1 ? 'falls' : 'fall'}.` : '';
+    this.log(`The bolt goes on through into ${squadName(t)} for ${dmg}.${fallen}`, a.faction === 'player' ? 'good' : 'bad');
+    this.afterDamage(a, t, dmg, lost, 4, 'Impaled');
+  }
+
+  /**
+   * What follows damage outside a plain attack (spells, a bolt carrying on,
+   * bleeding): the squad falls, or its morale takes the wound and the losses.
+   * Friendly fire earns nobody a kill.
+   */
+  private afterDamage(by: BattleUnit | undefined, t: BattleUnit, damage: number, lost: number, extra: number, reason: string) {
+    if (t.hp <= 0) {
+      if (t.status === 'routing') t.status = 'active';
+      this.fall(t, by && by.faction !== t.faction && by.status === 'active' ? by : undefined);
+      return;
+    }
+    if (t.status !== 'active') return;
+    const loss = Math.round((damage / t.maxHp) * 28) + extra + Math.round((lost * 6) / t.size);
+    this.changeMorale(t, -loss, lost > 0 ? (lost === 1 ? 'Lost a soldier' : `Lost ${lost} soldiers`) : reason);
   }
 
   private push(a: BattleUnit, t: BattleUnit, follow = false) {
@@ -834,6 +932,7 @@ export class Battle {
       if (this.isOver()) return;
       runAi(this);
       if (this.isOver()) return;
+      this.endOfTurn('enemy');
     }
     this.phase = 'player';
     this.startTurn('player');
@@ -1054,6 +1153,304 @@ export class Battle {
     return true;
   }
 
+  // ---------------------------------------------------------------- spells and war machines
+
+  /**
+   * The squads a spell aimed at `at` would touch, in the order it reaches
+   * them, with the share of its force each takes. Lightning arcs from the
+   * squad struck to the nearest other foes; blasts and stones catch every
+   * squad on the tiles beside the one struck.
+   */
+  spellReach(a: BattleUnit, ab: AbilityDef, at: Pt, from: Pt = a): { u: BattleUnit; role: SpellHit['role']; factor: number }[] {
+    const out: { u: BattleUnit; role: SpellHit['role']; factor: number }[] = [];
+    if (ab.aura !== undefined) {
+      for (const u of this.active(a.faction)) if (manhattan(u, from) <= ab.aura) out.push({ u, role: 'aura', factor: 1 });
+      return out;
+    }
+    const main = unitAt(this.units, at.x, at.y);
+    if (main && (ab.target === 'tile' || (ab.target === 'enemy' ? main.faction !== a.faction : main.faction === a.faction))) {
+      out.push({ u: main, role: 'main', factor: 1 });
+    }
+    if (ab.splash) {
+      for (const n of neighbors(this.map, at)) {
+        const u = unitAt(this.units, n.x, n.y);
+        if (!u || (!ab.friendly && u.faction === a.faction)) continue;
+        out.push({ u, role: 'splash', factor: ab.splash });
+      }
+    }
+    if (ab.chain && out[0]?.role === 'main') {
+      let last = out[0].u;
+      let factor = 1;
+      const struck = new Set([last.uid]);
+      for (let j = 0; j < ab.chain.jumps; j++) {
+        const next = this.units
+          .filter((u) => (u.status === 'active' || u.status === 'routing') && u.faction !== a.faction && !struck.has(u.uid) && manhattan(u, last) <= ab.chain!.reach)
+          .sort((p, q) => manhattan(p, last) - manhattan(q, last) || p.hp - q.hp || (p.uid < q.uid ? -1 : 1))[0];
+        if (!next) break;
+        factor *= ab.chain.falloff;
+        struck.add(next.uid);
+        out.push({ u: next, role: 'chain', factor });
+        last = next;
+      }
+    }
+    return out;
+  }
+
+  /** Damage range a spell's share `factor` does to `t`: each caster's blow less armour, times the casters standing. */
+  private spellDamage(a: BattleUnit, ab: AbilityDef, t: BattleUnit, factor: number): [number, number] {
+    const casters = Math.max(1, a.alive);
+    const pierce = ab.ignoreArmor ? 1 : (ab.pierce ?? 0);
+    const armor = t.stats.armor * (1 - pierce);
+    const blow = (n: number) => Math.max(1, Math.round(n * factor - armor));
+    return [blow(ab.power![0]) * casters, blow(ab.power![1]) * casters];
+  }
+
+  /** What casting `abilityId` at the tile `at` would do now (from `from`, after moving `movedTiles`). */
+  spellPreview(a: BattleUnit, abilityId: string, at: Pt, opts: { from?: Pt; movedTiles?: number } = {}): SpellPreview {
+    const ab = ABILITIES[abilityId];
+    const from = opts.from ?? { x: a.x, y: a.y };
+    const casters = Math.max(1, a.alive);
+    const mods: [string, number][] = [];
+    const base: SpellPreview = { legal: true, ability: abilityId, at: { x: at.x, y: at.y }, chance: 100, mods, casters, hits: [], scatter: !!ab?.scatter, moraleHit: 0 };
+    const fail = (reason: string): SpellPreview => ({ ...base, legal: false, reason });
+    if (!ab || ab.kind !== 'spell') return fail('Not a spell');
+    if (!a.abilities.includes(abilityId)) return fail('Not known to this squad');
+    if (!tileAt(this.map, at.x, at.y)) return fail('Off the field');
+    const target = unitAt(this.units, at.x, at.y);
+    const moved = (opts.movedTiles ?? a.movedTiles) > 0;
+    if (ab.engine && moved) return fail('Cannot loose in a turn it has moved');
+    const hostile = !!ab.power;
+    if (ab.target === 'self') {
+      if (at.x !== from.x || at.y !== from.y) return fail('Cast where the casters stand');
+    } else {
+      if (ab.target === 'enemy' && (!target || target.faction === a.faction)) return fail('Choose an enemy squad');
+      if (ab.target === 'ally' && (!target || target.faction !== a.faction || target.status !== 'active')) return fail('Choose a friendly squad');
+      const d = dist(from, at);
+      if (hostile && d < Math.max(1, ab.minRange ?? 1)) return fail('Too close');
+      if (d > (ab.range ?? 1) + 0.01) return fail('Out of range');
+      if (ab.sight && d > 0 && lineOfSight(this.map, from, at).blocked) return fail('No line of sight');
+      if (hostile && this.setup.darkness && d > (ab.range ?? 1) - 2) return fail('Too dark to see');
+    }
+    let chance = 100;
+    if (hostile) {
+      chance = a.stats.ranged;
+      mods.push([ab.engine ? 'Crew skill' : 'Spell skill', chance]);
+      if (target && target.faction !== a.faction) {
+        // Squads dodge a spell; nobody dodges a falling stone, only its aim.
+        const def = Math.round(target.stats.rangedDefense / (ab.engine ? 2 : 1));
+        chance -= def;
+        mods.push(['Target defense', -def]);
+        if (target.status === 'routing') {
+          chance += 15;
+          mods.push(['Fleeing target', 15]);
+        }
+      }
+      if (ab.hitBonus) {
+        chance += ab.hitBonus;
+        mods.push([ab.engine ? 'Crude engine' : 'The spell seeks its mark', ab.hitBonus]);
+      }
+      const d = dist(from, at);
+      if (ab.engine && d > 5) {
+        const m = -Math.round((d - 5) * 3);
+        chance += m;
+        mods.push(['Long range', m]);
+      }
+      const ams = this.moraleState(a);
+      const am = ams === 'confident' ? 5 : ams === 'shaken' ? -8 : ams === 'wavering' ? -15 : 0;
+      if (am) {
+        chance += am;
+        mods.push([ams === 'confident' ? 'Confident' : ams === 'shaken' ? 'Shaken' : 'Wavering', am]);
+      }
+      if (this.isAdjacentEnemy(a, from)) {
+        chance -= 15;
+        mods.push(['Engaged in melee', -15]);
+      }
+      if (hasStatus(a, 'chilled')) {
+        chance -= 10;
+        mods.push(['Chilled', -10]);
+      }
+      if (this.setup.darkness) {
+        chance -= 10;
+        mods.push(['Darkness', -10]);
+      }
+      chance = Math.max(5, Math.min(95, Math.round(chance)));
+    }
+    const p = chance / 100;
+    const hits = this.spellReach(a, ab, at, from).map(({ u, role, factor }) => {
+      const ally = u.faction === a.faction;
+      if (ab.heal) {
+        const missing = u.alive * u.hpPer - u.hp;
+        const lo = Math.min(missing, ab.heal[0] * casters);
+        const hi = Math.min(missing, ab.heal[1] * casters);
+        return { uid: u.uid, role, min: lo, max: hi, heal: true, ally, soldiers: [0, 0] as [number, number], kill: 0 };
+      }
+      if (!ab.power) return { uid: u.uid, role, min: 0, max: 0, heal: false, ally, soldiers: [0, 0] as [number, number], kill: 0 };
+      const [min, max] = this.spellDamage(a, ab, u, factor);
+      let killing = 0;
+      for (let dmg = min; dmg <= max; dmg++) if (dmg >= u.hp) killing++;
+      // Splash from a stone that strays still lands somewhere near; the rest needs the spell to strike home.
+      const reach = role === 'splash' && ab.scatter ? 0.5 + p * 0.5 : p;
+      return { uid: u.uid, role, min, max, heal: false, ally, soldiers: [killsFrom(u, min), killsFrom(u, max)] as [number, number], kill: (killing / (max - min + 1)) * reach };
+    });
+    const main = hits.find((h) => h.role === 'main' && !h.heal);
+    const moraleHit = main && target ? Math.round(((main.min + main.max) / 2 / target.maxHp) * 28) + (ab.moraleDamage ?? 0) : 0;
+    return { ...base, chance, hits, moraleHit };
+  }
+
+  /** Squads (or the caster's own tile) a spell could be cast at right now. */
+  spellTargets(u: BattleUnit, abilityId: string, from: Pt = u): BattleUnit[] {
+    const ab = ABILITIES[abilityId];
+    if (!ab || ab.kind !== 'spell') return [];
+    if (ab.target === 'self') return [u];
+    const pool = ab.target === 'ally' ? this.active(u.faction) : this.living().filter((x) => x.faction !== u.faction);
+    return pool.filter((t) => this.spellPreview(u, abilityId, t, { from }).legal);
+  }
+
+  /** Whether the squad may use this spell at all now (cooldown, nerve, having acted). */
+  canCast(u: BattleUnit, abilityId: string): { ok: boolean; reason?: string } {
+    const ab = ABILITIES[abilityId];
+    if (!ab || ab.kind !== 'spell' || !u.abilities.includes(abilityId)) return { ok: false, reason: 'Not known to this squad' };
+    if (!this.canAct(u) || u.hasActed) return { ok: false, reason: 'Has already acted' };
+    if ((u.cooldowns[abilityId] ?? 0) > 0) return { ok: false, reason: `Ready in ${u.cooldowns[abilityId]} turns` };
+    // A war machine's shot is its plain attack; spells need a steady nerve.
+    if (this.moraleState(u) === 'wavering' && UNIT_TYPES[u.typeId]?.primary !== abilityId) return { ok: false, reason: 'Too shaken' };
+    if (ab.engine && u.movedTiles > 0) return { ok: false, reason: 'Cannot loose in a turn it has moved' };
+    return { ok: true };
+  }
+
+  /** Cast a spell (or loose a war machine's stone) at the tile `at`. */
+  cast(uid: string, abilityId: string, at: Pt): boolean {
+    const a = this.unit(uid);
+    if (!this.canCast(a, abilityId).ok) return false;
+    const pv = this.spellPreview(a, abilityId, at);
+    if (!pv.legal) return false;
+    this.moveRecords.delete(uid);
+    this.resolveSpell(a, ABILITIES[abilityId], at, pv);
+    const ab = ABILITIES[abilityId];
+    if (ab.cooldown) a.cooldowns[abilityId] = ab.cooldown;
+    a.hasActed = true;
+    this.afterAction(a);
+    return true;
+  }
+
+  /**
+   * The spell takes effect. One roll decides whether it strikes home; a stone
+   * or fireball that misses lands a tile astray. Each squad touched then takes
+   * one damage roll (or one healing roll): the casters' power is rolled once
+   * per squad, never per caster.
+   */
+  private resolveSpell(a: BattleUnit, ab: AbilityDef, at: Pt, pv: SpellPreview) {
+    const hostile = !!ab.power;
+    const hit = !hostile || this.rng.next() * 100 < pv.chance;
+    let impact = { x: at.x, y: at.y };
+    if (!hit && ab.scatter) {
+      const astray = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]
+        .map(([dx, dy]) => ({ x: at.x + dx, y: at.y + dy }))
+        .filter((q) => tileAt(this.map, q.x, q.y) && !(q.x === a.x && q.y === a.y));
+      if (astray.length) impact = astray[this.rng.int(0, astray.length - 1)];
+    }
+    // A stray stone or fireball strikes whoever stands where it lands, in full.
+    const reach = hit || ab.scatter ? this.spellReach(a, ab, impact) : [];
+    const casters = Math.max(1, a.alive);
+    const hits: SpellHit[] = [];
+    const after: (() => void)[] = [];
+    for (const { u: t, role, factor } of reach) {
+      if (t.status !== 'active' && t.status !== 'routing') continue;
+      const aliveBefore = t.alive;
+      let damage = 0;
+      let heal = 0;
+      if (ab.power) {
+        const [min, max] = this.spellDamage(a, ab, t, factor);
+        damage = Math.min(t.hp, this.rng.int(min, max));
+        this.hitsTaken[t.uid] = (this.hitsTaken[t.uid] ?? 0) + 1;
+        damageSquad(t, damage);
+        if (t.faction !== a.faction) a.damageDealt += damage;
+      }
+      if (ab.heal) {
+        heal = healSquad(t, this.rng.int(ab.heal[0] * casters, ab.heal[1] * casters));
+        // Healers learn from the wounds they close.
+        if (a.faction === 'player') a.damageDealt += Math.round(heal * 0.5);
+      }
+      const status = ab.status && t.hp > 0 ? ab.status.id : ab.bleed && damage > 0 && t.hp > 0 ? 'bleeding' : undefined;
+      hits.push({ uid: t.uid, role, damage, heal, hp: t.hp, aliveBefore, aliveAfter: t.alive, status });
+      const lost = aliveBefore - t.alive;
+      after.push(() => {
+        if (ab.power) {
+          const fallen = lost > 0 && t.alive > 0 ? ` ${lost === 1 ? 'One' : lost} ${memberNoun(t.typeId, lost)} ${lost === 1 ? 'falls' : 'fall'}.` : '';
+          const friendly = t.faction === a.faction ? ' (their own side!)' : '';
+          this.log(`${role === 'chain' ? 'The lightning arcs to' : role === 'splash' ? 'The blast catches' : `${ab.name} strikes`} ${squadName(t)}${friendly} for ${damage}.${fallen}`, t.faction === 'player' ? 'bad' : 'good');
+          this.afterDamage(a, t, damage, lost, role === 'main' ? (ab.moraleDamage ?? 0) : Math.round((ab.moraleDamage ?? 0) / 2), ab.name);
+        }
+        if (ab.heal) {
+          if (heal > 0) this.log(`${ab.name}: the wounds of ${squadName(t)} close (+${heal}).`, t.faction === 'player' ? 'good' : 'bad');
+          if (ab.moraleGain) this.changeMorale(t, ab.moraleGain, ab.name);
+        }
+        if (t.status !== 'active' && t.status !== 'routing') return;
+        if (ab.status) {
+          this.addStatus(t, ab.status.id, ab.status.turns, a.uid);
+          if (ab.status.id === 'bloodlust') this.log(`${squadName(t)} ${t.leader ? 'is' : 'are'} seized by bloodlust!`, t.faction === 'player' ? 'good' : 'bad');
+          if (!ab.heal && ab.moraleGain) this.changeMorale(t, ab.moraleGain, ab.name);
+        }
+        if (ab.bleed && damage > 0) this.addStatus(t, 'bleeding', 2, a.uid, Math.max(1, Math.round(damage * ab.bleed)));
+      });
+    }
+    this.emit({ t: 'spell', uid: a.uid, ability: ab.id, at: { x: at.x, y: at.y }, impact, hit, chance: pv.chance, casters, hits });
+    if (hostile && !hit) {
+      this.log(
+        ab.scatter
+          ? `${squadName(a)}: ${ab.name} goes astray${hits.length ? '' : ' and lands on empty ground'} (${pv.chance}%).`
+          : `${squadName(a)}: ${ab.name} misses ${squadName(unitAt(this.units, at.x, at.y) ?? a)} (${pv.chance}%).`,
+        'neutral',
+      );
+    } else if (!hostile && !ab.heal) this.log(`${squadName(a)}: ${ab.name}!`, a.faction === 'player' ? 'good' : 'bad');
+    for (const f of after) f();
+  }
+
+  /** Lay a condition on a squad (renewing it if it is already there). */
+  private addStatus(t: BattleUnit, id: StatusId, turns: number, by?: string, power?: number) {
+    const cur = statusOf(t, id);
+    if (cur) {
+      cur.turns = Math.max(cur.turns, turns);
+      if (power) cur.power = Math.max(cur.power ?? 0, power);
+      cur.by = by ?? cur.by;
+    } else t.statuses.push({ id, turns, by, power });
+    this.emit({ t: 'status', uid: t.uid, status: id, on: true, turns });
+  }
+
+  /** Chill and frenzy wear off at the end of the squad's own turn once their time is up. */
+  private endOfTurn(faction: Faction) {
+    for (const u of this.units) {
+      if (u.faction !== faction || !u.statuses.length) continue;
+      for (const s of u.statuses.slice()) {
+        if (s.id === 'bleeding') continue;
+        s.turns--;
+        if (s.turns > 0) continue;
+        u.statuses.splice(u.statuses.indexOf(s), 1);
+        if (u.status === 'active' || u.status === 'routing') this.emit({ t: 'status', uid: u.uid, status: s.id, on: false, turns: 0 });
+      }
+    }
+  }
+
+  /** Bleeding wounds open again at the start of the squad's turn. */
+  private bleed(u: BattleUnit) {
+    const s = statusOf(u, 'bleeding');
+    if (!s || (u.status !== 'active' && u.status !== 'routing')) return;
+    const aliveBefore = u.alive;
+    const damage = Math.min(u.hp, s.power ?? 1);
+    damageSquad(u, damage);
+    this.emit({ t: 'dot', uid: u.uid, status: 'bleeding', damage, hp: u.hp, aliveBefore, aliveAfter: u.alive });
+    const lost = aliveBefore - u.alive;
+    const fallen = lost > 0 && u.alive > 0 ? ` ${lost === 1 ? 'One' : lost} ${memberNoun(u.typeId, lost)} ${lost === 1 ? 'dies' : 'die'}.` : '';
+    this.log(`${squadName(u)} bleed from the gutripper hex (−${damage}).${fallen}`, u.faction === 'player' ? 'bad' : 'good');
+    s.turns--;
+    if (s.turns <= 0) {
+      u.statuses.splice(u.statuses.indexOf(s), 1);
+      if (u.hp > 0) this.emit({ t: 'status', uid: u.uid, status: 'bleeding', on: false, turns: 0 });
+    }
+    const by = s.by ? this.units.find((x) => x.uid === s.by) : undefined;
+    this.afterDamage(by, u, damage, lost, 3, 'Bleeding');
+  }
+
   endUnit(uid: string) {
     const u = this.unit(uid);
     u.done = true;
@@ -1067,11 +1464,13 @@ export class Battle {
   endTurn(runAi: (b: Battle) => void) {
     if (this.phase !== 'player') return;
     this.moveRecords.clear();
+    this.endOfTurn('player');
     this.phase = 'enemy';
     this.startTurn('enemy');
     if (this.isOver()) return;
     runAi(this);
     if (this.isOver()) return;
+    this.endOfTurn('enemy');
     this.afterEnemyTurn();
     if (this.isOver()) return;
     this.turn++;
@@ -1234,6 +1633,7 @@ export class Battle {
         u.stance = undefined;
         this.emit({ t: 'stance', uid: u.uid, stance: null });
       }
+      if (u.statuses.length) this.bleed(u);
       // Trolls knit their wounds closed, but a fallen troll stays down.
       if (u.status === 'active' && u.tags.includes('regenerate')) {
         const healed = healSquad(u, Math.round(u.hpPer * 0.12) * u.alive);

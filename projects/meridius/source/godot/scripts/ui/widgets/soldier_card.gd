@@ -9,7 +9,7 @@
 ##   SoldierCard.row(so: Dictionary, trailing: Array = [], on_click := Callable(), name_w := 190, bars_w := 104) -> PanelContainer
 ##       SoldierRow: Portrait 42 | name / type (name_w px) | pips, HP, morale (bars_w px) | tags | trailing controls.
 ##       (CSS lets the 190/104 columns shrink when the trailing buttons are wide; pass smaller widths there.)
-##   SoldierCard.squad_order(type_id) -> int      line first, then spears, then missiles
+##   SoldierCard.squad_order(type_id) -> int      line first, then spears, missiles, mages and war machines
 ##   SoldierCard.sort_roster(list) -> Array       by squad_order, then level (high first); a sorted copy
 extends RefCounted
 
@@ -26,7 +26,7 @@ const SquadBar = preload("res://scripts/ui/widgets/squad_bar.gd")
 const MenPips = preload("res://scripts/ui/widgets/men_pips.gd")
 
 ## Order squads are listed in: the line first, then spears, then missiles.
-const SQUAD_ORDER := ["collie_guard", "footman", "spearman", "crossbowman"]
+const SQUAD_ORDER := ["collie_guard", "footman", "spearman", "crossbowman", "battle_mage", "ballista", "mangonel"]
 
 
 static func squad_order(type_id: String) -> int:

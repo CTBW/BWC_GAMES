@@ -6,7 +6,10 @@ extends "res://tests/unit/test_battle_base.gd"
 
 
 func test_squads_have_six_soldiers_unless_the_type_says_otherwise() -> void:
-	var special := {"troll": 3, "wolf_rider": 4, "goblin_horn": 4, "goblin_rabble": 9}
+	var special := {
+		"troll": 3, "wolf_rider": 4, "goblin_horn": 4, "goblin_rabble": 9,
+		"battle_mage": 3, "goblin_shaman": 3, "ballista": 3, "mangonel": 3, "rock_lobber": 3, "war_wagon": 3,
+	}
 	for id in DB.UNIT_TYPES:
 		assert_eq(DB.squad_size(id), special.get(id, DB.DEFAULT_SQUAD_SIZE), id)
 	assert_eq(DB.DEFAULT_SQUAD_SIZE, 6)

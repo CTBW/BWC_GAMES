@@ -468,7 +468,8 @@ func _army_row(so: Dictionary, can_bandage: bool, E, Soldier) -> Control:
 		for l in t.find_children("*", "Label", true, false):
 			(l as Label).add_theme_color_override("font_color", Color("#ffb0a0"))
 		tags.add_child(t)
-	if def.get("shot") != null:
+	# Bolts only for squads that carry them (mages and a ballista do not count theirs).
+	if def.get("shot") != null and def.shot.get("ammo") != null:
 		tags.add_child(H.trim(UI.label("%d bolts" % int(so.get("ammo", 0)), "TinyMutedLabel"), -1, -1))
 	body.add_child(H.margin(tags, 3, 0, 0, 0))
 	row.add_child(body)

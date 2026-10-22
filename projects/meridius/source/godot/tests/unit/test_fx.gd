@@ -95,3 +95,55 @@ func test_draws_without_errors() -> void:
 		fx.draw_texts(n, 0.7))
 	n.queue_redraw()
 	n.free()
+
+
+func test_magic_missiles_leave_trails_of_light_and_do_not_stick() -> void:
+	var fx = Fx.new()
+	for kind in ["orb", "fireball", "shard", "stone"]:
+		fx.shoot({"x0": 0, "y0": 0, "x1": 200, "y1": 0, "dur": 0.4, "arc": 20, "kind": kind, "scale": 1.0, "stick": true, "color": "#8fc8ff"})
+	fx.update(0.1)
+	var glows: Array = fx.particles.filter(func(p): return p.shape == "glow")
+	# Fireballs every 12 ms, orbs and shards every 22 ms; stones none.
+	assert_eq(glows.size(), 8 + 4 + 4, "trail particles")
+	for p in glows:
+		assert_between(p.life, 0.0, 0.45)
+	fx.update(0.4)
+	assert_false(fx.busy)
+	assert_eq(fx.marks.size(), 0, "only bolts and arrows stick in the ground")
+
+
+func test_lightning_flickers_and_tendrils_writhe_then_fade() -> void:
+	var fx = Fx.new()
+	fx.lightning(0, 0, 300, 100, {"width": 2.8, "branches": 2})
+	fx.tendril(0, 0, 100, 50, {"color": "#d8261a", "core": "#ffb08a", "dark": "#4a0606", "width": 2.2, "amp": 10, "life": 0.6})
+	assert_eq(fx.arcs.size(), 2)
+	var bolt: Dictionary = fx.arcs[0]
+	assert_eq(bolt.pts.size(), 33, "five levels of midpoint displacement")
+	assert_eq(bolt.pts[0], Vector2(0, 0))
+	assert_eq(bolt.pts[32], Vector2(300, 100))
+	assert_eq(bolt.branches.size(), 2)
+	assert_true(fx.arcs[1].has("tendril"))
+	assert_false(fx.busy, "arcs do not hold up the playback")
+	fx.update(0.4)
+	assert_eq(fx.arcs.size(), 1, "the bolt is gone after its 0.32 s")
+	fx.update(0.3)
+	assert_eq(fx.arcs.size(), 0)
+
+
+func test_spell_marks_on_the_ground() -> void:
+	var fx = Fx.new()
+	fx.mark(10, 20, "scorch", 1.6, 40)
+	fx.mark(0, 0, "crater", 1.6, 60)
+	fx.mark(0, 0, "frost", 1.1, 20)
+	assert_eq(fx.marks.map(func(m): return m.kind), ["scorch", "crater", "frost"])
+	fx.update(25)
+	assert_eq(fx.marks.map(func(m): return m.kind), ["scorch", "crater"], "frost thaws first")
+
+
+func test_light_is_flagged_for_the_additive_material() -> void:
+	var fx = Fx.new()
+	var c := Color(0.5, 0.6, 0.7, 1)
+	assert_eq(fx._light(c, 0.5), Color(0.5, 0.6, 0.7, 0.5), "plain blending without the material")
+	fx.additive = true
+	assert_eq(fx._light(c, 0.5), Color(0.5 + Fx.ADD, 0.6, 0.7, 0.5), "red carries ADD")
+

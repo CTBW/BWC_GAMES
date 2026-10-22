@@ -10,6 +10,7 @@
 // playwright-core, served by the original's vite toolchain from tools/bake
 // (port 5181). See tools/bake/README.md.
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -63,11 +64,21 @@ function enumerateKeys(data) {
   const poseType = read('src/render/figures.ts').match(/export type Pose = ([^;]+);/);
   const poses = [...poseType[1].matchAll(/'(\w+)'/g)].map((m) => m[1]);
   if (poses.length !== regexPoses.length || !poses.every((p) => regexPoses.includes(p))) throw new Error('Pose type and procedural regex disagree');
-  const portraitTypes = pm[1].split('|');
-  for (const s of data.unitSprites) if (!figTypes.includes(s)) throw new Error(`unit sprite ${s} has no figure art`);
+  // War engines (engines.ts): their own key and portrait patterns, the same poses.
+  const em = proc.match(/const em = key\.match\(\/\^\(([^)]+)\)_\(([^)]+)\)\$\//);
+  const pe = proc.match(/const pe = key\.match\(\/\^portrait_\(([^)]+)\)\$\//);
+  if (!em !== !pe) throw new Error('procedural.ts: engine key and engine portrait patterns must come together');
+  const engineTypes = em ? em[1].split('|') : [];
+  if (em) {
+    const enginePoses = em[2].split('|');
+    if (enginePoses.length !== poses.length || !poses.every((p) => enginePoses.includes(p))) throw new Error('Pose type and engine regex disagree');
+  }
+  const portraitTypes = [...pm[1].split('|'), ...(pe ? pe[1].split('|') : [])];
+  for (const s of data.unitSprites) if (!figTypes.includes(s) && !engineTypes.includes(s)) throw new Error(`unit sprite ${s} has no figure or engine art`);
 
   const groups = {
     figures: figTypes.flatMap((t) => poses.map((p) => `${t}_${p}`)),
+    engines: engineTypes.flatMap((t) => poses.map((p) => `${t}_${p}`)),
     portraits: portraitTypes.map((t) => `portrait_${t}`),
     props: [],
     buildings: data.buildings.flatMap((b) => Array.from({ length: b.levels }, (_, i) => `b_${b.id}_${i + 1}`)),
@@ -102,7 +113,7 @@ function enumerateKeys(data) {
   groups.literal = [...lit].filter((k) => !Object.values(groups).some((g) => g.includes(k)));
   const all = [];
   for (const g of Object.values(groups)) for (const k of g) if (!all.includes(k)) all.push(k);
-  return { groups, all, figTypes, poses, portraitTypes };
+  return { groups, all, figTypes, engineTypes, poses, portraitTypes };
 }
 
 // ---------------------------------------------------------------- atlas packing
@@ -252,9 +263,14 @@ async function bakeSprites(page) {
   }
   process.stdout.write('\n');
 
-  // Group procedural sprites into atlases: one per figure type, portraits, misc.
+  // Group procedural sprites into atlases: one per figure type, one per war
+  // engine, portraits, misc.
   const figType = (key) => keys.figTypes.find((t) => keys.poses.some((p) => key === `${t}_${p}`));
+  const engineType = (key) => keys.engineTypes.find((t) => keys.poses.some((p) => key === `${t}_${p}`));
   const atlases = new Map();
+  // Engines alias poses (run_f and the shield poses draw idle_f, flee_b idle_b…):
+  // identical canvases in an engine atlas share one region.
+  const shared = new Map();
   const manifest = {};
   const copied = new Set();
   let artFiles = 0;
@@ -274,11 +290,22 @@ async function bakeSprites(page) {
         manifest[r.key].push({ file: toRes(dst), ...out, art: true });
       } else {
         const t = figType(r.key);
-        const group = t ? `fig_${t}` : r.key.startsWith('portrait_') ? 'portraits' : 'misc';
+        const et = t ? undefined : engineType(r.key);
+        const group = t ? `fig_${t}` : et ? `engine_${et}` : r.key.startsWith('portrait_') ? 'portraits' : 'misc';
         if (!atlases.has(group)) atlases.set(group, []);
         const rgba = zlib.inflateSync(Buffer.from(e.rgba, 'base64'));
         if (rgba.length !== e.w * e.h * 4) throw new Error(`${r.key}: pixel data size`);
         const item = { key: r.key, v: e.v, w: e.w, h: e.h, rgba, out };
+        if (et) {
+          const id = `${group}:${e.w}x${e.h}:${crypto.createHash('sha1').update(rgba).digest('hex')}`;
+          const same = shared.get(id);
+          if (same) {
+            // Same pixels: reuse the packed region, keep this key's own anchor and scale.
+            manifest[r.key].push({ ref: same, out });
+            continue;
+          }
+          shared.set(id, item);
+        }
         atlases.get(group).push(item);
         manifest[r.key].push(item); // replaced below once packed
       }
@@ -315,7 +342,10 @@ async function bakeSprites(page) {
     }
   }
   for (const key of Object.keys(manifest)) {
-    manifest[key] = manifest[key].map((it) => (it.rgba ? { file: it.file, region: [it.x, it.y, it.w, it.h], ...it.out } : it));
+    manifest[key] = manifest[key].map((it) => {
+      const p = it.ref ?? it;
+      return p.rgba ? { file: p.file, region: [p.x, p.y, p.w, p.h], ...it.out } : it;
+    });
   }
   writeIfChanged(path.join(GODOT, 'assets/sprites.json'), JSON.stringify(manifest, null, 1) + '\n');
 
@@ -325,7 +355,7 @@ async function bakeSprites(page) {
   writeIfChanged(path.join(FIXTURES, 'variant_counts.json'), JSON.stringify({ counts, hasArt, groups: keys.groups }, null, 1) + '\n');
   // The original's hit masks (opaqueAt) for a few sprites, for the picking test.
   const hits = [];
-  for (const [key, v] of [['footman_idle_f', 0], ['troll_atk_b', 2], ['goblin_rabble_dead', 4], ['b_barracks_2', 0], ['tree_pine', 1], ['node_village', 0], ['portrait_orc_warlord', 1]]) {
+  for (const [key, v] of [['footman_idle_f', 0], ['troll_atk_b', 2], ['goblin_rabble_dead', 4], ['b_barracks_2', 0], ['tree_pine', 1], ['node_village', 0], ['portrait_orc_warlord', 1], ['battle_mage_atk_f', 2], ['mangonel_idle_b', 1], ['war_wagon_dead', 2]]) {
     hits.push({ key, v, step: 5, ...(await page.evaluate(([k, vv]) => window.__bake.hitGrid(k, vv, 5), [key, v])) });
   }
   writeIfChanged(path.join(FIXTURES, 'hit_masks.json'), JSON.stringify(hits) + '\n');
@@ -353,6 +383,15 @@ function wav(sampleRate, pcm) {
   return Buffer.concat([h, pcm]);
 }
 
+/** True when `file` holds the same 16-bit WAV as `data` up to ±1 in any sample. */
+function sameWithinLsb(file, data) {
+  if (!fs.existsSync(file)) return false;
+  const old = fs.readFileSync(file);
+  if (old.length !== data.length || !old.subarray(0, 44).equals(data.subarray(0, 44))) return false;
+  for (let i = 44; i + 1 < data.length; i += 2) if (Math.abs(old.readInt16LE(i) - data.readInt16LE(i)) > 1) return false;
+  return true;
+}
+
 async function bakeAudio(page) {
   const src = read('src/audio/sfx.ts');
   const names = [...src.matchAll(/case '(\w+)':/g)].map((m) => m[1]);
@@ -372,7 +411,10 @@ async function bakeAudio(page) {
       const r = await page.evaluate(([g, nm, sd]) => window.__bake.renderSfx(g, nm, sd), [gameFs, name, seed]);
       if (i === 0 && r.randomCalls > 0) n = VARIANTS;
       const file = path.join(OUT_AUDIO, `${name}_${i}.wav`);
-      writeIfChanged(file, wav(r.sampleRate, Buffer.from(r.pcm, 'base64')));
+      const data = wav(r.sampleRate, Buffer.from(r.pcm, 'base64'));
+      // The browser's offline rendering jitters by a least significant bit in a
+      // few samples between runs; keep the existing take then.
+      if (!sameWithinLsb(file, data)) writeIfChanged(file, data);
       written.add(path.basename(file));
       sounds[name].push(toRes(file));
       if (i === 0) report.push(`${name}: ${n} variant(s), ${(r.samples / r.sampleRate).toFixed(2)} s, peak ${r.peak.toFixed(3)}${r.clipped ? `, CLIPPED ${r.clipped}` : ''}`);

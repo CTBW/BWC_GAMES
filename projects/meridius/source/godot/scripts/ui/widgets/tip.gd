@@ -104,6 +104,9 @@ func _place() -> void:
 	_panel.reset_size()
 	var x := minf(vp.x - (340.0 if wide else 300.0), m.x + 14.0)
 	var y := minf(vp.y - 120.0, m.y + 16.0)
+	# A tall tip (a spell's, over the squad card's buttons) is kept whole on
+	# screen; the original's 120 px allowance let it run off the bottom.
+	y = maxf(0.0, minf(y, vp.y - _panel.size.y - 4.0))
 	_panel.position = Vector2(x, y)
 
 

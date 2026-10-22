@@ -21,15 +21,20 @@
 ##       hover: Dictionary           HoverInfo, keys always present, null when unset:
 ##           tile {x,y}|null, unit uid|null, preview Dictionary|null (AttackPreview +
 ##           target, from {x,y}|null, ability|null, moveFirst), path Array|null,
-##           zoc int|null, dest {x,y}|null, facing int|null, facings Array|null, turn bool|null
-##       ability: String|null        ability armed for the next click
+##           zoc int|null, dest {x,y}|null, facing int|null, facings Array|null, turn bool|null,
+##           spell Dictionary|null (SpellPreview: what the chosen spell, or a war
+##           machine's stone, would do cast at the hovered tile; Battle.spell_preview)
+##       ability: String|null        ability armed for the next click (a spell: aimed
+##                                   by hovering, cast by clicking; self-target spells
+##                                   cast at once from set_ability)
 ##       busy: bool                  playback (or the rules) still running
 ##       banner: Dictionary|null     {text, sub (String|null), tone "player"|"enemy"|"neutral", id}
 ##       log: Array                  [{text, tone|null}], newest first, ≤ 60
 ##       showGrid: bool, danger: bool, version: int (bumped by every notify())
 ##       turn: int, side: "player"|"enemy"   turn and side as played back so far
 ##   views: Dictionary         uid -> UnitView (fields hp, alive, morale, facing,
-##                             status, stance, routing, visible, reserve, x, y, …):
+##                             status, stance, routing, visible, reserve, x, y,
+##                             statuses (condition ids as played back), …):
 ##                             what the screen shows of each squad (follows playback).
 ##   atmo                      Atmosphere (set atmo.night = true for a night battle)
 ##   cam                       Camera (scripts/render/camera.gd)
@@ -89,6 +94,7 @@ const BattleDraw = preload("res://scripts/render/battle_draw.gd")
 const BattleDeps = preload("res://scripts/render/battle_deps.gd")
 const BattleLayer = preload("res://scripts/render/battle_layer.gd")
 const BattleNight = preload("res://scripts/render/battle_night.gd")
+const FxShader = preload("res://scenes/battle/battle_fx.gdshader")
 
 const TW := 128
 const TH := 64
@@ -102,6 +108,16 @@ const QUIET_MORALE := {"Steadied": true, "Surrounded": true, "The battle is turn
 
 ## Most animations running at once (an enemy turn plays its squads side by side).
 const MAX_ANIMS := 14
+
+## Labels and tints of lasting conditions.
+const STATUS_COLOR := {"chilled": Color(0xbf / 255.0, 0xe6 / 255.0, 1.0), "bloodlust": Color(1.0, 0x6a / 255.0, 0x50 / 255.0), "bleeding": Color(1.0, 0x8a / 255.0, 0x7a / 255.0)}
+const STATUS_LABEL := {"chilled": "CHILLED", "bloodlust": "FRENZY", "bleeding": "BLEEDING"}
+
+## Colour of the damage numbers a spell throws up.
+const SPELL_TEXT := {"lightning": "#d8ecff", "frost": "#cfeeff", "fire": "#ffc060", "gut": "#ff8a7a", "stone": "#ffffff", "rock": "#ffffff"}
+
+## Where a spell's power gathers, by its look.
+const SPELL_GLOW := {"lightning": "#8fc8ff", "frost": "#cfeeff", "heal": "#ffe48a", "circle": "#ffe48a", "fire": "#ff9a30", "blood": "#ff4030", "gut": "#c0ff60", "stone": "#c9b79a", "rock": "#c9b79a"}
 
 const MORALE_COLORS := {
 	"confident": Color8(0x9f, 0xe0, 0xff),
@@ -151,6 +167,10 @@ class UnitView extends RefCounted:
 	var visible := true
 	## Still beyond the edge with a coming wave (drawn when the wave is near).
 	var reserve := false
+	## Conditions as played back (chilled, frenzied, bleeding).
+	var statuses: Array = []
+	## A war machine shows its loosing pose for this many seconds.
+	var engine_atk := 0.0
 
 
 ## A fallen soldier left on the field.
@@ -212,6 +232,8 @@ var last_rules_ms := 0.0
 var last_snapshot_ms := 0.0
 ## The relief of a last stand: riders charging in with the sunrise (drawn only, no rules).
 var relief = null
+## A flash over the whole field (lightning, a fireball bursting): strength and colour.
+var flash := {"a": 0.0, "color": Color.WHITE}
 
 var _queue: Array = [] # [{e, uids}]
 ## The animation `_play` just created (moved into `_anims` by the scheduler).
@@ -228,6 +250,8 @@ var _states_cache = null
 var _facing_pick = null
 var _danger_cache = null
 var _target_cache = null
+## Targets of the chosen spell, cached per squad and spell.
+var _spell_target_cache = null
 var _w := 1920.0
 var _h := 1080.0
 var _banner_id := 0
@@ -352,6 +376,9 @@ func _warm_sprites() -> void:
 		var esc = DB.UNIT_TYPES.get(u.typeId, {}).get("escort")
 		if esc != null:
 			types[esc] = true
+		var crew = DB.UNIT_TYPES.get(u.typeId, {}).get("crew")
+		if crew != null:
+			types[crew] = true
 	if relief_possible():
 		types["margrave_rider"] = true
 	if _host != null:
@@ -400,6 +427,14 @@ func _build_layers() -> void:
 	_add_layer(_world, "PropShadows", _draw.draw_prop_shadows, true)
 	_add_layer(_world, "Sorted", _draw.draw_sorted)
 	_add_layer(_world, "FxAir", _draw.draw_fx_air)
+	# Glow, lightning and magic are light ('lighter'), drawn in order with the
+	# rest of the air FX: the layer's material adds the draws flagged for it.
+	var fx_mat := ShaderMaterial.new()
+	fx_mat.shader = FxShader
+	_layers.FxAir.material = fx_mat
+	fx.additive = true
+	# Lightning lights up the whole field for an instant; a fireball's burst warms it.
+	_add_layer(self, "Flash", _draw.draw_screen_flash).material = fx_mat
 	_night = BattleNight.new()
 	_night.name = "Night"
 	add_child(_night)
@@ -649,6 +684,8 @@ func _make_view(u: Dictionary) -> UnitView:
 	v.routing = u.status == "routing"
 	v.visible = u.status != "reserve"
 	v.reserve = u.status == "reserve"
+	for s in u.get("statuses", []):
+		v.statuses.append(s.id)
 	return v
 
 
@@ -744,6 +781,19 @@ func set_ability(id = null) -> void:
 	elif ab.kind == "shout":
 		if b.shout(u.uid, id):
 			pump()
+	elif ab.kind == "spell":
+		if not b.can_cast(u, id).ok:
+			_sfx("deny")
+		elif ab.get("target") == "self":
+			# Cast where the casters stand: no aiming needed.
+			if b.cast(u.uid, id, {"x": u.x, "y": u.y}):
+				ui.ability = null
+				pump()
+				_after_player_action(u)
+		else:
+			ui.ability = null if ui.ability == id else id
+			_sfx("click")
+			_refresh_hover()
 	else:
 		ui.ability = null if ui.ability == id else id
 		_sfx("click")
@@ -917,6 +967,7 @@ func pump() -> void:
 	_states_cache = null
 	_danger_cache = null
 	_target_cache = null
+	_spell_target_cache = null
 	ui.busy = busy()
 	notify()
 
@@ -931,8 +982,16 @@ func _involved(e: Dictionary) -> Array:
 			return [e.uid]
 		"attack":
 			_cause = [e.uid, e.target]
+			if e.get("via") != null:
+				_cause.append(e.via)
 			return _cause.duplicate()
-		"push", "heal", "morale", "mstate", "down", "rout", "rally", "fled":
+		"spell":
+			_cause = [e.uid]
+			for h in e.hits:
+				if not _cause.has(h.uid):
+					_cause.append(h.uid)
+			return _cause.duplicate()
+		"status", "dot", "push", "heal", "morale", "mstate", "down", "rout", "rally", "fled":
 			var out := [e.uid]
 			for c in _cause:
 				if not out.has(c):
@@ -1085,6 +1144,32 @@ func _play(e: Dictionary) -> void:
 			_anim = _new_anim(0.5)
 		"attack":
 			_play_attack(e)
+		"spell":
+			_play_spell(e)
+		"status":
+			var v: UnitView = views[e.uid]
+			if e.on:
+				if not v.statuses.has(e.status):
+					v.statuses.append(e.status)
+				var hp := _head_pos(v)
+				var label := "Chilled" if e.status == "chilled" else ("Bloodlust!" if e.status == "bloodlust" else "Bleeding")
+				fx.text(hp.x, hp.y - 36, label, STATUS_COLOR[e.status], {"size": 16, "delay": 0.05})
+			else:
+				v.statuses.erase(e.status)
+		"dot":
+			# The hex's wound opens again: blood, and soldiers may die of it.
+			var v: UnitView = views[e.uid]
+			v.hp = e.hp
+			var hp := _head_pos(v)
+			fx.text(hp.x, hp.y - 4, JS.num_str(e.damage), "#ff6a5a", {"size": 22})
+			for m in SquadView.standing(v.members):
+				var q := _member_pos(v, m)
+				m.flash = maxf(m.flash, 0.3)
+				m.shake = 0.6
+				fx.burst(q.x, q.y - 24, 0, 5, {"shape": "spark", "colors": ["#b8291c", "#7d1a12", "#e05040"], "speed": 60, "vz": 30, "gravity": 240, "size": 2.6, "max": 0.5})
+			_sfx("hit_flesh")
+			_show_casualties(v, e.aliveBefore - e.aliveAfter, {"x": 0.0, "y": 1.0})
+			_anim = _new_anim(0.55)
 		"push":
 			_play_push(e)
 		"morale":
@@ -1111,11 +1196,28 @@ func _play(e: Dictionary) -> void:
 			var hp := _head_pos(v)
 			v.status = "dead" if e.dead else "downed"
 			v.stance = null
+			v.statuses = []
 			v.hp = 0
 			var n := SquadView.standing(v.members).size()
 			if n > 0:
 				_show_casualties(v, n, {"x": 0.0, "y": -1.0})
 			v.alive = 0
+			if DB.is_engine(u.typeId):
+				# With its crew dead the engine is wrecked where it stood.
+				var ep := _view_pos(v)
+				var o := Formation.engine_offset(v.facing)
+				var c := Corpse.new()
+				c.wx = ep.x + o.x
+				c.wy = ep.y + o.y
+				c.d = JS.rnd(v.x) + JS.rnd(v.y) - 0.2
+				c.type = u.typeId
+				c.variant = int(u.variant)
+				c.flip = v.facing == 0 or v.facing == 2
+				c.scale = SquadView.member_scale(u)
+				corpses.append(c)
+				fx.burst(ep.x, ep.y - 10, 4, 14, {"shape": "spark", "colors": ["#7a5532", "#5a3a22", "#c9ced4"], "speed": 130, "vz": 90, "gravity": 260, "size": 3, "max": 0.8})
+				fx.burst(ep.x, ep.y, 6, 8, {"shape": "puff", "color": "rgba(170,150,110,1)", "speed": 50, "vz": 30, "gravity": 10, "size": 9, "max": 1.1})
+				_sfx("crash")
 			var label := "Slain" if u.leader else ("Wiped out" if e.dead else "Broken")
 			fx.text(hp.x, hp.y - 14, label, "#ff8a7a" if e.dead else "#ffd27a", {"size": 22})
 			_sfx("death_player" if u.faction == "player" else "death")
@@ -1276,6 +1378,8 @@ func _play_move(e: Dictionary) -> void:
 	var per := 0.15 if v.routing else (0.24 if u.faction == "enemy" else 0.26)
 	var st := {"last": -1}
 	var last_pt: Dictionary = path[path.size() - 1]
+	# A squad falling back off an ally's tile backs away, still facing its way.
+	var backward: bool = e.get("backward", false)
 	_anim = _new_anim(per * steps,
 		func(f):
 			var pos: float = f * steps
@@ -1289,7 +1393,7 @@ func _play_move(e: Dictionary) -> void:
 			v.y = Iso.lerp(a.y, bb.y, k)
 			v.h = Iso.lerp(ha, hb, Iso.ease_in_out_quad(k)) + maxf(0.0, hb - ha) * sin(k * PI) * 0.4
 			var dir := dir_of(a, bb)
-			if dir != v.facing:
+			if dir != v.facing and not backward:
 				v.facing = dir
 				_reform_view(v, {"dur": per * 0.8, "stagger": 0.02})
 			if i != st.last:
@@ -1374,7 +1478,49 @@ func _dir_between(a: UnitView, bv: UnitView) -> Dictionary:
 	return {"nx": dx / len, "ny": dy / len, "len": len}
 
 
+## A ballista bolt carrying on through the squad it struck into the one behind.
+func _play_through(e: Dictionary) -> void:
+	var vv: UnitView = views[e.via]
+	var tv: UnitView = views[e.target]
+	var a := _view_pos(vv)
+	var bp := _view_pos(tv)
+	var nx := signf(bp.x - a.x)
+	if nx == 0.0:
+		nx = 1.0
+	var ny := signf(bp.y - a.y)
+	var from := {"x": -nx, "y": -ny}
+	var victims := _pick_victims(tv, maxi(0, e.aliveBefore - e.aliveAfter), from)
+	var dur := Iso.clamp(a.distance_to(bp) / 1400, 0.08, 0.22)
+	fx.shoot({
+		"x0": a.x,
+		"y0": a.y - 22,
+		"x1": bp.x,
+		"y1": bp.y - 22,
+		"t": 0.0,
+		"dur": dur,
+		"arc": 0.0,
+		"kind": "bolt",
+		"scale": 1.5,
+		"onHit": func():
+			tv.hp = e.targetHp
+			var head := _head_pos(tv)
+			fx.text(head.x, head.y - 4, JS.num_str(e.damage), "#ffffff", {"size": 26})
+			fx.text(head.x, head.y - 34, "Run through!", "#ffd27a", {"size": 15, "delay": 0.05})
+			for m in SquadView.standing(tv.members):
+				m.flash = maxf(m.flash, 0.42)
+				m.shake = 1.0
+			_sfx("bolt_hit")
+			for m in victims:
+				_drop_victim(tv, m, from)
+			_after_casualties(tv, victims.size()),
+	})
+	_anim = _new_anim(dur + 0.35)
+
+
 func _play_attack(e: Dictionary) -> void:
+	if e.get("via") != null:
+		_play_through(e)
+		return
 	var av: UnitView = views[e.uid]
 	var tv: UnitView = views[e.target]
 	var attacker: Dictionary = _u(e.uid)
@@ -1447,6 +1593,10 @@ func _play_attack(e: Dictionary) -> void:
 	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
 	var st := {"next": 0, "swung2": false}
 	_sfx("swing")
+	# A war wagon lurches into its ram as the crew shove.
+	if DB.is_engine(attacker.typeId):
+		av.engine_atk = total
+		_sfx("smash")
 	_anim = _new_anim(total,
 		func(f):
 			var t: float = f * total
@@ -1545,10 +1695,16 @@ func _after_casualties(v: UnitView, count: int) -> void:
 ## miss stick in the ground around them. Casualties drop as their shots land.
 func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, killed: int, show_hit: Callable, nx: float, ny: float, len: float) -> void:
 	var attacker: Dictionary = _u(e.uid)
+	if DB.is_engine(attacker.typeId):
+		_play_engine_shot(e, av, tv, order, killed, show_hit, nx, ny, len)
+		return
+	# Mages and shamans loose bolts of their own power between spells.
+	var caster: bool = attacker.get("tags", []).has("caster")
+	var glow := "#8fc8ff" if attacker.faction == "player" else "#a6ff5a"
 	var bolt: bool = attacker.typeId == "crossbowman"
 	var flight := Iso.clamp(len / 1000, 0.2, 0.55)
-	var aim := 0.24
-	var beat := 0.07 if bolt else 0.05
+	var aim := 0.34 if caster else 0.24
+	var beat := 0.07 if bolt else (0.09 if caster else 0.05)
 	var shooters: Array = []
 	for i in order.size():
 		shooters.append({"m": order[i], "at": aim + i * beat + randf() * 0.02, "fired": false})
@@ -1556,7 +1712,7 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
 	var targets := SquadView.standing(tv.members)
 	var total := aim + (shooters.size() - 1) * beat + flight + 0.3
-	_sfx("crossbow" if bolt else "bow")
+	_sfx("cast" if caster else ("crossbow" if bolt else "bow"))
 	var st := {"volley_sound": false}
 	_anim = _new_anim(total,
 		func(f):
@@ -1584,22 +1740,29 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 					else:
 						var q := _view_pos(tv)
 						to = Vector2(q.x + (randf() - 0.5) * 90, q.y + (randf() - 0.5) * 34)
-					fx.shoot({
+					var shot := {
 						"x0": fp.x + nx * 8,
-						"y0": fp.y - 28,
+						"y0": fp.y - (40 if caster else 28),
 						"x1": to.x,
 						"y1": to.y,
 						"t": 0.0,
 						"dur": flight * (0.92 + randf() * 0.16),
-						"arc": len * 0.05 if bolt else len * 0.16,
-						"kind": "bolt" if bolt else "arrow",
-						"scale": 0.62,
-						"stick": not e.hit,
+						"arc": len * 0.05 if (bolt or caster) else len * 0.16,
+						"kind": "orb" if caster else ("bolt" if bolt else "arrow"),
+						"scale": 0.8 if caster else 0.62,
+						"stick": not e.hit and not caster,
 						"onHit": func():
 							show_hit.call()
+							if caster:
+								fx.burst(to.x, to.y, 0, 6, {"shape": "glow", "color": glow, "speed": 70, "vz": 0, "gravity": 0, "size": 3, "max": 0.35})
 							if victim != null:
 								_drop_victim(tv, victim, from),
-					})
+					}
+					if caster:
+						shot.color = glow
+					fx.shoot(shot)
+					if caster:
+						fx.burst(fp.x + nx * 8, fp.y - 40, 0, 5, {"shape": "glow", "color": glow, "speed": 40, "vz": 0, "gravity": 0, "size": 3, "max": 0.3})
 					if not st.volley_sound and i == shooters.size() / 2 and shooters.size() > 2:
 						st.volley_sound = true
 						_sfx("crossbow" if bolt else "bow")
@@ -1618,6 +1781,376 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 				s.m.lunge = Vector2.ZERO
 			for m in SquadView.standing(tv.members):
 				m.lunge = Vector2.ZERO)
+
+
+## A ballista looses: the crew heave on the windlass, the arms snap forward
+## and one great bolt flies. Everyone it kills drops as it lands.
+func _play_engine_shot(e: Dictionary, av: UnitView, tv: UnitView, crew: Array, killed: int, show_hit: Callable, nx: float, ny: float, len: float) -> void:
+	var aim := 0.34
+	var flight := Iso.clamp(len / 1500, 0.16, 0.42)
+	var from := {"x": -nx, "y": -ny}
+	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
+	var total := aim + flight + 0.4
+	var st := {"fired": false}
+	_anim = _new_anim(total,
+		func(f):
+			var t: float = f * total
+			for m in crew:
+				m.pose = "atk" if t < aim + 0.12 else "idle"
+			if st.fired or t < aim:
+				return
+			st.fired = true
+			av.engine_atk = 0.6
+			var p := _view_pos(av)
+			var o := Formation.engine_offset(av.facing)
+			var x0: float = p.x + o.x + nx * 20
+			var y0: float = p.y + o.y - 24 + ny * 10
+			var tp := _view_pos(tv)
+			var to := Vector2(tp.x, tp.y - 22) if e.hit else Vector2(tp.x + (randf() - 0.5) * 120, tp.y + (randf() - 0.5) * 44)
+			_sfx("ballista")
+			cam.shake = maxf(cam.shake, 0.12)
+			fx.burst(p.x + o.x, p.y + o.y, 0, 6, {"shape": "puff", "color": "rgba(190,165,120,1)", "speed": 40, "vz": 20, "gravity": 10, "size": 6, "max": 0.6})
+			fx.shoot({
+				"x0": x0,
+				"y0": y0,
+				"x1": to.x,
+				"y1": to.y,
+				"t": 0.0,
+				"dur": flight,
+				"arc": len * 0.03,
+				"kind": "bolt",
+				"scale": 1.5,
+				"stick": not e.hit,
+				"onHit": func():
+					show_hit.call()
+					if not e.hit:
+						return
+					fx.burst(to.x, to.y, 0, 10, {"shape": "spark", "colors": ["#d64a3a", "#a3261c", "#c9a27a"], "speed": 170, "vz": 60, "gravity": 220, "size": 3, "max": 0.5})
+					for m in victims:
+						_drop_victim(tv, m, from),
+			}),
+		func():
+			show_hit.call()
+			for m in victims:
+				_drop_victim(tv, m, from)
+			_after_casualties(tv, victims.size())
+			for m in crew:
+				m.pose = "idle")
+
+
+## Where a caster's power gathers: the head of his staff.
+func _staff_tip(v: UnitView, m) -> Vector2:
+	var q := _member_pos(v, m)
+	var side := -1.0 if (v.facing == 1 or v.facing == 2) else 1.0
+	return Vector2(q.x + side * 7, q.y - SquadView.member_height(_type_of(v.uid)) - 6)
+
+
+## The ground point of a tile (world px).
+func _ground_pt(p: Dictionary) -> Vector2:
+	return Vector2(Iso.iso_x(p.x, p.y), Iso.iso_y(p.x, p.y, _tile_h(p.x, p.y)))
+
+
+## The view of the squad standing on a tile (as the rules have it now), else `fallback`.
+func _view_at(p: Dictionary, fallback: UnitView) -> UnitView:
+	var u = Grid.unit_at(b.units, p.x, p.y)
+	if u != null and views.has(u.uid):
+		return views[u.uid]
+	return fallback
+
+
+## A spell or a war machine's stone, from the casters' wind-up to every
+## squad it reaches. The rules rolled each squad's damage once; this only
+## shows it, at the moment the effect arrives there.
+func _play_spell(e: Dictionary) -> void:
+	var ab: Dictionary = DB.ABILITIES[e.ability]
+	var av: UnitView = views[e.uid]
+	var caster: Dictionary = _u(e.uid)
+	var kind: String = ab.get("fx", "lightning")
+	var engine := DB.is_engine(caster.typeId)
+	var casters := SquadView.standing(av.members)
+	var ap := _view_pos(av)
+	var aim_pt := _ground_pt(e.at)
+	var imp_pt := _ground_pt(e.get("impact", e.at))
+	var hits: Array = e.hits
+	var hviews: Array = []
+	var any_player: bool = caster.faction == "player"
+	for h in hits:
+		hviews.append(views[h.uid])
+		if _u(h.uid).faction == "player":
+			any_player = true
+	var body := func(v: UnitView) -> Vector2:
+		var p := _view_pos(v)
+		return Vector2(p.x, p.y - 24)
+	if any_player:
+		_focus_on((av.x + e.at.x) / 2.0, (av.y + e.at.y) / 2.0, false)
+	var glow: String = SPELL_GLOW.get(kind, "#ffffff")
+	# State the steps share (lambdas capture locals by value).
+	var st := {"applied": {}, "done": 0, "fired": false, "landed": false, "started": false, "lashed": false, "struck": false}
+	var apply := func(i: int) -> void:
+		if st.applied.has(i) or i >= hits.size():
+			return
+		st.applied[i] = true
+		var h: Dictionary = hits[i]
+		var tp := _view_pos(hviews[i])
+		var src: Vector2 = ap if (h.role == "main" or h.role == "aura") else imp_pt
+		var l := src.distance_to(tp)
+		if l == 0.0:
+			l = 1.0
+		_apply_spell_hit(e, h, {"x": (src.x - tp.x) / l, "y": (src.y - tp.y) / l})
+	var apply_all := func() -> void:
+		for i in hits.size():
+			apply.call(i)
+	var pose := func(on: bool) -> void:
+		for m in casters:
+			m.pose = "atk" if on else "idle"
+	var gather := func(amount: float) -> void:
+		if engine:
+			return
+		for m in casters:
+			if randf() > amount:
+				continue
+			var s := _staff_tip(av, m)
+			fx.burst(s.x + (randf() - 0.5) * 6, s.y + (randf() - 0.5) * 6, 0, 1, {"shape": "glow", "color": glow, "speed": 18, "vz": 0, "gravity": -30, "size": 2.6, "max": 0.45})
+	var total := 1.0
+	var step := func(_t: float) -> void:
+		pass
+	if not engine:
+		_sfx("cast")
+
+	if kind == "lightning":
+		var at := 0.5
+		var gap := 0.16
+		total = at + gap * maxi(1, hits.size()) + 0.45
+		step = func(t: float) -> void:
+			pose.call(t < at + 0.35)
+			if t < at:
+				gather.call(0.7)
+				return
+			if not e.hit and st.done == 0:
+				st.done = 1
+				var miss := Vector2(aim_pt.x + (randf() - 0.5) * 70, aim_pt.y + (randf() - 0.5) * 26)
+				for m in casters:
+					var s := _staff_tip(av, m)
+					fx.lightning(s.x, s.y, miss.x, miss.y, {"width": 2.4})
+				fx.mark(miss.x, miss.y, "scorch", 0.5)
+				flash = {"a": 0.6, "color": Color8(170, 200, 255)}
+				_sfx("lightning")
+				var head := _head_pos(_view_at(e.at, av))
+				fx.text(head.x, head.y - 4, "Miss", "#c8c8c8", {"size": 20})
+				return
+			while e.hit and st.done < hits.size() and t >= at + gap * st.done:
+				var to: Vector2 = body.call(hviews[st.done])
+				if st.done == 0:
+					for m in casters:
+						var s := _staff_tip(av, m)
+						fx.lightning(s.x, s.y, to.x, to.y, {"width": 2.8, "branches": 2})
+					flash = {"a": 1.0, "color": Color8(170, 200, 255)}
+					cam.shake = maxf(cam.shake, 0.3)
+				else:
+					var fr: Vector2 = body.call(hviews[st.done - 1])
+					fx.lightning(fr.x, fr.y, to.x, to.y, {"width": 2.2, "branches": 1})
+					flash = {"a": maxf(flash.a, 0.5), "color": Color8(170, 200, 255)}
+				fx.burst(to.x, to.y, 0, 14, {"shape": "glow", "color": "#bcd8ff", "speed": 150, "vz": 0, "gravity": 0, "size": 3, "max": 0.35})
+				fx.mark(to.x, to.y + 24, "scorch", 0.55)
+				_sfx("lightning")
+				apply.call(st.done)
+				st.done += 1
+	elif kind == "frost":
+		var at := 0.4
+		var flight := 0.32
+		total = at + flight + 0.55
+		step = func(t: float) -> void:
+			pose.call(t < at + 0.3)
+			if t < at:
+				gather.call(0.7)
+				return
+			if not st.fired:
+				st.fired = true
+				for m in casters:
+					for k in 2:
+						var s := _staff_tip(av, m)
+						var spread := 26.0 if e.hit else 90.0
+						fx.shoot({"x0": s.x, "y0": s.y, "x1": aim_pt.x + (randf() - 0.5) * spread, "y1": aim_pt.y - 16 + (randf() - 0.5) * spread * 0.4, "t": 0.0, "dur": flight * (0.85 + randf() * 0.3), "arc": 18.0, "kind": "shard", "scale": 1.0})
+			if not st.landed and t >= at + flight:
+				st.landed = true
+				_sfx("frost")
+				if not e.hit:
+					var head := _head_pos(_view_at(e.at, av))
+					fx.text(head.x, head.y - 4, "Miss", "#c8c8c8", {"size": 20})
+					return
+				fx.ring(aim_pt.x, aim_pt.y, 110, "rgba(200,235,255,0.95)", 0.7)
+				fx.burst(aim_pt.x, aim_pt.y - 20, 0, 26, {"shape": "glow", "colors": ["#e8f6ff", "#9fd8ff", "#ffffff"], "speed": 170, "vz": 0, "gravity": 30, "size": 3, "max": 0.6})
+				fx.burst(aim_pt.x, aim_pt.y - 10, 0, 14, {"shape": "spark", "colors": ["#ffffff", "#cfeeff"], "speed": 200, "vz": 80, "gravity": 260, "size": 2.4, "max": 0.5})
+				for hv in hviews:
+					var p := _view_pos(hv)
+					fx.mark(p.x, p.y, "frost", 1.1, 20)
+				flash = {"a": 0.45, "color": Color8(210, 240, 255)}
+				apply_all.call()
+	elif kind == "heal" or kind == "circle":
+		var at := 0.3 if kind == "circle" else 0.38
+		total = at + 0.12 * hits.size() + 0.6
+		step = func(t: float) -> void:
+			pose.call(t < at + 0.4)
+			if t < at:
+				gather.call(0.6)
+				return
+			if not st.started:
+				st.started = true
+				_sfx("heal")
+				if kind == "circle":
+					fx.ring(ap.x, ap.y, TW * 2.2, "rgba(255,225,140,0.9)", 0.9)
+					fx.ring(ap.x, ap.y, TW * 1.4, "rgba(255,245,200,0.7)", 0.7)
+			while st.done < hits.size() and t >= at + 0.12 * st.done:
+				var hv: UnitView = hviews[st.done]
+				var p := _view_pos(hv)
+				fx.ring(p.x, p.y, 70, "rgba(255,230,150,0.85)", 0.6)
+				# Light falls on every soldier of the squad.
+				for m in SquadView.standing(hv.members):
+					var q := _member_pos(hv, m)
+					fx.burst(q.x, q.y - 50, 0, 4, {"shape": "glow", "colors": ["#fff2b0", "#c8ff9a"], "speed": 12, "vz": 0, "gravity": -40, "size": 3, "max": 0.9})
+				apply.call(st.done)
+				st.done += 1
+	elif kind == "fire":
+		var at := 0.42
+		var l := imp_pt.distance_to(ap)
+		var flight := Iso.clamp(l / 700, 0.35, 0.8)
+		total = at + flight + 0.65
+		var explode := func() -> void:
+			flash = {"a": 0.9, "color": Color8(255, 170, 80)}
+			cam.shake = maxf(cam.shake, 0.5)
+			fx.ring(imp_pt.x, imp_pt.y, 130, "rgba(255,150,60,0.9)", 0.6)
+			fx.burst(imp_pt.x, imp_pt.y - 16, 0, 36, {"shape": "glow", "colors": ["#ffe080", "#ff9a30", "#ff5a20"], "speed": 190, "vz": 0, "gravity": -40, "size": 4.5, "max": 0.6})
+			fx.burst(imp_pt.x, imp_pt.y - 10, 0, 16, {"shape": "spark", "colors": ["#ffd27a", "#ff7a2a"], "speed": 230, "vz": 120, "gravity": 300, "size": 2.6, "max": 0.6})
+			fx.burst(imp_pt.x, imp_pt.y - 20, 10, 10, {"shape": "puff", "colors": ["rgba(60,48,40,1)", "rgba(90,80,70,1)"], "speed": 50, "vz": 40, "gravity": -20, "size": 14, "max": 1.6})
+			fx.mark(imp_pt.x, imp_pt.y, "scorch", 1.6, 40)
+			_sfx("explosion")
+			apply_all.call()
+		step = func(t: float) -> void:
+			pose.call(t < at + 0.25)
+			if t < at:
+				gather.call(0.8)
+				return
+			if st.fired:
+				return
+			st.fired = true
+			_sfx("fireball")
+			var s: Vector2 = _staff_tip(av, casters[floori(casters.size() / 2.0)]) if casters.size() > 0 else Vector2(ap.x, ap.y - 40)
+			fx.shoot({"x0": s.x, "y0": s.y, "x1": imp_pt.x, "y1": imp_pt.y - 14, "t": 0.0, "dur": flight, "arc": l * 0.22 + 20, "kind": "fireball", "scale": 1.1, "onHit": explode})
+	elif kind == "blood" or kind == "gut":
+		var at := 0.4
+		var strike := 0.62
+		total = 1.15
+		var tv: UnitView = hviews[0] if hviews.size() > 0 else _view_at(e.at, av)
+		step = func(t: float) -> void:
+			pose.call(t < strike + 0.2)
+			if t < at:
+				gather.call(0.8)
+				return
+			if not st.lashed:
+				st.lashed = true
+				_sfx("bloodlust" if kind == "blood" else "hex")
+				var to: Vector2 = body.call(tv)
+				for m in casters:
+					var s := _staff_tip(av, m)
+					var end := Vector2(to.x + (randf() - 0.5) * 18, to.y + (randf() - 0.5) * 10)
+					if kind == "blood":
+						fx.tendril(s.x, s.y, end.x, end.y, {"color": "#d8261a", "core": "#ffb08a", "dark": "#4a0606", "width": 2.2, "amp": 10, "life": 0.6})
+					else:
+						fx.tendril(s.x, s.y, end.x, end.y, {"color": "#7a1424", "core": "#c8ff70", "dark": "#1e0408", "width": 2.8, "amp": 16, "life": 0.65})
+			if st.struck or t < strike:
+				return
+			st.struck = true
+			if not e.hit:
+				var head := _head_pos(tv)
+				fx.text(head.x, head.y - 4, "Resisted", "#c8c8c8", {"size": 20})
+				return
+			var p := _view_pos(tv)
+			if kind == "blood":
+				fx.ring(p.x, p.y, 80, "rgba(255,60,40,0.9)", 0.7)
+				for m in SquadView.standing(tv.members):
+					var q := _member_pos(tv, m)
+					fx.burst(q.x, q.y - 30, 0, 5, {"shape": "glow", "colors": ["#ff4030", "#ff9a60"], "speed": 30, "vz": 0, "gravity": -50, "size": 3, "max": 0.8})
+			else:
+				for m in SquadView.standing(tv.members):
+					var q := _member_pos(tv, m)
+					fx.burst(q.x, q.y - 28, 0, 9, {"shape": "spark", "colors": ["#b8291c", "#7d1a12", "#e05040"], "speed": 120, "vz": 70, "gravity": 260, "size": 3, "max": 0.55})
+				fx.burst(p.x, p.y - 26, 0, 12, {"shape": "glow", "colors": ["#c0ff60", "#ff5040"], "speed": 80, "vz": 0, "gravity": 0, "size": 3, "max": 0.45})
+			apply_all.call()
+	else:
+		# A war machine's stone: the arm swings, the stone tumbles high and smashes down.
+		var at := 0.32
+		var l := imp_pt.distance_to(ap)
+		var flight := Iso.clamp(l / 600, 0.7, 1.3)
+		total = at + flight + 0.7
+		var crash := func() -> void:
+			cam.shake = maxf(cam.shake, 0.5)
+			flash = {"a": maxf(flash.a, 0.25), "color": Color8(255, 235, 200)}
+			fx.ring(imp_pt.x, imp_pt.y, 150, "rgba(160,130,90,0.9)", 0.7)
+			fx.ring(imp_pt.x, imp_pt.y, 90, "rgba(240,225,190,0.8)", 0.5)
+			fx.burst(imp_pt.x, imp_pt.y, 8, 22, {"shape": "puff", "colors": ["rgba(170,150,110,1)", "rgba(130,110,80,1)", "rgba(200,185,150,1)"], "speed": 150, "vz": 60, "gravity": 15, "size": 17, "max": 1.5})
+			fx.burst(imp_pt.x, imp_pt.y - 6, 0, 26, {"shape": "spark", "colors": ["#8a8378", "#5a4a38", "#c9b79a", "#3a2c1e"], "speed": 280, "vz": 170, "gravity": 400, "size": 4.2, "max": 0.8})
+			# Chunks of the stone bounce away.
+			fx.burst(imp_pt.x, imp_pt.y - 4, 4, 6, {"shape": "dot", "colors": ["#7d7568", "#9a9184"], "speed": 170, "vz": 150, "gravity": 420, "size": 5, "max": 0.9})
+			fx.mark(imp_pt.x, imp_pt.y, "crater", 1.6, 60)
+			_sfx("crash")
+			apply_all.call()
+		step = func(t: float) -> void:
+			for m in casters:
+				m.pose = "atk" if t < at + 0.1 else "idle"
+			if st.fired or t < at:
+				return
+			st.fired = true
+			av.engine_atk = 0.8
+			_sfx("catapult")
+			var o := Formation.engine_offset(av.facing)
+			var d: Dictionary = Grid.DIRS[av.facing]
+			fx.shoot({
+				"x0": ap.x + o.x - Iso.iso_x(d.x, d.y) * 0.25,
+				"y0": ap.y + o.y - 46,
+				"x1": imp_pt.x,
+				"y1": imp_pt.y - 10,
+				"t": 0.0,
+				"dur": flight,
+				"arc": l * 0.45 + 90,
+				"kind": "stone",
+				"scale": 2.1 if kind == "rock" else 1.8,
+				"color": "#7d6e5a" if kind == "rock" else "#8a8378",
+				"onHit": crash,
+			})
+	var run := step
+	_anim = _new_anim(total,
+		func(f): run.call(f * total),
+		func():
+			apply_all.call()
+			pose.call(false))
+
+
+## One squad takes what the spell brought it: a wound and its dead, healing, or a frenzy.
+func _apply_spell_hit(e: Dictionary, h: Dictionary, from: Dictionary) -> void:
+	var ab: Dictionary = DB.ABILITIES[e.ability]
+	var v: UnitView = views[h.uid]
+	var t: Dictionary = _u(h.uid)
+	var caster: Dictionary = _u(e.uid)
+	v.hp = h.hp
+	var head := _head_pos(v)
+	var damage: float = float(h.get("damage", 0))
+	var heal: float = float(h.get("heal", 0))
+	if damage > 0:
+		var col: String = SPELL_TEXT.get(ab.get("fx", "stone"), "#ffffff")
+		fx.text(head.x, head.y - 4, JS.num_str(h.damage), col, {"size": 28 if h.role == "main" else 22})
+		if t.faction == caster.faction:
+			fx.text(head.x, head.y - 34, "Friendly fire!", "#ffb070", {"size": 14, "delay": 0.05})
+		for m in SquadView.standing(v.members):
+			m.flash = maxf(m.flash, 0.55)
+			m.shake = 1.0
+		_sfx("hit_metal" if (t.stats.armor >= 2 and ab.get("fx") != "gut") else "hit_flesh")
+		_show_casualties(v, h.aliveBefore - h.aliveAfter, from, {"reformDelay": 0.55})
+	elif ab.get("power") != null and damage == 0:
+		fx.text(head.x, head.y - 4, "Unhurt", "#c8c8c8", {"size": 18})
+	if heal > 0:
+		fx.text(head.x, head.y - 4, "+%s" % JS.num_str(h.heal), "#9ff08a", {"size": 24})
+	elif ab.get("heal") != null:
+		fx.text(head.x, head.y - 4, "Unhurt", "#d8ecc8", {"size": 16})
 
 
 # ---------------------------------------------------------------- update
@@ -1658,12 +2191,16 @@ func update(dt: float) -> void:
 	cam.update(dt)
 	fx.update(dt)
 	atmo.update(dt, _w, _h)
+	flash.a = maxf(0.0, flash.a - dt * 3.2)
 	for v: UnitView in views.values():
 		v.shake = maxf(0.0, v.shake - dt * 3)
+		v.engine_atk = maxf(0.0, v.engine_atk - dt)
 		SquadView.step_members(v.members, dt, func(m): _add_corpse(v, m))
 		v.walking = Iso.clamp(v.walking + (dt * 6 if v.marching else -dt * 4), 0, 1)
 		if v.walking > 0:
 			v.walk_t += dt
+		if v.statuses.size() > 0 and v.visible and v.alive > 0:
+			_status_motes(v, dt)
 	_focus_hold = maxf(0.0, _focus_hold - dt)
 	var rush := Iso.clamp(1 + _queue.size() / 45.0, 1, 1.9) if ui.side == "enemy" else 1.0
 	var adt := dt * rush
@@ -1726,6 +2263,25 @@ func update(dt: float) -> void:
 			select_next()
 
 
+## Lasting conditions show on the soldiers: frost glitter, the red haze of a frenzy, dripping blood.
+func _status_motes(v: UnitView, dt: float) -> void:
+	var live := SquadView.standing(v.members)
+	if live.is_empty():
+		return
+	for s in v.statuses:
+		if randf() > (4.0 if s == "bleeding" else 6.0) * dt:
+			continue
+		var m = live[randi() % live.size()]
+		var q := _member_pos(v, m)
+		var x := q.x + (randf() - 0.5) * 14
+		if s == "chilled":
+			fx.burst(x, q.y - 8 - randf() * 34, 0, 1, {"shape": "glow", "color": "#e6f6ff", "speed": 6, "vz": 0, "gravity": -6, "size": 2, "max": 1})
+		elif s == "bloodlust":
+			fx.burst(x, q.y - 16 - randf() * 26, 0, 1, {"shape": "glow", "color": "#ff3a20", "speed": 10, "vz": 0, "gravity": -34, "size": 2.6, "max": 0.75})
+		else:
+			fx.burst(x, q.y - 4, 14 + randf() * 10, 1, {"shape": "dot", "color": "#9a1a12", "speed": 4, "vz": 0, "gravity": 220, "size": 2.2, "max": 0.6})
+
+
 func _apply_camera() -> void:
 	if _world == null:
 		return
@@ -1738,7 +2294,7 @@ func _apply_camera() -> void:
 
 
 func _redraw() -> void:
-	for n in ["Background", "Under", "FxGround", "Sorted", "FxAir", "Overlays", "Minimap", "Texts"]:
+	for n in ["Background", "Under", "FxGround", "Sorted", "FxAir", "Flash", "Overlays", "Minimap", "Texts"]:
 		var l = _layers.get(n)
 		if l != null:
 			l.queue_redraw()
@@ -1839,7 +2395,34 @@ func resolve_pointer(sx: float, sy: float) -> Dictionary:
 
 
 static func _empty_hover() -> Dictionary:
-	return {"tile": null, "unit": null, "preview": null, "path": null, "zoc": null, "dest": null, "facing": null, "facings": null, "turn": null}
+	return {"tile": null, "unit": null, "preview": null, "spell": null, "path": null, "zoc": null, "dest": null, "facing": null, "facings": null, "turn": null}
+
+
+## The spell the cursor aims: the one chosen from the squad's panel, or, with
+## nothing chosen, a war machine's stone when the cursor is on an enemy.
+func _aimed_spell(sel, under = null) -> Variant:
+	if sel == null:
+		return null
+	var id = ui.ability
+	if id != null:
+		return id if DB.ABILITIES.get(id, {}).get("kind") == "spell" else null
+	var primary = DB.UNIT_TYPES.get(sel.typeId, {}).get("primary")
+	if primary != null and under != null and under.faction == "enemy" and b.can_cast(sel, primary).ok:
+		return primary
+	return null
+
+
+## Where a spell would be cast with the cursor on tile `t` (over unit `u`), if it can be aimed there at all.
+func _spell_aim(spell_id: String, t: Dictionary, u = null) -> Variant:
+	var ab: Dictionary = DB.ABILITIES[spell_id]
+	var target = ab.get("target")
+	if target == "tile":
+		return {"x": u.x, "y": u.y} if u != null else {"x": t.x, "y": t.y}
+	if target == "enemy" and u != null and u.faction == "enemy":
+		return {"x": u.x, "y": u.y}
+	if target == "ally" and u != null and u.faction == "player":
+		return {"x": u.x, "y": u.y}
+	return null
 
 
 func _refresh_hover() -> void:
@@ -1855,7 +2438,16 @@ func _refresh_hover() -> void:
 		var u = picked
 		if u != null:
 			hover.unit = u.uid
-		if sel != null and not busy() and b.phase == "player":
+		var spell_id = _aimed_spell(sel, u) if (sel != null and not busy() and b.phase == "player") else null
+		if sel != null and spell_id != null:
+			var at = _spell_aim(spell_id, t, u)
+			if at != null and not sel.hasActed:
+				hover.spell = b.spell_preview(sel, spell_id, at)
+			# A war machine's stone that cannot fly here (too close, just moved): its crew's own attack instead.
+			if ui.ability == null and u != null and hover.spell != null and not hover.spell.legal:
+				hover.spell = null
+				hover.preview = _preview_against(sel, u)
+		elif sel != null and not busy() and b.phase == "player":
 			if u != null and u.faction == "enemy":
 				hover.preview = _preview_against(sel, u)
 				var from = hover.preview.get("from") if (hover.preview != null and hover.preview.moveFirst) else null
@@ -2027,6 +2619,7 @@ func pointer_down(p: Vector2, button: int) -> void:
 			ui.ability = null
 		else:
 			ui.selected = null
+		_refresh_hover()
 		notify()
 		return
 	if button == 0 and b.map.get("scale") == "large":
@@ -2065,6 +2658,25 @@ func pointer_down(p: Vector2, button: int) -> void:
 	if b.phase != "player":
 		return
 	var sel = selected_unit()
+	var spell_id = _aimed_spell(sel, u)
+	if sel != null and spell_id != null:
+		var at = _spell_aim(spell_id, t, u)
+		if at != null and b.cast(sel.uid, spell_id, at):
+			ui.ability = null
+			pump()
+			_after_player_action(sel)
+			return
+		# A chosen spell that cannot be cast here stops the click; a machine's stone gives way to its crew's attack.
+		if at != null and ui.ability != null:
+			_sfx("deny")
+			return
+		if at == null and ui.ability != null:
+			# With a spell chosen, a click on another of the company's squads picks that squad instead.
+			if u != null and u.faction == "player":
+				select(u.uid)
+			else:
+				_sfx("deny")
+			return
 	if u != null and u.faction == "player":
 		if sel != null and u.uid == sel.uid and hv.get("turn") and hv.get("facing") != null:
 			# Step out and back to face the edge pointed at.
@@ -2142,6 +2754,7 @@ func key_action(action: String, pressed: bool) -> void:
 			redo()
 		"cancel":
 			ui.ability = null
+			_refresh_hover()
 			notify()
 		"toggle_grid":
 			ui.showGrid = not ui.showGrid
@@ -2153,7 +2766,7 @@ func key_action(action: String, pressed: bool) -> void:
 			var n := int(action.substr(8))
 			var u = selected_unit()
 			if u != null:
-				var list: Array = u.abilities.filter(func(a): return DB.ABILITIES[a].kind != "attack" or DB.ABILITIES[a].get("damageMult"))
+				var list: Array = u.abilities.filter(func(a): return DB.is_active_ability(a))
 				if n - 1 < list.size():
 					set_ability(list[n - 1])
 

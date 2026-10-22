@@ -8,7 +8,7 @@
 ##       white SVGs tinted with `tint`, or with the theme colour Icon/tint (ink on
 ##       parchment, light on dark panels) when no tint is given.
 ##   Icon.tex(name) -> Texture2D          the texture (missing.svg for unknown names)
-##   Icon.type_icon_name(type_id) -> String   shield / spear / crossbow / sword
+##   Icon.type_icon_name(type_id) -> String   engine / staff / shield / spear / crossbow / sword
 ##   Icon.type_icon(type_id, size := 16) -> TextureRect   port of TypeIcon (title = unit name)
 ##   Icon.NAMES                           every exported icon name
 extends TextureRect
@@ -18,7 +18,9 @@ const DB = preload("res://scripts/data/db.gd")
 const NAMES := ["silver", "timber", "iron", "trophies", "rations", "bandages", "bolts", "torches", "tools",
 	"hp", "morale", "fatigue", "xp", "cp", "slot", "weight", "skull", "injury", "sword", "shield", "spear",
 	"crossbow", "march", "eye", "bash", "spearwall", "thrust", "bolt", "horn", "charge", "rotl", "rotr",
-	"sound", "mute", "grid", "danger"]
+	"sound", "mute", "grid", "danger",
+	# Spells and war machines.
+	"lightning", "frost", "heal", "circle", "fire", "blood", "gut", "stone", "staff", "engine"]
 const TINTED := ["rotl", "rotr", "sound", "mute", "grid", "danger"]
 
 static var _cache: Dictionary = {}
@@ -72,6 +74,11 @@ func set_icon(name: String) -> void:
 
 
 static func type_icon_name(type_id: String) -> String:
+	var def: Dictionary = DB.UNIT_TYPES.get(type_id, {})
+	if def.has("crew"):
+		return "engine"
+	if (def.get("tags", []) as Array).has("caster"):
+		return "staff"
 	if type_id == "footman" or type_id == "collie_guard":
 		return "shield"
 	if type_id == "spearman":

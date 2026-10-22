@@ -8,8 +8,8 @@ import { Bar, Icon, MenPips, Portrait, RosterSquadBar, Tip, TypeIcon, squadTypeL
 import { useStore } from '../store';
 import { sfx } from '../../audio/sfx';
 
-/** Order squads are listed in: the line first, then spears, then missiles. */
-export const SQUAD_ORDER = ['collie_guard', 'footman', 'spearman', 'crossbowman'];
+/** Order squads are listed in: the line first, then spears, then missiles, mages and war machines. */
+export const SQUAD_ORDER = ['collie_guard', 'footman', 'spearman', 'crossbowman', 'battle_mage', 'ballista', 'mangonel'];
 export const squadOrder = (typeId: string) => {
   const i = SQUAD_ORDER.indexOf(typeId);
   return i < 0 ? SQUAD_ORDER.length : i;
@@ -102,6 +102,9 @@ export function SoldierDetail({ id }: { id: string }) {
   const one = canReinforce(g, so, 1);
   const all = canReinforce(g, so, missing);
   const times = (r: [number, number]) => `${r[0]}–${r[1]} × ${so.men} = ${r[0] * so.men}–${r[1] * so.men}`;
+  const caster = !!def.tags?.includes('caster');
+  const who = def.crew ? 'crewmen' : caster ? 'mages' : 'soldiers';
+  const lob = def.primary ? ABILITIES[def.primary] : undefined;
   const close = () => {
     if (name.trim() && name !== so.name) {
       so.name = name.trim().slice(0, 32);
@@ -153,19 +156,25 @@ export function SoldierDetail({ id }: { id: string }) {
         <div className="flourish" />
         <div className="statgrid">
           <div>Melee <b>{st.melee}</b></div>
-          <div>Ranged <b>{st.ranged || '–'}</b></div>
+          <div>{caster ? 'Spell skill' : def.crew ? 'Crew skill' : 'Ranged'} <b>{st.ranged || '–'}</b></div>
           <div>Defense <b>{st.defense}</b></div>
           <div>vs. missiles <b>{st.rangedDefense}</b></div>
           <div>Armour <b>{(st.armor * so.armorCondition).toFixed(1)}</b></div>
           <div>Move <b>{st.move}</b></div>
           {def.shieldFront ? <div>Shield <b>+{def.shieldFront}</b></div> : <div>Shield <b>–</b></div>}
-          <div>Soldiers <b>{so.men}/{size}</b></div>
-          <div style={{ gridColumn: 'span 2' }} title={`Each of the ${so.men} soldiers strikes for ${dmg.melee[0]}–${dmg.melee[1]} before armour.`}>
+          <div>{def.crew ? 'Crew' : caster ? 'Mages' : 'Soldiers'} <b>{so.men}/{size}</b></div>
+          <div style={{ gridColumn: 'span 2' }} title={`Each of the ${so.men} ${who} strikes for ${dmg.melee[0]}–${dmg.melee[1]} before armour.`}>
             Melee damage <b>{times(dmg.melee)}</b>
           </div>
-          <div style={{ gridColumn: 'span 2' }} title={dmg.shot ? `Each of the ${so.men} soldiers looses a bolt for ${dmg.shot[0]}–${dmg.shot[1]} before armour.` : 'No missile weapon.'}>
-            Shot damage <b>{dmg.shot ? times(dmg.shot) : '–'}</b>
-          </div>
+          {lob?.power ? (
+            <div style={{ gridColumn: 'span 2' }} title={`${lob.name}: ${lob.power[0]}–${lob.power[1]} per crewman at the engine, half to everyone beside the squad struck.`}>
+              Stone <b>{times(lob.power)}</b>
+            </div>
+          ) : (
+            <div style={{ gridColumn: 'span 2' }} title={dmg.shot ? `Each of the ${so.men} ${who} looses for ${dmg.shot[0]}–${dmg.shot[1]} before armour.` : 'No missile weapon.'}>
+              {caster ? 'Arcane bolt' : def.crew ? 'Bolt' : 'Shot damage'} <b>{dmg.shot ? times(dmg.shot) : '–'}</b>
+            </div>
+          )}
           <div>Fatigue <b>{fatigueLabel(so.fatigue)}</b></div>
           <div>Battles <b>{so.battles}</b></div>
           <div title="Enemy squads destroyed">Squads slain <b>{so.kills}</b></div>
@@ -173,9 +182,17 @@ export function SoldierDetail({ id }: { id: string }) {
         <div className="grid2" style={{ marginTop: 10 }}>
           <div className="card">
             <h4 style={{ fontSize: 14 }}>Equipment</h4>
-            <div className="small row" style={{ gap: 6 }}><Icon name="sword" size={15} /> {weapon?.name} <span className="muted">(tier {so.weaponTier})</span></div>
-            <div className="small row" style={{ gap: 6 }}><Icon name="shield" size={15} /> {armor?.name} <span className="muted">(tier {so.armorTier}, {Math.round(so.armorCondition * 100)}%)</span></div>
-            {def.shot && <div className="small row" style={{ gap: 6 }}><Icon name="bolts" size={15} /> {so.ammo} bolts in the quiver</div>}
+            {weapon ? (
+              <div className="small row" style={{ gap: 6 }}><Icon name="sword" size={15} /> {weapon.name} <span className="muted">(tier {so.weaponTier})</span></div>
+            ) : (
+              <div className="small row" style={{ gap: 6 }}><Icon name={def.crew ? 'engine' : caster ? 'staff' : 'sword'} size={15} /> {def.crew ? `The ${def.name.toLowerCase()} and its tackle` : caster ? 'Staves and spellbooks' : '–'} <span className="muted">(not forged at the armoury)</span></div>
+            )}
+            {armor ? (
+              <div className="small row" style={{ gap: 6 }}><Icon name="shield" size={15} /> {armor.name} <span className="muted">(tier {so.armorTier}, {Math.round(so.armorCondition * 100)}%)</span></div>
+            ) : (
+              <div className="small row" style={{ gap: 6 }}><Icon name="shield" size={15} /> {caster ? 'Robes, no armour' : 'Leather aprons'}</div>
+            )}
+            {def.shot?.ammo !== undefined && <div className="small row" style={{ gap: 6 }}><Icon name="bolts" size={15} /> {so.ammo} bolts in the quiver</div>}
           </div>
           <div className="card">
             <h4 style={{ fontSize: 14 }}>Abilities</h4>
@@ -190,6 +207,8 @@ export function SoldierDetail({ id }: { id: string }) {
               <div className="small muted">Promotion unlocks: {ABILITIES[def.promotion].name}</div>
             )}
             {def.tags?.includes('firstStrike') && <div className="small muted">Passive: strikes first at enemies that close in from the front.</div>}
+            {def.tags?.includes('impale') && <div className="small muted">Passive: a bolt that strikes home goes on into the next foe behind, at half force.</div>}
+            {def.crew && <div className="small muted">A war machine: it cannot loose in a turn it has moved.</div>}
           </div>
         </div>
         {so.injuries.length > 0 && (

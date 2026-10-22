@@ -158,6 +158,66 @@
    "res://assets/audio/smash_1.wav",
    "res://assets/audio/smash_2.wav",
    "res://assets/audio/smash_3.wav"
+  ],
+  "cast": [
+   "res://assets/audio/cast_0.wav",
+   "res://assets/audio/cast_1.wav",
+   "res://assets/audio/cast_2.wav",
+   "res://assets/audio/cast_3.wav"
+  ],
+  "lightning": [
+   "res://assets/audio/lightning_0.wav",
+   "res://assets/audio/lightning_1.wav",
+   "res://assets/audio/lightning_2.wav",
+   "res://assets/audio/lightning_3.wav"
+  ],
+  "frost": [
+   "res://assets/audio/frost_0.wav",
+   "res://assets/audio/frost_1.wav",
+   "res://assets/audio/frost_2.wav",
+   "res://assets/audio/frost_3.wav"
+  ],
+  "heal": [
+   "res://assets/audio/heal_0.wav"
+  ],
+  "fireball": [
+   "res://assets/audio/fireball_0.wav",
+   "res://assets/audio/fireball_1.wav",
+   "res://assets/audio/fireball_2.wav",
+   "res://assets/audio/fireball_3.wav"
+  ],
+  "explosion": [
+   "res://assets/audio/explosion_0.wav",
+   "res://assets/audio/explosion_1.wav",
+   "res://assets/audio/explosion_2.wav",
+   "res://assets/audio/explosion_3.wav"
+  ],
+  "bloodlust": [
+   "res://assets/audio/bloodlust_0.wav"
+  ],
+  "hex": [
+   "res://assets/audio/hex_0.wav",
+   "res://assets/audio/hex_1.wav",
+   "res://assets/audio/hex_2.wav",
+   "res://assets/audio/hex_3.wav"
+  ],
+  "catapult": [
+   "res://assets/audio/catapult_0.wav",
+   "res://assets/audio/catapult_1.wav",
+   "res://assets/audio/catapult_2.wav",
+   "res://assets/audio/catapult_3.wav"
+  ],
+  "crash": [
+   "res://assets/audio/crash_0.wav",
+   "res://assets/audio/crash_1.wav",
+   "res://assets/audio/crash_2.wav",
+   "res://assets/audio/crash_3.wav"
+  ],
+  "ballista": [
+   "res://assets/audio/ballista_0.wav",
+   "res://assets/audio/ballista_1.wav",
+   "res://assets/audio/ballista_2.wav",
+   "res://assets/audio/ballista_3.wav"
   ]
  }
 }

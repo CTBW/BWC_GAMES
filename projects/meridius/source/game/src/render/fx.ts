@@ -14,7 +14,8 @@ export interface Particle {
   color: string;
   gravity: number;
   drag: number;
-  shape: 'dot' | 'spark' | 'puff' | 'leaf';
+  /** `glow`: a soft additive light (sparks of magic, embers, frost glitter). */
+  shape: 'dot' | 'spark' | 'puff' | 'leaf' | 'glow';
 }
 
 export interface FloatText {
@@ -30,6 +31,8 @@ export interface FloatText {
   delay: number;
 }
 
+export type ProjectileKind = 'bolt' | 'arrow' | 'orb' | 'fireball' | 'stone' | 'shard';
+
 export interface Projectile {
   x0: number;
   y0: number;
@@ -38,20 +41,38 @@ export interface Projectile {
   t: number;
   dur: number;
   arc: number;
-  kind: 'bolt' | 'arrow';
+  kind: ProjectileKind;
   onHit?: () => void;
   stick?: boolean;
   /** Size of the missile (squad soldiers shoot smaller ones). */
   scale?: number;
+  /** Glow colour of magic missiles. */
+  color?: string;
+  /** Seconds since the last trail particle. */
+  trailT?: number;
 }
 
 export interface Mark {
   x: number;
   y: number;
   angle: number;
-  kind: 'bolt' | 'arrow';
+  /** Missiles stuck in the ground, or what a spell or a stone leaves on it. */
+  kind: 'bolt' | 'arrow' | 'scorch' | 'crater' | 'frost';
   life: number;
   scale: number;
+}
+
+/** A jagged bolt of lightning, or a writhing tendril of blood magic, between two points. */
+export interface Arc {
+  pts: { x: number; y: number }[];
+  branches: { x: number; y: number }[][];
+  life: number;
+  max: number;
+  color: string;
+  core: string;
+  width: number;
+  /** A tendril: drawn in its own dark colours (not as light), writhing along a smooth curve. */
+  tendril?: { x0: number; y0: number; x1: number; y1: number; amp: number; seed: number; dark: string };
 }
 
 export interface Ring {
@@ -63,12 +84,76 @@ export interface Ring {
   color: string;
 }
 
+/** A jagged line from a to b: midpoint displacement, `jag` world pixels at the coarsest level. */
+function jagged(x0: number, y0: number, x1: number, y1: number, jag: number, depth = 5): { x: number; y: number }[] {
+  let pts = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
+  let amp = jag;
+  for (let d = 0; d < depth; d++) {
+    const next: { x: number; y: number }[] = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const off = (Math.random() - 0.5) * amp;
+      next.push({ x: (a.x + b.x) / 2 - (dy / len) * off, y: (a.y + b.y) / 2 + (dx / len) * off }, b);
+    }
+    pts = next;
+    amp *= 0.55;
+  }
+  return pts;
+}
+
 export class Fx {
   particles: Particle[] = [];
   texts: FloatText[] = [];
   projectiles: Projectile[] = [];
   marks: Mark[] = [];
   rings: Ring[] = [];
+  arcs: Arc[] = [];
+
+  /**
+   * Lightning (or a tendril) from one point to another. It flickers: each
+   * frame of its short life redraws a fresh jagged path.
+   */
+  lightning(x0: number, y0: number, x1: number, y1: number, opts: { color?: string; core?: string; width?: number; life?: number; jag?: number; branches?: number } = {}) {
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    const jag = opts.jag ?? Math.min(60, len * 0.22);
+    const pts = jagged(x0, y0, x1, y1, jag);
+    const branches: { x: number; y: number }[][] = [];
+    for (let i = 0; i < (opts.branches ?? 2); i++) {
+      const p = pts[Math.floor(pts.length * (0.25 + Math.random() * 0.5))];
+      const ang = Math.atan2(y1 - y0, x1 - x0) + (Math.random() - 0.5) * 2.2;
+      const l = len * (0.12 + Math.random() * 0.18);
+      branches.push(jagged(p.x, p.y, p.x + Math.cos(ang) * l, p.y + Math.sin(ang) * l, jag * 0.5, 3));
+    }
+    const life = opts.life ?? 0.32;
+    this.arcs.push({ pts, branches, life, max: life, color: opts.color ?? 'rgba(120,170,255,1)', core: opts.core ?? '#f4f8ff', width: opts.width ?? 3 });
+  }
+
+  /**
+   * A tendril of blood magic reaching from one point to another: a smooth,
+   * writhing curve in dark flesh and blood colours with a bright vein.
+   */
+  tendril(x0: number, y0: number, x1: number, y1: number, opts: { color: string; core: string; dark: string; width?: number; life?: number; amp?: number }) {
+    const life = opts.life ?? 0.5;
+    this.arcs.push({
+      pts: [],
+      branches: [],
+      life,
+      max: life,
+      color: opts.color,
+      core: opts.core,
+      width: opts.width ?? 3,
+      tendril: { x0, y0, x1, y1, amp: opts.amp ?? 14, seed: Math.random() * 10, dark: opts.dark },
+    });
+  }
+
+  /** A mark left on the ground by a spell or a stone (scorch, crater, frost). */
+  mark(x: number, y: number, kind: Mark['kind'], scale = 1, life = 30) {
+    this.marks.push({ x, y, angle: 0, kind, life, scale });
+  }
 
   burst(x: number, y: number, z: number, n: number, opts: Partial<Particle> & { speed?: number; spread?: number; colors?: string[] }) {
     for (let i = 0; i < n; i++) {
@@ -152,15 +237,44 @@ export class Fx {
     this.texts = this.texts.filter((t) => t.life > 0);
     for (const p of this.projectiles) {
       p.t += dt;
+      // Magic and fire leave a trail of light behind them.
+      if (p.kind === 'orb' || p.kind === 'fireball' || p.kind === 'shard') {
+        p.trailT = (p.trailT ?? 0) + dt;
+        const every = p.kind === 'fireball' ? 0.012 : 0.022;
+        while (p.trailT > every) {
+          p.trailT -= every;
+          const f = Math.min(1, p.t / p.dur);
+          const x = p.x0 + (p.x1 - p.x0) * f;
+          const y = p.y0 + (p.y1 - p.y0) * f - Math.sin(f * Math.PI) * p.arc;
+          const fire = p.kind === 'fireball';
+          this.particles.push({
+            x: x + (Math.random() - 0.5) * 4,
+            y: y + (Math.random() - 0.5) * 4,
+            z: 0,
+            vx: (Math.random() - 0.5) * 20,
+            vy: (Math.random() - 0.5) * 20 - (fire ? 10 : 0),
+            vz: 0,
+            life: fire ? 0.45 : 0.3,
+            max: fire ? 0.45 : 0.3,
+            size: (fire ? 7 : 4) * (p.scale ?? 1) * (0.7 + Math.random() * 0.6),
+            color: fire ? (Math.random() < 0.5 ? '#ffb030' : '#ff6a20') : (p.color ?? '#9fd8ff'),
+            gravity: 0,
+            drag: 2,
+            shape: 'glow',
+          });
+        }
+      }
       if (p.t >= p.dur) {
         p.onHit?.();
-        if (p.stick) {
+        if (p.stick && (p.kind === 'bolt' || p.kind === 'arrow')) {
           const ang = Math.atan2(p.y1 - p.y0, p.x1 - p.x0);
           this.marks.push({ x: p.x1, y: p.y1, angle: ang, kind: p.kind, life: 40, scale: p.scale ?? 1 });
         }
       }
     }
     this.projectiles = this.projectiles.filter((p) => p.t < p.dur);
+    for (const a of this.arcs) a.life -= dt;
+    this.arcs = this.arcs.filter((a) => a.life > 0);
     for (const r of this.rings) {
       r.life -= dt;
       r.r += (r.max - r.r) * Math.min(1, dt * 6);
@@ -173,6 +287,41 @@ export class Fx {
 
   drawGround(ctx: CanvasRenderingContext2D) {
     for (const m of this.marks) {
+      if (m.kind === 'scorch' || m.kind === 'crater' || m.kind === 'frost') {
+        // Flat on the ground: a burnt patch, a stone's crater, a skin of frost.
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, m.life / 4);
+        ctx.translate(m.x, m.y);
+        ctx.scale(m.scale, m.scale * 0.5);
+        if (m.kind === 'frost') {
+          const g = ctx.createRadialGradient(0, 0, 4, 0, 0, 46);
+          g.addColorStop(0, 'rgba(235,248,255,0.75)');
+          g.addColorStop(0.6, 'rgba(170,215,245,0.45)');
+          g.addColorStop(1, 'rgba(170,215,245,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(0, 0, 46, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          const g = ctx.createRadialGradient(0, 0, 3, 0, 0, 40);
+          g.addColorStop(0, m.kind === 'scorch' ? 'rgba(25,15,8,0.8)' : 'rgba(40,30,20,0.75)');
+          g.addColorStop(0.7, m.kind === 'scorch' ? 'rgba(45,28,14,0.45)' : 'rgba(80,62,40,0.4)');
+          g.addColorStop(1, 'rgba(45,28,14,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(0, 0, 40, 0, Math.PI * 2);
+          ctx.fill();
+          if (m.kind === 'crater') {
+            ctx.strokeStyle = 'rgba(150,125,90,0.55)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, 22, Math.PI * 0.9, Math.PI * 2.1);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+        continue;
+      }
       ctx.save();
       ctx.globalAlpha = Math.min(1, m.life / 3);
       ctx.translate(m.x, m.y);
@@ -201,11 +350,17 @@ export class Fx {
   }
 
   drawAir(ctx: CanvasRenderingContext2D) {
+    let glowing = false;
     for (const p of this.particles) {
       const a = Math.max(0, p.life / p.max);
+      const y = p.y - p.z;
+      if (p.shape === 'glow') {
+        // Additive soft light: drawn in its own pass below.
+        glowing = true;
+        continue;
+      }
       ctx.globalAlpha = a;
       ctx.fillStyle = p.color;
-      const y = p.y - p.z;
       if (p.shape === 'puff') {
         const s = p.size * (1.6 - a * 0.6);
         ctx.globalAlpha = a * 0.45;
@@ -230,6 +385,25 @@ export class Fx {
       }
     }
     ctx.globalAlpha = 1;
+    if (glowing) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of this.particles) {
+        if (p.shape !== 'glow') continue;
+        const a = Math.max(0, p.life / p.max);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = a * 0.35;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - p.z, p.size * 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = a * 0.8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - p.z, p.size * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    for (const arc of this.arcs) this.drawArc(ctx, arc);
     for (const p of this.projectiles) {
       const f = Math.min(1, p.t / p.dur);
       const x = p.x0 + (p.x1 - p.x0) * f;
@@ -239,6 +413,10 @@ export class Fx {
       const x2 = p.x0 + (p.x1 - p.x0) * f2;
       const y2 = p.y0 + (p.y1 - p.y0) * f2 - Math.sin(f2 * Math.PI) * p.arc;
       const ang = Math.atan2(y2 - y, x2 - x);
+      if (p.kind !== 'bolt' && p.kind !== 'arrow') {
+        this.drawMissile(ctx, p, x, y, ang, f);
+        continue;
+      }
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(ang);
@@ -266,6 +444,166 @@ export class Fx {
       ctx.fillRect(-18, -3, 5, 6);
       ctx.restore();
     }
+  }
+
+  /** Magic missiles, fireballs, ice shards and catapult stones in flight. */
+  private drawMissile(ctx: CanvasRenderingContext2D, p: Projectile, x: number, y: number, ang: number, f: number) {
+    const s = p.scale ?? 1;
+    ctx.save();
+    ctx.translate(x, y);
+    if (p.kind === 'stone') {
+      // A tumbling stone, its shadow racing along the ground below it.
+      ctx.save();
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = '#141008';
+      const gy = p.y0 + (p.y1 - p.y0) * f - y;
+      ctx.beginPath();
+      ctx.ellipse(0, gy, 9 * s, 4 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.rotate(p.t * 9);
+      ctx.scale(s, s);
+      ctx.beginPath();
+      const r = 9;
+      for (let i = 0; i < 7; i++) {
+        const a = (i / 7) * Math.PI * 2;
+        const k = r * (0.78 + ((i * 37) % 10) / 30);
+        if (i) ctx.lineTo(Math.cos(a) * k, Math.sin(a) * k);
+        else ctx.moveTo(Math.cos(a) * k, Math.sin(a) * k);
+      }
+      ctx.closePath();
+      ctx.fillStyle = p.color ?? '#8a8378';
+      ctx.fill();
+      ctx.strokeStyle = '#2a1d14';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,245,220,0.35)';
+      ctx.beginPath();
+      ctx.arc(-3, -3, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      return;
+    }
+    ctx.globalCompositeOperation = 'lighter';
+    if (p.kind === 'shard') {
+      ctx.rotate(ang);
+      ctx.scale(s, s);
+      ctx.fillStyle = 'rgba(160,215,255,0.5)';
+      ctx.beginPath();
+      ctx.ellipse(-4, 0, 16, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#e8f6ff';
+      ctx.strokeStyle = '#5a8ab8';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(12, 0);
+      ctx.lineTo(0, -4);
+      ctx.lineTo(-10, 0);
+      ctx.lineTo(0, 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+      return;
+    }
+    const fire = p.kind === 'fireball';
+    const r = (fire ? 11 : 6) * s;
+    const col = fire ? '#ff7a1c' : (p.color ?? '#9fd8ff');
+    const flick = 1 + Math.sin(p.t * 40) * 0.08;
+    ctx.fillStyle = col;
+    ctx.globalAlpha = 0.28;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 2.4 * flick, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 1.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = fire ? '#ffe9a0' : '#ffffff';
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.65, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /** A flickering bolt: a wide soft glow under a bright core, redrawn jagged every few frames. */
+  private drawArc(ctx: CanvasRenderingContext2D, a: Arc) {
+    const k = Math.max(0, a.life / a.max);
+    if (a.tendril) {
+      this.drawTendril(ctx, a, k);
+      return;
+    }
+    // Re-jag now and then so the bolt crackles instead of hanging still.
+    if (Math.random() < 0.35 && a.pts.length > 2) {
+      const first = a.pts[0];
+      const last = a.pts[a.pts.length - 1];
+      const len = Math.hypot(last.x - first.x, last.y - first.y);
+      a.pts = jagged(first.x, first.y, last.x, last.y, Math.min(60, len * 0.22));
+    }
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const line = (pts: { x: number; y: number }[]) => {
+      ctx.beginPath();
+      pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+      ctx.stroke();
+    };
+    for (const [w, alpha, col] of [[a.width * 5, 0.18, a.color], [a.width * 2.2, 0.45, a.color], [a.width, 1, a.core]] as const) {
+      ctx.globalAlpha = alpha * k;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = w;
+      line(a.pts);
+      ctx.lineWidth = w * 0.55;
+      for (const b of a.branches) line(b);
+    }
+    ctx.restore();
+  }
+
+  /** A tendril lashes out (grows from the caster in its first fifth), writhes, then withers. */
+  private drawTendril(ctx: CanvasRenderingContext2D, a: Arc, k: number) {
+    const t = a.tendril!;
+    const age = a.max - a.life;
+    const reach = Math.min(1, age / (a.max * 0.22));
+    const dx = t.x1 - t.x0;
+    const dy = t.y1 - t.y0;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len;
+    const ny = dx / len;
+    const pts: { x: number; y: number }[] = [];
+    const n = 22;
+    for (let i = 0; i <= n; i++) {
+      const f = (i / n) * reach;
+      // Two waves travelling along the tendril, pinned at both ends.
+      const w = Math.sin(f * Math.PI * 3 - age * 14 + t.seed) * 0.7 + Math.sin(f * Math.PI * 5 + age * 9 + t.seed * 2) * 0.3;
+      const off = w * t.amp * Math.sin(f * Math.PI);
+      pts.push({ x: t.x0 + dx * f + nx * off, y: t.y0 + dy * f + ny * off });
+    }
+    const line = () => {
+      ctx.beginPath();
+      pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
+      ctx.stroke();
+    };
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const fade = Math.min(1, k * 2.5);
+    // A faint glow of its own colour around it, then the dark sinew, the flesh and a bright vein.
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = 0.22 * fade;
+    ctx.strokeStyle = a.color;
+    ctx.lineWidth = a.width * 4.5;
+    line();
+    ctx.globalCompositeOperation = 'source-over';
+    for (const [w, col, alpha] of [[a.width * 2.3, t.dark, 0.95], [a.width * 1.5, a.color, 1], [a.width * 0.45, a.core, 0.9]] as const) {
+      ctx.globalAlpha = alpha * fade;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = w;
+      line();
+    }
+    ctx.restore();
   }
 
   drawTexts(ctx: CanvasRenderingContext2D, zoom: number) {

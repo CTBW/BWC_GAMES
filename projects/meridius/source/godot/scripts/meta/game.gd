@@ -20,6 +20,9 @@ const SAVE_VERSION := 1
 ## Chance that a recruit squad is the elite Border Collie Royal Guard (Barracks level 2+).
 const ELITE_RECRUIT_CHANCE := 0.22
 
+## Squads that answer the muster one at a time: a circle of battle mages or a war machine and its crew.
+const SPECIALIST_TYPES := ["battle_mage", "battle_mage", "ballista", "mangonel"]
+
 
 ## Runs fn(rng) with the game's RNG and stores its state back. Returns fn's result.
 static func use_rng(g: Dictionary, fn: Callable) -> Variant:
@@ -282,6 +285,9 @@ static func roll_recruits(g: Dictionary) -> void:
 			if rng.chance(vet):
 				lvl = 3 if rng.chance(vet * 0.4) else 2
 			out.append(Soldier.new_soldier(rng, t, lvl, next_id(g), g.cycle))
+		# One specialist squad is on offer each cycle as well.
+		var spec: String = rng.pick(SPECIALIST_TYPES)
+		out.append(Soldier.new_soldier(rng, spec, 2 if rng.chance(vet) else 1, next_id(g), g.cycle))
 		# A thin company draws volunteers from the steadings: one joins for free.
 		if g.roster.size() < 6:
 			var v := Soldier.new_soldier(rng, "spearman", 1, next_id(g), g.cycle)

@@ -12,12 +12,16 @@ extends RefCounted
 const JS = preload("res://scripts/core/js.gd")
 const DB = preload("res://scripts/data/db.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
+const Squad = preload("res://scripts/rules/squad.gd")
 
 const PLAYER_PROFILES := {
 	"footman": {"aggression": 0.55, "caution": 0.45, "swarm": 0.5},
 	"spearman": {"aggression": 0.45, "caution": 0.5, "swarm": 0.5},
 	"crossbowman": {"aggression": 0.2, "caution": 0.8, "preferRange": 5, "swarm": 0.2},
 	"collie_guard": {"aggression": 0.6, "caution": 0.4, "swarm": 0.5},
+	"battle_mage": {"aggression": 0.2, "caution": 0.95, "preferRange": 5, "swarm": 0.25, "role": "caster"},
+	"ballista": {"aggression": 0.1, "caution": 0.85, "preferRange": 6, "swarm": 0.2, "role": "artillery"},
+	"mangonel": {"aggression": 0.1, "caution": 0.85, "preferRange": 6, "swarm": 0.2, "role": "artillery"},
 }
 
 const DEFAULT_PROFILE := {"aggression": 0.5, "caution": 0.5}
@@ -25,7 +29,21 @@ const DEFAULT_PROFILE := {"aggression": 0.5, "caution": 0.5}
 ## Who acts first in the horde: archers loose, the heavy orcs crash into the
 ## front, riders slip round it, the swarm floods the gaps they opened, and the
 ## leaders and the horn-bearer come last.
-const ROLE_ORDER := {"missile": 0, "shock": 1, "line": 2, "flanker": 3, "swarm": 4, "leader": 5, "herald": 6}
+const ROLE_ORDER := {"missile": 0, "caster": 0, "artillery": 0, "shock": 1, "line": 2, "flanker": 3, "swarm": 4, "leader": 5, "herald": 6}
+
+
+## What a squad can hurl at range, per soldier: its missiles, or a war
+## machine's stones. `{avg, range, min}` or null.
+static func _missile_of(f: Dictionary) -> Variant:
+	var shot: Variant = f.get("shot")
+	if shot != null and f.ammo != 0:
+		return {"avg": (shot.damage[0] + shot.damage[1]) / 2.0, "range": shot.range, "min": shot.minRange}
+	var def: Variant = DB.UNIT_TYPES.get(f.typeId)
+	var primary: Variant = def.get("primary") if def != null else null
+	var ab: Variant = DB.ABILITIES.get(primary) if primary != null else null
+	if ab != null and ab.has("power"):
+		return {"avg": (ab.power[0] + ab.power[1]) / 2.0, "range": JS.get_or(ab, "range", 1), "min": JS.get_or(ab, "minRange", 1)}
+	return null
 
 
 static func profile_of(u: Dictionary) -> Dictionary:
@@ -44,17 +62,17 @@ static func _danger_map(b, from: String) -> Dictionary:
 	var foes: Array = b.active(from)
 	var fdata: Array = []
 	for f in foes:
-		var shot: Variant = f.get("shot")
+		var miss: Variant = _missile_of(f)
 		fdata.append([
 			f.x, f.y,
 			# Weapon damage is per soldier; a depleted squad threatens less.
 			float(f.alive) / f.size,
-			f.stats.move + 1,
+			Squad.move_of(f) + 1,
 			(f.melee[0] + f.melee[1]) / 2.0,
-			shot != null and f.ammo != 0,
-			shot.minRange if shot != null else 0,
-			shot.range if shot != null else 0,
-			(shot.damage[0] + shot.damage[1]) / 2.0 if shot != null else 0.0,
+			miss != null,
+			miss.min if miss != null else 0,
+			miss.range if miss != null else 0,
+			miss.avg if miss != null else 0.0,
 		])
 	for t in b.map.tiles:
 		var tx: int = t.x
@@ -294,11 +312,11 @@ static func exposure(at: Dictionary, dir: int, foes: Array) -> float:
 		var strength: float = float(e.alive) / e.size
 		var m := Grid.manhattan(e, at)
 		var threat := 0.0
-		if m <= e.stats.move + 1:
+		if m <= Squad.move_of(e) + 1:
 			threat = ((e.melee[0] + e.melee[1]) / 2.0) * strength * (1.5 if m <= 1 else 1.0)
-		var shot: Variant = e.get("shot")
-		if shot != null and e.ammo != 0 and Grid.dist(e, at) <= shot.range:
-			threat = maxf(threat, ((shot.damage[0] + shot.damage[1]) / 2.0) * strength * 0.5)
+		var miss: Variant = _missile_of(e)
+		if miss != null and Grid.dist(e, at) <= miss.range:
+			threat = maxf(threat, miss.avg * strength * 0.5)
 		if not threat:
 			continue
 		var dx: float = float(e.x) - float(at.x)
@@ -337,6 +355,98 @@ static func choose_facing(b, u: Dictionary, tile: Dictionary, states: Variant = 
 			best_facing = o.facing
 			best_s = s
 	return best_facing
+
+
+## Worth of a spell in the terms attacks are weighed in (squad damage in one
+## caster's share). Harm to foes counts, harm to friends counts against it half
+## again; healing counts where wounds are open; a chill or a frenzy counts by
+## the blows it will change.
+static func _spell_value(b, u: Dictionary, ab: Dictionary, pv: Dictionary) -> float:
+	var p: float = pv.chance / 100.0
+	var s := 0.0
+	for h in pv.hits:
+		var t: Dictionary = b.unit(h.uid)
+		var avg: float = (h.min + h.max) / 2.0 / u.size
+		if h.heal:
+			# Wounds that would cost soldiers soon are worth closing first.
+			var low: float = 1.3 if float(t.hp) / maxi(1, t.alive * t.hpPer) < 0.6 else 1.0
+			s += avg * 0.75 * low * (1.3 if b.is_adjacent_enemy(t) else 1.0)
+			continue
+		if ab.has("power"):
+			var reach: float = 0.5 + p * 0.5 if h.role == "splash" and pv.scatter else p
+			if h.ally:
+				s -= reach * avg * 1.6 + h.kill * 30
+			else:
+				s += reach * avg * _target_weight(b, u, t) + h.kill * 22
+			if not h.ally and ab.get("bleed"):
+				s += p * avg * ab.bleed * 2
+			if not h.ally and ab.has("status") and ab.status.id == "chilled":
+				s += p * 3 * (float(t.alive) / t.size) * (1.5 if Grid.manhattan(t, u) <= Squad.move_of(t) + 2 else 1.0)
+			continue
+		if ab.has("status") and ab.status.id == "bloodlust" and h.ally and t.get("shot") == null and not Squad.has_status(t, "bloodlust"):
+			# A frenzy is worth the extra blows of a squad about to fight.
+			var near := false
+			for f in b.enemies_of(t):
+				if Grid.manhattan(f, t) <= Squad.move_of(t) + 1:
+					near = true
+					break
+			if not near:
+				continue
+			var blows: float = t.alive * (3 + ((t.melee[0] + t.melee[1]) / 2.0) * 0.1)
+			s += (blows / u.size) * (0.7 if t.hasActed else 1.4) - 1.5
+	return s + p * pv.moraleHit * 0.35
+
+
+## Tiles worth aiming a spell of this kind at: squads to strike or bless, and for blasts the ground beside foes.
+static func _spell_aims(b, u: Dictionary, ab: Dictionary, from: Dictionary) -> Array:
+	var rng_v: float = JS.get_or(ab, "range", 1) + 0.01
+	if ab.target == "self":
+		return [{"x": from.x, "y": from.y}]
+	if ab.target == "ally":
+		var allies: Array = []
+		for a in b.active(u.faction):
+			if Grid.dist(a, from) <= rng_v:
+				allies.append(a)
+		return allies
+	var foes: Array = []
+	for f in b.living():
+		if f.faction != u.faction and Grid.dist(f, from) <= rng_v + 1:
+			foes.append(f)
+	if ab.target == "enemy":
+		var out_e: Array = []
+		for f in foes:
+			if Grid.dist(f, from) <= rng_v:
+				out_e.append(f)
+		return out_e
+	var out := {}
+	for f in foes:
+		out[Grid.key(f.x, f.y)] = {"x": f.x, "y": f.y}
+		if ab.get("splash"):
+			for n in Grid.neighbors(b.map, f):
+				if Grid.dist(n, from) <= rng_v:
+					out[Grid.key(n.x, n.y)] = n
+	var aims: Array = []
+	for q in out.values():
+		if Grid.dist(q, from) <= rng_v:
+			aims.append(q)
+	return aims
+
+
+## The best spell to cast from `from`, if any is worth casting: `{id, at, s, pv}` or null.
+static func _best_spell(b, u: Dictionary, spells: Array, from: Dictionary, moved: int) -> Variant:
+	var best: Variant = null
+	for id in spells:
+		var ab: Dictionary = DB.ABILITIES[id]
+		if ab.get("engine") and moved > 0:
+			continue
+		for at in _spell_aims(b, u, ab, from):
+			var pv: Dictionary = b.spell_preview(u, id, at, {"from": from, "movedTiles": moved})
+			if not pv.legal or pv.hits.is_empty():
+				continue
+			var s := _spell_value(b, u, ab, pv)
+			if best == null or s > best.s:
+				best = {"id": id, "at": {"x": at.x, "y": at.y}, "s": s, "pv": pv}
+	return best
 
 
 static func _nearest_foe(foes: Array, p: Dictionary) -> float:
@@ -427,6 +537,14 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 			var def: Variant = DB.ABILITIES.get(ab)
 			if def != null and def.kind == "attack" and def.get("damageMult") and JS.get_or(u.cooldowns, ab, 0) == 0:
 				attack_options.append(ab)
+	# Spells ready to cast (a war machine's stone is its plain attack and needs no nerve).
+	var spells: Array = []
+	if not u.hasActed:
+		for id in u.abilities:
+			var def: Variant = DB.ABILITIES.get(id)
+			if def != null and def.kind == "spell" and b.can_cast(u, id).ok:
+				spells.append(id)
+	var ranged: bool = Squad.is_backline(u)
 
 	# Nothing below changes the battle until the plan is chosen, so the
 	# squad's allies and the target weights are looked up once.
@@ -456,13 +574,20 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 		# The horn-bearer keeps well out of reach.
 		if role == "herald":
 			pos_score -= maxf(0.0, 6 - _nearest_foe(foes, tile)) * 4
-		if u_shot != null:
+		if ranged:
 			var nf := _nearest_foe(foes, tile)
 			if nf <= 1.01:
 				pos_score -= 12
 			if prefer_range:
 				pos_score -= absf(nf - prefer_range) * 1.2
 			pos_score += _cover_at(b, tile, foes[0] if foes.size() > 0 else null) * 0.15
+
+		if not spells.is_empty():
+			var sp: Variant = _best_spell(b, u, spells, tile, moved)
+			if sp != null:
+				var sscore: float = sp.s * (0.6 + aggression) + pos_score
+				if (sscore if timid else sp.s) >= min_attack and (best == null or sscore > best.score):
+					best = {"score": sscore, "tile": tile, "spell": {"id": sp.id, "at": sp.at}}
 
 		if not u.hasActed and role != "herald":
 			for t in all_foes:
@@ -531,12 +656,17 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 				- _outside(hold, zone_keys, guards, k))
 			if role == "herald":
 				s -= maxf(0.0, 6 - _nearest_foe(foes, tile)) * 4
-			if u_shot != null and prefer_range:
+			# A war machine that moves cannot loose this turn or be laid well: it shifts only when it must.
+			if u.tags.has("engine") and role != "shock" and k != Grid.key(u.x, u.y):
+				s -= 4
+			if ranged and prefer_range:
 				var nf := _nearest_foe(foes, tile)
 				s -= absf(nf - prefer_range) * 2
+				var reach_of = u_shot.range if u_shot != null else (_missile_of(u).range if _missile_of(u) != null else 5)
+				var lobs: bool = u.tags.has("artillery")
 				var seen := false
 				for f in foes:
-					if not Grid.line_of_sight(b.map, tile, f).blocked and Grid.dist(tile, f) <= u_shot.range:
+					if (lobs or not Grid.line_of_sight(b.map, tile, f).blocked) and Grid.dist(tile, f) <= reach_of:
 						seen = true
 						break
 				if seen:
@@ -555,6 +685,21 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 			b.move(u.uid, best.tile.x, best.tile.y, facing, states)
 	if u.status != "active" or b.is_over():
 		return
+
+	var spell: Variant = best.get("spell")
+	if spell != null and not u.hasActed:
+		# Cast as planned; if the target moved or fell on the way, choose again from here.
+		if not b.cast(u.uid, spell.id, spell.at):
+			var again: Array = []
+			for id in u.abilities:
+				var def: Variant = DB.ABILITIES.get(id)
+				if def != null and def.kind == "spell" and b.can_cast(u, id).ok:
+					again.append(id)
+			var sp: Variant = _best_spell(b, u, again, u, u.movedTiles)
+			if sp != null and sp.s >= min_attack:
+				b.cast(u.uid, sp.id, sp.at)
+		if u.status != "active" or b.is_over():
+			return
 
 	var best_target: Variant = best.get("target")
 	if best_target != null and not u.hasActed:
@@ -661,7 +806,7 @@ static func run_player_auto(b) -> void:
 			for p in zone:
 				hold[Grid.key(p.x, p.y)] = true
 	var order: Array = b.active("player")
-	JS.sort(order, func(a, c): return (0 if a.get("shot") != null else 1) - (0 if c.get("shot") != null else 1))
+	JS.sort(order, func(a, c): return (0 if Squad.is_backline(a) else 1) - (0 if Squad.is_backline(c) else 1))
 	for u in order:
 		if b.is_over():
 			return

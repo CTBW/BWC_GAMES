@@ -1,3 +1,7 @@
+// ARCHIVED (21 Oct 2026): do not re-run. The original is archived and the Godot
+// rules have since changed on purpose; the traces are re-recorded by the port
+// (MERIDIUS_RECORD=1 tools/test.sh test_battle_parity, see README.md).
+//
 // Golden battle traces from the original rules for tests/parity/test_battle_parity.gd.
 //   cd projects/meridius/source/game && npx vite-node ../godot/tools/parity/battle_traces.ts
 //
@@ -19,7 +23,7 @@ import type { Dir } from '../../../game/src/core/types';
 import { ABILITIES } from '../../../game/src/data/abilities';
 import { ENCOUNTERS } from '../../../game/src/data/encounters';
 import { Battle } from '../../../game/src/battle/battle';
-import { chooseFacing, exposure, runEnemyAi, runPlayerAuto } from '../../../game/src/battle/ai';
+import { actUnit, chooseFacing, exposure, runEnemyAi, runPlayerAuto } from '../../../game/src/battle/ai';
 import { buildBattle, rollEncounter } from '../../../game/src/battle/setup';
 import { lineOfSight, manhattan } from '../../../game/src/battle/grid';
 import type { BattleSetup, BattleUnit, Pt } from '../../../game/src/battle/types';
@@ -104,8 +108,23 @@ function weakCompany(seed: number): BattleUnit[] {
   return roster.map((s) => soldierToUnit(s));
 }
 
-type Company = 'fresh' | 'veteran' | 'elite' | 'weak';
-const COMPANIES: Record<Company, (seed: number) => BattleUnit[]> = { fresh: freshCompany, veteran: veteranCompany, elite: eliteCompany, weak: weakCompany };
+/**
+ * A company with the specialists: two circles of battle mages (one promoted,
+ * with the Mending Circle), a ballista and a mangonel beside four line squads.
+ */
+function magicCompany(seed: number): BattleUnit[] {
+  const g = newGame(seed);
+  const rng = new Rng(seed * 23 + 5);
+  let n = 300;
+  const roster: Soldier[] = g.roster.slice(0, 4);
+  const mage = newSoldier(rng, 'battle_mage', 3, () => `m${n++}`, 1);
+  mage.promoted = true;
+  roster.push(mage, newSoldier(rng, 'battle_mage', 1, () => `m${n++}`, 1), newSoldier(rng, 'ballista', 2, () => `m${n++}`, 1), newSoldier(rng, 'mangonel', 1, () => `m${n++}`, 1));
+  return roster.map((s) => soldierToUnit(s));
+}
+
+type Company = 'fresh' | 'veteran' | 'elite' | 'weak' | 'magic';
+const COMPANIES: Record<Company, (seed: number) => BattleUnit[]> = { fresh: freshCompany, veteran: veteranCompany, elite: eliteCompany, weak: weakCompany, magic: magicCompany };
 
 function makeSetup(encounterId: string, seed: number, o: { depth?: number; company?: Company; darkness?: boolean; mapId?: string; survivalBonus?: number } = {}): BattleSetup {
   const roll = rollEncounter(encounterId, new Rng(seed), o.depth ?? 2);
@@ -130,7 +149,7 @@ function snapshot(b: Battle) {
     moveRecords: [...b.moveRecords.entries()].map(([k, r]) => [k, r.x, r.y, r.facing, r.movedTiles, r.clean, r.path]),
     units: b.units.map((u) => [
       u.uid, u.x, u.y, u.facing, u.hp, u.alive, u.morale, u.status, u.stance ?? null, u.hasMoved, u.hasActed, u.done,
-      u.movedTiles, u.kills, u.damageDealt, u.xp, u.ammo, u.cooldowns, u.struck,
+      u.movedTiles, u.kills, u.damageDealt, u.xp, u.ammo, u.cooldowns, u.struck, u.statuses ?? [],
     ]),
   });
 }
@@ -451,6 +470,83 @@ function warchiefTrace(seed: number) {
   return { name: `scripted/last_stand-warchief-s${seed}`, kind: 'script', setup: json, steps, result: b.result ?? null };
 }
 
+/**
+ * Spells and war machines through the API the AI uses and the one it does not:
+ * every caster's and machine's spell queries (canCast, spellTargets,
+ * spellPreview at squads and tiles around them, from another tile after
+ * moving, impaleTarget), then casts at random legal targets and refused
+ * second casts; other squads act through actUnit; the enemy turn is the AI.
+ */
+function spellTrace(name: string, setup: BattleSetup, seed: number, turns: number) {
+  const json = clone(setup);
+  const b = new Battle(clone(json));
+  const r = new Rng(seed);
+  const steps: Step[] = [];
+  const act = (op: string, args: unknown[], ret: unknown) => steps.push({ op, args: clone(args), ret: clone(ret), events: clone(b.drain()), state: snapshot(b) });
+  const q = (op: string, args: unknown[], ret: unknown) => steps.push({ op, args: clone(args), ret: clone(ret) });
+  const spellsOf = (u: BattleUnit) => u.abilities.filter((a) => ABILITIES[a]?.kind === 'spell');
+  b.begin(runEnemyAi);
+  act('begin', [], null);
+  const probe = () => {
+    for (const u of b.active()) {
+      for (const id of spellsOf(u)) {
+        q('canCast', [u.uid, id], b.canCast(u, id));
+        q('spellTargets', [u.uid, id, null], b.spellTargets(u, id).map((t) => t.uid));
+        const ab = ABILITIES[id];
+        const range = ab.range ?? 0;
+        for (const t of b.living()) {
+          if (Math.hypot(t.x - u.x, t.y - u.y) > range + 2) continue;
+          q('spellPreview', [u.uid, id, t.x, t.y, {}], b.spellPreview(u, id, t));
+          if (ab.splash && r.chance(0.5)) {
+            const p = { x: t.x + r.int(-1, 1), y: t.y + r.int(-1, 1) };
+            if (p.x >= 0 && p.y >= 0 && p.x < b.map.w && p.y < b.map.h) q('spellPreview', [u.uid, id, p.x, p.y, {}], b.spellPreview(u, id, p));
+          }
+        }
+        const keys = [...b.reachable(u).keys()];
+        const living = b.living();
+        if (keys.length && living.length) {
+          const p = unkey(r.pick(keys));
+          const t = r.pick(living);
+          q('spellPreview', [u.uid, id, t.x, t.y, { from: p, movedTiles: 2 }], b.spellPreview(u, id, t, { from: p, movedTiles: 2 }));
+        }
+      }
+      if (u.tags.includes('impale')) {
+        for (const t of b.active(u.faction === 'player' ? 'enemy' : 'player')) q('impaleTarget', [u.uid, t.uid], b.impaleTarget(u, t)?.uid ?? null);
+      }
+    }
+  };
+  const playerTurn = () => {
+    for (const uid of b.active('player').map((u) => u.uid)) {
+      if (b.isOver()) return;
+      const u = b.unit(uid);
+      if (u.status !== 'active') continue;
+      const spells = spellsOf(u).filter((id) => b.canCast(u, id).ok);
+      if (spells.length && r.chance(0.85)) {
+        const id = r.pick(spells);
+        const ts = b.spellTargets(u, id);
+        if (ts.length) {
+          const t = r.pick(ts);
+          act('cast', [uid, id, t.x, t.y], b.cast(uid, id, { x: t.x, y: t.y }));
+        }
+        // A second cast is refused: the squad has acted (or there was no target).
+        act('cast', [uid, id, u.x, u.y], b.cast(uid, id, { x: u.x, y: u.y }));
+        continue;
+      }
+      actUnit(b, u, { useStances: true });
+      act('actUnit', [uid], null);
+    }
+  };
+  for (let turn = 1; turn <= turns && !b.isOver(); turn++) {
+    if (b.phase !== 'player') break;
+    probe();
+    playerTurn();
+    if (b.isOver()) break;
+    b.endTurn(runEnemyAi);
+    act('endTurn', [], null);
+  }
+  return { name, kind: 'script', setup: json, steps, result: b.result ?? null };
+}
+
 // ------------------------------------------------------------------ generate
 
 const files: Record<string, unknown[]> = {};
@@ -476,6 +572,13 @@ add('scripted', scriptedTrace('scripted/brute_vanguard-retreat', makeSetup('brut
 add('scripted', scriptedTrace('scripted/moss_trolls-fresh', makeSetup('moss_trolls', 16), 106, { turns: 5, finish: true }));
 add('scripted', scriptedTrace('scripted/last_stand-veteran', makeSetup('last_stand', 17, { company: 'veteran', mapId: 'ford' }), 107, { turns: 3, shout: true, finish: true }));
 add('scripted', scriptedTrace('scripted/refugee_stand-fresh', makeSetup('refugee_stand', 18), 108, { turns: 3, retreatAt: 3 }));
+
+// Battle mages, ballistae and mangonels with the company; shamans, rock lobbers and war wagons with the host.
+const MAGIC: [string, number, string?][] = [['shaman_fire', 41], ['siege_train', 42], ['raiding_party', 43], ['moss_trolls', 44], ['last_stand', 45, 'steading'], ['refugee_stand', 46], ['orc_overseer', 47]];
+for (const [id, seed, mapId] of MAGIC) add('magic', autoTrace(`magic/${id}-s${seed}`, makeSetup(id, seed, { company: 'magic', depth: 4, mapId })));
+add('magic', spellTrace('magic/spells-shaman_fire', makeSetup('shaman_fire', 51, { company: 'magic' }), 151, 6));
+add('magic', spellTrace('magic/spells-siege_train', makeSetup('siege_train', 52, { company: 'magic', depth: 4 }), 152, 6));
+add('magic', spellTrace('magic/spells-moss_trolls', makeSetup('moss_trolls', 53, { company: 'magic', depth: 4 }), 153, 5));
 
 // Rare outcomes: search seeds for battles that show them (first hit of each).
 function features(t: { steps: Step[]; result: string | null | undefined }): Set<string> {

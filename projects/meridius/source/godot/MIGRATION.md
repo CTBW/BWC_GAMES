@@ -117,8 +117,106 @@ preserved (tile grid, one squad per tile, reserves = enemy waves off-field).
       (`tools/export.sh`, Meridius.exe 168 MB) + `Meridius.console.exe -- --smoke`:
       SMOKE OK, 13/13 (9.2 s). Full `tools/test.sh` not rerun after these changes.
 
+## Magic and war machines (port of the TS update, 21 Oct 2026)
+The TypeScript game gained spellcasters and war machines after `dff1262`
+(`../../docs/magic-and-machines.md`); the updated TS sources are in `../game`
+on this branch (85/85 vitest) and are again the source of truth.
+- [x] Data: `tools/export_data.ts` re-run; only the new content changed (units
+      `battle_mage`, `goblin_shaman`, `ballista`, `mangonel`, `rock_lobber`,
+      `war_wagon`; their abilities; encounters `shaman_fire`, `siege_train`;
+      the last stand's final host and the refugee stand's flank wave).
+- [x] Rules: `db.gd` (`is_engine`, `is_active_ability`), `squad.gd` (crew
+      nouns, `status_of`/`has_status`, `is_backline`, `move_of`), `battle.gd`
+      (spells: reach, chain order, forecast, cast, failure; statuses chilled,
+      bloodlust, bleeding with their end-of-turn and bleed ticks; impale;
+      unbraced engines; crews move with `move_of`), `ai.gd` (player profiles,
+      casters and artillery in the role order, spell choice and aim, engine
+      hold, artillery line of sight), `setup.gd`, `soldier.gd`, `game.gd`
+      (one specialist per muster), `expedition.gd` (bolts only for `shot.ammo`).
+- [x] Parity: battle traces now 77 (+ `shaman_fire`, `siege_train` and a
+      scripted magic company: every spell, impale, chained and failed casts,
+      `canCast`/`spellTargets`/`spellPreview`/`impaleTarget` queries); 30,361
+      events and 41,064 query results identical incl. RNG state. Setup, meta and
+      campaign goldens regenerated and identical. `test_spells.gd` (19 rule
+      tests); `test_squad.gd` sizes; `test_save.gd` now takes the first choice an
+      event allows (the new RNG path reached a pedlar the company could not pay).
+- [x] Assets: `fig_battle_mage`, `fig_goblin_shaman`, `fig_engineer` (6 looks)
+      and `engine_<type>` atlases (3 looks) baked from the original renderer,
+      portraits, 11 new sounds (42), 10 new icons (47); test_assets, test_sfx.
+- [x] Battle view: engines and crews in formation, spell and condition FX
+      (`fx.gd`, `battle_fx.gdshader`), condition tints in `battle_sorted.gdshader`,
+      wrecks; `tools/parity/battleview_engines.ts` →
+      `tests/fixtures/battle_view/formation_engines.json`; `tests/visual/magic_lab.gd`
+      (captures in `tests/visual/out/magic/`).
+- [x] HUD: spell buttons and keys, spell forecast on hover, impale target,
+      conditions on cards and tooltips, crews and engines on soldier cards and
+      the detail screen, the Barracks' specialist, manual pages;
+      `tests/visual/capture_magic.gd` (captures `tests/visual/out/magic_*.png`).
+- [x] Verification (worktree, uncommitted): full `tools/test.sh` 337 passed,
+      0 failed, 0 skipped (273 s), exit code 0. Its exit printed leak warnings
+      from `test_ui_widgets::test_labels_and_tags` (unchanged on this branch: two
+      `sign_label` Labels never freed); fixed in the test. Re-export
+      (`Meridius.exe` 183 MB) + `Meridius.console.exe -- --smoke`: SMOKE OK
+      13/13 (1588 sprite variants, 42 sounds, all 13 encounters, 11.3 s).
+      Play-through (default): 236 checks, 0 failed, 0 errors; an earlier run
+      took a different random path and failed 2 checks on the shared-tile bug
+      fixed below.
+- Deliberate differences from the original: the engine stays until its wreck
+      appears (the original stops drawing it when the last crewman falls, a
+      moment before the squad's `down` event leaves the wreck;
+      `battle_draw.gd _engine_stands`); cancelling a spell (Esc) clears its
+      forecast at once rather than on the next pointer move; tall tooltips are kept whole on screen (`widgets/tip.gd`).
+- Original bug, ported as is and then fixed in Godot only (next section):
+      two squads could end a move on one tile.
+
+## Original archived; first Godot-only rule change (21 Oct 2026)
+The TypeScript original is archived (`../game/ARCHIVED.md`): it stays in place
+for the sprite bake, unchanged, and is no longer kept in step. Godot is the
+only version developed.
+- [x] Bug: two squads could end a move on one tile. A path could cross a
+      routing enemy (`reach_states` skipped only active foes) while `walk`
+      stops in front of any enemy, so the move ended short, sometimes on the
+      ally's tile the path passed through; and a squad passing through an
+      ally's tile could be broken there by a free attack (or halted by a
+      spearwall) and stay. A headless stress run (every encounter, AI on both
+      sides) found 9 shared tiles in 33 battles on the pre-port code; with
+      routing foes blocking, 7 in 520 remained, all from free attacks.
+- [x] Fix (`battle.gd`): routing enemies block paths like any enemy; and a
+      walk that ends on a tile another squad holds falls back along its path,
+      still facing its way, to the last tile the squad had to itself (a `move`
+      event with `backward: true`; such a move cannot be redone). The view
+      backs the squad off without turning it (`battle_view.gd _play_move`).
+      Stress run after the fix: 520 battles (40 seeds × 13 encounters), no
+      shared tile after any squad's action or enemy turn. Balance, 60
+      companies × 6 autoplay expeditions (the seeds of the original's
+      `scripts/simcampaign.ts`): success 37.5% → 39.8%, defeat 21.0% → 18.6%,
+      deaths about 1.0 per expedition both ways; within the noise of ~355
+      expeditions.
+- [x] Tests: `test_battle.gd` (the old "kept as is" case now asserts the fix;
+      a blocked walk and a broken squad fall back; no two squads share a tile
+      in any encounter, two seeds each); `test_facing*.gd` expect the facing of
+      the last step forward. Visual: `tests/visual/magic_lab.gd -- fallback`
+      (footmen broken by a free attack in the spearmen's tile back off to their
+      own, still facing their way; checked in the contact sheet).
+- [x] Goldens: the battle traces and the campaign runs are now the port's own
+      regression baseline, re-recorded with
+      `MERIDIUS_RECORD=1 tools/test.sh test_battle_parity test_campaign_parity`
+      (record mode in both tests; `test_campaign_parity.gd` carries a port of
+      the run driver of `tools/parity/campaign_golden.ts`). Checked against the
+      original's recordings: 47 of 77 battle traces and all five driven runs
+      without AI battles came out identical (so the recorder and the ported
+      driver are exact); the 30 other traces, the two AI-battle runs and the
+      autoplay campaigns changed where the fix changes play. The TypeScript
+      generators carry an "ARCHIVED: do not re-run" note.
+- [x] Leak: `test_ui_widgets::test_labels_and_tags` freed two of its labels
+      only at exit (warnings after the full suite); fixed.
+- [x] Verification (worktree, uncommitted): full `tools/test.sh` 340 passed,
+      0 failed, 0 skipped (258 s), no leak warnings at exit. Re-export +
+      `Meridius.console.exe -- --smoke`: SMOKE OK 13/13. Play-through
+      (default): 213 checks, 0 failed, 0 errors, exit code 0.
+
 ## Resume here
-1. `tools/test.sh` (full) — green at d759b9c (289/0).
+1. `tools/test.sh` (full) — green with magic, war machines and the
+   shared-tile fix (340/0), not yet committed.
 2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
-3. Play-through QA (open items above), then fix and commit on branch
-   `godot-migration`.
+3. Commit on branch `godot-migration`.

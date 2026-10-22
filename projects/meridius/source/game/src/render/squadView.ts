@@ -51,6 +51,9 @@ export const BIG_MEMBER_SCALE = 0.44;
 /** Standing height of a soldier on screen (world px), for bars and labels. */
 export function memberHeight(typeId: string): number {
   const def = UNIT_TYPES[typeId];
+  if (def?.crew) return def.crew === 'goblin_rabble' ? 40 : 48;
+  if (typeId === 'battle_mage') return 54;
+  if (typeId === 'goblin_shaman') return 44;
   if (typeId === 'troll') return 66;
   if (typeId === 'wolf_rider') return 58;
   if (typeId === 'goblin_rabble') return 34;
@@ -63,7 +66,11 @@ export function memberHeight(typeId: string): number {
 export function memberScale(u: BattleUnit): number {
   if (u.typeId === 'wolf_rider') return 0.5;
   if (u.typeId === 'goblin_rabble') return 0.48;
-  return u.size <= 3 ? BIG_MEMBER_SCALE : MEMBER_SCALE;
+  const def = UNIT_TYPES[u.typeId];
+  // War machines and their crews: goblin crews as small as the rabble they come from.
+  if (def?.crew) return def.crew === 'goblin_rabble' ? 0.48 : MEMBER_SCALE;
+  // Only the great beasts stand three to a tile at the smaller scale; three mages are men like any other.
+  return u.size <= 3 && def?.size === 'large' ? BIG_MEMBER_SCALE : MEMBER_SCALE;
 }
 
 /** Index of the soldier who must fall last (the warlord among his guard), or -1. */
@@ -79,7 +86,8 @@ export function makeMembers(u: BattleUnit): Member[] {
   for (let i = 0; i < u.size; i++) {
     const alive = i < u.alive;
     const s = alive ? slots[i] : { x: 0, y: 0 };
-    const escort = def?.escort && i > 0 ? def.escort : undefined;
+    // A guard squad's rank and file, or a war machine's crew.
+    const escort = def?.escort && i > 0 ? def.escort : def?.crew;
     members.push({
       id: i,
       alive,

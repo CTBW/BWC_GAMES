@@ -3,7 +3,7 @@ import { chromium } from 'playwright-core';
 import { tmpdir } from 'node:os';
 const exe = process.env.CHROME_PATH ?? 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const browser = await chromium.launch({ executablePath: exe, headless: true });
-const urls = ['horde.html', 'index.html', 'squads.html', 'loop1.html'].map((f) => `file:///D:/ProjektM/BWC_GAMES/workspace/2026-10-20_meridius/${f}`);
+const urls = ['magic.html', 'horde.html', 'index.html', 'squads.html', 'loop1.html'].map((f) => `file:///D:/ProjektM/BWC_GAMES/workspace/2026-10-20_meridius/${f}`);
 const out = `${process.argv[2] ?? tmpdir()}/`;
 for (const url of urls) for (const [w, h, size] of [[1400, 1000, 'wide'], [768, 1024, 'tablet'], [390, 844, 'narrow']]) {
   const name = `${url.split('/').pop().replace('.html', '')}-${size}.png`;

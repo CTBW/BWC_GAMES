@@ -52,7 +52,15 @@ func test_round_trip_through_the_whole_loop() -> void:
 			Autoplay.auto_battle(b)
 			Expedition.apply_battle(g, b, p.title, p.objective)
 		elif p.kind == "event" and p.get("result") == null:
-			Expedition.choose_event(g, 0)
+			# The first choice the company can take (as the auto-player does): a
+			# choice it cannot afford would leave the event pending for ever.
+			var ev: Dictionary = Expedition._event(p.eventId)
+			var idx := 0
+			for i in ev.choices.size():
+				if Expedition.choice_available(g, ev.choices[i]).ok:
+					idx = i
+					break
+			Expedition.choose_event(g, idx)
 		elif p.kind == "camp" and not p.done.has("rest"):
 			Expedition.camp_repair(g)
 			Expedition.camp_rest(g)

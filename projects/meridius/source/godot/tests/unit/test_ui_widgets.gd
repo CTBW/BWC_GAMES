@@ -98,14 +98,39 @@ func test_labels_and_tags() -> void:
 	var s := UI.sign_label(3)
 	assert_eq(s.text, "+3")
 	assert_eq(s.theme_type_variation, &"GoodLabel")
-	assert_eq(UI.sign_label(-2).theme_type_variation, &"BadLabel")
-	assert_eq(UI.sign_label(0).text, "0")
+	var neg := UI.sign_label(-2)
+	assert_eq(neg.theme_type_variation, &"BadLabel")
+	var zero := UI.sign_label(0)
+	assert_eq(zero.text, "0")
 	var t := Tag.make("2 short", "red", "cp", 10)
 	host.add_child(t)
 	assert_eq(t.theme_type_variation, &"TagRed")
 	assert_eq(t.find_children("*", "Label", true, false)[0].theme_type_variation, &"TagRedLabel")
-	for l in [s]:
+	for l in [s, neg, zero]:
 		l.free()
+
+
+## War machines are named for their crew; casters and machines have their own type icons.
+func test_specialist_labels_and_icons() -> void:
+	assert_eq(UI.squad_type_label("ballista", 2), "%s Ballista Crew" % DB.RANKS[1])
+	assert_eq(UI.squad_type_label("mangonel"), "Mangonel Crew")
+	assert_eq(UI.squad_type_label("war_wagon"), "Spiked War Wagon Crew")
+	assert_eq(UI.squad_type_label("war_wagon", 0, true), "War Wagon Crew", "short name, singular")
+	assert_eq(UI.squad_type_label("battle_mage", 1, true), "%s Battle Mages" % DB.RANKS[0])
+	assert_eq(UI.squad_type_label("goblin_shaman"), "Goblin Shamans")
+	assert_eq(Icon.type_icon_name("battle_mage"), "staff")
+	assert_eq(Icon.type_icon_name("goblin_shaman"), "staff")
+	for t in ["ballista", "mangonel", "rock_lobber", "war_wagon"]:
+		assert_eq(Icon.type_icon_name(t), "engine", t)
+	assert_eq(Icon.type_icon_name("crossbowman"), "crossbow")
+	assert_eq(Icon.type_icon_name("footman"), "shield")
+	for n in ["lightning", "frost", "heal", "circle", "fire", "blood", "gut", "stone", "staff", "engine"]:
+		assert_true(Icon.tex(n) != Icon.tex("missing"), "icon %s exported" % n)
+	# Every spell's icon exists.
+	for id in DB.ABILITIES:
+		var ab: Dictionary = DB.ABILITIES[id]
+		if ab.get("kind") == "spell":
+			assert_true(Icon.NAMES.has(ab.icon), "%s: icon %s" % [id, ab.icon])
 
 
 ## (The test runner works before the scene tree is live, so theme lookups through

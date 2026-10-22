@@ -967,7 +967,9 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		s.fatigue = mini(100, s.fatigue + 6)
 		var hits: int = JS.get_or(b.hits_taken, u.uid, 0)
 		s.armorCondition = maxf(0.3, s.armorCondition - hits * 0.05)
-		if DB.UNIT_TYPES[s.typeId].get("shot") != null:
+		# Only crossbows draw on the bolt supply (arcane and ballista bolts never run out).
+		var sh: Variant = DB.UNIT_TYPES[s.typeId].get("shot")
+		if sh != null and sh.get("ammo") != null:
 			report.boltsUsed += maxi(0, s.ammo - maxi(0, u.ammo))
 			s.ammo = maxi(0, u.ammo)
 		report.xp.append({"name": s.name, "xp": u.xp})

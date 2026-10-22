@@ -16559,6 +16559,5574 @@
    "noShadow": false
   }
  ],
+ "battle_mage_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    966,
+    1390,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    966,
+    1682,
+    134,
+    271
+   ],
+   "ax": 77,
+   "ay": 265,
+   "scale": 0.4712,
+   "w": 134,
+   "h": 271,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    1390,
+    147,
+    277
+   ],
+   "ax": 90,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1126,
+    1390,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    166,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    982,
+    370,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    6,
+    232,
+    351
+   ],
+   "ax": 170,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1226,
+    370,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    370,
+    232,
+    349
+   ],
+   "ax": 170,
+   "ay": 343,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1470,
+    370,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    250,
+    6,
+    232,
+    351
+   ],
+   "ax": 170,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1286,
+    1390,
+    147,
+    273
+   ],
+   "ax": 57,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1286,
+    1094,
+    147,
+    281
+   ],
+   "ax": 57,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 281,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1558,
+    1682,
+    159,
+    269
+   ],
+   "ax": 57,
+   "ay": 263,
+   "scale": 0.4712,
+   "w": 159,
+   "h": 269,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    166,
+    1390,
+    147,
+    277
+   ],
+   "ax": 57,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1446,
+    1390,
+    147,
+    273
+   ],
+   "ax": 57,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1446,
+    1094,
+    147,
+    281
+   ],
+   "ax": 57,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 281,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1714,
+    370,
+    232,
+    345
+   ],
+   "ax": 62,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    494,
+    6,
+    232,
+    351
+   ],
+   "ax": 62,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1470,
+    734,
+    232,
+    334
+   ],
+   "ax": 62,
+   "ay": 328,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 334,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    250,
+    370,
+    232,
+    349
+   ],
+   "ax": 62,
+   "ay": 343,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    734,
+    232,
+    345
+   ],
+   "ax": 62,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    738,
+    6,
+    232,
+    351
+   ],
+   "ax": 62,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_dead": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    966,
+    1970,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1222,
+    1970,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1478,
+    1970,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1734,
+    1970,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    2198,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    262,
+    2198,
+    244,
+    82
+   ],
+   "ax": 230,
+   "ay": 78,
+   "scale": 0.4712,
+   "w": 244,
+   "h": 82,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    1970,
+    146,
+    216
+   ],
+   "ax": 69,
+   "ay": 207,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 216,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    806,
+    1970,
+    146,
+    207
+   ],
+   "ax": 69,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 207,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    486,
+    1970,
+    146,
+    209
+   ],
+   "ax": 69,
+   "ay": 200,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    166,
+    1970,
+    146,
+    216
+   ],
+   "ax": 69,
+   "ay": 207,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 216,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    326,
+    1970,
+    146,
+    210
+   ],
+   "ax": 69,
+   "ay": 201,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    646,
+    1970,
+    146,
+    209
+   ],
+   "ax": 69,
+   "ay": 200,
+   "scale": 0.4712,
+   "w": 146,
+   "h": 209,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1606,
+    1390,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    326,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1114,
+    1682,
+    134,
+    271
+   ],
+   "ax": 77,
+   "ay": 265,
+   "scale": 0.4712,
+   "w": 134,
+   "h": 271,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    326,
+    1390,
+    147,
+    277
+   ],
+   "ax": 90,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1766,
+    1390,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    486,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    250,
+    734,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    982,
+    6,
+    232,
+    351
+   ],
+   "ax": 170,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    494,
+    734,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    494,
+    370,
+    232,
+    349
+   ],
+   "ax": 170,
+   "ay": 343,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    738,
+    734,
+    232,
+    345
+   ],
+   "ax": 170,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1226,
+    6,
+    232,
+    351
+   ],
+   "ax": 170,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    6,
+    1682,
+    147,
+    273
+   ],
+   "ax": 57,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1606,
+    1094,
+    147,
+    281
+   ],
+   "ax": 57,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 281,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1730,
+    1682,
+    159,
+    269
+   ],
+   "ax": 57,
+   "ay": 263,
+   "scale": 0.4712,
+   "w": 159,
+   "h": 269,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    486,
+    1390,
+    147,
+    277
+   ],
+   "ax": 57,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    166,
+    1682,
+    147,
+    273
+   ],
+   "ax": 57,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1766,
+    1094,
+    147,
+    281
+   ],
+   "ax": 57,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 281,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    982,
+    734,
+    232,
+    345
+   ],
+   "ax": 62,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1470,
+    6,
+    232,
+    351
+   ],
+   "ax": 62,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1714,
+    734,
+    232,
+    334
+   ],
+   "ax": 62,
+   "ay": 328,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 334,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    738,
+    370,
+    232,
+    349
+   ],
+   "ax": 62,
+   "ay": 343,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1226,
+    734,
+    232,
+    345
+   ],
+   "ax": 62,
+   "ay": 339,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 345,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1714,
+    6,
+    232,
+    351
+   ],
+   "ax": 62,
+   "ay": 345,
+   "scale": 0.4712,
+   "w": 232,
+   "h": 351,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_run_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    326,
+    1682,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    646,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1262,
+    1682,
+    134,
+    271
+   ],
+   "ax": 77,
+   "ay": 265,
+   "scale": 0.4712,
+   "w": 134,
+   "h": 271,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    646,
+    1390,
+    147,
+    277
+   ],
+   "ax": 90,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    486,
+    1682,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    806,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "battle_mage_run_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    646,
+    1682,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    966,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1410,
+    1682,
+    134,
+    271
+   ],
+   "ax": 77,
+   "ay": 265,
+   "scale": 0.4712,
+   "w": 134,
+   "h": 271,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    806,
+    1390,
+    147,
+    277
+   ],
+   "ax": 90,
+   "ay": 271,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 277,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    806,
+    1682,
+    147,
+    273
+   ],
+   "ax": 90,
+   "ay": 267,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 273,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_battle_mage.png",
+   "region": [
+    1126,
+    1094,
+    147,
+    282
+   ],
+   "ax": 90,
+   "ay": 276,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    170,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    334,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    498,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    662,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    826,
+    942,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    254,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    502,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    750,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    998,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1246,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    990,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1154,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1318,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1482,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1646,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1810,
+    942,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    998,
+    318,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1246,
+    318,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1494,
+    318,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1742,
+    318,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    254,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_dead": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1438,
+    1686,
+    234,
+    84
+   ],
+   "ax": 221,
+   "ay": 72,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 84,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1190,
+    1686,
+    234,
+    86
+   ],
+   "ax": 221,
+   "ay": 74,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 86,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1686,
+    1686,
+    234,
+    84
+   ],
+   "ax": 221,
+   "ay": 72,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 84,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    942,
+    1686,
+    234,
+    87
+   ],
+   "ax": 221,
+   "ay": 75,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 87,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    1902,
+    234,
+    84
+   ],
+   "ax": 221,
+   "ay": 72,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 84,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    254,
+    1902,
+    234,
+    84
+   ],
+   "ax": 221,
+   "ay": 72,
+   "scale": 0.4712,
+   "w": 234,
+   "h": 84,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    1686,
+    141,
+    204
+   ],
+   "ax": 65,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 204,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    786,
+    1686,
+    141,
+    178
+   ],
+   "ax": 65,
+   "ay": 169,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 178,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    474,
+    1686,
+    141,
+    199
+   ],
+   "ax": 65,
+   "ay": 190,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 199,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    162,
+    1686,
+    141,
+    204
+   ],
+   "ax": 65,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 204,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    630,
+    1686,
+    141,
+    199
+   ],
+   "ax": 65,
+   "ay": 190,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 199,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    318,
+    1686,
+    141,
+    204
+   ],
+   "ax": 65,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 141,
+   "h": 204,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    170,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    334,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    498,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    662,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    826,
+    1190,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1494,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1742,
+    6,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    318,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    254,
+    318,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    502,
+    318,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    750,
+    318,
+    236,
+    298
+   ],
+   "ax": 146,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 236,
+   "h": 298,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    990,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1154,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1318,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1482,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1646,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1810,
+    1190,
+    149,
+    233
+   ],
+   "ax": 59,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    502,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    750,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    998,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1246,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1494,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1742,
+    630,
+    233,
+    298
+   ],
+   "ax": 87,
+   "ay": 292,
+   "scale": 0.4712,
+   "w": 233,
+   "h": 298,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_run_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    6,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    170,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    334,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    498,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    662,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    826,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "goblin_shaman_run_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    990,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1154,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1318,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1482,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1646,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_goblin_shaman.png",
+   "region": [
+    1810,
+    1438,
+    149,
+    233
+   ],
+   "ax": 90,
+   "ay": 220,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 233,
+   "noShadow": false
+  }
+ ],
+ "engineer_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1474,
+    510,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1634,
+    510,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    334,
+    510,
+    147,
+    211
+   ],
+   "ax": 63,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1794,
+    510,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    166,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  }
+ ],
+ "engineer_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    150,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    294,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    438,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    582,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    726,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  }
+ ],
+ "engineer_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1306,
+    958,
+    155,
+    208
+   ],
+   "ax": 55,
+   "ay": 201,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 208,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1642,
+    958,
+    155,
+    207
+   ],
+   "ax": 55,
+   "ay": 200,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 207,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1610,
+    258,
+    155,
+    212
+   ],
+   "ax": 55,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 212,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    170,
+    1182,
+    155,
+    205
+   ],
+   "ax": 55,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 205,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    974,
+    510,
+    155,
+    210
+   ],
+   "ax": 55,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    806,
+    958,
+    155,
+    209
+   ],
+   "ax": 55,
+   "ay": 202,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 209,
+   "noShadow": false
+  }
+ ],
+ "engineer_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    870,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1014,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1158,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1302,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1446,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1590,
+    6,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  }
+ ],
+ "engineer_dead": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1178,
+    1182,
+    209,
+    101
+   ],
+   "ax": 195,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 209,
+   "h": 101,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1402,
+    1182,
+    208,
+    101
+   ],
+   "ax": 194,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 208,
+   "h": 101,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    506,
+    1182,
+    212,
+    101
+   ],
+   "ax": 198,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 212,
+   "h": 101,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1622,
+    1182,
+    207,
+    101
+   ],
+   "ax": 193,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 207,
+   "h": 101,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    730,
+    1182,
+    211,
+    101
+   ],
+   "ax": 197,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 211,
+   "h": 101,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    954,
+    1182,
+    211,
+    101
+   ],
+   "ax": 197,
+   "ay": 101,
+   "scale": 0.4712,
+   "w": 211,
+   "h": 101,
+   "noShadow": false
+  }
+ ],
+ "engineer_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1310,
+    510,
+    149,
+    210
+   ],
+   "ax": 69,
+   "ay": 201,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1142,
+    958,
+    149,
+    209
+   ],
+   "ax": 69,
+   "ay": 200,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1446,
+    258,
+    149,
+    214
+   ],
+   "ax": 69,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 214,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    1182,
+    149,
+    207
+   ],
+   "ax": 69,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 207,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    510,
+    149,
+    212
+   ],
+   "ax": 69,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 212,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    170,
+    510,
+    149,
+    211
+   ],
+   "ax": 69,
+   "ay": 202,
+   "scale": 0.4712,
+   "w": 149,
+   "h": 211,
+   "noShadow": false
+  }
+ ],
+ "engineer_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    326,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    486,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    494,
+    510,
+    147,
+    211
+   ],
+   "ax": 63,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    646,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    806,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    966,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  }
+ ],
+ "engineer_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1734,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1878,
+    6,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    258,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    150,
+    258,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    294,
+    258,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    438,
+    258,
+    131,
+    239
+   ],
+   "ax": 80,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  }
+ ],
+ "engineer_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1474,
+    958,
+    155,
+    208
+   ],
+   "ax": 55,
+   "ay": 201,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 208,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1810,
+    958,
+    155,
+    207
+   ],
+   "ax": 55,
+   "ay": 200,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 207,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1778,
+    258,
+    155,
+    212
+   ],
+   "ax": 55,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 212,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    338,
+    1182,
+    155,
+    205
+   ],
+   "ax": 55,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 205,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1142,
+    510,
+    155,
+    210
+   ],
+   "ax": 55,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    974,
+    958,
+    155,
+    209
+   ],
+   "ax": 55,
+   "ay": 202,
+   "scale": 0.4712,
+   "w": 155,
+   "h": 209,
+   "noShadow": false
+  }
+ ],
+ "engineer_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    582,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    726,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    870,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1014,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1158,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1302,
+    258,
+    131,
+    239
+   ],
+   "ax": 51,
+   "ay": 233,
+   "scale": 0.4712,
+   "w": 131,
+   "h": 239,
+   "noShadow": false
+  }
+ ],
+ "engineer_run_f": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1126,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1286,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    654,
+    510,
+    147,
+    211
+   ],
+   "ax": 63,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1446,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1606,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    1766,
+    734,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  }
+ ],
+ "engineer_run_b": [
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    6,
+    958,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    166,
+    958,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    814,
+    510,
+    147,
+    211
+   ],
+   "ax": 63,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    326,
+    958,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    486,
+    958,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/fig_engineer.png",
+   "region": [
+    646,
+    958,
+    147,
+    210
+   ],
+   "ax": 63,
+   "ay": 204,
+   "scale": 0.4712,
+   "w": 147,
+   "h": 210,
+   "noShadow": false
+  }
+ ],
+ "ballista_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1370,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1702,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    634,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  }
+ ],
+ "ballista_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    338,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    714,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1090,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  }
+ ],
+ "ballista_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1134,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1466,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    338,
+    318,
+    282
+   ],
+   "ax": 156,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "ballista_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    6,
+    362,
+    320
+   ],
+   "ax": 162,
+   "ay": 235,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 320,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    382,
+    6,
+    362,
+    320
+   ],
+   "ax": 162,
+   "ay": 235,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 320,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    758,
+    6,
+    362,
+    311
+   ],
+   "ax": 162,
+   "ay": 226,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 311,
+   "noShadow": false
+  }
+ ],
+ "ballista_dead": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    338,
+    338,
+    329,
+    242
+   ],
+   "ax": 171,
+   "ay": 150,
+   "scale": 0.4712,
+   "w": 329,
+   "h": 242,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    682,
+    338,
+    329,
+    242
+   ],
+   "ax": 171,
+   "ay": 150,
+   "scale": 0.4712,
+   "w": 329,
+   "h": 242,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1026,
+    338,
+    329,
+    242
+   ],
+   "ax": 171,
+   "ay": 150,
+   "scale": 0.4712,
+   "w": 329,
+   "h": 242,
+   "noShadow": false
+  }
+ ],
+ "ballista_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1134,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1466,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    338,
+    318,
+    282
+   ],
+   "ax": 156,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "ballista_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1370,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1702,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    634,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  }
+ ],
+ "ballista_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    338,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    714,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1090,
+    634,
+    361,
+    209
+   ],
+   "ax": 200,
+   "ay": 175,
+   "scale": 0.4712,
+   "w": 361,
+   "h": 209,
+   "noShadow": false
+  }
+ ],
+ "ballista_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1134,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1466,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    338,
+    318,
+    282
+   ],
+   "ax": 156,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "ballista_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    6,
+    362,
+    320
+   ],
+   "ax": 162,
+   "ay": 235,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 320,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    382,
+    6,
+    362,
+    320
+   ],
+   "ax": 162,
+   "ay": 235,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 320,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    758,
+    6,
+    362,
+    311
+   ],
+   "ax": 162,
+   "ay": 226,
+   "scale": 0.4712,
+   "w": 362,
+   "h": 311,
+   "noShadow": false
+  }
+ ],
+ "ballista_run_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1370,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1702,
+    338,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    634,
+    318,
+    211
+   ],
+   "ax": 162,
+   "ay": 177,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 211,
+   "noShadow": false
+  }
+ ],
+ "ballista_run_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1134,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    1466,
+    6,
+    318,
+    309
+   ],
+   "ax": 156,
+   "ay": 232,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 309,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_ballista.png",
+   "region": [
+    6,
+    338,
+    318,
+    282
+   ],
+   "ax": 156,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 318,
+   "h": 282,
+   "noShadow": false
+  }
+ ],
+ "mangonel_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    966,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    646,
+    610,
+    314,
+    252
+   ],
+   "ax": 144,
+   "ay": 186,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 252,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1294,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  }
+ ],
+ "mangonel_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    6,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    322,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  }
+ ],
+ "mangonel_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    954,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    326,
+    314,
+    265
+   ],
+   "ax": 170,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 265,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1282,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "mangonel_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1610,
+    6,
+    302,
+    270
+   ],
+   "ax": 158,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    322,
+    326,
+    302,
+    269
+   ],
+   "ax": 158,
+   "ay": 202,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 269,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    6,
+    326,
+    302,
+    270
+   ],
+   "ax": 158,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "mangonel_dead": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1622,
+    326,
+    307,
+    260
+   ],
+   "ax": 155,
+   "ay": 148,
+   "scale": 0.4712,
+   "w": 307,
+   "h": 260,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    6,
+    610,
+    307,
+    260
+   ],
+   "ax": 155,
+   "ay": 148,
+   "scale": 0.4712,
+   "w": 307,
+   "h": 260,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    326,
+    610,
+    307,
+    260
+   ],
+   "ax": 155,
+   "ay": 148,
+   "scale": 0.4712,
+   "w": 307,
+   "h": 260,
+   "noShadow": false
+  }
+ ],
+ "mangonel_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    954,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    326,
+    314,
+    265
+   ],
+   "ax": 170,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 265,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1282,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "mangonel_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    966,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    646,
+    610,
+    314,
+    252
+   ],
+   "ax": 144,
+   "ay": 186,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 252,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1294,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  }
+ ],
+ "mangonel_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    6,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    322,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    6,
+    302,
+    306
+   ],
+   "ax": 144,
+   "ay": 240,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 306,
+   "noShadow": false
+  }
+ ],
+ "mangonel_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    954,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    326,
+    314,
+    265
+   ],
+   "ax": 170,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 265,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1282,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "mangonel_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1610,
+    6,
+    302,
+    270
+   ],
+   "ax": 158,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    322,
+    326,
+    302,
+    269
+   ],
+   "ax": 158,
+   "ay": 202,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 269,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    6,
+    326,
+    302,
+    270
+   ],
+   "ax": 158,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 302,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "mangonel_run_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    966,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    646,
+    610,
+    314,
+    252
+   ],
+   "ax": 144,
+   "ay": 186,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 252,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1294,
+    326,
+    314,
+    261
+   ],
+   "ax": 144,
+   "ay": 195,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 261,
+   "noShadow": false
+  }
+ ],
+ "mangonel_run_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    954,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    638,
+    326,
+    314,
+    265
+   ],
+   "ax": 170,
+   "ay": 198,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 265,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_mangonel.png",
+   "region": [
+    1282,
+    6,
+    314,
+    270
+   ],
+   "ax": 170,
+   "ay": 203,
+   "scale": 0.4712,
+   "w": 314,
+   "h": 270,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    374,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    742,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1110,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1014,
+    6,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1382,
+    6,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    434,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1478,
+    434,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    678,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_dead": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    678,
+    854,
+    338,
+    266
+   ],
+   "ax": 157,
+   "ay": 176,
+   "scale": 0.4712,
+   "w": 338,
+   "h": 266,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1030,
+    854,
+    338,
+    266
+   ],
+   "ax": 157,
+   "ay": 176,
+   "scale": 0.4712,
+   "w": 338,
+   "h": 266,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1382,
+    854,
+    338,
+    266
+   ],
+   "ax": 157,
+   "ay": 176,
+   "scale": 0.4712,
+   "w": 338,
+   "h": 266,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1478,
+    434,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    374,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    742,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1110,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1014,
+    6,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1382,
+    6,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    434,
+    354,
+    408
+   ],
+   "ax": 157,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 408,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1478,
+    434,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    678,
+    6,
+    321,
+    415
+   ],
+   "ax": 166,
+   "ay": 333,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 415,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_run_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    374,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    742,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1110,
+    434,
+    354,
+    312
+   ],
+   "ax": 157,
+   "ay": 237,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 312,
+   "noShadow": false
+  }
+ ],
+ "rock_lobber_run_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    1478,
+    434,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    6,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_rock_lobber.png",
+   "region": [
+    342,
+    854,
+    321,
+    287
+   ],
+   "ax": 166,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 321,
+   "h": 287,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_idle_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1110,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1474,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1158,
+    398,
+    352,
+    330
+   ],
+   "ax": 171,
+   "ay": 264,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 330,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_atk_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    6,
+    6,
+    354,
+    378
+   ],
+   "ax": 184,
+   "ay": 299,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 378,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    374,
+    6,
+    354,
+    378
+   ],
+   "ax": 184,
+   "ay": 299,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 378,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    6,
+    354,
+    354
+   ],
+   "ax": 184,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 354,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_idle_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1106,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1470,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_atk_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1522,
+    398,
+    356,
+    298
+   ],
+   "ax": 170,
+   "ay": 221,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    6,
+    762,
+    356,
+    298
+   ],
+   "ax": 170,
+   "ay": 221,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    374,
+    762,
+    356,
+    291
+   ],
+   "ax": 170,
+   "ay": 214,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 291,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_dead": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    6,
+    398,
+    370,
+    349
+   ],
+   "ax": 181,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 370,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    390,
+    398,
+    370,
+    349
+   ],
+   "ax": 181,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 370,
+   "h": 349,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    774,
+    398,
+    370,
+    349
+   ],
+   "ax": 181,
+   "ay": 205,
+   "scale": 0.4712,
+   "w": 370,
+   "h": 349,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_flee_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1106,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1470,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_idle_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1110,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1474,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1158,
+    398,
+    352,
+    330
+   ],
+   "ax": 171,
+   "ay": 264,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 330,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_atk_fs": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    6,
+    6,
+    354,
+    378
+   ],
+   "ax": 184,
+   "ay": 299,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 378,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    374,
+    6,
+    354,
+    378
+   ],
+   "ax": 184,
+   "ay": 299,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 378,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    6,
+    354,
+    354
+   ],
+   "ax": 184,
+   "ay": 275,
+   "scale": 0.4712,
+   "w": 354,
+   "h": 354,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_idle_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1106,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1470,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_atk_bs": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1522,
+    398,
+    356,
+    298
+   ],
+   "ax": 170,
+   "ay": 221,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    6,
+    762,
+    356,
+    298
+   ],
+   "ax": 170,
+   "ay": 221,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 298,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    374,
+    762,
+    356,
+    291
+   ],
+   "ax": 170,
+   "ay": 214,
+   "scale": 0.4712,
+   "w": 356,
+   "h": 291,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_run_f": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1110,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1474,
+    6,
+    352,
+    353
+   ],
+   "ax": 171,
+   "ay": 287,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 353,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1158,
+    398,
+    352,
+    330
+   ],
+   "ax": 171,
+   "ay": 264,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 330,
+   "noShadow": false
+  }
+ ],
+ "war_wagon_run_b": [
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    742,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1106,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/engine_war_wagon.png",
+   "region": [
+    1470,
+    762,
+    352,
+    276
+   ],
+   "ax": 181,
+   "ay": 209,
+   "scale": 0.4712,
+   "w": 352,
+   "h": 276,
+   "noShadow": false
+  }
+ ],
  "portrait_footman": [
   {
    "file": "res://assets/sprites/baked/portraits.png",
@@ -17206,6 +22774,288 @@
    "region": [
     1382,
     522,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_battle_mage": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1554,
+    522,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1726,
+    522,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    6,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_goblin_shaman": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    178,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    350,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    522,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_ballista": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    694,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    866,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1038,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_mangonel": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1210,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1382,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1554,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_rock_lobber": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    1726,
+    694,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    6,
+    866,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    178,
+    866,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  }
+ ],
+ "portrait_war_wagon": [
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    350,
+    866,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    522,
+    866,
+    160,
+    160
+   ],
+   "ax": 80,
+   "ay": 160,
+   "scale": 1,
+   "w": 160,
+   "h": 160,
+   "noShadow": false
+  },
+  {
+   "file": "res://assets/sprites/baked/portraits.png",
+   "region": [
+    694,
+    866,
     160,
     160
    ],

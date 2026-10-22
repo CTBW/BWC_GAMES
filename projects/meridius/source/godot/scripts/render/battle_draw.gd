@@ -1,7 +1,8 @@
 ## The battle view's drawing passes: the render half of src/render/battleScene.ts
 ## (bakeOuter, drawGrid, drawHighlights, drawZone, drawEntryWarnings,
 ## drawFacingArrow, drawFootprints, drawSorted, moveGhost, drawSquadShadow,
-## drawSquad, drawStandard, drawOverlays, drawWaveLabels, the minimap).
+## engineOf, drawTints, drawSquad, drawStandard, drawOverlays, drawWaveLabels,
+## the screen flash, the minimap).
 ## Each pass is called from a BattleLayer's _draw() with that CanvasItem; world
 ## passes draw in world pixels (the camera is the parent's transform), overlay
 ## passes in the view's screen pixels. The night and dawn are battle_night.gd.
@@ -16,6 +17,7 @@ const Assets = preload("res://scripts/render/assets.gd")
 const Formation = preload("res://scripts/render/formation.gd")
 const SquadView = preload("res://scripts/render/squad_view.gd")
 const BattleDeps = preload("res://scripts/render/battle_deps.gd")
+const Fx = preload("res://scripts/render/fx.gd")
 const SortedShader = preload("res://scenes/battle/battle_sorted.gdshader")
 const DashShader = preload("res://scenes/battle/battle_dash.gdshader")
 const FONT_PATH := "res://assets/fonts/cinzel-latin-700-normal.woff2"
@@ -390,6 +392,15 @@ func _danger_tiles() -> Dictionary:
 	var b = v.b
 	var m: Dictionary = b.map
 	for e in b.active("enemy"):
+		# A war machine's stones fall from where it stands now: it cannot move and loose in one turn.
+		var primary = DB.UNIT_TYPES.get(e.typeId, {}).get("primary")
+		var lob = DB.ABILITIES.get(primary) if primary != null else null
+		if lob != null and lob.get("range"):
+			var lmin: float = lob.get("minRange", 1)
+			for t in m.tiles:
+				var dd := Grid.dist(t, e)
+				if dd <= lob.range and dd >= lmin:
+					out[Grid.key(t.x, t.y)] = true
 		var reach: Dictionary = b.reachable_full(e)
 		var shot = e.get("shot")
 		for k in reach:
@@ -446,16 +457,37 @@ func draw_under(ci: CanvasItem) -> void:
 			var pulse := 0.26 + 0.05 * sin(time * 3)
 			fill_tiles(g, tiles, rgba(105, 165, 255, pulse), rgba(200, 225, 255, 0.6), 0.06)
 			g.flush(ci)
-		var shot = sel.get("shot")
-		if shot != null and not sel.hasActed and sel.get("stance") != "overwatch":
-			# Range ring hint: tiles within range (light).
-			var r: float = shot.range
-			var cx := Iso.iso_x(sel.x, sel.y)
-			var cy := Iso.iso_y(sel.x, sel.y, v._tile_h(sel.x, sel.y))
-			dash_geo(g, ellipse_points(Vector2(cx, cy), r * TW * 0.7071, r * TH * 0.7071, 96), rgba(255, 230, 160, 0.35), 2.0, 6.0, 8.0, 0.0, true)
+		var cx := Iso.iso_x(sel.x, sel.y)
+		var cy := Iso.iso_y(sel.x, sel.y, v._tile_h(sel.x, sel.y))
+		var ring := func(r: float, col: Color) -> void:
+			dash_geo(g, ellipse_points(Vector2(cx, cy), r * TW * 0.7071, r * TH * 0.7071, 96), col, 2.0, 6.0, 8.0, 0.0, true)
 			g.flush(ci)
+		# The spell being aimed, or a war machine's stone: its reach and what it can be cast at.
+		var chosen = v.ui.ability if (v.ui.ability != null and DB.ABILITIES.get(v.ui.ability, {}).get("kind") == "spell") else null
+		var primary = DB.UNIT_TYPES.get(sel.typeId, {}).get("primary")
+		var spell_id = chosen
+		if spell_id == null and primary != null and v.ui.ability == null and b.can_cast(sel, primary).ok:
+			spell_id = primary
+		if spell_id != null and not sel.hasActed:
+			var ab: Dictionary = DB.ABILITIES[spell_id]
+			var magic: bool = not ab.get("engine", false)
+			if ab.get("range"):
+				ring.call(float(ab.range), rgba(200, 170, 255, 0.55) if magic else rgba(255, 210, 140, 0.5))
+			if ab.get("minRange"):
+				ring.call(float(ab.minRange) - 0.5, rgba(255, 140, 110, 0.4))
+			var skey := "%s|%s|%d,%d|%d" % [sel.uid, spell_id, sel.x, sel.y, b.turn]
+			if v._spell_target_cache == null or v._spell_target_cache.key != skey:
+				v._spell_target_cache = {"key": skey, "list": b.spell_targets(sel, spell_id)}
+			var ally: bool = ab.get("target") == "ally"
+			for t in v._spell_target_cache.list:
+				fill_tiles(g, [t], rgba(120, 220, 120, 0.22) if ally else rgba(230, 70, 50, 0.24), rgba(160, 240, 150, 0.8) if ally else rgba(255, 120, 90, 0.8), 0.08)
+			g.flush(ci)
+		var shot = sel.get("shot")
+		if chosen == null and shot != null and not sel.hasActed and sel.get("stance") != "overwatch":
+			# Range ring hint: tiles within range (light).
+			ring.call(float(shot.range), rgba(255, 230, 160, 0.35))
 		# Attackable enemies.
-		if not sel.hasActed:
+		if not sel.hasActed and chosen == null:
 			var ab = v.ui.ability
 			var tkey := "%s|%s|%d,%d" % [sel.uid, ab if ab != null else "", sel.x, sel.y]
 			if v._target_cache == null or v._target_cache.key != tkey:
@@ -463,8 +495,44 @@ func draw_under(ci: CanvasItem) -> void:
 			for t in v._target_cache.list:
 				fill_tiles(g, [t], rgba(230, 70, 50, 0.28), rgba(255, 120, 90, 0.8), 0.08)
 			g.flush(ci)
+		_draw_spell_area(ci, g, time)
 	_draw_path_and_arrows(ci, g, time)
 	_draw_footprints(ci, g, time)
+
+
+## What the hovered spell would strike: the blast's ground, friends caught in
+## it in orange, and lightning's arcs.
+func _draw_spell_area(ci: CanvasItem, g: Geo, time: float) -> void:
+	var b = v.b
+	var sp = v.ui.hover.get("spell")
+	if sp == null or not sp.get("legal") or v.busy():
+		return
+	var ab: Dictionary = DB.ABILITIES[sp.ability]
+	if ab.get("splash"):
+		var area: Array = [sp.at]
+		area.append_array(Grid.neighbors(b.map, sp.at))
+		fill_tiles(g, area, rgba(255, 170, 80, 0.12), rgba(255, 190, 110, 0.55), 0.12)
+		g.flush(ci)
+	for h in sp.hits:
+		var u: Dictionary = v._u(h.uid)
+		var good: bool = float(h.get("heal", 0)) > 0 or (h.get("ally", false) and not h.get("max"))
+		var ally: bool = h.get("ally", false)
+		var fill := rgba(140, 240, 130, 0.32) if good else (rgba(255, 150, 40, 0.42) if ally else rgba(255, 80, 50, 0.36))
+		var edge := rgba(190, 255, 170, 0.95) if good else (rgba(255, 190, 90, 1) if ally else rgba(255, 140, 110, 1))
+		fill_tiles(g, [u], fill, edge, 0.05)
+	g.flush(ci)
+	# Lightning: the arcs it will jump along.
+	if ab.get("chain") == null:
+		return
+	var pts := PackedVector2Array()
+	for h in sp.hits:
+		if h.role != "main" and h.role != "chain":
+			continue
+		var u: Dictionary = v._u(h.uid)
+		pts.append(Vector2(Iso.iso_x(u.x, u.y), Iso.iso_y(u.x, u.y, v._tile_h(u.x, u.y)) - 20))
+	if pts.size() > 1:
+		dash_geo(g, pts, rgba(190, 215, 255, 0.85), 2.5, 4.0, 6.0, -time * 40)
+		g.flush(ci)
 
 
 func _draw_path_and_arrows(ci: CanvasItem, g: Geo, time: float) -> void:
@@ -661,7 +729,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 	# `marks`: world points that must stay in sight (one is enough to fade a prop).
 	var boxes := {} # column -> [[x, y, d]]
 	for uv in v.views.values():
-		if not (uv.visible or staged.has(uv.uid)) or not _has_bodies(uv):
+		if not (uv.visible or staged.has(uv.uid)) or not _shows(uv):
 			continue
 		var p: Vector2 = v._view_pos(uv)
 		if absf(p.x - cx) < hw and p.y - cy > -hh - 60 and p.y - cy < hh + 420:
@@ -750,7 +818,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 	for uv in v.views.values():
 		# Coming waves mass beyond their edge, darkened, until they march in.
 		var waiting: bool = uv.reserve and staged.has(uv.uid)
-		if not (uv.visible or waiting) or not _has_bodies(uv):
+		if not (uv.visible or waiting) or not _shows(uv):
 			continue
 		var vp: Vector2 = v._view_pos(uv)
 		if not (absf(vp.x - cx) < hw and vp.y - cy > -hh - 60 and vp.y - cy < hh + 420):
@@ -786,6 +854,11 @@ const K_GHOST := 3
 const K_SQUAD := 4
 const K_RIDER := 5
 const OFFS := [Vector2(0, -22), Vector2(0, -44), Vector2(-26, -30), Vector2(26, -30), Vector2(0, -62)]
+
+
+## Something of the squad to draw: soldiers standing or falling, or a war machine's engine.
+func _shows(uv) -> bool:
+	return _has_bodies(uv) or (_engine_stands(uv) and DB.is_engine(v._type_of(uv.uid)))
 
 
 static func _has_bodies(uv) -> bool:
@@ -933,6 +1006,15 @@ func member_sprite(uv, m) -> Array:
 ## Whether a squad's drawn soldiers cover a world point (with a little tolerance).
 func body_covers(uv, u: Dictionary, wx: float, wy: float, tol := 4.0) -> bool:
 	var k0 := SquadView.member_scale(u)
+	var eng = engine_of(uv, u) if _engine_stands(uv) else null
+	if eng != null and not eng.s.is_empty():
+		var es: Dictionary = eng.s
+		var ek: float = es.scale * k0
+		for o in [Vector2(0, 0), Vector2(tol, 0), Vector2(-tol, 0), Vector2(0, tol), Vector2(0, -tol)]:
+			var lx: float = es.ax - (wx + o.x - eng.x) / ek if eng.flip else es.ax + (wx + o.x - eng.x) / ek
+			var ly: float = es.ay + (wy + o.y - eng.y) / ek
+			if Assets.opaque_at(es, lx, ly):
+				return true
 	for m in uv.members:
 		if not m.alive:
 			continue
@@ -951,9 +1033,42 @@ func body_covers(uv, u: Dictionary, wx: float, wy: float, tol := 4.0) -> bool:
 	return false
 
 
+## Whether a crew squad's engine still stands. The original draws it only
+## while a crewman stands, so it vanished between the last one's fall and the
+## squad's `down` event (which leaves the wreck); here it stays until then.
+static func _engine_stands(uv) -> bool:
+	return uv.alive > 0 or (uv.status != "dead" and uv.status != "downed")
+
+
+## The war machine of a crew squad: its sprite, where it stands and which way it is drawn.
+func engine_of(uv, u: Dictionary) -> Variant:
+	if not DB.is_engine(u.typeId):
+		return null
+	var p: Vector2 = v._view_pos(uv)
+	var o := Formation.engine_offset(uv.facing)
+	# The engine moves with its crew: shoved forward when they ram or heave, rocked when they are struck.
+	var lx := 0.0
+	var ly := 0.0
+	var n := 0
+	for m in uv.members:
+		if m.alive:
+			lx += m.lunge.x
+			ly += m.lunge.y
+			n += 1
+	if n > 0:
+		lx /= n
+		ly /= n
+	var pose := "atk" if (uv.engine_atk > 0 and not uv.routing) else "idle"
+	var s := Assets.sprite("%s_%s_%s" % [u.typeId, pose, "f" if Formation.faces_camera(uv.facing) else "b"], int(u.variant))
+	var shake: float = sin(v.time * 55) * uv.shake * 3 if uv.shake else 0.0
+	return {"s": s, "flip": uv.facing == 0 or uv.facing == 2, "x": p.x + o.x + lx + shake, "y": p.y + o.y + ly - uv.hop, "oy": o.y}
+
+
 func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 	var k := SquadView.member_scale(u)
-	var big := 1.5 if u.size <= 3 else (0.8 if DB.UNIT_TYPES[u.typeId].get("size") == "small" else 1.0)
+	var def: Dictionary = DB.UNIT_TYPES[u.typeId]
+	var big := 0.85 if def.has("crew") else (1.5 if (u.size <= 3 and def.get("size") == "large") else (0.8 if def.get("size") == "small" else 1.0))
+	var eng = engine_of(uv, u) if _engine_stands(uv) else null
 	var col := Color(20 / 255.0, 25 / 255.0, 10 / 255.0, 0.3 * uv.alpha)
 	var bx := Iso.iso_x(uv.x, uv.y)
 	var by := Iso.iso_y(uv.x, uv.y, uv.h)
@@ -966,6 +1081,8 @@ func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 		var px: float = bx + m.x + m.lunge.x
 		var py: float = by + m.y + m.lunge.y + 1
 		ci.draw_texture_rect(disc, Rect2(px - rx, py - ry, rx * 2, ry * 2), false, col)
+	if eng != null:
+		ci.draw_texture_rect(disc, Rect2(eng.x - 40, eng.y + 2 - 17, 80, 34), false, col)
 	# Zoomed out, or on a crowded large field, the contact shadows are enough:
 	# a cast shadow per soldier doubles the drawing for little to see.
 	if v.cam.zoom < 0.5 or (v.b.map.get("scale") == "large" and not v.rich_shadows):
@@ -975,6 +1092,8 @@ func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 			continue
 		var ms := member_sprite(uv, m)
 		Assets.draw_cast_shadow(ci, ms[0], bx + m.x + m.lunge.x, by + m.y + m.lunge.y, ms[1], k, 0.16 * uv.alpha)
+	if eng != null:
+		Assets.draw_cast_shadow(ci, eng.s, eng.x, eng.y, eng.flip, k, 0.18 * uv.alpha)
 
 
 ## Assets.draw_sprite without restoring the transform afterwards (the next
@@ -996,6 +1115,39 @@ static func _blit_m(ci: CanvasItem, ms: Array, x: float, y: float, scale: float,
 	var sc: float = ms[5] * scale
 	ci.draw_set_transform_matrix(Transform2D(rot, Vector2(-sc if ms[1] else sc, sc * sy), 0.0, Vector2(x, y)))
 	ci.draw_texture_rect_region(tex, ms[3], ms[4], mod)
+
+
+## Frost on a chilled squad, the red of a frenzy: a tinted copy of the figure
+## over it (tintOf; the sorted pass's material draws Assets.TINT colours).
+static func _draw_tints(ci: CanvasItem, uv, s: Dictionary, x: float, y: float, flip: bool, scale: float, alpha: float, sy: float, rot: float, time: float, phase: float) -> void:
+	for st in uv.statuses:
+		if st == "bleeding":
+			continue
+		var chill: bool = st == "chilled"
+		var a := 0.42 if chill else 0.22 + 0.09 * sin(time * 6 + phase)
+		_blit(ci, s, x, y, flip, scale, Assets.tint_modulate(TINT_CHILL if chill else TINT_FRENZY, alpha * a), sy, rot)
+		# Rime on the chilled: a faint frosty sheen over the blue.
+		if chill:
+			_blit(ci, s, x, y, flip, scale, Assets.tint_modulate(Color.WHITE, alpha * 0.12), sy, rot)
+
+
+const TINT_CHILL := Color(0x7c / 255.0, 0xc4 / 255.0, 1.0)
+const TINT_FRENZY := Color(0xc8 / 255.0, 0x1e / 255.0, 0x10 / 255.0)
+
+
+## The engine among its crew (the drawEngine step of drawSquad).
+func _draw_engine(ci: CanvasItem, uv, eng: Dictionary, scale: float, alpha: float, dim: float, time: float) -> void:
+	var s: Dictionary = eng.s
+	_blit(ci, s, eng.x, eng.y, eng.flip, scale, Color(1, 1, 1, alpha))
+	if dim > 0:
+		_blit(ci, s, eng.x, eng.y, eng.flip, scale, Color(0, 0, 0, alpha * dim))
+	_draw_tints(ci, uv, s, eng.x, eng.y, eng.flip, scale, alpha, 1.0, 0.0, time, 0.0)
+	var fl := 0.0
+	for m in uv.members:
+		if m.alive:
+			fl = maxf(fl, m.flash)
+	if fl > 0:
+		_blit(ci, s, eng.x, eng.y, eng.flip, scale, Color(Assets.FLASH, Assets.FLASH, Assets.FLASH, fl * 0.6))
 
 
 ## `dim` darkens the squad (a wave still massing beyond the edge).
@@ -1025,7 +1177,14 @@ func _draw_squad(ci: CanvasItem, uv, u: Dictionary, time: float, fade := 1.0, di
 	var vshake: float = sin(time * 55) * uv.shake * 3 if uv.shake else 0.0
 	var hop: float = uv.hop
 	var walk: float = uv.walk_t * 3.3
+	# A war machine stands among its crew: those behind it are drawn first.
+	var eng = engine_of(uv, u) if _engine_stands(uv) else null
+	var engine_drawn: bool = eng == null
+	var tinted: bool = uv.statuses.size() > 0
 	for m in bodies:
+		if not engine_drawn and m.y + m.lunge.y > eng.oy:
+			engine_drawn = true
+			_draw_engine(ci, uv, eng, base_scale, alpha, dim, time)
 		var ms := member_sprite(uv, m)
 		var s: Dictionary = ms[0]
 		var flip: bool = ms[1]
@@ -1055,11 +1214,15 @@ func _draw_squad(ci: CanvasItem, uv, u: Dictionary, time: float, fade := 1.0, di
 		_blit_m(ci, ms, qx, qy, scale, white, breathe, rot)
 		if dim > 0:
 			_blit_m(ci, ms, qx, qy, scale, Color(0, 0, 0, alpha * dim), breathe, rot)
+		if tinted:
+			_draw_tints(ci, uv, s, qx, qy, flip, scale, alpha, breathe, rot, time, phase)
 		if m.flash > 0:
 			_blit_m(ci, ms, qx, qy, scale, Color(Assets.FLASH, Assets.FLASH, Assets.FLASH, m.flash * 0.8), breathe, rot)
 		if m == bearer and (fighting or uv.reserve):
 			ci.draw_set_transform_matrix(Assets.draw_base)
 			_draw_standard(ci, u, qx, qy, flip, time, alpha)
+	if not engine_drawn:
+		_draw_engine(ci, uv, eng, base_scale, alpha, dim, time)
 	ci.draw_set_transform_matrix(Assets.draw_base)
 
 
@@ -1191,6 +1354,8 @@ func draw_overlays(ci: CanvasItem) -> void:
 			icon.call("SPEARS", Color.html("#e9d58f"))
 		elif stance == "overwatch":
 			icon.call("WATCH", Color.html("#e9d58f"))
+		for st in uv.statuses:
+			icon.call(v.STATUS_LABEL[st], v.STATUS_COLOR[st])
 		if u.leader:
 			icon.call("★", Color.html("#ffcf5a"))
 		if u.tags.has("warchief"):
@@ -1288,6 +1453,18 @@ func _draw_wave_labels(ci: CanvasItem, w: float, h: float, time: float) -> void:
 		var lc := Color.html("#ffb4a0")
 		lc.a = pulse
 		ci.draw_string(font, Vector2(lx, ly), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, lc)
+
+
+# ---------------------------------------------------------------- screen flash
+
+## Lightning lights up the whole field for an instant; a fireball's burst warms
+## it (additive over the world, under the night; the layer's material adds it).
+func draw_screen_flash(ci: CanvasItem) -> void:
+	var f: Dictionary = v.flash
+	if f.a <= 0.01:
+		return
+	var c: Color = f.color
+	ci.draw_rect(Rect2(0, 0, v._w, v._h), Color(c.r + Fx.ADD, c.g, c.b, f.a * 0.2))
 
 
 # ---------------------------------------------------------------- minimap

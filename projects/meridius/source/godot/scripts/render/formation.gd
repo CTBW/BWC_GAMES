@@ -12,6 +12,7 @@
 extends RefCounted
 
 const JS = preload("res://scripts/core/js.gd")
+const DB = preload("res://scripts/data/db.gd")
 
 ## Column spacing, half the gap between ranks, and the sideways lean toward the facing.
 const COL := 30.0
@@ -41,14 +42,61 @@ static func side_sign(f: int) -> float:
 	return -1.0 if (f == 1 or f == 2) else 1.0
 
 
+const GRID_DIRS := [{"x": 1, "y": 0}, {"x": 0, "y": 1}, {"x": -1, "y": 0}, {"x": 0, "y": -1}]
+
+
+## A point on the ground in grid units (along the facing, to its left) as a screen offset.
+static func ground_offset(facing: int, along: float, left: float) -> Dictionary:
+	var d: Dictionary = GRID_DIRS[facing]
+	var gx: float = d.x * along + d.y * left
+	var gy: float = d.y * along - d.x * left
+	return _p((gx - gy) * 64, (gx + gy) * 32)
+
+
+## Where a war machine stands on its tile: a little forward of the centre, its crew behind it.
+static func engine_offset(facing: int) -> Dictionary:
+	return ground_offset(facing, ENGINE_FORWARD, 0)
+
+
+## How far forward of the tile centre the engine stands (grid units).
+const ENGINE_FORWARD := 0.1
+
+
+## Crew around a war machine. Facing the camera, two work the windlass at the
+## back corners and the third stands at its side. Facing away, the back of the
+## engine is nearest the camera, so the crew stand at its flanks where they do
+## not hide it. A war wagon's crew always shove it from behind.
+static func crew_slots(n: int, facing: int, pushed: bool) -> Array:
+	if n <= 0:
+		return []
+	if pushed:
+		var back := -0.32
+		if n == 1:
+			return [ground_offset(facing, back, 0)]
+		var pall := [ground_offset(facing, back, 0.17), ground_offset(facing, back, -0.17), ground_offset(facing, back - 0.1, 0)]
+		return pall.slice(0, n)
+	var all: Array
+	if faces_camera(facing):
+		all = [ground_offset(facing, -0.3, 0.21), ground_offset(facing, -0.3, -0.21), ground_offset(facing, 0.02, 0.36)]
+	else:
+		all = [ground_offset(facing, -0.1, 0.37), ground_offset(facing, -0.1, -0.37), ground_offset(facing, 0.24, 0.37)]
+	if n == 1:
+		return [ground_offset(facing, -0.3, 0) if faces_camera(facing) else all[0]]
+	return all.slice(0, n)
+
+
 ## Slots for `n` standing soldiers of a squad whose full strength is `size`,
 ## front rank first. Six stand in two ranks of three; casualties close up the
-## ranks so the block stays centred on the anchor. Three-strong squads (trolls)
-## stand in a triangle with one behind.
+## ranks so the block stays centred on the anchor. Three-strong squads of great
+## beasts (trolls) stand in a triangle with one behind; a war machine's crew
+## stand around their engine (crew_slots).
 static func formation_slots(n: int, size: int, facing: int, tight: float = 1.0, type_id: String = "") -> Array:
 	var fs := 1.0 if faces_camera(facing) else -1.0 # +y is the front rank
 	var ls := side_sign(facing)
 	var out: Array = []
+	var def: Dictionary = DB.UNIT_TYPES.get(type_id, {}) if type_id != "" else {}
+	if def.has("crew"):
+		return crew_slots(n, facing, type_id == "war_wagon")
 	if type_id == "wolf_rider":
 		var col := MOUNT_COL * tight
 		var row := MOUNT_ROW * tight
@@ -83,7 +131,8 @@ static func formation_slots(n: int, size: int, facing: int, tight: float = 1.0, 
 			for x in xs:
 				out.append(_p(x + ls * lean * r, fs * row * r))
 		return out
-	var big := size <= 3
+	# Three-strong squads of great beasts (trolls) stand wide; three mages stand like men.
+	var big: bool = size <= 3 and (def.is_empty() or def.get("size") == "large")
 	var col := (BIG_COL if big else COL) * tight
 	var row := (BIG_ROW if big else ROW) * tight
 	var lean := LEAN * tight

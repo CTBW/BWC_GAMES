@@ -5,6 +5,7 @@ import { MILITIA_LEADERS, WARCHIEF_NAMES } from '../data/names';
 import { makeEnemy } from '../meta/soldier';
 import { INWARD } from './battle';
 import { dirTo, dist, tilePassable } from './grid';
+import { isBackline } from './squad';
 import { OUTWARD, TRANSPOSED, generateMap } from './mapgen';
 import type { BattleKind, BattleMap, BattleObjective, BattleSetup, BattleUnit, Edge, Pt, Wave, WaveUnit } from './types';
 
@@ -50,9 +51,9 @@ export function rollEncounter(encounterId: string, rng: Rng, depth: number): Enc
   return { encounterId, mapId, seed: rng.int(1, 2 ** 31 - 1), enemies, ambush: !!e.ambush, waves, allies };
 }
 
-/** Deployment order: shields in front, then spears and levies, missiles at the back. */
+/** Deployment order: shields in front, then spears and levies, missiles, casters and war machines at the back. */
 function rank(u: BattleUnit): number {
-  if (u.shot) return 3;
+  if (isBackline(u)) return 3;
   if (u.typeId === 'footman' || u.typeId === 'collie_guard') return 0;
   if (u.typeId === 'spearman') return 1;
   return 2;
@@ -68,8 +69,8 @@ export function deployPlayer(map: BattleMap, units: BattleUnit[], ambush: boolea
     const mid = { x: map.w / 2 - 0.5, y: map.h / 2 - 0.5 };
     zone.sort((a, b) => dist(a, mid) - dist(b, mid));
     // Ranged in the middle, melee around them.
-    const ranged = sorted.filter((u) => u.shot);
-    const melee = sorted.filter((u) => !u.shot);
+    const ranged = sorted.filter((u) => isBackline(u));
+    const melee = sorted.filter((u) => !isBackline(u));
     let i = 0;
     for (const u of [...ranged, ...melee]) {
       const p = zone[i++];
@@ -107,7 +108,7 @@ export function deployPlayer(map: BattleMap, units: BattleUnit[], ambush: boolea
         u.x = p.x;
         u.y = p.y;
       };
-      const holders = sorted.filter((u) => !u.shot && !u.tags.includes('militia'));
+      const holders = sorted.filter((u) => !isBackline(u) && !u.tags.includes('militia'));
       const rest = sorted.filter((u) => !holders.includes(u));
       ways.forEach((p, i) => holders[i] && take(p, holders[i]));
       const spare = holders.slice(ways.length).concat(rest);
@@ -152,8 +153,8 @@ export function deployPlayer(map: BattleMap, units: BattleUnit[], ambush: boolea
 
 export function deployEnemies(map: BattleMap, units: BattleUnit[], rng: Rng, ambush: boolean) {
   const zone = rng.shuffle(map.enemyDeploy.slice());
-  const melee = units.filter((u) => !u.shot);
-  const ranged = units.filter((u) => u.shot);
+  const melee = units.filter((u) => !isBackline(u));
+  const ranged = units.filter((u) => isBackline(u));
   const midY = map.h / 2;
   // Ranged prefer rows far from the player; melee the near rows.
   const far = (p: Pt) => (ambush ? -Math.abs(p.y - midY) : p.y);

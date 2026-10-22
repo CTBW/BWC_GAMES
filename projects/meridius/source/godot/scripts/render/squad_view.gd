@@ -62,6 +62,12 @@ const BIG_MEMBER_SCALE := 0.44
 ## Standing height of a soldier on screen (world px), for bars and labels.
 static func member_height(type_id: String) -> float:
 	var def: Dictionary = DB.UNIT_TYPES.get(type_id, {})
+	if def.has("crew"):
+		return 40.0 if def.crew == "goblin_rabble" else 48.0
+	if type_id == "battle_mage":
+		return 54.0
+	if type_id == "goblin_shaman":
+		return 44.0
 	if type_id == "troll":
 		return 66.0
 	if type_id == "wolf_rider":
@@ -82,7 +88,12 @@ static func member_scale(u: Dictionary) -> float:
 		return 0.5
 	if u.typeId == "goblin_rabble":
 		return 0.48
-	return BIG_MEMBER_SCALE if u.size <= 3 else MEMBER_SCALE
+	var def: Dictionary = DB.UNIT_TYPES.get(u.typeId, {})
+	# War machines and their crews: goblin crews as small as the rabble they come from.
+	if def.has("crew"):
+		return 0.48 if def.crew == "goblin_rabble" else MEMBER_SCALE
+	# Only the great beasts stand three to a tile at the smaller scale; three mages are men like any other.
+	return BIG_MEMBER_SCALE if (u.size <= 3 and def.get("size") == "large") else MEMBER_SCALE
 
 
 ## Index of the soldier who must fall last (the warlord among his guard), or -1.
@@ -101,7 +112,8 @@ static func make_members(u: Dictionary) -> Array:
 	for i in size:
 		var alive: bool = i < u.alive
 		var s: Dictionary = slots[i] if alive else {"x": 0.0, "y": 0.0}
-		var escort: Variant = def.get("escort") if (def.get("escort") and i > 0) else null
+		# A guard squad's rank and file, or a war machine's crew.
+		var escort: Variant = def.get("escort") if (def.get("escort") and i > 0) else def.get("crew")
 		var m := Member.new()
 		m.id = i
 		m.alive = alive

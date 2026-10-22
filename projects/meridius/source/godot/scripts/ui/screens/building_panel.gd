@@ -212,7 +212,18 @@ static func _barracks(g: Dictionary) -> Control:
 		meta.add_child(UI.hbox(3, [Icon.make("cp", 14), UI.label("%d CP" % Soldier.command_cost(r), "SmallMutedLabel")]))
 		if r.typeId == "collie_guard":
 			meta.add_child(Tag.make("Elite", "gold", "", 10))
+		# The muster's specialist: battle mages or a war machine, with what it does.
+		var specialist: bool = def.has("crew") or (def.get("tags", []) as Array).has("caster")
+		if specialist:
+			var spec := Tag.make("War machine" if def.has("crew") else "Mages", "blue", "", 10)
+			spec.name = "Specialist"
+			meta.add_child(spec)
 		info.add_child(meta)
+		if specialist:
+			var blurb := UI.rich(UI.esc(str(def.blurb)), "TinyMutedText")
+			blurb.name = "SpecialistBlurb"
+			info.add_child(UI.gap(0, 2))
+			info.add_child(blurb)
 		row.add_child(info)
 		var hire: Button
 		if cost == 0:
@@ -230,6 +241,7 @@ static func _barracks(g: Dictionary) -> Control:
 		col.add_child(UI.equal_grid(cards, 2, 8, 8))
 	if Game.level(g, "barracks") < 2:
 		col.add_child(UI.rich("A proper Barracks (level 2) draws the Border Collie Royal Guard to the gate now and then.", "SmallMutedText"))
+	col.add_child(UI.rich("Each muster one specialist squad also offers its service: three battle mages, or a ballista or mangonel with its crew.", "SmallMutedText"))
 	col.add_child(Flourish.make())
 	# Reinforcements.
 	var rh := UI.hbox(8)

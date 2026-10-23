@@ -39,6 +39,9 @@ html[data-workspace-theme=light] .report-frame,html[data-workspace-theme=light] 
 html[data-workspace-theme=light] .workspace-root .sidebar{box-shadow:20px 0 60px #18213614}
 html[data-workspace-theme=light] .app-layout .step-tab{border-color:var(--hairline);color:var(--text-dim)}
 html[data-workspace-theme=light] .app-layout .step-tab.active{border-color:#98445e50;background:var(--pink-dim);color:var(--pink-bright)}
+html[data-workspace-theme=light] .step-groups{background:var(--bg)}
+html[data-workspace-theme=light] .step-group.active{border-color:#98445e50}
+html[data-workspace-theme=light] .step-group.open{border-color:#98445e30}
 html[data-workspace-theme=light] .home .entity-card{background:#fff;border-color:var(--hairline-strong);box-shadow:var(--shadow-1)}
 html[data-workspace-theme=light] .home .entity-card:hover{background:#fff;border-color:#98445e60;box-shadow:var(--shadow-2)}
 html[data-workspace-theme=light] .home .entity-card .card-desc{color:var(--text-dim)}

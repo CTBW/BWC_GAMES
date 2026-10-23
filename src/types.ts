@@ -7,6 +7,17 @@ export interface WorkspaceStep {
    * the step renders the side-by-side 3D viewer instead.
    */
   viewer?: 'compare3d'
+  /**
+   * Tabs that share a group sit behind one card in the left rail, and the top
+   * bar lists only the active card's tabs. Ungrouped tabs form the main card.
+   */
+  group?: string
+  /**
+   * Splits a group into smaller cards, listed under the group's card while it
+   * is open; the top bar then lists one subgroup. A group's tabs without a
+   * subgroup gather in an "Other" card.
+   */
+  subgroup?: string
 }
 
 export interface WorkspaceEntity {

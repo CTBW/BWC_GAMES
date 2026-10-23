@@ -5,6 +5,10 @@
    output media local to that task or its project folder.
 3. Write the result in English by default. Use stable tab names and relative
    paths. Keep one main project pinned when it is the user's working hub.
+   When a card's tabs pile up, give related tabs the same `group` in the
+   registry: they move behind one card in the rail left of the report. A
+   group can be split further with `subgroup` (one per character in
+   Meridius's "Character rigs"); a new character rig gets its own subgroup.
 4. Add the shared report CSS and script; use `data-mak-report="document"`.
    Markdown requires no HTML wrapper and opens in the formatted document view.
 5. Make every image clickable and downloadable. Videos need native controls.

@@ -9,9 +9,11 @@ interface TopbarProps {
   onStep: (id: string, index: number) => void
   onHome: () => void
   reportUrl: string | null
+  /** Indexes of the tabs to list; omitted = every tab. */
+  tabs?: number[]
 }
 
-export default function Topbar({ entity, stepIndex, onStep, onHome, reportUrl }: TopbarProps) {
+export default function Topbar({ entity, stepIndex, onStep, onHome, reportUrl, tabs }: TopbarProps) {
   return (
     <div className="topbar">
       <nav className="breadcrumb" aria-label="Breadcrumb">
@@ -32,16 +34,16 @@ export default function Topbar({ entity, stepIndex, onStep, onHome, reportUrl }:
         <div className="topbar-right">
           {entity.steps.length > 0 && (
             <div className="step-tabs" role="tablist">
-              {entity.steps.map((s, i) => (
+              {(tabs ?? entity.steps.map((_, i) => i)).map(i => (
                 <button
                   key={i}
                   role="tab"
                   aria-selected={i === stepIndex}
                   className={`step-tab${i === stepIndex ? ' active' : ''}`}
                   onClick={() => onStep(entity.id, i)}
-                  title={s.name}
+                  title={entity.steps[i].name}
                 >
-                  {s.name}
+                  {entity.steps[i].name}
                 </button>
               ))}
             </div>

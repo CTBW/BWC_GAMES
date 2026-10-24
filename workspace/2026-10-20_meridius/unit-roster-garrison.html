@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Unit roster · Garrison</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .roster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .unit { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 16px; padding: 14px; margin: 0;
+            border: 1px solid var(--mak-border); --tint: color-mix(in srgb, var(--mak-text) 7%, transparent); }
+    .unit-art { margin: 0; height: 148px; display: flex; align-items: flex-end; justify-content: center;
+                padding: 8px; border-radius: 9px; background: var(--tint); }
+    .unit-art img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
+    html[data-mak-report] .unit h3 { margin: 0 0 2px; font-size: 16px; line-height: 1.4; }
+    .unit .role { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+                  color: var(--mak-accent); margin: 0 0 6px; }
+    .unit p { margin: 0 0 8px; font-size: 13px; line-height: 1.6; }
+    .unit .facts { color: var(--mak-muted); font-size: 12px; margin-bottom: 8px; }
+    .unit .skills { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+    .unit .skills span { font-size: 11px; line-height: 1.5; padding: 2px 8px; border-radius: 999px;
+                         background: var(--tint); border: 1px solid var(--mak-border); cursor: help; }
+    .unit .skills .promo { border-style: dashed; }
+    .roster-foot { margin-top: 40px; font-size: 12px; color: var(--mak-muted); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <p class="eyebrow">Meridius · Unit roster</p>
+    <h1>Garrison</h1>
+    <p class="lead">The 7 squad types the player can recruit and command. Footmen, spearmen and crossbowmen come from every muster at the Barracks; the Border Collie Royal Guard can answer once it reaches level 2; and each muster offers one specialist squad: battle mages, a ballista or a mangonel.</p>
+    <p class="meta">Images are the in-game battle frames (front idle, first soldier of the squad). Descriptions and
+      numbers come from the game data as of 24 October 2026. Stats are per soldier at level 1; hover an ability for its rules.</p>
+    <h2>Line troops</h2>
+    <div class="roster-grid">
+      <article class="card unit" id="footman">
+        <figure class="unit-art"><img src="unit-roster/img/footman.png" alt="Footman in a blue cloak and cream tabard with a sword and a blue kite shield bearing a white eagle" width="138" height="193" loading="lazy"></figure>
+        <div>
+          <h3>Footman</h3>
+          <span class="role">Line holder</span>
+          <p>Armoured infantry with sword and eagle kite shield. Holds the line and shelters weaker troops behind the shield wall.</p>
+          <p class="facts">Squad of 6 · 32 HP each · Move 4 · Armour 3 · Melee 7–10 · 45 silver, 3 command</p>
+          <p class="facts">Barracks, every muster</p>
+          <p class="skills"><span title="Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense.">Shield Wall</span><span title="Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge.">Charge</span><span title="Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.">Defend</span><span class="promo" title="Promotion. Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage.">Shield Bash · promotion</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="spearman">
+        <figure class="unit-art"><img src="unit-roster/img/spearman.png" alt="Bearded spearman in a blue cloak holding an upright spear" width="137" height="209" loading="lazy"></figure>
+        <div>
+          <h3>Spearman</h3>
+          <span class="role">Anti-charge</span>
+          <p>Long spears set against the charge. Strikes first at anything that closes in, and turns choke points into killing ground.</p>
+          <p class="facts">Squad of 6 · 27 HP each · Move 4 · Armour 2 · Melee 7–11 · 30 silver, 2 command</p>
+          <p class="facts">Barracks, every muster</p>
+          <p class="skills"><span title="Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.">Spearwall</span><span title="Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.">Square</span><span class="promo" title="Promotion. Strike an enemy two tiles away in a straight line, over the head of whoever stands between.">Pike Thrust · promotion</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="crossbowman">
+        <figure class="unit-art"><img src="unit-roster/img/crossbowman.png" alt="Crossbowman in a blue cloak holding a loaded crossbow" width="131" height="193" loading="lazy"></figure>
+        <div>
+          <h3>Crossbowman</h3>
+          <span class="role">Ranged</span>
+          <p>Heavy bolts that punch through mail at range. Deadly behind a screen, helpless once the enemy reaches them.</p>
+          <p class="facts">Squad of 6 · 22 HP each · Move 4 · Armour 1 · Shot 9–13 at 2–7 tiles · 40 silver, 3 command</p>
+          <p class="facts">Barracks, every muster</p>
+          <p class="skills"><span title="Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit).">Overwatch</span><span title="Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved.">Aimed Shot</span><span class="promo" title="Promotion. A fully cranked bolt: +50% damage, ignores armour, costs two bolts.">Heavy Bolt · promotion</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="collie_guard">
+        <figure class="unit-art"><img src="unit-roster/img/collie_guard.png" alt="Border collie in black plate with a sword and a black shield bearing a gold eagle" width="164" height="204" loading="lazy"></figure>
+        <div>
+          <h3>Border Collie Royal Guard</h3>
+          <span class="role">Elite guard</span>
+          <p>Sworn hounds of the royal house in black-and-gold plate. Quick on their feet, stubborn in the line and very hard to break.</p>
+          <p class="facts">Squad of 6 · 34 HP each · Move 5 · Armour 4 · Melee 8–11 · 85 silver, 4 command</p>
+          <p class="facts">Barracks level 2, now and then</p>
+          <p class="skills"><span title="A low growl from the whole pack: enemies within 2 tiles lose 12 morale and are cowed until the end of their next turn (−10 to hit).">Growl</span><span title="Bound at least 2 tiles and hit an enemy at full tilt: +20% damage, +12% to hit and 14 more morale lost. A spear square breaks the charge.">Charge</span><span title="Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.">Defend</span><span title="The hounds tend each other&#x27;s wounds: heal 3–5 per hound standing, stop bleeding, shake off the chill and gain 6 morale. Not with an enemy beside them. The fallen stay dead.">Lick Wounds</span><span class="promo" title="Promotion. Promotion: the veterans&#x27; growl becomes a howl that carries. Enemies within 3 tiles lose 16 morale and are cowed until the end of their second turn (−10 to hit).">Howl · promotion</span></p>
+        </div>
+      </article>
+    </div>
+    <h2>Specialists</h2>
+    <div class="roster-grid">
+      <article class="card unit" id="battle_mage">
+        <figure class="unit-art"><img src="unit-roster/img/battle_mage.png" alt="Grey-bearded mage in hooded blue robes with a staff topped by a glowing orb" width="127" height="193" loading="lazy"></figure>
+        <div>
+          <h3>Battle Mage</h3>
+          <span class="role">Spellcaster</span>
+          <p>Three magi of the Amberfeld circle in the company blue. They call down chain lightning, freeze a charge in its tracks and close the wounds of the line, but an enemy blade within reach of them is a disaster.</p>
+          <p class="facts">Squad of 3 · 25 HP each · Move 4 · Armour 0 · Shot 5–7 at 2–5 tiles · 80 silver, 3 command</p>
+          <p class="facts">Barracks specialist offer</p>
+          <p class="skills"><span title="Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage).">Chain Lightning</span><span title="A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense.">Frost Blast</span><span title="Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead.">Healing Light</span><span class="promo" title="Promotion. Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead.">Mending Circle · promotion</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="ballista">
+        <figure class="unit-art"><img src="unit-roster/img/ballista.png" alt="Wheeled ballista carriage in blue and timber with a loaded bolt and a blue pennant" width="230" height="152" loading="lazy"></figure>
+        <div>
+          <h3>Ballista</h3>
+          <span class="role">War machine</span>
+          <p>A great bolt-thrower on a wheeled carriage, worked by a crew of three. Its bolt punches through one squad and into the next one behind it. It cannot loose in a turn it has been moved, and its crew are no fighters.</p>
+          <p class="facts">1 machine, crew of 3 · 23 HP each · Move 3 · Armour 2 · Shot 20–26 at 2–9 tiles · 90 silver, 3 command</p>
+          <p class="facts">Barracks specialist offer</p>
+          
+        </div>
+      </article>
+      <article class="card unit" id="mangonel">
+        <figure class="unit-art"><img src="unit-roster/img/mangonel.png" alt="Blue-painted mangonel on wheels with its throwing arm loaded with a stone" width="239" height="203" loading="lazy"></figure>
+        <div>
+          <h3>Mangonel</h3>
+          <span class="role">War machine</span>
+          <p>A torsion catapult that lobs stones over walls and heads into the enemy ranks. A stone smashes the squad it lands on and everyone beside it, friend or foe, and a miss lands a tile astray. It cannot loose in a turn it has been moved, nor at anything closer than three tiles.</p>
+          <p class="facts">1 machine, crew of 3 · 20 HP each · Move 3 · Armour 2 · 100 silver, 4 command</p>
+          <p class="facts">Barracks specialist offer</p>
+          <p class="skills"><span title="Lob a stone over walls and heads at a tile 3–9 tiles away: 10–14 per crewman to the squad there and 40% of that to every squad beside it, friend or foe. A miss lands one tile astray. Not in a turn the mangonel has moved.">Hurl Stone</span></p>
+        </div>
+      </article>
+    </div>
+    <p class="roster-foot">Source: <code>projects/meridius/source/godot/data/units.json</code>, <code>abilities.json</code> and
+      <code>assets/sprites/anim/</code>. The succubus and wolf scout rigs under Character rigs are prototypes without a
+      unit entry, so they are not listed. Rebuild with <code>python workspace/2026-10-20_meridius/unit-roster/build.py</code>.</p>
+  </main>
+</body>
+</html>

@@ -41,6 +41,24 @@
           "path": "succubus-3d.html",
           "group": "Character rigs",
           "subgroup": "Succubus"
+        },
+        {
+          "name": "Garrison units",
+          "path": "unit-roster-garrison.html",
+          "group": "Unit roster",
+          "subgroup": "Garrison"
+        },
+        {
+          "name": "Allies and crews",
+          "path": "unit-roster-allies.html",
+          "group": "Unit roster",
+          "subgroup": "Allies and crews"
+        },
+        {
+          "name": "Hillsvain Host units",
+          "path": "unit-roster-host.html",
+          "group": "Unit roster",
+          "subgroup": "Hillsvain Host"
         }
       ],
       "status": "active",

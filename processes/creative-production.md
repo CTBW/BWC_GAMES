@@ -1,6 +1,17 @@
 # Creative production loop
 
-Read the brief and inspect references. Decide which result the user needs now:
+Read the brief and inspect references. Before a new design or a revision, look
+at the project's earlier designs for context, and check all of them when needed,
+not only the closest one: concept sheets, in-game sprites, modelling masters and
+isolated parts, boss concepts, lore pages and the prompts in their receipts (the
+owner, 24 October 2026). For Meridius they are in
+`projects/meridius/references/characters/` (unit sheets, `*_idle/`,
+`wolf_scout/`, `mage_3d/`, `bosses/concepts/`), `references/text/`, `review/`
+and `source/godot/art/raw/`. A contact sheet of thumbnails shows many at once.
+Note which earlier designs the new one follows (faction colours, anatomy,
+materials, rendering) so it fits the universe.
+
+Decide which result the user needs now:
 an exploration, a faithful edit, a modeling reference, a mesh, a material or a
 motion study. Use `3d-production-routing` to select the relevant skill.
 

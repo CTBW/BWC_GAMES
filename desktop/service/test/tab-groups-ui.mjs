@@ -21,7 +21,10 @@ const steps = [
   rigs('Footman study', 'Footman'), rigs('Mixar', 'Shared'), rigs('Footman rig', 'Footman'),
   rigs('Crossbowman rig', 'Crossbowman'), { name: 'Tools', group: 'Tools' }, rigs('Loose rig'),
 ].map((step, index) => ({ ...step, path: `step${index}.html` }));
-for (const [index, step] of steps.entries()) await writeFile(path.join(repo, 'workspace/test', step.path), `<h1>Document ${index + 1}</h1><p>Readable content.</p>`);
+// The first report asks the app for other tabs of its card, as the Meridius game guide does.
+const ask = target => `parent.postMessage({ type: 'mrmak:open-step', path: '${target}' }, '*')`;
+const opener = `<a href="step6.html" onclick="event.preventDefault(); ${ask('step6.html')}">Open Footman rig</a> <button onclick="${ask('nowhere.html')}">Open nothing</button>`;
+for (const [index, step] of steps.entries()) await writeFile(path.join(repo, 'workspace/test', step.path), `<h1>Document ${index + 1}</h1><p>Readable content.</p>${index === 0 ? opener : ''}`);
 const card = { type: 'group', category: 'test', created: '2026-10-23', updated: '2026-10-23', folder: 'test', status: 'active', description: 'Tab groups.' };
 await writeFile(path.join(repo, 'workspace/workspace.json'), JSON.stringify({ entities: [
   { ...card, id: 'test', title: 'Grouped card', steps, defaultStep: 0 },
@@ -104,6 +107,22 @@ try {
   await page.keyboard.press('Escape');
   await expect(menu).toHaveCount(0);
 
+  // A report opens another tab of its own card by path, into that tab's group.
+  // Unknown paths and messages that don't come from the report frame do nothing.
+  await page.goto(service.urls.workspace + '#/test/0');
+  await showing('#/test/0', 'Main 1', 'Document 1');
+  const report = page.frameLocator('iframe.report-frame');
+  await report.getByRole('button', { name: 'Open nothing' }).click();
+  assert.equal(await page.evaluate(() => new Promise(resolve => {
+    window.postMessage({ type: 'mrmak:open-step', path: 'step8.html' }, '*');
+    setTimeout(() => resolve(location.hash), 100);
+  })), '#/test/0');
+  await report.getByRole('link', { name: 'Open Footman rig' }).click();
+  await showing('#/test/6', 'Footman rig', 'Document 7');
+  await expect(subCard('Footman')).toHaveAttribute('aria-pressed', 'true');
+  await groupCard('Grouped card').click();
+  await showing('#/test/0', 'Main 1', 'Document 1');
+
   // A card without groups keeps the full top bar and no rail.
   await page.goto(service.urls.workspace + '#/plain/5');
   await showing('#/plain/5', 'Mixar', 'Document 6');
@@ -129,7 +148,7 @@ try {
   await page.screenshot({ path: path.join(repo, 'tab-groups-narrow.png') });
   await page.setViewportSize({ width: 1280, height: 820 });
   await page.screenshot({ path: path.join(repo, 'tab-groups.png') });
-  console.log(`Tab groups UI passed: rail, filtered top bar, subgroups that open and fold, last tab per group and subgroup, Other subgroup, card menu, ungrouped card, default tab and narrow strip. Screenshots: ${repo}`);
+  console.log(`Tab groups UI passed: rail, filtered top bar, subgroups that open and fold, last tab per group and subgroup, Other subgroup, card menu, tabs opened from a report, ungrouped card, default tab and narrow strip. Screenshots: ${repo}`);
 } finally {
   await browser?.close(); await service?.close();
 }

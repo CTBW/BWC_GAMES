@@ -133,6 +133,15 @@ def icon(name):
     return f'<span class="icon-tile" aria-hidden="true"><svg><use href="#icon-{name}"></use></svg></span>'
 
 
+def tab_link(step):
+    # Another tab of the card. In Mr. Mak hub.js asks the app to open it; from disk it opens the page.
+    return f'<a class="tab-link" href="{esc(step["path"])}" data-step="{esc(step["path"])}">{esc(step["name"])}</a>'
+
+
+def rig_line(rig):
+    return f'3D rig: Character rigs ▸ {esc(rig["subgroup"])} ({", ".join(tab_link(t) for t in rig["tabs"])})'
+
+
 def chip(unit_id, units, page='characters', note=''):
     u = units[unit_id]
     extra = f' <small>{esc(note)}</small>' if note else ''
@@ -284,7 +293,7 @@ def unit_card(unit_id, ctx):
     links = [f'<button type="button" class="text-action" data-goto="animations:{unit_id}">{len(anim["labels"])} battle poses</button>'
              f' · {esc(", ".join(FACINGS[f] for f in anim["facings"]))}']
     for rig in ctx['rigs'].get(unit_id, []):
-        links.append(f'3D rig: Character rigs ▸ {esc(rig["subgroup"])} ({esc(", ".join(rig["tabs"]))})')
+        links.append(rig_line(rig))
     seen = ctx['seen_in'].get(unit_id)
     if seen:
         links.append('Fights in: ' + esc(', '.join(seen)))
@@ -405,7 +414,7 @@ def anim_row(unit_id, ctx):
         f'<span>{label}</span></div>'
         for label, seq, times in previews)
     labels = ''.join(f'<span>{esc(x)}</span>' for x in a['labels'])
-    rigs = ''.join(f'<li>3D rig: Character rigs ▸ {esc(r["subgroup"])} ({esc(", ".join(r["tabs"]))})</li>' for r in ctx['rigs'].get(unit_id, []))
+    rigs = ''.join(f'<li>{rig_line(r)}</li>' for r in ctx['rigs'].get(unit_id, []))
     faction = ctx['faction_of'][unit_id]
     return f"""<article class="anim-row" id="anim-{unit_id}" data-faction="{faction}">
           <div class="anim-head">
@@ -424,14 +433,14 @@ def page_animations(ctx):
     for sub, rig in ctx['rig_groups'].items():
         unit = RIG_UNITS.get(sub)
         who = chip(unit, ctx['units']) if unit else '<span class="muted">Prototype or shared tooling, no unit entry</span>'
-        rig_cards.append(f'<article class="rig-card"><h3>{esc(sub)}</h3><ul>{"".join(f"<li>{esc(t)}</li>" for t in rig)}</ul><div class="chip-row">{who}</div></article>')
+        rig_cards.append(f'<article class="rig-card"><h3>{esc(sub)}</h3><ul>{"".join(f"<li>{tab_link(t)}</li>" for t in rig)}</ul><div class="chip-row">{who}</div></article>')
     rows = '\n'.join(anim_row(i, ctx) for i in ctx['order'])
     return f"""
       <div class="page-heading">
         <div><p class="hub-eyebrow">05 · Animations</p><h1>How the squads move.</h1></div>
         <p>Battle figures are drawn poses. <code>soldier_anim.gd</code> plays them and adds the stride, bounce, breathing and lean from <code>_gait.json</code>, so in battle they move more than these previews.</p>
       </div>
-      <div class="section-heading"><h2>3D rigs in progress</h2><span>open them from Character rigs, left of this page</span></div>
+      <div class="section-heading"><h2>3D rigs in progress</h2><span>click a tab to open it · Meridius in the rail, then Game guide, brings you back</span></div>
       <div class="rig-grid">{''.join(rig_cards)}</div>
       <div class="section-heading"><h2>Battle poses</h2><span>first soldier, front view · previews cycle the poses at game timing</span></div>
       <div class="anim-list">
@@ -489,19 +498,19 @@ def page_more(ctx):
         if step['path'] == 'hub.html':
             continue
         key = step.get('group') or 'Meridius'
-        groups.setdefault(key, {}).setdefault(step.get('subgroup') or '', []).append(step['name'])
+        groups.setdefault(key, {}).setdefault(step.get('subgroup') or '', []).append(step)
     blocks = []
     for name, subs in groups.items():
         items = []
         for sub, tabs in subs.items():
-            inner = ''.join(f'<li>{esc(t)}</li>' for t in tabs)
+            inner = ''.join(f'<li>{tab_link(t)}</li>' for t in tabs)
             items.append(f'<li><b>{esc(sub)}</b><ul>{inner}</ul></li>' if sub else inner)
         count = sum(len(t) for t in subs.values())
         blocks.append(f'<section class="note-card"><p class="hub-eyebrow">{count} tabs</p><h2>{esc(name)}</h2><ul class="page-list">{"".join(items)}</ul></section>')
     return f"""
       <div class="page-heading">
         <div><p class="hub-eyebrow">07 · More pages</p><h1>The rest of the card.</h1></div>
-        <p>Design notes, labs and rigs live in their own tabs. Pick the group in the rail left of this page, then the tab in the bar above.</p>
+        <p>Design notes, labs and rigs live in their own tabs. Click one to open it. To come back, pick Meridius in the rail left of the page, then Game guide in the bar above.</p>
       </div>
       <div class="pages-grid">{''.join(blocks)}</div>"""
 
@@ -578,7 +587,7 @@ def main():
     rig_groups, rigs = {}, {}
     for step in entity['steps']:
         if step.get('group') == 'Character rigs':
-            rig_groups.setdefault(step.get('subgroup') or 'Other', []).append(step['name'])
+            rig_groups.setdefault(step.get('subgroup') or 'Other', []).append(step)
     for sub, tabs in rig_groups.items():
         if sub in RIG_UNITS:
             rigs.setdefault(RIG_UNITS[sub], []).append({'subgroup': sub, 'tabs': tabs})

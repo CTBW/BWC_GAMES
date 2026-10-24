@@ -38,6 +38,8 @@ html[data-mak-report=document] .section-heading h2{margin:0;padding:0;border:0;f
 html[data-mak-report=document] .hub-page h3{margin:0;font-size:16px;line-height:1.4}
 html[data-mak-report] body.hub-document button.text-action{padding:0;background:none;border:0;color:var(--mak-accent);font:inherit;cursor:pointer;text-align:left}
 html[data-mak-report] body.hub-document button.text-action:hover,html[data-mak-report] body.hub-document button.ability-name:hover{text-decoration:underline}
+html[data-mak-report] body.hub-document a.tab-link{color:var(--mak-accent);text-decoration:none}
+html[data-mak-report] body.hub-document a.tab-link:hover{text-decoration:underline}
 
 /* Overview */
 .hub-hero{position:relative;margin:0;overflow:hidden;border-radius:14px;border:1px solid var(--mak-border);background:#1c2418;isolation:isolate}

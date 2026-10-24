@@ -100,6 +100,23 @@ export default function App() {
     setRoute({ id, step: index })
   }, [])
 
+  // A report opens another tab of its own card by path, since its sandbox
+  // can't navigate the window: parent.postMessage({ type: 'mrmak:open-step',
+  // path: 'other.html' }, '*'). Only the open report frame is listened to.
+  useEffect(() => {
+    if (!entity || !reportUrl) return
+    const origin = new URL(reportUrl, location.href).origin
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.type !== 'mrmak:open-step' || event.origin !== origin) return
+      const frame = document.querySelector<HTMLIFrameElement>('iframe.report-frame')
+      if (!frame || event.source !== frame.contentWindow) return
+      const index = entity.steps.findIndex(s => s.path === event.data.path)
+      if (index >= 0) selectStep(entity.id, index)
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [entity, reportUrl, selectStep])
+
   const openTabs = (indexes: number[], key: string | null, preferred?: number) => {
     if (!entity) return
     const remembered = key ? lastTab.current.get(key) : undefined

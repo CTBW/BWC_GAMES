@@ -15,23 +15,6 @@
 <p>The front soldier from the spearmen concept, built in Tripo and rigged in Blender with a Mixamo-compatible skeleton. His spear has a forged steel head made in Blender. Ten clips play below from the game's battle camera, in all four facings: the bayonet strike from <code>projects/meridius/Animations</code> as his thrust and guard, the spearmen walk as his march, and three deaths, so the game can vary how men in a squad fall.</p>
 </header>
 
-<!-- rig-combat:start -->
-<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
-<h2 id="combat-skills-title">Combat skills</h2>
-<p class="rig-combat-status"><strong>Implemented Godot kit</strong> · 2026-10-24</p>
-<p>Spear attack: 7–11 base melee damage per soldier before armour.</p>
-<div class="rig-combat-table"><table><caption>Spearmen combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
-<tr data-skill="spearwall"><th scope="row">Spearwall</th><td>Base kit · Key 1 · stance · Every turn</td><td>Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.</td></tr>
-<tr data-skill="square"><th scope="row">Square</th><td>Base kit · Key 2 · stance · Every turn</td><td>Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.</td></tr>
-<tr data-skill="pikethrust"><th scope="row">Pike Thrust</th><td>Promotion · Key 3 · attack · Every turn</td><td>Strike an enemy two tiles away in a straight line, over the head of whoever stands between.</td></tr>
-<tr data-skill="passive"><th scope="row">First Strike</th><td>Passive · Automatic</td><td>Automatically strikes first when an enemy that moved this turn attacks from the front, once against that attacker per turn. Square extends this protection to every side.</td></tr>
-</tbody></table></div>
-<p class="rig-combat-note">Promotion skills unlock at Veteran rank through a level-2 Training Yard. Each turn a squad can move once and act once; cooldowns and skill conditions still apply. Base damage is per soldier before rank, equipment and battle modifiers.</p>
-<p><strong>3D animation status.</strong> Guard and Thrust are available in the pose viewer. Square formation and a dedicated two-tile Pike Thrust are not listed as separate clips.</p>
-<p class="rig-combat-sources"><a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
-</section>
-<!-- rig-combat:end -->
-
 <h2>Pose viewer</h2>
 <p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Screenshot with the readout in view, so the frame is named. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
 <div class="viewer">
@@ -61,6 +44,23 @@
   <div><strong>7 · Cloth cape</strong><p>The cape is cut free of the body and simulated as wool, pinned under the hood and colliding with his torso, hips, legs and the ground. Every clip has its own baked cache, so all four facings show the same cloth.</p></div>
   <div><strong>8 · Holds</strong><p>Two hands on the shaft in the guard, thrust and turn, the spear dipped a little as he turns. Upright in the right fist on the march and at ease. Leaning back on his shoulder in the step into lane.</p></div>
 </div>
+
+<!-- rig-combat:start -->
+<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
+<h2 id="combat-skills-title">Combat skills</h2>
+<p class="rig-combat-status"><strong>Implemented Godot kit</strong> · 2026-10-24</p>
+<p>Spear attack: 7–11 base melee damage per soldier before armour.</p>
+<div class="rig-combat-table"><table><caption>Spearmen combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr data-skill="spearwall"><th scope="row">Spearwall</th><td>Base kit · Key 1 · stance · Every turn</td><td>Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.</td></tr>
+<tr data-skill="square"><th scope="row">Square</th><td>Base kit · Key 2 · stance · Every turn</td><td>Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.</td></tr>
+<tr data-skill="pikethrust"><th scope="row">Pike Thrust</th><td>Promotion · Key 3 · attack · Every turn</td><td>Strike an enemy two tiles away in a straight line, over the head of whoever stands between.</td></tr>
+<tr data-skill="passive"><th scope="row">First Strike</th><td>Passive · Automatic</td><td>Automatically strikes first when an enemy that moved this turn attacks from the front, once against that attacker per turn. Square extends this protection to every side.</td></tr>
+</tbody></table></div>
+<p class="rig-combat-note">Promotion skills unlock at Veteran rank through a level-2 Training Yard. Each turn a squad can move once and act once; cooldowns and skill conditions still apply. Base damage is per soldier before rank, equipment and battle modifiers.</p>
+<p><strong>3D animation status.</strong> Guard and Thrust are available in the pose viewer. Square formation and a dedicated two-tile Pike Thrust are not listed as separate clips.</p>
+<p class="rig-combat-sources"><a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
+</section>
+<!-- rig-combat:end -->
 
 <h2>From concept to Tripo</h2>
 <figure><img src="spearman-3d/img/chain.webp" width="2254" height="1010" loading="lazy" alt="The front spearman cut from the concept sheet, the first T-pose with an eagle on the chest, the corrected T-pose and the spear">

@@ -4,6 +4,11 @@
   const tabs = [...document.querySelectorAll('[data-page]')];
   const pages = [...document.querySelectorAll('.hub-page')];
   let pending = null;
+  // The app reloads the guide whenever its tab opens again, so the section, and the scroll position
+  // when a tab link was followed, are kept for the session. Storage may be blocked; then it starts over.
+  const KEY = 'meridius-guide';
+  const saved = (() => { try { return JSON.parse(sessionStorage.getItem(KEY)) || {}; } catch { return {}; } })();
+  const save = state => { try { sessionStorage.setItem(KEY, JSON.stringify(state)); } catch { /* not kept */ } };
 
   const reveal = id => {
     const target = document.getElementById(id);
@@ -21,6 +26,7 @@
       tab.tabIndex = active ? 0 : -1;
     }
     for (const page of pages) page.hidden = page.id !== target.dataset.page;
+    save({ page: target.dataset.page });
     if (focus) target.focus();
     const anchor = pending;
     pending = null;
@@ -65,8 +71,19 @@
     open(page);
   });
 
+  // Tab links open another tab of the card. Inside Mr. Mak the page can't navigate the window,
+  // so it asks the app (App.tsx, mrmak:open-step); opened from disk the link opens the page itself.
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[data-step]');
+    if (!link || window.parent === window || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    save({ page: pages.find(page => !page.hidden).id, top: window.scrollY });
+    window.parent.postMessage({ type: 'mrmak:open-step', path: link.dataset.step }, '*');
+  });
+
   window.addEventListener('hashchange', () => select(location.hash.slice(1)));
-  select(location.hash.slice(1));
+  select(location.hash.slice(1) || saved.page);
+  if (!location.hash && saved.top) window.scrollTo({ top: saved.top, behavior: 'instant' });
 
   // Pose previews step through one strip of equal cells at the game's frame times.
   const still = matchMedia('(prefers-reduced-motion: reduce)');

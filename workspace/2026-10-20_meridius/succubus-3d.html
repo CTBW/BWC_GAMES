@@ -16,36 +16,6 @@
 <p>A succubus and German shepherd hybrid: horns, drooping deer ears, bat wings, a bushy tail, paws, and a coiled razor whip in her left hand. She was drawn in Higgsfield, modelled in Tripo as four separate parts, reworked and rigged in Blender, and exported as one FBX that plays in the Godot 3D sandbox. Eight clips from <code>E:\Animations</code> play below from the game's battle camera, in all four facings. Her tail, wings and loincloth move on their own on top of the Mixamo motion, and in the attack a bladed lash plays out of the whip's collar.</p>
 </header>
 
-<!-- rig-combat:start -->
-<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
-<h2 id="combat-skills-title">Combat skills</h2>
-<p class="rig-combat-status"><strong>Combat animation and approved spell concept; gameplay kit pending</strong> · 2026-10-24</p>
-<p>The Succubus is currently a 3D sandbox character, with no unit entry or combat ability kit in the Godot gameplay data.</p>
-<div class="rig-combat-table"><table><caption>Succubus combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
-<tr data-skill="whip_attack"><th scope="row">Whip attack</th><td>Existing animation · Sandbox only</td><td>A left-handed bladed lash extends and cracks like a whip twice, an overhand strike and a rising underhand one, both forward at the tile ahead, then recoils and falls. Damage, gameplay reach, costs and cooldown are not defined; the two animated strikes do not establish two gameplay hits.</td></tr>
-<tr data-skill="sovereign_kiss"><th scope="row">Sovereign Kiss</th><td>Approved visual direction · Gameplay pending</td><td>A blown kiss becomes a large heart of pink fog that passes through opponents, enthralls eligible targets and dissolves beyond the formation. Cast with the free right hand while the left keeps the whip lowered. Target count, duration, resistance, range, cost and cooldown remain undecided.</td></tr>
-</tbody></table></div>
-
-<p><strong>3D animation status.</strong> The whip Attack clip is available in the pose viewer. Sovereign Kiss has an approved visual direction and a Blender handoff; its animation and gameplay implementation remain pending.</p>
-<p class="rig-combat-sources"><a href="sovereign-kiss.html">Sovereign Kiss schematic and icon</a> · <a href="sovereign-kiss/blender-handoff.html">Spell animation handoff</a> · <a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
-</section>
-<!-- rig-combat:end -->
-
-<h2>Animations to fix</h2>
-<p>Step to the frame that is wrong in the pose viewer below, press <strong>Copy frame reference</strong>, and send it with a note. Each fix is recorded here with what changed.</p>
-<div class="table-wrap"><table>
-<thead><tr><th><div style="min-width:6rem">Clip</div></th><th><div style="min-width:10rem">Source</div></th><th><div style="min-width:6.5rem">Length</div></th><th><div style="min-width:5rem">Status</div></th><th><div style="min-width:18rem">Notes</div></th></tr></thead>
-<tbody>
-<tr><td>Idle</td><td>Idle standing - Succubus-German Shepherd</td><td>16.6 s loop</td><td>New · to review</td><td>Her standing idle, added 24 Oct. Her hand and the coiled whip sank 6–7 cm into her fur hips: the whip arm is now held 15–24° out from her side and the whip rolled outward in her fist. Wings sway nine times per loop.</td></tr>
-<tr><td>Idle flourish</td><td>Idle - Succubus-German Shepherd</td><td>7.8 s, one-off</td><td>Fixed · to review</td><td>The bending idle, now played from the idle now and then: each succubus waits her own random 9–22 s, so a squad never moves in step. Eased in from and back to the idle's first pose. <strong>Frame 220:</strong> the whip arm is turned out from her side while her hands rest on her knees (up to 42° in this clip), so it no longer cuts into her legs. <strong>Frame 166:</strong> the whip rolled in her fist so the coil lies behind her head instead of through it (it still touches her hair).</td></tr>
-<tr><td>Walk</td><td>Walking - Succubus-German Shepherd</td><td>1.17 s loop, 1.0 m/s</td><td>To review</td><td>Wings folded. On the back swing the whip's pommel went into her hip fur: the arm now turns out up to 11° there. The loop's last frame differs from its first by 1.7 cm at most.</td></tr>
-<tr><td>Start walking</td><td>Start Walking - Succubus-German Shepherd</td><td>1.87 s</td><td>To review</td><td>Keeps its travel (1.6 m). Tail and wing sway build up. Whip arm 6–15° out.</td></tr>
-<tr><td>Stop walking</td><td>Stop Walking - Succubus-German Shepherd</td><td>1.53 s</td><td>To review</td><td>Keeps its travel (1.4 m). The sway dies down. Whip arm 6–15° out.</td></tr>
-<tr><td>Attack</td><td>Attack - Succubus-German Shepherd</td><td>3.5 s</td><td>Changed · to review</td><td><strong>Extending whip, revised 24 Oct.</strong> At the top of her wind-up (frames 17–22) the coil rolls up into the collar while a 2 m bladed lash plays out of it, laid back over her shoulder. It then cracks twice like a whip (<a href="#whip-crack">The whip crack</a>): an overhand strike, straight at the tile ahead at frame 27 (0.87 s), and a rising underhand strike at frame 52 (1.70 s, formerly a backhand at frame 55 that cracked behind her). After each crack the lash recoils and falls in front of her; after the second, her arm stops at the target and sinks (edited: the clip pulled it back over her shoulder). It is reeled in at frames 62–70 as the coil returns. The wings flare round frame 42.</td></tr>
-<tr><td>Hit</td><td>Hit - Succubus-German Shepherd</td><td>3.43 s</td><td>To review</td><td>Eased in from and out to the idle; turned 38° to face her facing. Starts and ends with the idle's arm and whip.</td></tr>
-<tr><td>Death</td><td>Death - Succubus-German Shepherd</td><td>3.5 s, still at 2.87 s</td><td>To review</td><td>Falls on her back 1.3 m to her right; hips lifted up to 0.23 m to keep her above the ground. The wings open and lie beside her; their membranes dip up to 2.6 cm into the ground near the end.</td></tr>
-</tbody></table></div>
-
 <h2>Pose viewer</h2>
 <p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
 <div class="viewer">
@@ -75,6 +45,36 @@
   <div><strong>7 · Tail, wings, loincloth</strong><p>Wings folded while walking and half spread at idle, after the user's reference video. The tail sways once per stride. The loincloth rides over whichever thigh is furthest forward.</p></div>
   <div><strong>8 · FBX and Godot</strong><p>One 9.1 MB FBX with all clips, checked by re-import, plays in <code>footman3d_sandbox.tscn</code> next to the 3D footman, his game sprite and an oak prop.</p></div>
 </div>
+
+<h2>Animations to fix</h2>
+<p>Step to the frame that is wrong in the pose viewer above, press <strong>Copy frame reference</strong>, and send it with a note. Each fix is recorded here with what changed.</p>
+<div class="table-wrap"><table>
+<thead><tr><th><div style="min-width:6rem">Clip</div></th><th><div style="min-width:10rem">Source</div></th><th><div style="min-width:6.5rem">Length</div></th><th><div style="min-width:5rem">Status</div></th><th><div style="min-width:18rem">Notes</div></th></tr></thead>
+<tbody>
+<tr><td>Idle</td><td>Idle standing - Succubus-German Shepherd</td><td>16.6 s loop</td><td>New · to review</td><td>Her standing idle, added 24 Oct. Her hand and the coiled whip sank 6–7 cm into her fur hips: the whip arm is now held 15–24° out from her side and the whip rolled outward in her fist. Wings sway nine times per loop.</td></tr>
+<tr><td>Idle flourish</td><td>Idle - Succubus-German Shepherd</td><td>7.8 s, one-off</td><td>Fixed · to review</td><td>The bending idle, now played from the idle now and then: each succubus waits her own random 9–22 s, so a squad never moves in step. Eased in from and back to the idle's first pose. <strong>Frame 220:</strong> the whip arm is turned out from her side while her hands rest on her knees (up to 42° in this clip), so it no longer cuts into her legs. <strong>Frame 166:</strong> the whip rolled in her fist so the coil lies behind her head instead of through it (it still touches her hair).</td></tr>
+<tr><td>Walk</td><td>Walking - Succubus-German Shepherd</td><td>1.17 s loop, 1.0 m/s</td><td>To review</td><td>Wings folded. On the back swing the whip's pommel went into her hip fur: the arm now turns out up to 11° there. The loop's last frame differs from its first by 1.7 cm at most.</td></tr>
+<tr><td>Start walking</td><td>Start Walking - Succubus-German Shepherd</td><td>1.87 s</td><td>To review</td><td>Keeps its travel (1.6 m). Tail and wing sway build up. Whip arm 6–15° out.</td></tr>
+<tr><td>Stop walking</td><td>Stop Walking - Succubus-German Shepherd</td><td>1.53 s</td><td>To review</td><td>Keeps its travel (1.4 m). The sway dies down. Whip arm 6–15° out.</td></tr>
+<tr><td>Attack</td><td>Attack - Succubus-German Shepherd</td><td>3.5 s</td><td>Changed · to review</td><td><strong>Extending whip, revised 24 Oct.</strong> At the top of her wind-up (frames 17–22) the coil rolls up into the collar while a 2 m bladed lash plays out of it, laid back over her shoulder. It then cracks twice like a whip (<a href="#whip-crack">The whip crack</a>): an overhand strike, straight at the tile ahead at frame 27 (0.87 s), and a rising underhand strike at frame 52 (1.70 s, formerly a backhand at frame 55 that cracked behind her). After each crack the lash recoils and falls in front of her; after the second, her arm stops at the target and sinks (edited: the clip pulled it back over her shoulder). It is reeled in at frames 62–70 as the coil returns. The wings flare round frame 42.</td></tr>
+<tr><td>Hit</td><td>Hit - Succubus-German Shepherd</td><td>3.43 s</td><td>To review</td><td>Eased in from and out to the idle; turned 38° to face her facing. Starts and ends with the idle's arm and whip.</td></tr>
+<tr><td>Death</td><td>Death - Succubus-German Shepherd</td><td>3.5 s, still at 2.87 s</td><td>To review</td><td>Falls on her back 1.3 m to her right; hips lifted up to 0.23 m to keep her above the ground. The wings open and lie beside her; their membranes dip up to 2.6 cm into the ground near the end.</td></tr>
+</tbody></table></div>
+
+<!-- rig-combat:start -->
+<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
+<h2 id="combat-skills-title">Combat skills</h2>
+<p class="rig-combat-status"><strong>Combat animation and approved spell concept; gameplay kit pending</strong> · 2026-10-24</p>
+<p>The Succubus is currently a 3D sandbox character, with no unit entry or combat ability kit in the Godot gameplay data.</p>
+<div class="rig-combat-table"><table><caption>Succubus combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr data-skill="whip_attack"><th scope="row">Whip attack</th><td>Existing animation · Sandbox only</td><td>A left-handed bladed lash extends and cracks like a whip twice, an overhand strike and a rising underhand one, both forward at the tile ahead, then recoils and falls. Damage, gameplay reach, costs and cooldown are not defined; the two animated strikes do not establish two gameplay hits.</td></tr>
+<tr data-skill="sovereign_kiss"><th scope="row">Sovereign Kiss</th><td>Approved visual direction · Gameplay pending</td><td>A blown kiss becomes a large heart of pink fog that passes through opponents, enthralls eligible targets and dissolves beyond the formation. Cast with the free right hand while the left keeps the whip lowered. Target count, duration, resistance, range, cost and cooldown remain undecided.</td></tr>
+</tbody></table></div>
+
+<p><strong>3D animation status.</strong> The whip Attack clip is available in the pose viewer. Sovereign Kiss has an approved visual direction and a Blender handoff; its animation and gameplay implementation remain pending.</p>
+<p class="rig-combat-sources"><a href="sovereign-kiss.html">Sovereign Kiss schematic and icon</a> · <a href="sovereign-kiss/blender-handoff.html">Spell animation handoff</a> · <a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
+</section>
+<!-- rig-combat:end -->
 
 <h2>From concept to Tripo</h2>
 <figure><img src="succubus-3d/img/chain.webp" width="2400" height="461" loading="lazy" alt="The Higgsfield T-pose with wings and tail, the body the user cut out, and the separate wings, tail and coiled whip">

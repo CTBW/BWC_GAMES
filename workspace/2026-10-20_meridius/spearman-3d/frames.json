@@ -1,0 +1,389 @@
+{
+ "clips": {
+  "idle": {
+   "sw": {
+    "file": "sheets/idle_sw.webp",
+    "frames": 43,
+    "cols": 9,
+    "w": 120,
+    "h": 225,
+    "x": 124.5,
+    "y": 157.5
+   },
+   "se": {
+    "file": "sheets/idle_se.webp",
+    "frames": 43,
+    "cols": 8,
+    "w": 260,
+    "h": 303,
+    "x": 126.0,
+    "y": 68.2
+   },
+   "nw": {
+    "file": "sheets/idle_nw.webp",
+    "frames": 43,
+    "cols": 7,
+    "w": 258,
+    "h": 280,
+    "x": 4.5,
+    "y": 70.5
+   },
+   "ne": {
+    "file": "sheets/idle_ne.webp",
+    "frames": 43,
+    "cols": 12,
+    "w": 120,
+    "h": 372,
+    "x": 144.8,
+    "y": 0.0
+   }
+  },
+  "idle_rest": {
+   "sw": {
+    "file": "sheets/idle_rest_sw.webp",
+    "frames": 129,
+    "cols": 21,
+    "w": 118,
+    "h": 366,
+    "x": 143.2,
+    "y": 5.2
+   },
+   "se": {
+    "file": "sheets/idle_rest_se.webp",
+    "frames": 129,
+    "cols": 19,
+    "w": 123,
+    "h": 328,
+    "x": 138.8,
+    "y": 28.5
+   },
+   "nw": {
+    "file": "sheets/idle_rest_nw.webp",
+    "frames": 129,
+    "cols": 20,
+    "w": 124,
+    "h": 351,
+    "x": 126.8,
+    "y": 0.0
+   },
+   "ne": {
+    "file": "sheets/idle_rest_ne.webp",
+    "frames": 129,
+    "cols": 20,
+    "w": 117,
+    "h": 345,
+    "x": 129.0,
+    "y": 12.8
+   }
+  },
+  "walk": {
+   "sw": {
+    "file": "sheets/walk_sw.webp",
+    "frames": 42,
+    "cols": 11,
+    "w": 144,
+    "h": 372,
+    "x": 119.2,
+    "y": 10.5
+   },
+   "se": {
+    "file": "sheets/walk_se.webp",
+    "frames": 42,
+    "cols": 10,
+    "w": 150,
+    "h": 350,
+    "x": 135.0,
+    "y": 25.5
+   },
+   "nw": {
+    "file": "sheets/walk_nw.webp",
+    "frames": 42,
+    "cols": 11,
+    "w": 150,
+    "h": 368,
+    "x": 105.0,
+    "y": 0.0
+   },
+   "ne": {
+    "file": "sheets/walk_ne.webp",
+    "frames": 42,
+    "cols": 11,
+    "w": 145,
+    "h": 366,
+    "x": 125.2,
+    "y": 0.0
+   }
+  },
+  "attack": {
+   "sw": {
+    "file": "sheets/attack_sw.webp",
+    "frames": 64,
+    "cols": 8,
+    "w": 257,
+    "h": 246,
+    "x": 0.0,
+    "y": 158.2
+   },
+   "se": {
+    "file": "sheets/attack_se.webp",
+    "frames": 64,
+    "cols": 9,
+    "w": 264,
+    "h": 311,
+    "x": 126.0,
+    "y": 68.2
+   },
+   "nw": {
+    "file": "sheets/attack_nw.webp",
+    "frames": 64,
+    "cols": 9,
+    "w": 263,
+    "h": 295,
+    "x": 0.0,
+    "y": 57.0
+   },
+   "ne": {
+    "file": "sheets/attack_ne.webp",
+    "frames": 64,
+    "cols": 10,
+    "w": 257,
+    "h": 372,
+    "x": 132.8,
+    "y": 0.0
+   }
+  },
+  "hit": {
+   "sw": {
+    "file": "sheets/hit_sw.webp",
+    "frames": 61,
+    "cols": 8,
+    "w": 334,
+    "h": 319,
+    "x": 0.0,
+    "y": 100.5
+   },
+   "se": {
+    "file": "sheets/hit_se.webp",
+    "frames": 61,
+    "cols": 7,
+    "w": 375,
+    "h": 268,
+    "x": 14.2,
+    "y": 99.8
+   },
+   "nw": {
+    "file": "sheets/hit_nw.webp",
+    "frames": 61,
+    "cols": 9,
+    "w": 375,
+    "h": 395,
+    "x": 0.0,
+    "y": 19.5
+   },
+   "ne": {
+    "file": "sheets/hit_ne.webp",
+    "frames": 61,
+    "cols": 9,
+    "w": 334,
+    "h": 376,
+    "x": 55.5,
+    "y": 0.0
+   }
+  },
+  "death": {
+   "sw": {
+    "file": "sheets/death_sw.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 390,
+    "h": 420,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "se": {
+    "file": "sheets/death_se.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 390,
+    "h": 420,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "nw": {
+    "file": "sheets/death_nw.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 390,
+    "h": 420,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "ne": {
+    "file": "sheets/death_ne.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 390,
+    "h": 396,
+    "x": 0.0,
+    "y": 0.0
+   }
+  },
+  "death_2": {
+   "sw": {
+    "file": "sheets/death_2_sw.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 389,
+    "h": 420,
+    "x": 0.8,
+    "y": 0.0
+   },
+   "se": {
+    "file": "sheets/death_2_se.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 390,
+    "h": 420,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "nw": {
+    "file": "sheets/death_2_nw.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 390,
+    "h": 415,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "ne": {
+    "file": "sheets/death_2_ne.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 388,
+    "h": 373,
+    "x": 0.0,
+    "y": 0.0
+   }
+  },
+  "death_3": {
+   "sw": {
+    "file": "sheets/death_3_sw.webp",
+    "frames": 118,
+    "cols": 11,
+    "w": 256,
+    "h": 258,
+    "x": 0.0,
+    "y": 161.2
+   },
+   "se": {
+    "file": "sheets/death_3_se.webp",
+    "frames": 118,
+    "cols": 12,
+    "w": 277,
+    "h": 320,
+    "x": 112.5,
+    "y": 99.8
+   },
+   "nw": {
+    "file": "sheets/death_3_nw.webp",
+    "frames": 118,
+    "cols": 12,
+    "w": 277,
+    "h": 309,
+    "x": 0.0,
+    "y": 42.0
+   },
+   "ne": {
+    "file": "sheets/death_3_ne.webp",
+    "frames": 118,
+    "cols": 14,
+    "w": 256,
+    "h": 376,
+    "x": 133.5,
+    "y": 0.0
+   }
+  },
+  "step_lane": {
+   "sw": {
+    "file": "sheets/step_lane_sw.webp",
+    "frames": 39,
+    "cols": 11,
+    "w": 141,
+    "h": 365,
+    "x": 111.0,
+    "y": 10.5
+   },
+   "se": {
+    "file": "sheets/step_lane_se.webp",
+    "frames": 39,
+    "cols": 11,
+    "w": 144,
+    "h": 380,
+    "x": 126.8,
+    "y": 0.0
+   },
+   "nw": {
+    "file": "sheets/step_lane_nw.webp",
+    "frames": 39,
+    "cols": 10,
+    "w": 144,
+    "h": 327,
+    "x": 119.2,
+    "y": 36.0
+   },
+   "ne": {
+    "file": "sheets/step_lane_ne.webp",
+    "frames": 39,
+    "cols": 11,
+    "w": 142,
+    "h": 365,
+    "x": 136.5,
+    "y": 6.8
+   }
+  },
+  "turn_90": {
+   "sw": {
+    "file": "sheets/turn_90_sw.webp",
+    "frames": 29,
+    "cols": 6,
+    "w": 279,
+    "h": 282,
+    "x": 108.0,
+    "y": 101.2
+   },
+   "se": {
+    "file": "sheets/turn_90_se.webp",
+    "frames": 29,
+    "cols": 7,
+    "w": 279,
+    "h": 381,
+    "x": 110.2,
+    "y": 0.0
+   },
+   "nw": {
+    "file": "sheets/turn_90_nw.webp",
+    "frames": 29,
+    "cols": 6,
+    "w": 279,
+    "h": 307,
+    "x": 0.0,
+    "y": 72.8
+   },
+   "ne": {
+    "file": "sheets/turn_90_ne.webp",
+    "frames": 29,
+    "cols": 7,
+    "w": 279,
+    "h": 380,
+    "x": 2.2,
+    "y": 0.0
+   }
+  }
+ },
+ "fps": 30,
+ "canvas": [
+  390,
+  420
+ ]
+}

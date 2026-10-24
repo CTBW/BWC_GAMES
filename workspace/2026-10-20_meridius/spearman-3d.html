@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Spearman 3D rig</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<link rel="stylesheet" href="rig-viewer/viewer.css">
+<link rel="stylesheet" href="rig-viewer/combat.css">
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / AMBERFELD SPEARMEN / 3D RIG / 23 OCT 2026</p>
+<h1>Spearman 3D rig</h1>
+<p>The front soldier from the spearmen concept, built in Tripo and rigged in Blender with a Mixamo-compatible skeleton. His spear has a forged steel head made in Blender. Ten clips play below from the game's battle camera, in all four facings: the bayonet strike from <code>E:\Animations</code> as his thrust and guard, the spearmen walk as his march, and three deaths, so the game can vary how men in a squad fall.</p>
+</header>
+
+<!-- rig-combat:start -->
+<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
+<h2 id="combat-skills-title">Combat skills</h2>
+<p class="rig-combat-status"><strong>Implemented Godot kit</strong> · 2026-10-24</p>
+<p>Spear attack: 7–11 base melee damage per soldier before armour.</p>
+<div class="rig-combat-table"><table><caption>Spearmen combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr data-skill="spearwall"><th scope="row">Spearwall</th><td>Base kit · Key 1 · stance · Every turn</td><td>Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.</td></tr>
+<tr data-skill="square"><th scope="row">Square</th><td>Base kit · Key 2 · stance · Every turn</td><td>Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.</td></tr>
+<tr data-skill="pikethrust"><th scope="row">Pike Thrust</th><td>Promotion · Key 3 · attack · Every turn</td><td>Strike an enemy two tiles away in a straight line, over the head of whoever stands between.</td></tr>
+<tr data-skill="passive"><th scope="row">First Strike</th><td>Passive · Automatic</td><td>Automatically strikes first when an enemy that moved this turn attacks from the front, once against that attacker per turn. Square extends this protection to every side.</td></tr>
+</tbody></table></div>
+<p class="rig-combat-note">Promotion skills unlock at Veteran rank through a level-2 Training Yard. Each turn a squad can move once and act once; cooldowns and skill conditions still apply. Base damage is per soldier before rank, equipment and battle modifiers.</p>
+<p><strong>3D animation status.</strong> Guard and Thrust are available in the pose viewer. Square formation and a dedicated two-tile Pike Thrust are not listed as separate clips.</p>
+<p class="rig-combat-sources"><a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
+</section>
+<!-- rig-combat:end -->
+
+<h2>Pose viewer</h2>
+<p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Screenshot with the readout in view, so the frame is named. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
+<div class="viewer">
+  <div class="vbar" role="group" aria-label="Clip"><span class="vlbl">Clip</span><div class="vchips" id="clipChips"></div></div>
+  <div class="vbar" role="group" aria-label="Facing"><span class="vlbl">Facing</span><div class="vchips" id="faceChips"></div></div>
+  <div class="vbar" role="group" aria-label="Playback">
+    <button id="first" class="vbtn" title="First frame (Home)" aria-label="First frame">⏮</button>
+    <button id="prev" class="vbtn" title="Previous frame (←)" aria-label="Previous frame">◀</button>
+    <button id="play" class="vbtn" title="Play / pause (Space)" aria-label="Play or pause">❚❚</button>
+    <button id="next" class="vbtn" title="Next frame (→)" aria-label="Next frame">▶</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <label class="vsel">Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+    <label class="vsel">Zoom <select id="zoom"><option value="1">1×</option><option value="1.5" selected>1.5×</option><option value="2">2×</option></select></label>
+    <label class="vsel">Ground <select id="ground"><option value="paper">Paper</option><option value="grass">Grass</option><option value="dark">Dark</option></select></label>
+  </div>
+  <div class="readout"><span id="readout" aria-live="polite">Loading frames…</span><button id="copy" class="vcopy">Copy frame reference</button><span id="copied" class="copied" hidden>Copied</span></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="steps">
+  <div><strong>1 · Reference images</strong><p>The front soldier cut from <code>Pikemen.png</code>. Nano Banana Pro on Higgsfield turned him into a T-pose, with one edit for the cream chest of the concept, and drew the spear on its own, at 4K.</p></div>
+  <div><strong>2 · Tripo</strong><p>Smart Mesh in quads. The body's cape was regenerated with the three free Edit Mesh retries and ended at 5,962 faces; the spear has 499. Both are textured at 4096 px.</p></div>
+  <div><strong>3 · Fixed in Blender</strong><p>Cloth folds on the cape's flat back, the hem left as Tripo made it. Four slivers at the tabard slits removed.</p></div>
+  <div><strong>4 · Spear head</strong><p>The wooden collar is replaced by a forged steel socket with rings, rivets and two riveted langets. The blue wrap now binds the langets. Shaft 4 cm across, length 2.4 m.</p></div>
+  <div><strong>5 · Rigged</strong><p>A 22-bone skeleton with Mixamo names, fitted to the mesh, with rigid fists round the shaft. Two forearm twist bones carry the wrist half of each forearm round with the hand, so rolling the fist doesn't wring the wrist.</p></div>
+  <div><strong>6 · Clips retargeted</strong><p>Guard, At ease, March, Thrust, Hit, Death 1–3, Turn 90° and Step into lane, each its own action in the .blend, with the spear's own motion per clip.</p></div>
+  <div><strong>7 · Cloth cape</strong><p>The cape is cut free of the body and simulated as wool, pinned under the hood and colliding with his torso, hips, legs and the ground. Every clip has its own baked cache, so all four facings show the same cloth.</p></div>
+  <div><strong>8 · Holds</strong><p>Two hands on the shaft in the guard, thrust and turn, the spear dipped a little as he turns. Upright in the right fist on the march and at ease. Leaning back on his shoulder in the step into lane.</p></div>
+</div>
+
+<h2>From concept to Tripo</h2>
+<figure><img src="spearman-3d/img/chain.webp" width="2254" height="1010" loading="lazy" alt="The front spearman cut from the concept sheet, the first T-pose with an eagle on the chest, the corrected T-pose and the spear">
+<figcaption>The cut-out, the first T-pose (the tabard ran up over the chest with a second eagle), the corrected T-pose that went into Tripo, and the spear.</figcaption></figure>
+
+<h2>Cape and spear head</h2>
+<div class="figs">
+<figure><img src="spearman-3d/img/cape.webp" width="1658" height="616" loading="lazy" alt="The cape's back in clay: Tripo's flat first mesh, after three free retries, and with folds added in Blender">
+<figcaption>Cape, from behind. Tripo only saw the front, so the first mesh had a flat slab. The retries gave it a hood and a wavy hem, and Blender added vertical folds that fan out towards the hem.</figcaption></figure>
+<figure><img src="spearman-3d/img/spearhead.webp" width="888" height="676" loading="lazy" alt="The spear head before, with a plain wooden collar, and after, with a forged steel socket, rings, rivets and langets">
+<figcaption>Spear head. Tripo's plain wooden collar, and the forged octagonal socket that replaces it. The two-tone steel follows the game's cel look and reads the same from the front and the back.</figcaption></figure>
+</div>
+<figure><img src="spearman-3d/img/cape_cloth.webp" width="1260" height="1188" loading="lazy" alt="The march from the north-west and the thrust from the south-west, six frames each, with the old cape skinned to the spine above the new cloth cape">
+<figcaption>Cape in motion, closer in: the march from the north-west and the thrust from the south-west. Skinned to the spine, the cape stood off his back like a board. As cloth it falls close over his hips, swings with each step and trails behind the thrust.</figcaption></figure>
+
+<h2>All round</h2>
+<figure><img src="spearman-3d/img/turnaround.webp" width="1352" height="1072" loading="lazy" alt="The textured spearman in T-pose from eight directions with his spear">
+<figcaption>Eight directions in the game's flat-lit look, with outline and cavity.</figcaption></figure>
+
+<h2>Three deaths</h2>
+<figure><img src="spearman-3d/img/deaths.webp" width="2282" height="1170" loading="lazy" alt="Key frames of the three deaths from the south-east: thrown back and landing face down, thrown sideways onto his back, and crumpling forward">
+<figcaption>Each starts from the guard and drops the spear as the hips start to sink. The spear falls flat and lands clear of where he ends up. The cape comes down on his back in the two falls that end face down, and lies flat under him in Death 2.</figcaption></figure>
+
+<h2>Next to the footman and crossbowman</h2>
+<figure><img src="spearman-3d/img/lineup.webp" width="2518" height="680" loading="lazy" alt="The footman, crossbowman and spearman side by side in their idle poses with their weapons, from the front, from behind and from the battle camera">
+<figcaption>The three Amberfeld rigs in their idle poses, in the same light and at the same height: from the front, from behind, and from the game's battle camera in the south-east facing.</figcaption></figure>
+<p>They read as one army, in the same blue, cream and brown with the same boots, gloves and belts. The spearman stands out by his long cape and hood, the cream quilted chest and the spear held across his body in guard. In the back view his cape covers the tabard, where the crossbowman shows his quiver and the footman his shield.</p>
+
+<h2>Notes</h2>
+<ul class="notes">
+<li><strong>Holding the spear.</strong> In the guard and the thrust it runs from the rear fist through the front one, with the rear fist at the butt cap for reach and the blade's flat level. The bayonet clip's thrust drives straight ahead, while its guard holds the weapon diagonally across the body, tip up and to his left. On the march and at ease, the right arm is re-solved: upper arm hanging, forearm level, hand rolled so the fist's grip axis stands upright, butt riding at 78 cm. In the turn both arms keep the guard's pose on the turning body, the spear dips 16° (eased in and out over 6 frames), and the front arm is re-solved so its fist stays on the shaft. In the hit the spear stays fixed in the right fist.</li>
+<li><strong>Step into lane.</strong> The source clip turns his body about 70° to his right as he steps. His head is turned back to look straight ahead in every frame. The shaft rests against the front of his right shoulder and leans 22° back from his chest. His fist is just below, at the collarbone, with the elbow back by his ribs. The wrist bends 11–15° sideways so the shaft keeps its lean, and the fist itself stays rigid.</li>
+<li><strong>Cape.</strong> Skinned to the spine, the cape moved like a board. It is now cloth, about 2.6 kg of wool: the top rows under the hood are pinned to the spine, and the rest hangs, swings and settles. It collides with the ground and with ellipsoids riding on his bones: just inside his torso, hips, thighs and shins, plus one round the back of his tunic's skirt and belt. That last one gives the cape its A-line over the hips. Without it, the cape slipped under the skirt when the step into lane turns his body, and the skirt and belt fringe showed through. The leather pouch and fringe on his lower back are pressed flat under the cape for the same reason. The arms have no colliders, because they come down through the cape's sides from the T-pose. Each run starts from the rest pose and eases into the clip's first pose, so the cape has settled by frame 1. Loops are simulated twice and the second pass is kept, with its end eased into its start. The caches are in <code>art/spearman_3d/cape_cache/</code>, one <code>.pc2</code> per clip. Checked from all four facings on every fourth frame of the march, step into lane, thrust, hit and at ease: in the worst view two or three sampled points of his body show in front of the cape, and nine in one march frame, where his left forearm swings past its edge.</li>
+<li><strong>Clearance.</strong> Every frame of every clip is checked for the spear crossing his deformed body. Guard, At ease, March, Turn and Step into lane: none. Thrust 1 of 64 frames. Single frames in the deaths as the spear leaves his hand or he lands: Death 1 1 of 72, Death 2 1 of 69, Death 3 2 of 118. Hit: 10 of 61 frames, where his left arm sweeps across the shaft as he flinches. It was 20 with both hands on the shaft.</li>
+<li><strong>On the ground.</strong> Retargeted onto him, the three deaths sank his body 12–17 cm into the ground by the time he lay still. That pushed the cape's pinned rows under the floor, and in Death 2 the cloth followed half a metre down. In the deaths his hips are now lifted wherever any part of his body would go below the ground, smoothed over five frames so the lift never pops. His boots may still roll 3 cm into the ground, as in every walk. With the cloth baked again on the lifted bodies, none of it goes below the ground. In Death 2, which ends on his back, the cape lies flat under him. Death 1 and Death 3 end face down, with the cape on his back.</li>
+<li><strong>Blending.</strong> Hit, the deaths and the turn come from the crossbowman and footman clips, which start in another stance. They blend in from the guard over 6–8 frames, and the hit blends back out, so the game can cut between them without a jump. The guard loops seamlessly.</li>
+<li><strong>Clips used.</strong> Thrust: Attack - Spearmen, frames 1–64. Guard: its hold, frames 57–99. March: Walk - Spearmen, in place. At ease: Idle - Crossbowmen. Hit: Hit - Crossbowmen. Deaths: Death and Death_2 - Crossbowmen, Sword And Shield Death. Turn: Turning - Footman. Step: Standing Walk Right. Standing Block Idle was left out: through both fists it put the spear up behind his shoulder. For spearmen, bracing against a charge is the guard.</li>
+<li><strong>To judge.</strong> The guard's spear rises at about 42°, as the bayonet held its rifle. It can be lowered towards a levelled spear wall, with the left hand moved onto the shaft. In Step into lane his neck turns a long way between the turned body and the forward head; if it reads too stiff, the body's turn can be reduced instead.</li>
+<li><strong>Files.</strong> <code>projects/meridius/source/godot/art/spearman_3d/spearman_rig.blend</code> (rig, clips, spear motion and cloth cape), its <code>cape_cache/</code>, <code>spearman_base.blend</code> and <code>spear.blend</code>, rebuilt by the scripts in <code>art/spearman_3d/tools/</code>: <code>rig_spearman.py</code>, <code>retarget_clips.py</code>, <code>spear_motion.py</code>, <code>cape_cloth.py</code> (setup, then sim), with <code>spear_clearance.py</code> and <code>render_preview.py</code> for the checks and renders. The Tripo exports are in <code>references/characters/Spearman TRIPO/</code>, and job IDs and costs in <code>references/characters/spearman_idle/jobs.json</code>.</li>
+</ul>
+</main>
+<script id="frames-data" type="application/json">{"clips":{"idle":{"sw":{"file":"sheets/idle_sw.webp","frames":43,"cols":9,"w":120,"h":225,"x":124.5,"y":157.5},"se":{"file":"sheets/idle_se.webp","frames":43,"cols":8,"w":260,"h":303,"x":126.0,"y":68.2},"nw":{"file":"sheets/idle_nw.webp","frames":43,"cols":7,"w":258,"h":280,"x":4.5,"y":70.5},"ne":{"file":"sheets/idle_ne.webp","frames":43,"cols":12,"w":120,"h":372,"x":144.8,"y":0.0}},"idle_rest":{"sw":{"file":"sheets/idle_rest_sw.webp","frames":129,"cols":21,"w":118,"h":366,"x":143.2,"y":5.2},"se":{"file":"sheets/idle_rest_se.webp","frames":129,"cols":19,"w":123,"h":328,"x":138.8,"y":28.5},"nw":{"file":"sheets/idle_rest_nw.webp","frames":129,"cols":20,"w":124,"h":351,"x":126.8,"y":0.0},"ne":{"file":"sheets/idle_rest_ne.webp","frames":129,"cols":20,"w":117,"h":345,"x":129.0,"y":12.8}},"walk":{"sw":{"file":"sheets/walk_sw.webp","frames":42,"cols":11,"w":144,"h":372,"x":119.2,"y":10.5},"se":{"file":"sheets/walk_se.webp","frames":42,"cols":10,"w":150,"h":350,"x":135.0,"y":25.5},"nw":{"file":"sheets/walk_nw.webp","frames":42,"cols":11,"w":150,"h":368,"x":105.0,"y":0.0},"ne":{"file":"sheets/walk_ne.webp","frames":42,"cols":11,"w":145,"h":366,"x":125.2,"y":0.0}},"attack":{"sw":{"file":"sheets/attack_sw.webp","frames":64,"cols":8,"w":257,"h":246,"x":0.0,"y":158.2},"se":{"file":"sheets/attack_se.webp","frames":64,"cols":9,"w":264,"h":311,"x":126.0,"y":68.2},"nw":{"file":"sheets/attack_nw.webp","frames":64,"cols":9,"w":263,"h":295,"x":0.0,"y":57.0},"ne":{"file":"sheets/attack_ne.webp","frames":64,"cols":10,"w":257,"h":372,"x":132.8,"y":0.0}},"hit":{"sw":{"file":"sheets/hit_sw.webp","frames":61,"cols":8,"w":334,"h":319,"x":0.0,"y":100.5},"se":{"file":"sheets/hit_se.webp","frames":61,"cols":7,"w":375,"h":268,"x":14.2,"y":99.8},"nw":{"file":"sheets/hit_nw.webp","frames":61,"cols":9,"w":375,"h":395,"x":0.0,"y":19.5},"ne":{"file":"sheets/hit_ne.webp","frames":61,"cols":9,"w":334,"h":376,"x":55.5,"y":0.0}},"death":{"sw":{"file":"sheets/death_sw.webp","frames":72,"cols":9,"w":390,"h":420,"x":0.0,"y":0.0},"se":{"file":"sheets/death_se.webp","frames":72,"cols":9,"w":390,"h":420,"x":0.0,"y":0.0},"nw":{"file":"sheets/death_nw.webp","frames":72,"cols":9,"w":390,"h":420,"x":0.0,"y":0.0},"ne":{"file":"sheets/death_ne.webp","frames":72,"cols":9,"w":390,"h":396,"x":0.0,"y":0.0}},"death_2":{"sw":{"file":"sheets/death_2_sw.webp","frames":69,"cols":9,"w":389,"h":420,"x":0.8,"y":0.0},"se":{"file":"sheets/death_2_se.webp","frames":69,"cols":9,"w":390,"h":420,"x":0.0,"y":0.0},"nw":{"file":"sheets/death_2_nw.webp","frames":69,"cols":9,"w":390,"h":415,"x":0.0,"y":0.0},"ne":{"file":"sheets/death_2_ne.webp","frames":69,"cols":9,"w":388,"h":373,"x":0.0,"y":0.0}},"death_3":{"sw":{"file":"sheets/death_3_sw.webp","frames":118,"cols":11,"w":256,"h":258,"x":0.0,"y":161.2},"se":{"file":"sheets/death_3_se.webp","frames":118,"cols":12,"w":277,"h":320,"x":112.5,"y":99.8},"nw":{"file":"sheets/death_3_nw.webp","frames":118,"cols":12,"w":277,"h":309,"x":0.0,"y":42.0},"ne":{"file":"sheets/death_3_ne.webp","frames":118,"cols":14,"w":256,"h":376,"x":133.5,"y":0.0}},"step_lane":{"sw":{"file":"sheets/step_lane_sw.webp","frames":39,"cols":11,"w":141,"h":365,"x":111.0,"y":10.5},"se":{"file":"sheets/step_lane_se.webp","frames":39,"cols":11,"w":144,"h":380,"x":126.8,"y":0.0},"nw":{"file":"sheets/step_lane_nw.webp","frames":39,"cols":10,"w":144,"h":327,"x":119.2,"y":36.0},"ne":{"file":"sheets/step_lane_ne.webp","frames":39,"cols":11,"w":142,"h":365,"x":136.5,"y":6.8}},"turn_90":{"sw":{"file":"sheets/turn_90_sw.webp","frames":29,"cols":6,"w":279,"h":282,"x":108.0,"y":101.2},"se":{"file":"sheets/turn_90_se.webp","frames":29,"cols":7,"w":279,"h":381,"x":110.2,"y":0.0},"nw":{"file":"sheets/turn_90_nw.webp","frames":29,"cols":6,"w":279,"h":307,"x":0.0,"y":72.8},"ne":{"file":"sheets/turn_90_ne.webp","frames":29,"cols":7,"w":279,"h":380,"x":2.2,"y":0.0}}},"fps":30,"canvas":[390,420]}</script>
+<script id="viewer-config" type="application/json">{"base": "spearman-3d/", "start": "attack", "key": "spearman-pose-viewer", "clips": [["idle", "Guard"], ["idle_rest", "At ease"], ["walk", "March"], ["attack", "Thrust"], ["hit", "Hit"], ["death", "Death 1"], ["death_2", "Death 2"], ["death_3", "Death 3"], ["turn_90", "Turn 90°"], ["step_lane", "Step into lane"]]}</script>
+<script src="rig-viewer/viewer.js"></script>
+</body>
+</html>

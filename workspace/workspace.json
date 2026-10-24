@@ -35,6 +35,12 @@
           "path": "spearman-3d.html",
           "group": "Character rigs",
           "subgroup": "Spearman"
+        },
+        {
+          "name": "Succubus 3D rig",
+          "path": "succubus-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Succubus"
         }
       ],
       "status": "active",

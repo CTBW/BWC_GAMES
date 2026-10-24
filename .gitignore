@@ -29,6 +29,7 @@ public/workspace
 inbox/*
 !inbox/.gitkeep
 **/job.json
+**/jobs.json
 **/result.json
 **/upload.json
 **/*.blend1

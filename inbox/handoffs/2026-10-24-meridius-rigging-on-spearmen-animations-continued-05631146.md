@@ -8,22 +8,36 @@ The spearman 3D rig is complete, committed and pushed. All three requests from 2
 
 The cape is baked for all ten clips, rendered and shown in the workspace tab. **The user hasn't judged the refreshed tab yet.** The open points are under "To judge".
 
+**Step-into-lane neck twist fixed in `e40ed6a` (2026-10-24, pushed).** The user asked to "fix the step lane neck twist". With the head held forward and the spine left as the source clip had it, the neck took the whole 64–79° turn between his chest and his head. Now:
+- the spine turns the chest halfway back (`SPINE_UNTWIST` 0.5 over Spine/Spine1/Spine2, 30/35/35%);
+- the neck base and the head's joint take 16–20° each.
+
+The spear's lean is now measured 75% from his hips and 25% from his chest (`SHOULDER_CFG["travel"] = 0.75`). Measured from the chest alone, the shaft stood upright from the SE, against the user's arrows (tip to the right). At 1.0 the tip leaned right as before, but the shaft ran over his face.
+
+Changed in `e40ed6a`:
+- `tools/spear_motion.py`
+- `spearman_rig.blend` (step_lane keys only)
+- `cape_cache/step_lane.pc2`
+- `workspace/2026-10-20_meridius/spearman-3d/sheets/step_lane_*.webp` and `frames.json`
+- the tab's frames data plus its step-into-lane and "to judge" notes.
+
 - Commits on `godot-migration`, pushed to `origin/godot-migration` (public repo `CTBW/BWC_GAMES`):
   - `f6c6e32` Meridius: spearman 3D rig with cloth cape, clips and report (94 files)
   - `1f5be46` Knowledge: Tripo Studio notes for the Meridius units
   - `aa697b4` Meridius: spearman helper scripts for baking, renders and report figures (14 files in `art/spearman_3d/tools/`)
-  - At the time of writing, `aa697b4` is the head of both the local and the remote branch. Other sessions commit and push to this branch too.
+  - `e40ed6a` Meridius: spearman step into lane, neck twist spread over spine, neck and head (9 files)
+  - At the time of writing, `e40ed6a` is the head of both the local and the remote branch. Other sessions commit and push to this branch too.
 - Report: `workspace/2026-10-20_meridius/spearman-3d.html`, card "Spearman 3D rig" (group Character rigs, subgroup Spearman) in `workspace/workspace.json`.
 - **Not in the game.** The Godot game still draws the spearman from 2D sprites (`art/squads/spearman`, `assets/sprites/anim/spearman.*`), which another session made. No game code was changed for this work. Two earlier items were answered but not built:
   - per-figure death variant via `Rng.hash2` in `squad_view.gd` and `battle_view.gd:_drop_victim`;
   - troll overkill ragdoll.
 
-## Files (committed in `f6c6e32`; helper scripts in `aa697b4`)
+## Files (committed in `f6c6e32`; helper scripts in `aa697b4`; neck fix in `e40ed6a`)
 All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless noted.
 
 | File | sha256 (first 12) |
 |---|---|
-| `spearman_rig.blend` | `a5613942478b` |
+| `spearman_rig.blend` | `d4e3944f50d6` (`e40ed6a`; was `a5613942478b` in `f6c6e32`) |
 | `spearman_base.blend` | `358886dd37fd` |
 | `spear.blend` | `88330b84d248` |
 
@@ -47,7 +61,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   | hit | `9eb388bd0e49` |
   | idle | `9df3000cdbf5` |
   | idle_rest | `8b4fdfd2aa52` |
-  | step_lane | `5d628dc3601f` |
+  | step_lane | `784298fb95c8` (re-baked for the neck fix, `e40ed6a`) |
   | turn_90 | `26b10c3afd32` |
   | walk | `20e3aa11dd73` |
 
@@ -89,7 +103,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   |---|---|
   | idle | 0.70 m |
   | walk | 0.72 m |
-  | step_lane | 0.72 m |
+  | step_lane | 0.72 m (0.69 m after the neck fix) |
   | attack | 0.66 m |
   | hit | 0.56 m |
   | death | 0.11 m |
@@ -110,7 +124,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   |---|---|---|
   | hit | 49 | 3 |
   | idle_rest | 144 (over 260 views) | 2 |
-  | step_lane | 42 | 3 (was 27 before the collision group fix) |
+  | step_lane | 42; 12 after the neck fix | 3; 2 after the neck fix (27 before the collision group fix) |
   | walk | 43 | 9 at f5 SW, his left forearm passing the cape edge |
   | attack | 30 | 2 |
 
@@ -131,15 +145,18 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   - Narrow widths were checked in iframes only. The workspace rule is now desktop only (`processes/workspace-authoring.md` step 7), so phone checks aren't needed.
 
 ## To judge (owner acceptance pending)
-1. **Step into lane:** the neck turns about 70° between the turned chest (the source clip "Standing Walk Right") and the forward head (`head_forward()`: Neck 50%, Head 100%).
+1. **Step into lane** (fix in `e40ed6a`): is the twist now spread well enough over his spine, neck and head? And is the SE spear acceptable? It now stands nearly upright with the tip a little to the right; before, it leaned further right. `travel` 1.0 gives the old lean but runs the shaft over his face.
 2. **Hit:** the left forearm sweeps across the shaft in 10 of 61 frames.
 3. **Death 1:** from above, the cape ends bunched on the upper back and shoulders, because it is flung up as he pitches forward. From the battle camera it reads as lying on his back.
 4. The death caches are still settling slightly in their last frames.
 
-None of these has a decided fix. Wait for the user's verdict before changing anything.
+Items 2–4 have no decided fix. Wait for the user's verdict before changing anything.
 
 ## Accepted decisions (keep)
-- **Shoulder carry:** the lean is measured from the chest (Spine2), not the unit's facing. `SHOULDER_CFG = contact [-0.20,-0.11,1.55], len 0.16, fwd -22, out 3, butt_z 0.85, pole [-0.3,0.6,-1.0]`. The wrist bends 11–15° and the palm faces the chest.
+- **Shoulder carry:** `SHOULDER_CFG = contact [-0.20,-0.11,1.55], len 0.16, fwd -22, out 3, butt_z 0.85, pole [-0.3,0.6,-1.0], travel 0.75`. The palm faces the chest.
+  - Until the neck fix, the lean was measured from the chest (Spine2) alone, with the wrist bending 11–15°.
+  - With the spine untwisted, the chest faces about 35° left of the hips. "travel" mixes in the hips (his walking direction) so the SE tip still leans right. The wrist now bends up to 11°.
+  - `SPINE_UNTWIST` and the `SPEAR_SHOULDER` JSON can be overridden through environment variables for trials.
 - **Turn:** `turn_two_handed` dips the spear 16°, eased over 6 frames.
 - **Chain order:** `rig_spearman` → `cape_cloth setup` → `retarget_clips` → `spear_motion` → `cape_cloth sim`.
   - `ground_lift` (deaths) needs the cape off the body, and it asserts that `Cape` exists.
@@ -187,6 +204,7 @@ Notes:
 - Call Blender with absolute paths. Relative ones resolved to `C:\` in a test.
 - Python with Pillow and numpy: `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\d8823a10-5e83-448e-b4e6-5c6ea96da2ae\scratchpad\venv-art\Scripts\python.exe` (run it with `-I`). It is a temp folder, so any Python with Pillow and numpy will do.
 - The old skinned-cape rig (`rig_tw.blend`, used for the figure's "before" frames) stays only in that scratchpad.
+- `spear_motion.py` edits the clip's keys in place (spine untwist, neck, arm). Always re-run the retarget before it. For step_lane, run `retarget_clips.py -- 'E:/Animations' step_lane` (source `E:\Animations\Standing Walk Right.fbx`), then `spear_motion.py -- step_lane`. It prints the wrist bend and the chest's turn (−40…−32° now).
 
 **Checked 2026-10-24 against the committed results** (see `cape_poke.py` for why the cape read is now unconditional):
 - `pack_sheets.py` reproduced all 40 sheets and `frames.json` byte for byte.
@@ -198,6 +216,8 @@ Notes:
 - The lineup renders matched pixel for pixel.
 
 **Godot tests at `aa697b4`.** `tools/test.sh --quick` gave 398 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread` (6 footmen marching 2 s, 10 treads heard). That test file, `tests/unit/test_audio.gd`, is untracked. It belongs to another session's uncommitted audio work (`scripts/audio/sfx.gd`, `battle_view.gd`, `battle_draw.gd`). It isn't part of the spearman commits; leave it to that session.
+
+**`e40ed6a`** was committed at the user's request ("commit now, don't wait") before the full `tools/test.sh` run finished. It changes only `art/spearman_3d/` (Godot ignores `art/` through `.gdignore`) and `workspace/`, outside the Godot project, so no game code or imported asset changed.
 
 **Acceptance for any change:**
 - The cape's lowest point is ≥ 0.01 m in every clip.

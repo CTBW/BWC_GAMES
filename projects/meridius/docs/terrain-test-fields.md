@@ -192,17 +192,29 @@ Shader changes:
 - Turf overhang: ragged tongues of turf over the top 8-17% of a face, with a
   dark undercut. The depth comes from -lap / slope, which does not depend on
   the bank's height.
-- Fallen blocks along the foot: faceted like the rock props (a flat lit top,
-  five or six flat sides, moss), in screen space. A block stands only where
+- Fallen blocks along the foot, in screen space: chunky rounded slabs about
+  three quarters of a tile across (twice the first pass), with a lit top and
+  rim, a lit left face, a cool shaded right face, a little moss on top and a
+  smaller companion stone beside six in ten of them. A block stands only where
   the ground under its centre is the concave foot of a camera-facing bank
   (lap above 0.6), so none is cut off. They are laid over the ground after its
   light, with their own light dimmed by hill shadow and canopy. Gentle hills get
-  none (checked in fields 0 and 2).
+  none (checked in fields 0 and 2). The meadow grass strokes are still drawn
+  over them.
+
+Painted rocks: the Stones (`rock_small`) and Boulders (`rock_large`) props
+everywhere in the game (battles, campaign map, garrison) are now painted in
+concept A's style instead of the grey Blender renders: four variants each, cut
+from one Nano Banana Pro sheet on magenta (review/rocks/rocks_sheet_1.png, 4
+credits) by `tools/props/rock_cutout.py`, with a soft contact shadow falling
+down and to the right. A stones cluster is about two thirds of a tile wide, a
+boulder about one tile. Rules and map layouts are unchanged; MIGRATION.md
+*Painted rocks* has the details.
 
 Captures: `tools/godot.sh --path . --resolution 1920x1080 --audio-driver Dummy
 -s res://tests/visual/terrain_relief_shots.gd` (optional `RELIEF_FIELDS=0,4`)
 writes the whole fields and the bank, ramp, meadow and night close-ups to
-tests/visual/out/terrain_relief/ with result.json (0 errors, build 55-85 ms).
+tests/visual/out/terrain_relief/ with result.json (0 errors, build 50-125 ms).
 
 Open: the lab's world mist lifts the shaded slopes by 10-15 levels, which
 flattens gentle hills. Lower its strength or keep it out of the open field if

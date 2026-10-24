@@ -6,6 +6,9 @@ extends "res://tests/test_case.gd"
 const Assets = preload("res://scripts/render/assets.gd")
 const DB = preload("res://scripts/data/db.gd")
 const FIXTURE := "res://tests/fixtures/assets/variant_counts.json"
+# Art repainted after the port, with more variants than the original drew
+# (MIGRATION.md, "Painted rocks"); the original's counts no longer apply.
+const REPAINTED := {"rock_small": 4, "rock_large": 4}
 
 var fx: Dictionary
 var manifest: Dictionary
@@ -42,7 +45,7 @@ func test_keys_and_variant_counts_match_original() -> void:
 	assert_eq(manifest.size(), counts.size(), "same number of keys as the original enumerates")
 	for key in counts:
 		assert_true(manifest.has(key), "%s in sprites.json" % key)
-		assert_eq(Assets.variant_count(key), int(counts[key]), "variantCount(%s)" % key)
+		assert_eq(Assets.variant_count(key), int(REPAINTED.get(key, counts[key])), "variantCount(%s)" % key)
 
 
 func test_has_art_matches_original() -> void:

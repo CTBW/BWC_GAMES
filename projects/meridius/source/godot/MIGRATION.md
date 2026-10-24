@@ -313,3 +313,16 @@ to Howl; no rebalancing):
    shared-tile fix (340/0), not yet committed.
 2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
 3. Commit on branch `godot-migration`.
+
+### 2026-10-24 - Painted rocks
+
+The `rock_small` ("Stones") and `rock_large` ("Boulders") props are now painted
+in the concept A style instead of the Blender renders: four variants each from
+one Nano Banana Pro sheet (`review/rocks/rocks_sheet_1.png`, sha256 in
+`assets/sprites/painted/rocks_sources.json`), cut by
+`tools/props/rock_cutout.py` (magenta key, pieces kept whole by the cell holding
+their centre, baked soft contact shadow down and right, `noShadow`, `art`).
+Rules are unchanged: tiles keep their `v` (0-9999) and the view picks
+`v % 4` instead of `v % 2`. The original drew two variants, so
+`test_assets` retires those two counts from `variant_counts.json` and pins
+four (`REPAINTED`). Native battle, campaign and relief-lab captures: 0 errors.

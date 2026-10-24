@@ -175,6 +175,38 @@ vec3 saturate_by(vec3 c, float k) {
 	return mix(vec3(luma(c)), c, k);
 }
 
+// A block fallen from a bank, in its own frame q (x right, y down, about
+// -1..1), cut like the slabs in concept A: a flat top turned to the sky over
+// a lit left face and a shaded right face, its outline broken, moss on top.
+// Returns the colour and the coverage.
+vec4 fallen_block(vec2 q, ivec2 id, uint k, vec3 stone, vec3 moss) {
+	float d = pow(pow(abs(q.x), 3.2) + pow(abs(q.y), 3.2), 1.0 / 3.2) + (fbm(q * 2.4 + vec2(id) * 3.7, k) - 0.5) * 0.22;
+	if (d >= 1.0) {
+		return vec4(0.0);
+	}
+	// The front corner, and the top's lower edge falling away from it.
+	float xc = (hash(id, k + 1u) - 0.5) * 0.5;
+	float ty = mix(-0.05, 0.2, hash(id, k + 2u)) - 0.45 * abs(q.x - xc) + (fbm(q * 4.0 + 9.0, k + 3u) - 0.5) * 0.12;
+	// The faces meet in softened edges, as a brush would leave them.
+	float wTop = smoothstep(-0.025, 0.025, ty - q.y);
+	float wLeft = smoothstep(-0.04, 0.04, xc + (fbm(q * 3.0, k + 5u) - 0.5) * 0.15 - q.x);
+	vec3 L = normalize(vec3(-0.55, -0.65, 0.55));
+	float lTop = max(dot(normalize(vec3((hash(id, k + 4u) - 0.5) * 0.5, -0.6, 0.8)), L), 0.0);
+	float lLeft = max(dot(normalize(vec3(-0.75, 0.3, 0.5)), L), 0.0);
+	float lRight = max(dot(normalize(vec3(0.75, 0.3, 0.5)), L), 0.0);
+	float lum = 0.45 + 0.8 * mix(mix(lRight, lLeft, wLeft), lTop, wTop);
+	// A lit rim along the top's edge, a crisp shade just under it.
+	lum *= 1.0 + (1.0 - smoothstep(0.0, 0.08, ty - q.y)) * 0.14 * wTop - (1.0 - smoothstep(0.0, 0.06, q.y - ty)) * 0.18 * (1.0 - wTop);
+	lum *= 0.93 + 0.14 * fbm(q * 3.0 + vec2(id), k + 6u);
+	// Warm where the sun strikes, cool in the shaded face.
+	vec3 col = stone * lum * mix(vec3(0.9, 0.95, 1.06), vec3(1.04, 1.0, 0.94), max(wTop, wLeft));
+	// A little moss at the back of the top, not a cushion.
+	float m = wTop * smoothstep(0.0, 0.3, ty - q.y) * smoothstep(0.56, 0.68, fbm(q * 2.2 + vec2(id) * 1.9, k + 7u));
+	col = mix(col, moss * mix(0.9, 1.1, lum - 0.6), m * 0.75);
+	col *= 1.0 - smoothstep(0.84, 1.0, d) * mix(0.45, 0.15, wTop);
+	return vec4(col, 1.0 - smoothstep(0.94, 1.0, d));
+}
+
 void fragment() {
 	vec2 p = grid;
 	uint s = uint(seed) % 9973u;
@@ -347,10 +379,12 @@ void fragment() {
 	float bA = 0.0;
 	vec3 bCol = vec3(0.0);
 	if (slope > 0.08 || lap > 0.3) {
-		vec2 cs = vec2(1.1, 0.8);
+		// A cell holds one block with its shadow: half a tile across or more,
+		// like the slabs in concept A.
+		vec2 cs = vec2(2.3, 1.6);
 		ivec2 cell = ivec2(floor(fq / cs));
-		if (hash(cell, s + 91u) < 0.55) {
-			vec2 rad = vec2(1.0, 0.7) * mix(0.18, 0.3, hash(cell, s + 92u));
+		if (hash(cell, s + 91u) < 0.8) {
+			vec2 rad = vec2(1.0, 0.7) * mix(0.36, 0.6, hash(cell, s + 92u));
 			vec2 c = (vec2(cell) + 0.5 + (vec2(hash(cell, s + 93u), hash(cell, s + 94u)) - 0.5) * 0.2) * cs;
 			// The grid point under the centre, at this fragment's height.
 			vec2 dq = c - fq;
@@ -365,26 +399,25 @@ void fragment() {
 			float csl = length(cg);
 			float cf = csl > 1e-3 ? -(cg.x + cg.y) / (csl * 1.41421) : 0.0;
 			float fallen = step(0.6, cl) * step(0.2, csl) * step(-0.2, cf);
-			vec2 q = (fq - c) / rad;
-			vec2 qs = (fq - c - vec2(0.05, 0.07)) / (rad * 1.2);
-			col *= 1.0 - fallen * (1.0 - smoothstep(0.6, 1.0, length(qs))) * 0.45;
-			// A rough block: squarish, its outline broken.
-			float d = pow(pow(abs(q.x), 3.2) + pow(abs(q.y), 3.2), 1.0 / 3.2) + (fbm(fq * 9.0, s + 95u) - 0.5) * 0.22;
-			if (fallen > 0.0 && d < 1.0) {
-				// Faceted like the rock props: a flat top turned up to the sky,
-				// a ring of flat sides around it.
-				float nf = 5.0 + floor(hash(cell, s + 98u) * 2.0);
-				float ac = (floor(atan(q.y, q.x) / 6.28318 * nf + hash(cell, s + 99u)) + 0.5) / nf * 6.28318;
-				vec2 qt = q - vec2(0.05, -0.28);
-				bool top = length(qt * vec2(1.0, 1.5)) < 0.5;
-				vec3 bn = top ? normalize(vec3(0.0, -0.55, 0.8)) : normalize(vec3(cos(ac) * 0.85, sin(ac) * 0.85, 0.5));
-				float lum = 0.5 + 0.75 * max(dot(bn, normalize(vec3(-0.55, -0.65, 0.55))), 0.0);
-				vec3 stoneC = mix(vec3(0.6, 0.57, 0.52), faceRock, 0.5);
-				bCol = mix(stoneC, soil * 1.1, hash(cell, s + 96u) * 0.4) * lum;
-				// Moss on its top.
-				bCol = mix(bCol, grass * vec3(0.95, 1.05, 0.8), (top ? 1.0 : 0.0) * smoothstep(0.4, 0.55, fbm(fq * 5.0, s + 97u)) * 0.85);
-				bCol *= 1.0 - smoothstep(0.82, 1.0, d) * 0.45;
-				bA = 1.0 - smoothstep(0.94, 1.0, d);
+			// Often a smaller stone beside it, a little in front.
+			bool pair = hash(cell, s + 100u) < 0.6;
+			vec2 rad2 = rad * 0.42;
+			vec2 c2 = c + rad * vec2(hash(cell, s + 101u) < 0.5 ? -0.9 : 0.9, 0.35);
+			float shB = 1.0 - smoothstep(0.6, 1.0, length((fq - c - rad * vec2(0.2, 0.3)) / (rad * 1.2)));
+			if (pair) {
+				shB = max(shB, 1.0 - smoothstep(0.6, 1.0, length((fq - c2 - rad2 * vec2(0.2, 0.3)) / (rad2 * 1.2))));
+			}
+			col *= 1.0 - fallen * shB * 0.45;
+			if (fallen > 0.0) {
+				vec3 stoneC = mix(mix(vec3(0.74, 0.7, 0.62), faceRock, 0.35), soil * 1.1, hash(cell, s + 96u) * 0.3);
+				vec3 moss = grass * vec3(0.95, 1.05, 0.8);
+				vec4 b = fallen_block((fq - c) / rad, cell, s + 95u, stoneC, moss);
+				if (pair) {
+					vec4 b2 = fallen_block((fq - c2) / rad2, cell + ivec2(17, 31), s + 95u, stoneC * 0.95, moss);
+					b = vec4(mix(b.rgb, b2.rgb, b2.a), max(b.a, b2.a));
+				}
+				bCol = b.rgb;
+				bA = b.a;
 			}
 		}
 	}

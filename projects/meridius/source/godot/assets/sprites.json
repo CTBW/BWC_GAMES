@@ -23069,44 +23069,84 @@
  ],
  "rock_large": [
   {
-   "file": "res://assets/sprites/blender/rock_large_0.webp",
-   "ax": 71.9,
-   "ay": 98.2,
-   "scale": 0.5001,
-   "w": 198,
-   "h": 154,
+   "file": "res://assets/sprites/painted/rock_large_0.webp",
+   "ax": 125.1,
+   "ay": 217.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 285,
    "noShadow": true,
    "art": true
   },
   {
-   "file": "res://assets/sprites/blender/rock_large_1.webp",
-   "ax": 119.7,
-   "ay": 89.4,
-   "scale": 0.5001,
-   "w": 238,
-   "h": 146,
+   "file": "res://assets/sprites/painted/rock_large_1.webp",
+   "ax": 138.0,
+   "ay": 206.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 273,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/rock_large_2.webp",
+   "ax": 131.0,
+   "ay": 197.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 263,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/rock_large_3.webp",
+   "ax": 172.5,
+   "ay": 242.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 313,
    "noShadow": true,
    "art": true
   }
  ],
  "rock_small": [
   {
-   "file": "res://assets/sprites/blender/rock_small_0.webp",
-   "ax": 37.6,
-   "ay": 57.4,
-   "scale": 0.5001,
-   "w": 108,
-   "h": 92,
+   "file": "res://assets/sprites/painted/rock_small_0.webp",
+   "ax": 108.9,
+   "ay": 114.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 156,
    "noShadow": true,
    "art": true
   },
   {
-   "file": "res://assets/sprites/blender/rock_small_1.webp",
-   "ax": 57.1,
-   "ay": 60.1,
-   "scale": 0.5001,
-   "w": 134,
-   "h": 102,
+   "file": "res://assets/sprites/painted/rock_small_1.webp",
+   "ax": 99.9,
+   "ay": 102.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 143,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/rock_small_2.webp",
+   "ax": 95.2,
+   "ay": 139.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 184,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/rock_small_3.webp",
+   "ax": 112.1,
+   "ay": 83.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 122,
    "noShadow": true,
    "art": true
   }

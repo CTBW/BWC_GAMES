@@ -307,6 +307,17 @@ to Howl; no rebalancing):
       Left as is: the forecast's guard note needs an enemy with Defend, and
       none has it (a design call); charge aiming tries only the side under the
       cursor (`battle_view._preview_against`, the animation session's file).
+- [x] Icons on the battlefield (24 Oct 2026): the words beside a squad's bar
+      for its stance (WALL, SPEARS, WATCH, GUARD, SQUARE) and its conditions
+      (CHILLED, FRENZY, BLEEDING, COWED) are now the skill icons, on 22 px
+      dark badges (gold rim for stances, the condition's colour for
+      conditions); `battle_draw.gd` `draw_overlays`, `stance_icon`,
+      `STATUS_ICON`. Fleeing, ★, Warchief and the horn stay words. Test
+      `test_squad_skills::test_every_stance_and_condition_wears_its_icon_on_the_map`;
+      checked in a window (`capture_skills.gd -- stances badges`).
+      The badges show the painted icons (`Icon.painted`,
+      `assets/icons/painted/`, keyed from the magenta-ground paintings by
+      `tools/ui_key_icons.py`), the SVG where none is painted (Howl).
 
 ## Resume here
 1. `tools/test.sh` (full) — green with magic, war machines and the

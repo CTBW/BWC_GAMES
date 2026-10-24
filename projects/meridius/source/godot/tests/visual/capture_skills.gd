@@ -9,7 +9,7 @@
 ## Writes tests/visual/out/skills_<name>.png and skills_<name>_bar.png (the
 ## bottom of the screen). Names (default: all): bar_footman, bar_spearman,
 ## bar_crossbowman, bar_collie_guard, tip_square, tip_defend, tip_lick, charge_forecast,
-## charge_square, use_growl, stances, tip_howl, use_howl.
+## charge_square, use_growl, stances, badges, tip_howl, use_howl.
 extends SceneTree
 
 const OUT := "res://tests/visual/out/"
@@ -199,6 +199,24 @@ func _run() -> void:
 	bv.select(null)
 	await _frames(10)
 	await _shot("stances")
+	# Every badge beside the bars at once: a stance on each of our squads and
+	# all four conditions on the cowed foe (on the views only, then put back).
+	if _want("badges"):
+		var kept := {}
+		var mine: Array = b.active("player")
+		var stances := ["shieldwall", "spearwall", "overwatch", "defend", "square"]
+		for i in mini(stances.size(), mine.size()):
+			var mv = bv.views[mine[i].uid]
+			kept[mine[i].uid] = [mv.stance, mv.statuses.duplicate()]
+			mv.stance = stances[i]
+		var fv = bv.views[foe2.uid]
+		kept[foe2.uid] = [fv.stance, fv.statuses.duplicate()]
+		fv.statuses = ["chilled", "bloodlust", "bleeding", "cowed"]
+		await _frames(10)
+		await _shot("badges")
+		for uid in kept:
+			bv.views[uid].stance = kept[uid][0]
+			bv.views[uid].statuses = kept[uid][1]
 
 	# Promoted veterans: Howl in Growl's place on key 1.
 	c.abilities = Soldier.kit("collie_guard", true)

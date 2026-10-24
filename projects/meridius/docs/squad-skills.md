@@ -107,6 +107,29 @@ the top left. They are drawn for the 26 px icon on the brown ability button.
 | `lick_wounds` | A tongue under a white muzzle, a green healing cross and sparkles. |
 | `aimed_shot` | A bolt driven into the centre of a target, gold aiming marks around it. |
 
+**On the battlefield** (24 Oct 2026): beside each squad's health bar, a
+stance shows the icon of the skill that takes it (Shield Wall `shield`,
+Spearwall `spearwall`, Overwatch `eye`, Defend `defend`, Square `square`;
+looked up from the abilities' `stance`), on a 22 px dark badge with a gold
+rim. A condition shows the icon of the skill that lays it, rimmed in the
+condition's colour: chilled `frost`, bloodlust `blood`, bleeding `gut`,
+cowed `growl`. Fleeing, the leader's ★, Warchief and the horn countdown stay
+words. A stance or condition without an icon falls back to its word.
+`battle_draw.gd` (`draw_overlays`, `stance_icon`, `STATUS_ICON`, `BADGE`).
+
+**Painted icons** (24 Oct 2026): the badges use the painted pixel-art icons
+(`Icon.painted(name)`, `assets/icons/painted/<icon>.png`, 128 px with
+mipmaps), falling back to the SVG where none is painted (Howl). The
+paintings are 2048 px on a magenta chroma-key ground ("<Ability> - Icon.png",
+kept out of Git in the repository's `local/ability-icons/`);
+`tools/ui_key_icons.py [--src <folder>]` keys them (colour difference against a
+per-row estimate of the ground, so Growl's pink haze and Square's darker
+ground key too), unmixes the edges, crops Shield Bash's frame and shrinks each
+to its shape. The stone's shadow and the fireball's glow were painted as
+tints of the magenta and are recoloured (`TINT`): a dark ground shadow and an
+orange glow. Lob Rock is the same painting as Hurl Stone (`stone`). The
+ability bar still shows the SVGs.
+
 ## Events for animation and effects
 
 What each skill emits, in order, for the view to play back (the rules never

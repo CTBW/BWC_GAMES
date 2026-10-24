@@ -8,6 +8,8 @@
 ##       white SVGs tinted with `tint`, or with the theme colour Icon/tint (ink on
 ##       parchment, light on dark panels) when no tint is given.
 ##   Icon.tex(name) -> Texture2D          the texture (missing.svg for unknown names)
+##   Icon.painted(name) -> Texture2D      the painted skill icon, assets/icons/painted/<name>.png
+##                                        (tools/ui_key_icons.py), or the SVG where none is painted
 ##   Icon.type_icon_name(type_id) -> String   engine / staff / shield / spear / crossbow / sword
 ##   Icon.type_icon(type_id, size := 16) -> TextureRect   port of TypeIcon (title = unit name)
 ##   Icon.NAMES                           every exported icon name
@@ -26,6 +28,7 @@ const NAMES := ["silver", "timber", "iron", "trophies", "rations", "bandages", "
 const TINTED := ["rotl", "rotr", "sound", "mute", "grid", "danger"]
 
 static var _cache: Dictionary = {}
+static var _painted: Dictionary = {}
 
 var icon_name := ""
 var explicit_tint := Color(0, 0, 0, 0)
@@ -39,6 +42,15 @@ static func tex(name: String) -> Texture2D:
 		p = "res://assets/icons/missing.svg"
 	var t: Texture2D = load(p)
 	_cache[name] = t
+	return t
+
+
+static func painted(name: String) -> Texture2D:
+	if _painted.has(name):
+		return _painted[name]
+	var p := "res://assets/icons/painted/%s.png" % name
+	var t: Texture2D = load(p) if ResourceLoader.exists(p) else tex(name)
+	_painted[name] = t
 	return t
 
 

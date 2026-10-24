@@ -27,6 +27,7 @@ SHORTCUT = Path(os.environ.get('USERPROFILE', str(Path.home()))) / 'Desktop' / '
 TAIL = 3 * 1024 * 1024
 QUIET_AFTER = 3 * 3600
 JOB_WINDOW = 12 * 3600
+CACHE_VERSION = 2  # raise when scan() changes, so old transcript scans are redone
 
 
 def now():
@@ -112,12 +113,12 @@ def scan(path, size, previous):
             result['title'] = entry['aiTitle']
         if kind not in ('user', 'assistant') or entry.get('isSidechain'):
             continue
+        if entry.get('isMeta') or entry.get('isCompactSummary'):
+            continue  # a session compacting itself while idle is not new activity
         stamp = entry.get('timestamp')
         result['last'] = stamp or result['last']
         message = entry.get('message') or {}
         if kind == 'user':
-            if entry.get('isMeta') or entry.get('isCompactSummary'):
-                continue
             text = user_text(message.get('content'))
             if text is None:
                 result['pendingTool'], result['ending'] = None, 'tool result'
@@ -258,6 +259,8 @@ def build():
     LIVE.mkdir(exist_ok=True)
     moment = now()
     cache = read_json(LIVE / 'cache.json', {})
+    if cache.get('version') != CACHE_VERSION:
+        cache = {'version': CACHE_VERSION}
     notes = read_json(LIVE / 'notes.json', {})
     data = {'generatedAt': iso(moment), 'cards': sessions(cache, notes, moment), 'git': git_state(),
             'lock': notes.get('lock'), 'coordinator': notes.get('coordinator')}

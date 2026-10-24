@@ -5,9 +5,12 @@ Each cell is keyed against the magenta background (alpha from how far a
 pixel's red and blue stand above its green, colour unmixed from the
 background), given a soft contact shadow falling down and to the right like
 the props' painted light, scaled to its in-game size and written as WebP.
+With --texture (the terrain's assets/terrain/rock.webp), the stone takes that
+texture's colour and grain under the painted light, outline and moss.
 
     python tools/props/rock_cutout.py SHEET [--out assets/sprites/painted]
-        [--manifest assets/sprites.json] [--review DIR]
+        [--texture assets/terrain/rock.webp] [--manifest assets/sprites.json]
+        [--review DIR]
 
 Prints the sprites.json entries for rock_small and rock_large; with
 --manifest, writes them over those two keys and leaves every other key as it
@@ -27,6 +30,11 @@ from PIL import Image, ImageFilter
 # a boulder about a whole tile.
 WIDTH = {"rock_small": 170, "rock_large": 270}
 SCALE = 0.5
+# The terrain texture on the rock: 2.6 sprite pixels per texture pixel, so a
+# boulder face shows one slab's surface rather than the ground's rubble; grain
+# finer than 3.5 px at 0.7 strength; the texture's colour (blurred 4 px) at
+# 0.65; its value moved 70% of the way from the painted stone's.
+TEX_DENSITY, TEX_GRAIN, TEX_DETAIL, TEX_SOFT, TEX_TINT, TEX_VALUE = 2.6, 3.5, 0.7, 4, 0.65, 0.7
 
 
 def key(rgb):
@@ -56,6 +64,65 @@ def premul_resize(rgba, size):
     return Image.fromarray(np.clip(small, 0, 255).round().astype(np.uint8), "RGBA")
 
 
+def lum(c):
+    return c[..., 0] * 0.299 + c[..., 1] * 0.587 + c[..., 2] * 0.114
+
+
+def blur(arr, r):
+    """Gaussian blur of an RGB float array (0-1)."""
+    im = Image.fromarray((np.clip(arr, 0, 1) * 255).round().astype(np.uint8))
+    return np.asarray(im.filter(ImageFilter.GaussianBlur(r)), dtype=np.float32) / 255.0
+
+
+def bare_stone(tex):
+    """The texture without its grass tufts and lichen: bright, saturated
+    yellow and green strokes filled from the stone around them."""
+    t = np.asarray(tex, dtype=np.float32) / 255.0
+    mx, mn = t.max(axis=-1), t.min(axis=-1)
+    sat = (mx - mn) / np.maximum(mx, 0.02)
+    m = ((sat > 0.24) & (mx > 0.3) & (t[..., 2] < np.minimum(t[..., 0], t[..., 1]) * 0.85)).astype(np.float32)
+    m = np.clip(blur(np.repeat(m[..., None], 3, -1), 1.2)[..., :1] * 3, 0, 1)
+    keep = 1 - m
+    cover = blur(np.repeat(keep, 3, -1), 7)
+    fill = np.where(cover > 0.3, blur(t * keep, 7) / np.maximum(cover, 0.05), t[keep[..., 0] > 0.5].mean(axis=0))
+    return Image.fromarray((np.clip(t * keep + fill * m, 0, 1) * 255).round().astype(np.uint8))
+
+
+def retexture(rock, tex, cell):
+    """The terrain's stone under the painted light: the painted shapes, light,
+    outline and moss stay; the stone takes the texture's colour and grain."""
+    arr = np.asarray(rock, dtype=np.float32) / 255.0
+    rgb, a = arr[..., :3], arr[..., 3]
+    h, w = a.shape
+    # The texture tiled at its density, a different window for each prop.
+    big = tex.resize((round(tex.width * TEX_DENSITY), round(tex.height * TEX_DENSITY)), Image.LANCZOS)
+    tiled = Image.new("RGB", (big.width * (w // big.width + 2), big.height * (h // big.height + 2)))
+    for i in range(0, tiled.width, big.width):
+        for j in range(0, tiled.height, big.height):
+            tiled.paste(big, (i, j))
+    ox, oy = (cell * 397) % big.width, (cell * 241) % big.height
+    t = np.asarray(tiled.crop((ox, oy, ox + w, oy + h)), dtype=np.float32) / 255.0
+    grain = np.clip(lum(t) / np.maximum(lum(blur(t, TEX_GRAIN)), 0.02), 0.4, 1.8)
+    soft = blur(t, TEX_SOFT)
+    tint = soft / np.maximum(lum(soft)[..., None], 0.02)
+    whole = np.asarray(tex, dtype=np.float32) / 255.0
+    wl = lum(whole)
+    t_alb = whole[wl > np.percentile(wl, 40)].mean(axis=0)
+    # Moss and grass keep their painted colour; so does the dark outline.
+    pl = lum(rgb)
+    green = rgb[..., 1] - np.maximum(rgb[..., 0], rgb[..., 2])
+    moss = np.clip(blur(np.repeat(np.clip((green - 0.01) / 0.05, 0, 1)[..., None], 3, -1), 1.5)[..., 0] * 1.4, 0, 1)
+    p_alb = rgb[(a > 0.9) & (moss < 0.1) & (pl > 0.3)].mean(axis=0)
+    # The painted light's warm and cool shifts stay; the stone's own colour
+    # becomes the texture's, and its value moves part of the way.
+    v = lum(t_alb) / lum(p_alb)
+    out = rgb * (t_alb / p_alb) / v * v ** TEX_VALUE
+    edge = np.clip((pl - 0.16) / 0.2, 0, 1)[..., None]
+    out = out * (1 + (grain[..., None] ** TEX_DETAIL * (tint / (t_alb / lum(t_alb))) ** TEX_TINT - 1) * edge)
+    arr[..., :3] = np.clip(out * (1 - moss[..., None]) + rgb * moss[..., None], 0, 1)
+    return Image.fromarray((arr * 255).round().astype(np.uint8), "RGBA")
+
+
 def owners(a, cols, rows, step=4):
     """Which cell each pixel's piece belongs to: pieces (connected at a
     quarter of the resolution) go to the cell holding their centre, so a prop
@@ -82,7 +149,7 @@ def owners(a, cols, rows, step=4):
     return full[:a.shape[0], :a.shape[1]]
 
 
-def cut(rgb, a, own, cell, width):
+def cut(rgb, a, own, cell, width, tex=None):
     ca = np.where(own == cell, a, 0.0)
     ys, xs = np.nonzero(ca > 0.5)
     bx0, bx1, by0, by1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
@@ -90,6 +157,8 @@ def cut(rgb, a, own, cell, width):
     rock = Image.fromarray(rock.round().astype(np.uint8), "RGBA")
     k = width / rock.width
     rock = premul_resize(rock, (width, max(1, round(rock.height * k))))
+    if tex is not None:
+        rock = retexture(rock, tex, cell)
     w, h = rock.size
     # Contact shadow: the rock's own mask, flattened onto the ground and
     # pushed down and to the right, soft at its edge.
@@ -141,6 +210,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet")
     ap.add_argument("--out", default="assets/sprites/painted")
+    ap.add_argument("--texture")
     ap.add_argument("--manifest")
     ap.add_argument("--review")
     args = ap.parse_args()
@@ -148,21 +218,26 @@ def main():
     rgb = np.asarray(src, dtype=np.float32)
     fg, a = key(rgb)
     own = owners(a, 4, 2)
+    tex = bare_stone(Image.open(args.texture).convert("RGB")) if args.texture else None
     os.makedirs(args.out, exist_ok=True)
     entries = {"rock_small": [], "rock_large": []}
-    sheet_sha = hashlib.sha256(open(args.sheet, "rb").read()).hexdigest()
+    sources = {"sheet": os.path.basename(args.sheet), "sha256": hashlib.sha256(open(args.sheet, "rb").read()).hexdigest(),
+               "cells": "2 rows x 4: rock_small 0-3, rock_large 0-3"}
+    if args.texture:
+        sources["texture"] = {"file": args.texture.replace(os.sep, "/"),
+                              "sha256": hashlib.sha256(open(args.texture, "rb").read()).hexdigest()}
     cells = []
     for row, name in enumerate(["rock_small", "rock_large"]):
         for col in range(4):
-            img, ax, ay = cut(fg, a, own, row * 4 + col, WIDTH[name])
+            img, ax, ay = cut(fg, a, own, row * 4 + col, WIDTH[name], tex)
             i = len(entries[name])
             path = os.path.join(args.out, f"{name}_{i}.webp")
             img.save(path, "WEBP", quality=92, alpha_quality=100, method=6)
             entries[name].append({"file": "res://" + path.replace(os.sep, "/"), "ax": ax, "ay": ay, "scale": SCALE,
                                   "w": img.width, "h": img.height, "noShadow": True, "art": True})
             cells.append(img)
-    with open(os.path.join(args.out, "rocks_sources.json"), "w") as f:
-        json.dump({"sheet": os.path.basename(args.sheet), "sha256": sheet_sha, "cells": "2 rows x 4: rock_small 0-3, rock_large 0-3"}, f, indent=1)
+    with open(os.path.join(args.out, "rocks_sources.json"), "w", newline="\n") as f:
+        json.dump(sources, f, indent=1)
     if args.review:
         os.makedirs(args.review, exist_ok=True)
         for bg_name, bg in (("grass", (92, 120, 52)), ("grey", (128, 128, 128))):

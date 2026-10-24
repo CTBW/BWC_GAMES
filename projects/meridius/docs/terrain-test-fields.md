@@ -208,8 +208,20 @@ concept A's style instead of the grey Blender renders: four variants each, cut
 from one Nano Banana Pro sheet on magenta (review/rocks/rocks_sheet_1.png, 4
 credits) by `tools/props/rock_cutout.py`, with a soft contact shadow falling
 down and to the right. A stones cluster is about two thirds of a tile wide, a
-boulder about one tile. Rules and map layouts are unchanged; MIGRATION.md
+boulder about one tile. The stone takes the terrain's rock texture
+(`assets/terrain/rock.webp`, its tufts and lichen removed): its colour and fine
+grain under the painted light, so the props read as the same grey stone as the
+bank strata and fallen blocks. Rules and map layouts are unchanged; MIGRATION.md
 *Painted rocks* has the details.
+
+Painted woodland: the trees and bushes everywhere in the game (`tree_pine`,
+`tree_oak`, `bush` in battles, on the campaign map and in the garrison) are now
+the painted pine, beech, oak and shrub from the Woodland scouting trial
+(`assets/terrain/woodland/`), cut out of their magenta backdrop by
+`tools/props/woodland_cutout.py` with the cast shadow the game draws for props
+baked in. They keep the lab's sizes and their own colour, and are never mirrored
+(their light is painted from the upper left). The ferns stay in the terrain lab
+for now. MIGRATION.md *Painted woodland* has the details.
 
 Captures: `tools/godot.sh --path . --resolution 1920x1080 --audio-driver Dummy
 -s res://tests/visual/terrain_relief_shots.gd` (optional `RELIEF_FIELDS=0,4`)

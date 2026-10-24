@@ -326,3 +326,34 @@ Rules are unchanged: tiles keep their `v` (0-9999) and the view picks
 `v % 4` instead of `v % 2`. The original drew two variants, so
 `test_assets` retires those two counts from `variant_counts.json` and pins
 four (`REPAINTED`). Native battle, campaign and relief-lab captures: 0 errors.
+With `--texture assets/terrain/rock.webp` the stone takes the terrain's rock
+texture (its grass tufts and lichen filled out first): its colour and fine grain
+under the painted light, outline and moss, so the props read as the same grey
+stone as the relief's bank strata and fallen blocks.
+
+### 2026-10-24 - Painted woodland
+
+The `tree_pine`, `tree_oak` and `bush` props are now the painted woodland the
+terrain lab trialled (`assets/terrain/woodland/`, `scripts/render/woodland_kit.gd`)
+instead of the Blender renders, in battles, on the campaign map and in the
+garrison. `tools/props/woodland_cutout.py` keys the pine, beech, oak and shrub
+paintings out of their magenta backdrop (the rock cutout's key), bakes the cast
+shadow the game draws for props (the silhouette skewed by (1, 0, -0.75, -0.32),
+alpha 0.2 for trees and 0.16 for the shrub, softened 2.5 px) and writes
+`assets/sprites/painted/woodland_<name>.webp` at 3 sprite px per world px, with
+mipmaps; `woodland_sources.json` records each painting's sha256. Root anchors and
+heights are the lab's (the whole painting 350, 310 and 285 world px for pine,
+beech and oak), so a pine stands about a fifth taller and half again as wide as
+the Blender one; the shrub is 87 rather than the lab's 66 so it covers the bush
+prop's footprint. The paintings keep their own colour (the lab grades them darker
+for its textured ground). Three variants each, as the original drew: one painting
+at sizes 1.0, 0.9 and 1.1; `tree_oak` is beech, oak and a smaller beech.
+`noShadow` keeps the game from mirroring them, since their light is painted from
+the upper left. Rules are unchanged. The ferns stay in the lab: they are
+presentation-only undergrowth and need a change to `battle_draw.gd`.
+`test_assets` retires the original's `tree_pine` hit mask (`REPAINTED`) and pins
+the new pine anchor. In the terrain lab the Painted woodland toggle now compares
+the lab's keyed paintings with these sprites rather than with the Blender trees.
+A sprite re-bake writes the Blender trees back (tools/bake/README.md). Native
+battle (deploy, march, night), campaign and garrison captures: 0 errors; frame
+times unchanged against the Blender trees (`battle_fps.gd`, campaign capture).

@@ -1,0 +1,90 @@
+{
+ "tint": [
+  1.0,
+  1.0,
+  1.0
+ ],
+ "density": 3.0,
+ "paintings": {
+  "pine": {
+   "file": "tree_pine__take-01.png",
+   "sha256": "66b42a7be5e7dbcc9adbe45d4f005dd2b38d4997fd93bd177c13fd6ff866734a",
+   "anchor": [
+    0.52,
+    0.94
+   ],
+   "worldHeight": 350.0
+  },
+  "beech": {
+   "file": "tree_beech__take-01.png",
+   "sha256": "9a02bfed7b15f7229ada3959d695ede9e95e19c85b7c3e8e55d06f09b4abf690",
+   "anchor": [
+    0.5,
+    0.94
+   ],
+   "worldHeight": 310.0
+  },
+  "oak": {
+   "file": "tree_oak__take-02.png",
+   "sha256": "44640ab1b39d9e5c9cae2af6808c0011010c1a56a417c19b61245e2d93d7ded8",
+   "anchor": [
+    0.51,
+    0.92
+   ],
+   "worldHeight": 285.0
+  },
+  "shrub": {
+   "file": "bush_green__take-01.png",
+   "sha256": "7a4fdd95fb5fc6ca42bfb598574ac2374117beec804f5f356a1b44dd8c0ceeea",
+   "anchor": [
+    0.46,
+    0.89
+   ],
+   "worldHeight": 87.0
+  }
+ },
+ "variants": {
+  "tree_pine": [
+   [
+    "pine",
+    1.0
+   ],
+   [
+    "pine",
+    0.9
+   ],
+   [
+    "pine",
+    1.1
+   ]
+  ],
+  "tree_oak": [
+   [
+    "beech",
+    1.0
+   ],
+   [
+    "oak",
+    1.0
+   ],
+   [
+    "beech",
+    0.9
+   ]
+  ],
+  "bush": [
+   [
+    "shrub",
+    1.0
+   ],
+   [
+    "shrub",
+    0.85
+   ],
+   [
+    "shrub",
+    1.15
+   ]
+  ]
+ }
+}

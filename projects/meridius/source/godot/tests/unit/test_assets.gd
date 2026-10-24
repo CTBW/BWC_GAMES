@@ -6,9 +6,9 @@ extends "res://tests/test_case.gd"
 const Assets = preload("res://scripts/render/assets.gd")
 const DB = preload("res://scripts/data/db.gd")
 const FIXTURE := "res://tests/fixtures/assets/variant_counts.json"
-# Art repainted after the port, with more variants than the original drew
-# (MIGRATION.md, "Painted rocks"); the original's counts no longer apply.
-const REPAINTED := {"rock_small": 4, "rock_large": 4}
+# Art repainted after the port (MIGRATION.md, "Painted rocks" and "Painted
+# woodland"): its variant counts, and the original's masks no longer apply.
+const REPAINTED := {"rock_small": 4, "rock_large": 4, "tree_pine": 3, "tree_oak": 3, "bush": 3}
 
 var fx: Dictionary
 var manifest: Dictionary
@@ -112,9 +112,9 @@ func test_figure_anchor_and_scale() -> void:
 	assert_false(s.noShadow)
 	assert_true(s.ax > 0 and s.ax < s.w and s.ay > 0 and s.ay <= s.h, "anchor inside the trimmed figure")
 	var tree := Assets.sprite("tree_pine", 0)
-	assert_true(tree.noShadow and tree.art, "Blender tree carries its own shadow")
-	assert_almost(tree.scale, 0.3201, 1e-9)
-	assert_almost(tree.ax, 226.9, 1e-9)
+	assert_true(tree.noShadow and tree.art, "painted tree carries its own shadow")
+	assert_almost(tree.scale, 0.3333, 1e-9)
+	assert_almost(tree.ax, 357.7, 1e-9)
 
 
 func test_opaque_at_hit_mask() -> void:
@@ -134,6 +134,8 @@ func test_opaque_at_matches_original_masks() -> void:
 	var cases: Array = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/assets/hit_masks.json"))
 	assert_true(cases.size() >= 5, "mask cases")
 	for c in cases:
+		if REPAINTED.has(c.key):
+			continue
 		var s := Assets.sprite(c.key, int(c.v))
 		assert_eq([s.w, s.h], [int(c.w), int(c.h)], "%s size" % c.key)
 		var step := float(c.step)

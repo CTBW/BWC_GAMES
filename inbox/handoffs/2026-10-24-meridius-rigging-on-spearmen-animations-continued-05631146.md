@@ -21,23 +21,47 @@ Changed in `e40ed6a`:
 - `workspace/2026-10-20_meridius/spearman-3d/sheets/step_lane_*.webp` and `frames.json`
 - the tab's frames data plus its step-into-lane and "to judge" notes.
 
+**Hit spear clearance fixed in `906687a` (2026-10-24, pushed).** The user asked to "fix the hit spear clearance". The spear stays rigid in the right fist. `wrist_clear()` in `spear_motion.py` now bends the right wrist where the flinch would swing the shaft through him:
+- **The test:** the shaft's axis, plus four lines `CLEAR_R` = 2.5 cm off it, must not cross the body more than 10 cm from either fist.
+- **The search:** a cheapest-path search over 2D wrist bends in the hand's X–Z plane (12 directions, 2° steps, up to `CLEAR_MAX` 30°, at most `CLEAR_STEP` 6° change per frame). It runs from a straight wrist `CLEAR_PAD` 8 frames before the crossing frames to a straight wrist 8 frames after them.
+- **Result:** bends in frames 6–23 and 34–43, at most 10°. Clearance is 0 of 61 frames, down from 10. The left forearm (8, 38–41) and the belly (16–20) are clear.
+- **Rejected:** one fixed bend direction for the whole stretch. It pushed the shaft into his left arm in frames 9 and 34–36, which were clear before. No single direction worked across frames 0–49.
+- **Re-runs:** `wrist_clear` edits the hit's `RightHand` keys in place. It marks the action (`act["wrist_clear"]`) and asserts on a second run, so run `retarget_clips.py -- 'E:/ProjektM/BWC_GAMES-godot/projects/meridius/Animations' hit` before re-running `spear_motion.py -- hit`.
+
+Changed in `906687a`:
+- `tools/spear_motion.py`
+- `spearman_rig.blend` (hit `RightHand` keys only; sha `94d4d4c23257`)
+- `workspace/2026-10-20_meridius/spearman-3d/sheets/hit_*.webp` and `frames.json`
+- the tab's frames data, its "Holding the spear" sentence on the hit, and the clearance line
+
+**`cape_cache/hit.pc2` is unchanged on purpose.** The wrist isn't a cloth collider: bakes from the rig before and after the wrist fix are identical. Cape poke-through for hit is unchanged at 49 total, worst 3.
+
+**Cape bakes depend on leftover pose scale (found 2026-10-24, not fixed).** A re-bake of hit from the current rig differs from the committed `hit.pc2` (max 0.33 m, mean 1.7 cm), and so does a re-bake from the `e40ed6a` rig. Only a re-bake from the `f6c6e32` rig reproduces it exactly.
+- **Cause:** the IK steps set `pb.matrix` directly, which leaves unkeyed pose scales of about 1.0001 on the right-arm bones. Their values depend on which clips `spear_motion.py` processed last, and they are saved in the file. `cape_cloth.py sim` keys only rotation and location, and the chaotic cloth sim amplifies that noise.
+- **Proof:** with all pose scales reset to 1, the `f6c6e32` and current rigs bake hit identically.
+- **Who it affects:** the committed caches stay valid simulations of their clips, but only step_lane's reproduces from the current rig.
+- **Possible fix** (needs the user's go-ahead, since all ten clips would need re-baking and re-rendering): reset pose scale to 1 in `cape_cloth.py sim`, and key or reset scale after the IK in `spear_motion.py`.
+- Render differences are sub-pixel: 60–76 anti-aliased pixels along the spear per frame.
+
 - Commits on `godot-migration`, pushed to `origin/godot-migration` (public repo `CTBW/BWC_GAMES`):
   - `f6c6e32` Meridius: spearman 3D rig with cloth cape, clips and report (94 files)
   - `1f5be46` Knowledge: Tripo Studio notes for the Meridius units
   - `aa697b4` Meridius: spearman helper scripts for baking, renders and report figures (14 files in `art/spearman_3d/tools/`)
   - `e40ed6a` Meridius: spearman step into lane, neck twist spread over spine, neck and head (9 files)
-  - At the time of writing, `e40ed6a` is the head of both the local and the remote branch. Other sessions commit and push to this branch too.
+  - `aa82847` handoff update; `906687a` Meridius: spearman hit, wrist bends the rigid spear clear of his body (8 files), pushed by the coordinating session.
+  - **Pushing:** the coordinating session (`bwc-games-godot-1c`) now pushes and opens PRs for everyone. Commit your own files by explicit path, then send it the hash. The folder and public-Git policy is in the "Where things live" section of `AGENTS.md`.
+  - `906687a` is on `origin/godot-migration` (with the coordinator's `7ac84ec` and `82ebed4` after it). The handoff and Animations path update is committed after that. Other sessions commit and push to this branch too.
 - Report: `workspace/2026-10-20_meridius/spearman-3d.html`, card "Spearman 3D rig" (group Character rigs, subgroup Spearman) in `workspace/workspace.json`.
 - **Not in the game.** The Godot game still draws the spearman from 2D sprites (`art/squads/spearman`, `assets/sprites/anim/spearman.*`), which another session made. No game code was changed for this work. Two earlier items were answered but not built:
   - per-figure death variant via `Rng.hash2` in `squad_view.gd` and `battle_view.gd:_drop_victim`;
   - troll overkill ragdoll.
 
-## Files (committed in `f6c6e32`; helper scripts in `aa697b4`; neck fix in `e40ed6a`)
+## Files (committed in `f6c6e32`; helper scripts in `aa697b4`; neck fix in `e40ed6a`; hit fix in `906687a`)
 All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless noted.
 
 | File | sha256 (first 12) |
 |---|---|
-| `spearman_rig.blend` | `d4e3944f50d6` (`e40ed6a`; was `a5613942478b` in `f6c6e32`) |
+| `spearman_rig.blend` | `94d4d4c23257` (`906687a`; `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
 | `spearman_base.blend` | `358886dd37fd` |
 | `spear.blend` | `88330b84d248` |
 
@@ -97,7 +121,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 - Before applying anything, re-read the tab and `git log origin/godot-migration`; other sessions commit and push to this branch.
 
 ## Verification (agent, 2026-10-24)
-- **Bake.** One background Blender per clip, peak 300–370 MB each. The new idle bake is bit-identical to the 2026-10-23 idle (the sim is deterministic). Lowest cape point per clip:
+- **Bake.** One background Blender per clip, peak 300–370 MB each. The new idle bake is bit-identical to the 2026-10-23 idle. The sim is deterministic for an identical file, but see the leftover-pose-scale note above. Lowest cape point per clip:
 
   | Clip | Lowest point |
   |---|---|
@@ -132,12 +156,12 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 
   | Clips | Frames |
   |---|---|
-  | idle, idle_rest, walk, step_lane, turn_90 | 0 |
+  | idle, idle_rest, walk, step_lane, turn_90, hit (since the wrist fix) | 0 |
   | attack | 1 of 64 |
   | death | 1 of 72 |
   | death_2 | 1 of 69 |
   | death_3 | 2 of 118 |
-  | hit | 10 of 61 |
+  | hit before the wrist fix | 10 of 61 |
 
 - **Tab in Chrome** (`python -m http.server 8765 --bind 127.0.0.1` from `workspace/`):
   - All 40 sheets and 7 figures load at their declared sizes, and the image preview offers download and close.
@@ -146,11 +170,11 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 
 ## To judge (owner acceptance pending)
 1. **Step into lane** (fix in `e40ed6a`): is the twist now spread well enough over his spine, neck and head? And is the SE spear acceptable? It now stands nearly upright with the tip a little to the right; before, it leaned further right. `travel` 1.0 gives the old lean but runs the shaft over his face.
-2. **Hit:** the left forearm sweeps across the shaft in 10 of 61 frames.
+2. **Hit** (wrist fix in `906687a`): does the up-to-10° wrist bend read naturally? It is subtle from the battle camera: the shaft lies a little further from his belly at frames 17–19 and from his left forearm at frames 39–41.
 3. **Death 1:** from above, the cape ends bunched on the upper back and shoulders, because it is flung up as he pitches forward. From the battle camera it reads as lying on his back.
 4. The death caches are still settling slightly in their last frames.
 
-Items 2–4 have no decided fix. Wait for the user's verdict before changing anything.
+Items 3–4 have no decided fix. Wait for the user's verdict before changing anything.
 
 ## Accepted decisions (keep)
 - **Shoulder carry:** `SHOULDER_CFG = contact [-0.20,-0.11,1.55], len 0.16, fwd -22, out 3, butt_z 0.85, pole [-0.3,0.6,-1.0], travel 0.75`. The palm faces the chest.
@@ -202,9 +226,10 @@ python $T/pack_sheets.py <work>/renders workspace/2026-10-20_meridius/spearman-3
 Notes:
 - `render_preview.py` reads `CLIP_SCALE` / `CLIP_Z` for close-ups (default 3.7 / 1.25; the cape figure used 2.6 / 1.0).
 - Call Blender with absolute paths. Relative ones resolved to `C:\` in a test.
+- The Mixamo FBX sources are in `projects/meridius/Animations/`, their final location since 2026-10-24 (formerly `E:\Animations`). The folder is gitignored; never commit raw Mixamo files.
 - Python with Pillow and numpy: `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\d8823a10-5e83-448e-b4e6-5c6ea96da2ae\scratchpad\venv-art\Scripts\python.exe` (run it with `-I`). It is a temp folder, so any Python with Pillow and numpy will do.
 - The old skinned-cape rig (`rig_tw.blend`, used for the figure's "before" frames) stays only in that scratchpad.
-- `spear_motion.py` edits the clip's keys in place (spine untwist, neck, arm). Always re-run the retarget before it. For step_lane, run `retarget_clips.py -- 'E:/Animations' step_lane` (source `E:\Animations\Standing Walk Right.fbx`), then `spear_motion.py -- step_lane`. It prints the wrist bend and the chest's turn (−40…−32° now).
+- `spear_motion.py` edits the clip's keys in place (spine untwist, neck, arm). Always re-run the retarget before it. For step_lane, run `retarget_clips.py -- 'E:/ProjektM/BWC_GAMES-godot/projects/meridius/Animations' step_lane` (source `projects/meridius/Animations/Standing Walk Right.fbx`), then `spear_motion.py -- step_lane`. It prints the wrist bend and the chest's turn (−40…−32° now).
 
 **Checked 2026-10-24 against the committed results** (see `cape_poke.py` for why the cape read is now unconditional):
 - `pack_sheets.py` reproduced all 40 sheets and `frames.json` byte for byte.
@@ -216,6 +241,8 @@ Notes:
 - The lineup renders matched pixel for pixel.
 
 **Godot tests at `aa697b4`.** `tools/test.sh --quick` gave 398 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread` (6 footmen marching 2 s, 10 treads heard). That test file, `tests/unit/test_audio.gd`, is untracked. It belongs to another session's uncommitted audio work (`scripts/audio/sfx.gd`, `battle_view.gd`, `battle_draw.gd`). It isn't part of the spearman commits; leave it to that session.
+
+**`906687a`** was committed after a full `tools/test.sh` run that gave 389 passed and 4 failed: two campaign parity tests, `test_audio`, and `test_squad_skills.gd`, which doesn't parse because `icon.gd` has no `painted()`. All four come from other sessions' uncommitted game code. The commit changes only `art/` and `workspace/`.
 
 **`e40ed6a`** was committed at the user's request ("commit now, don't wait") before the full `tools/test.sh` run finished. It changes only `art/spearman_3d/` (Godot ignores `art/` through `.gdignore`) and `workspace/`, outside the Godot project, so no game code or imported asset changed.
 

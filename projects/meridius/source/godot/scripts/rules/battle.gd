@@ -215,6 +215,9 @@ func morale_state(u: Dictionary) -> String:
 
 ## Arc from which `target` is attacked by someone standing at `from`.
 func arc_of(target: Dictionary, from: Dictionary) -> String:
+	# A spear square faces every way: it has no flank or rear.
+	if target.get("stance") == "square":
+		return "front"
 	var fx: int = Grid.DX[target.facing]
 	var fy: int = Grid.DY[target.facing]
 	var dx: float = float(from.x) - float(target.x)
@@ -615,6 +618,8 @@ func preview_legal(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> bool:
 	var ab: Variant = DB.ABILITIES.get(ab_id) if ab_id else null
 	var memo: Array = []
 	var ranged: bool = bool(ab.get("ranged", false)) if ab != null else (not opts.get("forceMelee", false) and _would_shoot(a, t, from, memo))
+	if ab != null and _run_short(a, ab, opts) != "":
+		return false
 	if ranged:
 		return _can_shoot(a, t, from, memo).ok and not _unbraced(a, opts)
 	var reach: int = JS.get_or(ab, "reach", 1) if ab != null else 1
@@ -627,6 +632,40 @@ func _unbraced(a: Dictionary, opts: Dictionary) -> bool:
 		return false
 	var mtv: Variant = opts.get("movedTiles")
 	return (a.movedTiles if mtv == null else mtv) > 0
+
+
+## Why an attack ability cannot be used after this turn's move, or "": a
+## charge needs a run (`minRun` tiles), an aimed shot a squad that has not moved (`still`).
+func _run_short(a: Dictionary, ab: Dictionary, opts: Dictionary) -> String:
+	var mtv: Variant = opts.get("movedTiles")
+	var run: int = a.movedTiles if mtv == null else mtv
+	if ab.get("minRun") and run < ab.minRun:
+		return "Needs a run of at least %d tiles" % ab.minRun
+	if ab.get("still") and ((run > 0) if mtv != null else a.hasMoved):
+		return "Only in a turn the squad has not moved"
+	return ""
+
+
+## Defend: the squad standing guard beside `t` that takes an attack aimed at
+## it, or null. Only attacks ordered against `t` are caught (not free attacks,
+## spearwalls, overwatch or first strikes), and a guard is never guarded.
+## Each guard catches one blow per stand (`guardSpent`). The sturdiest guard
+## steps in (most HP, then uid).
+func guard_of(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Variant:
+	if opts.get("reaction") or t.get("stance") == "defend" or t.faction == a.faction:
+		return null
+	var best: Variant = null
+	for g in units:
+		if g.get("stance") != "defend" or g.get("guardSpent") or g.status != "active" or g.faction != t.faction or g.uid == t.uid or Grid.manhattan(g, t) != 1:
+			continue
+		if best == null or g.hp > best.hp or (g.hp == best.hp and String(g.uid) < String(best.uid)):
+			best = g
+	return best
+
+
+## A charge that meets a spear square loses everything the run gave it.
+static func _charge_broken(ab: Variant, d: Dictionary) -> bool:
+	return ab != null and ab.get("minRun") and d.get("stance") == "square"
 
 
 ## AttackOpts: {from?: Pt, ability?: String, reaction?: String, forceMelee?: bool, movedTiles?: int}.
@@ -657,45 +696,58 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 		if not can_melee(a, t, from, reach):
 			legal = false
 			reason = "Needs a straight line two tiles away" if reach > 1 else "Not adjacent"
+	if legal and ab != null:
+		var short := _run_short(a, ab, opts)
+		if short != "":
+			legal = false
+			reason = short
 
-	var arc := arc_of(t, from)
+	# Who takes the blow: the target, or a squad standing guard beside it
+	# (Defend), on its shield. Where it lands (range, sight, cover, ground)
+	# stays the target's tile.
+	var guard: Variant = guard_of(a, t, opts)
+	var d: Dictionary = t if guard == null else guard
+	var arc := "front" if guard != null else arc_of(t, from)
 	var chance = a.stats.ranged if ranged else a.stats.melee
 	mods.append(["Ranged skill" if ranged else "Melee skill", chance])
 
-	var def = t.stats.rangedDefense if ranged else t.stats.defense
+	var def = d.stats.rangedDefense if ranged else d.stats.defense
 	var t_tile := tile(t)
 	def += DB.TERRAIN[t_tile.terrain].defenseMod
 	# Holding a gateway: the posts and the narrow way shelter the defenders.
 	var tprop: Variant = t_tile.get("prop")
 	if tprop and DB.PROPS[tprop].get("defense"):
 		def += DB.PROPS[tprop].defense
-	var t_stance: Variant = t.get("stance")
+	var t_stance: Variant = d.get("stance")
 	var shieldwall: bool = t_stance == "shieldwall"
-	if t.shieldFront and (arc == "front" or (shieldwall and arc == "flank")):
-		def += t.shieldFront
+	if d.shieldFront and (arc == "front" or (shieldwall and arc == "flank")):
+		def += d.shieldFront
 	if shieldwall:
 		def += 15 if ranged else 20
+	# A square bristles against blades but packs its men for the archers.
+	if t_stance == "square":
+		def += -10 if ranged else 6
 	if not shieldwall:
 		# alliesOf(t).some(shieldwall beside it)
 		for x in units:
-			if x.status == "active" and x.faction == t.faction and x.uid != t.uid and x.get("stance") == "shieldwall" and Grid.manhattan(x, t) == 1:
+			if x.status == "active" and x.faction == d.faction and x.uid != d.uid and x.get("stance") == "shieldwall" and Grid.manhattan(x, d) == 1:
 				def += 6
 				break
-	var tms := morale_state(t)
+	var tms := morale_state(d)
 	if tms == "shaken":
 		def -= 5
 	if tms == "wavering":
 		def -= 10
 	chance -= def
 	mods.append(["Target defense", -def])
-	if Squad.has_status(t, "chilled"):
+	if Squad.has_status(d, "chilled"):
 		chance += 10
 		mods.append(["Target chilled", 10])
-	if Squad.has_status(t, "bloodlust"):
+	if Squad.has_status(d, "bloodlust"):
 		chance += 8
 		mods.append(["Target in a frenzy", 8])
 
-	if t.status == "routing":
+	if d.status == "routing":
 		chance += 15
 		mods.append(["Fleeing target", 15])
 	if arc == "flank":
@@ -722,32 +774,37 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	if not ranged and Squad.has_status(a, "bloodlust"):
 		chance += 10
 		mods.append(["Bloodlust", 10])
+	if Squad.has_status(a, "cowed"):
+		chance -= 10
+		mods.append(["Cowed", -10])
 
 	if ranged and legal:
-		var d := Grid.dist(from, t)
-		if d > 4:
-			var m := -JS.rnd((d - 4) * 4)
+		# An aimed shot waits for its moment: cover, a blocked view and troops in the way do not spoil it.
+		var aimed: bool = ab != null and bool(ab.get("ignoreCover", false))
+		var rd := Grid.dist(from, t)
+		if rd > 4:
+			var m := -JS.rnd((rd - 4) * 4)
 			chance += m
 			mods.append(["Long range", m])
 		var los := _los(from, t, memo)
-		if los.partial:
+		if los.partial and not aimed:
 			chance -= los.partial * 10
 			mods.append(["Obstructed view", -los.partial * 10])
 		var between := 0
 		for p in los.tiles:
 			if Grid.unit_at(units, p.x, p.y) != null:
 				between += 1
-		if between:
+		if between and not aimed:
 			chance -= between * 12
 			mods.append(["Shooting past troops", -between * 12])
 		var last: Variant = los.tiles[los.tiles.size() - 1] if los.tiles.size() > 0 else null
-		if last != null and Grid.manhattan(last, t) <= 1:
+		if last != null and Grid.manhattan(last, t) <= 1 and not aimed:
 			var lt: Dictionary = Grid.tile_at(map, last.x, last.y)
 			var lp: Variant = lt.get("prop")
 			if lp and DB.PROPS[lp].cover:
 				chance -= DB.PROPS[lp].cover
 				mods.append(["Behind %s" % String(DB.PROPS[lp].name).to_lower(), -DB.PROPS[lp].cover])
-		var tc = DB.TERRAIN[t_tile.terrain].rangedCover
+		var tc = DB.TERRAIN[t_tile.terrain].rangedCover if not aimed else 0
 		if tc:
 			chance -= tc
 			mods.append(["In %s" % String(DB.TERRAIN[t_tile.terrain].name).to_lower(), -tc])
@@ -774,7 +831,10 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 			chance += m
 			mods.append(["Pack tactics", m])
 
-	if ab != null and ab.get("hitMod"):
+	var broken := _charge_broken(ab, d)
+	if broken:
+		mods.append(["Charge broken by the square", 0])
+	elif ab != null and ab.get("hitMod"):
 		chance += ab.hitMod
 		mods.append([ab.name, ab.hitMod])
 	if reaction == "overwatch":
@@ -789,7 +849,7 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	# Damage: every surviving soldier lands one blow, each reduced by the
 	# target's armour, and the squad's total is rolled once.
 	var base: Array = a.shot.damage if ranged else a.melee
-	var mult = JS.get_or(ab, "damageMult", 1) if ab != null else 1
+	var mult = JS.get_or(ab, "damageMult", 1) if ab != null and not broken else 1
 	if reaction == "spearwall":
 		mult *= 1.5
 	if arc == "rear":
@@ -800,30 +860,34 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	var flat := 0
 	var mtv: Variant = opts.get("movedTiles")
 	var moved_tiles = a.movedTiles if mtv == null else mtv
-	var charging: bool = not ranged and a.abilities.has("charge") and moved_tiles >= 2 and not reaction
+	var charging: bool = not ranged and a.abilities.has("charge") and moved_tiles >= 2 and not reaction and d.get("stance") != "square"
 	if charging:
 		flat += 3
 	# Frenzied soldiers put everything into every blow.
 	if not ranged and Squad.has_status(a, "bloodlust"):
 		flat += 3
 	var pierce = 1 if (ab != null and ab.get("ignoreArmor")) else (a.shot.pierce if ranged else a.meleePierce)
-	var armor = t.stats.armor * (1 - pierce)
+	var armor = d.stats.armor * (1 - pierce)
 	var strikers: int = maxi(1, a.alive)
 	var mn: int = maxi(1, JS.rnd(base[0] * mult + flat - armor)) * strikers
 	var mx: int = maxi(1, JS.rnd(base[1] * mult + flat - armor)) * strikers
 	var killing := 0
 	for dmg in range(mn, mx + 1):
-		if dmg >= t.hp:
+		if dmg >= d.hp:
 			killing += 1
 	var kill: float = (float(killing) / (mx - mn + 1)) * (float(chance) / 100.0)
 	var avg: float = (mn + mx) / 2.0
-	var morale_hit: int = (JS.rnd((avg / t.maxHp) * 28)
+	var morale_hit: int = (JS.rnd((avg / d.maxHp) * 28)
 		+ (4 if arc == "flank" else 8 if arc == "rear" else 0)
-		+ (JS.get_or(ab, "moraleDamage", 0) if ab != null else 0)
+		+ (JS.get_or(ab, "moraleDamage", 0) if ab != null and not broken else 0)
 		+ (8 if charging else 0))
-	var soldiers := [Squad.kills_from(t, mn), Squad.kills_from(t, mx)]
+	var soldiers := [Squad.kills_from(d, mn), Squad.kills_from(d, mx)]
 
-	return {"chance": chance, "min": mn, "max": mx, "arc": arc, "mods": mods, "kill": kill, "moraleHit": morale_hit, "legal": legal, "reason": reason, "soldiers": soldiers, "strikers": strikers}
+	var out := {"chance": chance, "min": mn, "max": mx, "arc": arc, "mods": mods, "kill": kill, "moraleHit": morale_hit, "legal": legal, "reason": reason, "soldiers": soldiers, "strikers": strikers}
+	# Numbers for the guard that steps in (Defend): `guard` is its uid.
+	if guard != null:
+		out["guard"] = guard.uid
+	return out
 
 
 ## Targets the unit could attack right now from `from` with the given ability.
@@ -955,6 +1019,15 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 	var ranged: bool = bool(ab.get("ranged", false)) if ab != null else (not opts.get("forceMelee", false) and would_shoot(a, t, a if from == null else from))
 	if ranged and a.ammo > 0:
 		a.ammo = maxi(0, a.ammo - (JS.get_or(ab, "ammoCost", 1) if ab != null else 1))
+	# Defend: the guard beside the target steps in and takes the blow (the
+	# preview's numbers are already the guard's). From here on `t` is whoever is struck.
+	var ward: Variant = null
+	var guard: Variant = guard_of(a, t, opts)
+	if guard != null:
+		ward = t
+		t = guard
+		t["guardSpent"] = true
+		_log("%s step in front of %s!" % [Squad.squad_name(t), Squad.squad_name(ward)], "good" if t.faction == "player" else "bad")
 	# One roll for the whole squad, however many soldiers swing or loose.
 	var hit: bool = rng.next() * 100 < pv.chance
 	var damage := 0
@@ -976,6 +1049,8 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 		ev["ability"] = ab_id
 	if reaction != null:
 		ev["reaction"] = reaction
+	if ward != null:
+		ev["ward"] = ward.uid
 	_emit(ev)
 	var how := ""
 	match reaction:
@@ -999,7 +1074,7 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 	if not hit:
 		return false
 	# A ballista bolt carries on through into the next foe behind.
-	var through: Variant = impale_target(a, t) if ranged and not reaction and a.tags.has("impale") else null
+	var through: Variant = impale_target(a, t) if ranged and not reaction and ward == null and a.tags.has("impale") else null
 	if t.hp <= 0:
 		if t.status == "routing":
 			# Cut down while fleeing.
@@ -1010,11 +1085,11 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 		return true
 	if t.status == "active":
 		var mtv: Variant = opts.get("movedTiles")
-		var charging: bool = not ranged and a.abilities.has("charge") and (a.movedTiles if mtv == null else mtv) >= 2 and not reaction
+		var charging: bool = not ranged and a.abilities.has("charge") and (a.movedTiles if mtv == null else mtv) >= 2 and not reaction and t.get("stance") != "square"
 		# Watching comrades fall shakes a squad more than the wounds alone.
 		var loss: int = (JS.rnd((float(damage) / t.maxHp) * 28)
 			+ (4 if pv.arc == "flank" else 8 if pv.arc == "rear" else 0)
-			+ (JS.get_or(ab, "moraleDamage", 0) if ab != null else 0)
+			+ (JS.get_or(ab, "moraleDamage", 0) if ab != null and not _charge_broken(ab, t) else 0)
 			+ (8 if charging else 0)
 			+ JS.rnd(float(lost * 6) / t.size))
 		var reason: String
@@ -1104,6 +1179,10 @@ func _after_damage(by: Variant, t: Dictionary, damage: int, lost: int, extra: in
 
 
 func _push(a: Dictionary, t: Dictionary, follow := false) -> void:
+	# A square is braced on every side: it gives no ground.
+	if t.get("stance") == "square":
+		_log("The square of %s holds its ground." % Squad.squad_name(t))
+		return
 	var dx := signi(t.x - a.x)
 	var dy := signi(t.y - a.y)
 	var to := {"x": t.x + dx, "y": t.y + dy}
@@ -1444,6 +1523,7 @@ func use_stance(uid: String, ability: String) -> bool:
 	if ab.stance == "overwatch" and (u.ammo == 0 or u.get("shot") == null):
 		return false
 	u["stance"] = ab.stance
+	u.erase("guardSpent")
 	u.hasActed = true
 	move_records.erase(uid)
 	_emit({"t": "stance", "uid": uid, "stance": ab.stance})
@@ -1451,13 +1531,28 @@ func use_stance(uid: String, ability: String) -> bool:
 	return true
 
 
-func shout(uid: String, ability: String) -> bool:
-	var u: Dictionary = unit(uid)
+## Whether the squad may use this shout (or other instant act of its own, like
+## Lick Wounds) now: `{ok, reason?}`.
+func can_shout(u: Dictionary, ability: String) -> Dictionary:
 	var ab: Variant = DB.ABILITIES.get(ability)
 	if ab == null or ab.kind != "shout" or not u.abilities.has(ability):
+		return {"ok": false, "reason": "Not known to this squad"}
+	if not can_act(u) or u.hasActed:
+		return {"ok": false, "reason": "Has already acted"}
+	var cd: int = JS.get_or(u.cooldowns, ability, 0)
+	if cd > 0:
+		return {"ok": false, "reason": "Ready in %d turns" % cd}
+	# Wounds are tended out of reach of the enemy's blades.
+	if ab.get("calm") and _enemy_beside(u, u):
+		return {"ok": false, "reason": "Not with an enemy beside them"}
+	return {"ok": true}
+
+
+func shout(uid: String, ability: String) -> bool:
+	var u: Dictionary = unit(uid)
+	if not can_shout(u, ability).ok:
 		return false
-	if not can_act(u) or u.hasActed or JS.get_or(u.cooldowns, ability, 0) > 0:
-		return false
+	var ab: Dictionary = DB.ABILITIES[ability]
 	move_records.erase(uid)
 	_emit({"t": "shout", "uid": uid, "ability": ability})
 	_log("%s: %s!" % [Squad.squad_name(u), ab.name], "good" if u.faction == "player" else "bad")
@@ -1468,10 +1563,31 @@ func shout(uid: String, ability: String) -> bool:
 	for e in enemies_of(u):
 		if Grid.dist(e, u) <= r:
 			change_morale(e, -JS.get_or(ab, "moraleDamage", 0), ab.name)
+			# Growl: those it reaches lose their nerve for a turn.
+			if ab.has("status") and e.status == "active":
+				_add_status(e, ab.status.id, ab.status.turns, u.uid)
+	if ab.has("selfHeal"):
+		_tend(u, ab)
 	u.cooldowns[ability] = JS.get_or(ab, "cooldown", 0)
 	u.hasActed = true
 	_after_action(u)
 	return true
+
+
+## Lick Wounds: the squad heals its survivors (per soldier standing), closes
+## the conditions named in `cleanse` and takes heart. The dead stay dead.
+func _tend(u: Dictionary, ab: Dictionary) -> void:
+	var healed = Squad.heal_squad(u, rng.rint(ab.selfHeal[0] * u.alive, ab.selfHeal[1] * u.alive))
+	if healed > 0:
+		_emit({"t": "heal", "uid": u.uid, "amount": healed, "hp": u.hp, "reason": ab.name})
+		_log("The wounds of %s close (+%s)." % [Squad.squad_name(u), JS.num_str(healed)], "good" if u.faction == "player" else "bad")
+	for id in ab.get("cleanse", []):
+		var s: Variant = Squad.status_of(u, id)
+		if s != null:
+			u.statuses.erase(s)
+			_emit({"t": "status", "uid": u.uid, "status": id, "on": false, "turns": 0})
+	if ab.get("selfMorale"):
+		change_morale(u, mini(ab.selfMorale, u.maxMorale - u.morale), ab.name)
 
 
 # ---------------------------------------------------------------- spells and war machines
@@ -2117,6 +2233,7 @@ func _start_turn(faction: String) -> void:
 		var cds: Dictionary = u.cooldowns
 		for k in cds.keys():
 			cds[k] = maxi(0, cds[k] - 1)
+		u.erase("guardSpent")
 		if u.get("stance"):
 			u.erase("stance")
 			_emit({"t": "stance", "uid": u.uid, "stance": null})

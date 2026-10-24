@@ -215,6 +215,90 @@ only version developed.
       `Meridius.console.exe -- --smoke`: SMOKE OK 13/13. Play-through
       (default): 213 checks, 0 failed, 0 errors, exit code 0.
 
+## Squad skills (22 Oct 2026, Godot only)
+Every company squad gets its own kit (`../../docs/squad-skills.md`): footmen
+Charge and Defend (beside Shield Wall, Shield Bash on promotion), spearmen
+Square, crossbowmen Aimed Shot, and the Border Collie Royal Guard its own four
+(Growl, Charge, Defend, Lick Wounds) in place of the footmen's Shield Wall and
+Shield Bash; since 23 Oct its promotion is Howl, which replaces Growl.
+- [x] Data: 7 abilities in `data/abilities.json` (`shield_charge`,
+      `hound_charge`, `defend`, `square`, `growl`, `lick_wounds`,
+      `aimed_shot`; new keys `minRun`, `still`, `ignoreCover`, `selfHeal`,
+      `selfMorale`, `cleanse`, `calm`, `short`); kits in `data/units.json`.
+- [x] Rules (`battle.gd`): `_run_short` (a charge's run, an aimed shot's
+      stillness) in `preview`/`preview_legal`; `guard_of` and the guard
+      taking the blow in `preview` and `_resolve_attack` (attack event
+      `ward`); a square in `arc_of` (no flank or rear), its +6/−10 defense, no
+      push, broken charges (`_charge_broken`, also the orcs' Brutal Charge);
+      the `cowed` condition (−10 to hit); `can_shout` and `_tend` (Lick
+      Wounds); Growl lays its status from `shout`. With none of these in play
+      every path is unchanged: the 77 battle traces (old kits in their
+      setups) still match, 41,064 query results included.
+- [x] AI (`ai.gd`): Growl only when foes are close (not for shaky allies);
+      Lick Wounds left out of the leaders' shouts and used by the company's
+      automation below 65% HP with no enemy beside. Attack skills are weighed
+      like any attack ability.
+- [x] HUD: buttons disabled with the reason (Lick Wounds beside an enemy, an
+      aimed shot after moving), the Cowed chip, a guard note in the attack
+      forecast, short button words (Shield Wall "Wall", Shield Bash "Bash");
+      manual paragraphs. Icons: 7 SVGs in `assets/icons/` (imported at 4× like
+      the rest), listed in `widgets/icon.gd`.
+- [x] Goldens: `campaign_golden.json` re-recorded
+      (`MERIDIUS_RECORD=1 tools/test.sh test_campaign_parity`); the scripted
+      runs and the generated expeditions are identical apart from the ability
+      lists, the two AI-battle runs and the autoplay campaigns changed with the
+      new skills. `meta_golden.json` has no recorder: instead of retiring ~100
+      cases, `test_meta_support.gd` (`OLD_KITS`, `current_kits`) reads its
+      recorded ability lists in today's kits and only those (any other list
+      still fails). Every other field is still compared as recorded. `setup_golden.json` is unaffected
+      (its armies carry their own lists).
+- [x] Balance (autoplay, both kits on today's rules; the old kits patched in
+      memory): 60 companies × 6 expeditions (the seeds of the original's
+      `scripts/simcampaign.ts`; the old kits reproduce the last recorded
+      39.8% / 18.6%): success 39.8% → 45.6%, retreat 41.5% → 38.6%, defeat
+      18.6% → 15.8%, deaths per expedition 1.03 → 0.88 (354 / 360
+      expeditions; about two standard errors on success). Single battles,
+      12 seeds × 13 encounters with a level-2 company of footmen ×2,
+      spearmen, crossbowmen ×2 and a Royal Guard: victories 155 → 154 of 156,
+      soldiers lost per battle 4.79 → 3.63. The company is stronger; not
+      retuned (a design call for the owner: cooldowns, Defend's coverage or
+      the encounters are the levers).
+- [x] Tests: `test_squad_skills.gd` (15), `test_battle_hud::test_squad_skill_buttons`.
+      Full `tools/test.sh`: 356 passed, 0 failed, 0 skipped (289 s).
+- [x] View (owned by the animation session): status/stance names, Growl and
+      Lick Wounds shouts, no frenzy tint or blood for the cowed — applied
+      there, with a "Guarded!" effect.
+- [ ] Effects per `../../docs/squad-skills.md`, after the squads' frames.
+
+Follow-up, 23 Oct 2026 (owner decisions: Defend stays a bodyguard but catches
+one blow per stand; Shield Bash stays a promotion; the Royal Guard is promoted
+to Howl; no rebalancing):
+- [x] Defend: a guard that catches a blow is `guardSpent` until the start of
+      its next turn (or its next stance), so `guard_of` passes it over and
+      later attacks reach their target. Description, manual and spec updated.
+- [x] Howl (`howl`): a shout with `upgrades: "growl"`, radius 3, −16 morale,
+      cowed for 2 turns, cooldown 3; `collie_guard.promotion`. An `upgrades`
+      promotion takes the place of that ability (`Soldier.kit`, shared by
+      `abilities_of` and the meta golden's `current_kit`), so the bar stays at
+      four keys. Soldier panel: "Promotion: Growl becomes Howl". Icon
+      `assets/icons/howl.svg`.
+- [x] Meta golden: the Royal Guard is promotable again, as recorded, so the
+      special case for its `canPromote` is gone; recorded promoted lists read
+      as `Soldier.kit(..., true)`.
+- [x] Campaign golden unchanged by these two: the skills committed on their
+      own (without fog of war) pass the full suite, campaign parity included
+      (24 Oct 2026: 358 passed, 0 failed, 0 skipped). With fog of war on it
+      differs (its entry, "Campaign baseline recording … deferred at the
+      user's request"); the owner kept that re-recording on hold (24 Oct
+      2026). The balance figures above predate both changes and fog.
+- [x] View (24 Oct 2026, owner's go-ahead): Howl shares Growl's branch in
+      `battle_view.gd`'s `"shout"` case, its rings scaled by the radius (3
+      tiles to Growl's 2); checked in a window (`capture_skills.gd --
+      use_growl use_howl`). It is in the animation session's uncommitted
+      view work and goes in with it; until then Howl plays the War Cry's
+      effect. Its sound is still the growl's roar.
+- [x] Tests: `test_squad_skills.gd` (17; new: one blow per stand, Howl).
+
 ## Resume here
 1. `tools/test.sh` (full) — green with magic, war machines and the
    shared-tile fix (340/0), not yet committed.

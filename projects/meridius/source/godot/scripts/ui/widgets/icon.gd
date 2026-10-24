@@ -20,7 +20,9 @@ const NAMES := ["silver", "timber", "iron", "trophies", "rations", "bandages", "
 	"crossbow", "march", "eye", "bash", "spearwall", "thrust", "bolt", "horn", "charge", "rotl", "rotr",
 	"sound", "mute", "grid", "danger",
 	# Spells and war machines.
-	"lightning", "frost", "heal", "circle", "fire", "blood", "gut", "stone", "staff", "engine"]
+	"lightning", "frost", "heal", "circle", "fire", "blood", "gut", "stone", "staff", "engine",
+	# Squad skills (Godot only).
+	"shield_charge", "defend", "square", "growl", "hound_charge", "lick_wounds", "aimed_shot", "howl"]
 const TINTED := ["rotl", "rotr", "sound", "mute", "grid", "danger"]
 
 static var _cache: Dictionary = {}

@@ -103,10 +103,20 @@ static func command_cost(s: Dictionary) -> int:
 
 
 static func abilities_of(s: Dictionary) -> Array:
-	var def: Dictionary = DB.UNIT_TYPES[s.typeId]
+	return kit(s.typeId, s.promoted)
+
+
+## A type's abilities, with its promotion when promoted: a new ability at the
+## end of the bar, or one that `upgrades` a base ability and takes its place.
+static func kit(type_id: String, promoted: bool) -> Array:
+	var def: Dictionary = DB.UNIT_TYPES[type_id]
 	var out: Array = def.abilities.duplicate()
-	if s.promoted and def.get("promotion") != null:
-		out.append(def.promotion)
+	if promoted and def.get("promotion") != null:
+		var i := out.find(DB.ABILITIES[def.promotion].get("upgrades", ""))
+		if i >= 0:
+			out[i] = def.promotion
+		else:
+			out.append(def.promotion)
 	return out
 
 

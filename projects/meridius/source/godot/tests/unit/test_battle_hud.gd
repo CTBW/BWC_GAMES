@@ -20,6 +20,7 @@ const Ai = preload("res://scripts/rules/ai.gd")
 const BattleHud = preload("res://scripts/ui/battle_hud.gd")
 const Panels = preload("res://scripts/ui/hud_battle_panels.gd")
 const Squad = preload("res://scripts/rules/squad.gd")
+const Grid = preload("res://scripts/rules/grid.gd")
 
 
 class FakeStore extends Node:
@@ -708,3 +709,59 @@ func test_conditions_and_hover_card() -> void:
 		mv.statuses = []
 	hud.refresh()
 	assert_null(_node("Status_bleeding"), "chips go with the condition")
+
+
+func test_squad_skill_buttons() -> void:
+	# The squad skills on the bar (../../docs/squad-skills.md): one word per
+	# button and no two alike, Lick Wounds held back while an enemy stands
+	# beside the hounds, an Aimed Shot only before the squad moves; each says why.
+	_open("goblin_scouts", false, _battle_with(["footman", "spearman", "crossbowman", "collie_guard"], "goblin_scouts", 11, 3))
+	_begin()
+	var b = view.b
+	var f := _of_type("footman")
+	f.abilities.append("shieldbash")
+	view.select(f.uid)
+	hud.refresh()
+	var words: Array = []
+	for a in Panels.abilities(f):
+		var w := _text_of(_button("Ability_" + a)).strip_edges()
+		assert_false(words.has(w), "a word of its own: " + w)
+		words.append(w)
+	assert_eq(words.size(), 4, "four keys: %s" % [words])
+	var c := _of_type("collie_guard")
+	assert_eq(Panels.abilities(c), ["growl", "hound_charge", "defend", "lick_wounds"])
+	view.select(c.uid)
+	hud.refresh()
+	for a in Panels.abilities(c):
+		assert_false(_button("Ability_" + a).disabled, a + " usable")
+	# An enemy beside the hounds: no licking wounds, and the reason.
+	var foe: Dictionary = b.active("enemy")[0]
+	for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
+		var x: int = c.x + d[0]
+		var y: int = c.y + d[1]
+		if Grid.tile_passable(b.map, x, y) and Grid.unit_at(b.units, x, y) == null:
+			foe.x = x
+			foe.y = y
+			break
+	view.select(f.uid)
+	hud.refresh()
+	view.select(c.uid)
+	hud.refresh()
+	var lick := _button("Ability_lick_wounds")
+	assert_true(lick.disabled, "an enemy beside them")
+	assert_true(_tip(lick).contains("Not with an enemy beside them."), _tip(lick))
+	# An aimed shot waits for a squad that has not moved.
+	var xb := _of_type("crossbowman")
+	view.select(xb.uid)
+	hud.refresh()
+	assert_false(_button("Ability_aimed_shot").disabled, "before moving")
+	for k in b.reachable(xb):
+		var p := {"x": int(k) % 1000, "y": int(k) / 1000}
+		if (p.x != xb.x or p.y != xb.y) and b.move(xb.uid, p.x, p.y):
+			break
+	_settle()
+	view.select(xb.uid)
+	hud.refresh()
+	var aim := _button("Ability_aimed_shot")
+	assert_true(aim.disabled, "after moving")
+	assert_true(_tip(aim).contains("Only in a turn the squad has not moved."), _tip(aim))

@@ -474,11 +474,16 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 		var def: Variant = DB.ABILITIES.get(ab)
 		if def == null or def.kind != "shout" or JS.get_or(u.cooldowns, ab, 0) > 0 or u.hasActed:
 			continue
+		# Tending wounds is no battle cry: see the end of the turn.
+		if def.has("selfHeal"):
+			continue
 		var r = JS.get_or(def, "radius", 4)
 		var shaky := 0
-		for a in b.allies_of(u):
-			if Grid.dist(a, u) <= r and float(a.morale) / a.maxMorale < 0.6:
-				shaky += 1
+		# A growl only frightens the enemy: it is worth it when they are close.
+		if def.get("moraleGain"):
+			for a in b.allies_of(u):
+				if Grid.dist(a, u) <= r and float(a.morale) / a.maxMorale < 0.6:
+					shaky += 1
 		var close := 0
 		for f in foes:
 			if Grid.dist(f, u) <= r:
@@ -729,6 +734,15 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 
 	if u.status != "active" or b.is_over():
 		return
+
+	# Player-side automation (simulation): a hurt squad out of reach of the
+	# enemy's blades tends its wounds (Lick Wounds) rather than stand idle.
+	if opts.get("useStances") and not u.hasActed and float(u.hp) / u.maxHp < 0.65:
+		for a in u.abilities:
+			var def: Variant = DB.ABILITIES.get(a)
+			if def != null and def.has("selfHeal") and b.can_shout(u, a).ok:
+				b.shout(u.uid, a)
+				break
 
 	# Player-side automation (simulation) can use stances.
 	if opts.get("useStances") and not u.hasActed:

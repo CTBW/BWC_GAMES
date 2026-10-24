@@ -5,8 +5,22 @@
 extends RefCounted
 
 const JS = preload("res://scripts/core/js.gd")
+const DB = preload("res://scripts/data/db.gd")
+const Soldier = preload("res://scripts/meta/soldier.gd")
 
 const GOLDEN := "res://tests/fixtures/golden/"
+
+## The kits (base abilities and promotion) of the types the squad skills
+## changed on 22 Oct 2026 (../../docs/squad-skills.md), as the archived original
+## recorded them. Goldens without a recorder still hold these lists;
+## `current_kits` rewrites exactly these to today's data/units.json so that
+## every other field is still compared as recorded.
+const OLD_KITS := {
+	"footman": {"abilities": ["shieldwall"], "promotion": "shieldbash"},
+	"spearman": {"abilities": ["spearwall"], "promotion": "pikethrust"},
+	"crossbowman": {"abilities": ["overwatch"], "promotion": "heavybolt"},
+	"collie_guard": {"abilities": ["shieldwall"], "promotion": "shieldbash"},
+}
 
 
 ## Whether this run re-records golden files (MERIDIUS_RECORD=1) instead of comparing.
@@ -93,3 +107,30 @@ static func diff(a: Variant, b: Variant, path := "$") -> String:
 static func _short(v: Variant) -> String:
 	var s := JSON.stringify(v) if (v is Array or v is Dictionary) else str(v)
 	return s if s.length() < 300 else s.substr(0, 300) + "…"
+
+
+## A recorded ability list of `type_id` in today's kit: the old base list
+## becomes the new one, and the old promotion today's promotion (if any).
+## Any other list is returned as it is, so a real difference still shows.
+static func current_kit(list: Array, type_id: String) -> Array:
+	var old: Variant = OLD_KITS.get(type_id)
+	if old == null:
+		return list
+	var promoted: bool = list == old.abilities + [old.promotion]
+	if list != old.abilities and not promoted:
+		return list
+	return Soldier.kit(type_id, promoted)
+
+
+## Every unit's or soldier's `abilities` list in a golden structure, in
+## today's kits (in place; returns `v`).
+static func current_kits(v: Variant) -> Variant:
+	if v is Array:
+		for x in v:
+			current_kits(x)
+	elif v is Dictionary:
+		if v.get("typeId") is String and v.get("abilities") is Array:
+			v.abilities = current_kit(v.abilities, v.typeId)
+		for k in v:
+			current_kits(v[k])
+	return v

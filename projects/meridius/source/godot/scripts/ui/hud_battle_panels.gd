@@ -43,6 +43,7 @@ const STATUS_INFO := {
 	"chilled": {"name": "Chilled", "color": "#bfe6ff", "text": "Half movement, −10 to hit and −10 defense until the end of its turn."},
 	"bloodlust": {"name": "Bloodlust", "color": "#ff8a6a", "text": "+10 to hit and +3 damage per soldier in melee, morale losses halved, −8 defense."},
 	"bleeding": {"name": "Bleeding", "color": "#ff9a8a", "text": "Loses HP (and soldiers) at the start of each of its turns."},
+	"cowed": {"name": "Cowed", "color": "#d9b8ff", "text": "−10 to hit until the end of its turn."},
 }
 ## How the spell forecast names a squad's part in it ("arc: Skab's goblin rabble").
 const ROLE_NAME := {"main": "", "splash": "beside", "chain": "arc", "aura": ""}
@@ -314,15 +315,22 @@ static func _ability_button(view: Object, u: Dictionary, a: String, i: int, ms: 
 	var ammo := int(u.get("ammo", -1))
 	var spell: bool = ab.get("kind") == "spell"
 	var cast: Dictionary = view.b.can_cast(u, a) if spell else {}
+	# Lick Wounds needs no enemy beside the squad; an aimed shot, a squad that has not moved.
+	var shout_ok: Dictionary = view.b.can_shout(u, a) if ab.get("kind") == "shout" else {"ok": true}
+	var still_ok: bool = not ab.get("still", false) or not u.hasMoved
 	var disabled: bool = not my_turn or u.hasActed or cd > 0 or (not cast.get("ok", false) if spell else ms == "wavering") \
 		or (ab.get("ammoCost") != null and ammo >= 0 and ammo < int(ab.ammoCost)) \
-		or (a == "overwatch" and ammo == 0)
+		or (a == "overwatch" and ammo == 0) or not shout_ok.get("ok", false) or not still_ok
 	# Why it cannot be used now (a cooldown shows on the button itself).
 	var why := ""
 	if spell and not cast.get("ok", false) and my_turn and not u.hasActed and cd == 0:
 		why = str(cast.get("reason", ""))
 	elif ms == "wavering" and not spell:
 		why = "Too shaken to use abilities."
+	elif my_turn and not u.hasActed and cd == 0 and not shout_ok.get("ok", false):
+		why = str(shout_ok.get("reason", "")) + "."
+	elif my_turn and not u.hasActed and not still_ok:
+		why = "Only in a turn the squad has not moved."
 	var active: bool = view.ui.ability == a
 	var btn := Button.new()
 	btn.name = "Ability_" + a
@@ -339,7 +347,8 @@ static func _ability_button(view: Object, u: Dictionary, a: String, i: int, ms: 
 	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var ic := Icon.make(str(ab.get("icon", "sword")), 26)
 	content.add_child(ic)
-	var nm := UI.label(str(ab.get("name", a)).split(" ")[0], "", 10, UI.LIGHT_TITLE)
+	# The button's word: `short` where two names would begin alike (Shield Wall, Shield Bash).
+	var nm := UI.label(str(ab.get("short", str(ab.get("name", a)).split(" ")[0])), "", 10, UI.LIGHT_TITLE)
 	nm.add_theme_font_override("font", UI.font("cinzel", 700))
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	content.add_child(nm)
@@ -431,7 +440,9 @@ static func _header(title: String, sub: Control, u: Dictionary) -> Control:
 static func forecast(view: Object) -> Control:
 	var b = view.b
 	var pv: Dictionary = view.ui.hover.preview
-	var target: Dictionary = b.unit(pv.target)
+	# A squad standing guard (Defend) takes the blow: the forecast is about it.
+	var ward: Variant = b.unit(pv.target) if pv.get("guard") != null else null
+	var target: Dictionary = b.unit(pv.guard) if ward != null else b.unit(pv.target)
 	var attacker: Variant = b.unit(view.ui.selected) if view.ui.selected != null else null
 	var tv = _view_of(view, target.uid)
 	var thp := maxi(0, JS.rnd(float(tv.hp if tv != null else target.hp)))
@@ -508,6 +519,12 @@ static func forecast(view: Object) -> Control:
 		if note != null:
 			col.add_child(H.margin(note, 6, 0, 0, 0))
 		col.add_child(H.margin(_tiny("Move the cursor around the target to choose the side you attack from; Q / E change the way you arrive.", UI.INK_FAINT), 4, 0, 0, 0))
+	if ward != null:
+		var gl := UI.label("%s stand guard: they take the blow aimed at %s, on their shields." % [squad_title(target), squad_title(ward)], "", 12, NEG)
+		gl.add_theme_font_override("font", UI.font("alegreya", 700))
+		gl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		gl.add_theme_constant_override("line_spacing", H.line_gap(12))
+		col.add_child(H.margin(H.trim(gl, -1, -1), 4, 0, 0, 0))
 	if target.get("tags", []).has("firstStrike") and pv.get("arc") == "front" and pv.get("moveFirst"):
 		var fs := UI.label("Spearmen strike first at anyone charging their front.", "", 12, NEG)
 		fs.add_theme_font_override("font", UI.font("alegreya", 700))

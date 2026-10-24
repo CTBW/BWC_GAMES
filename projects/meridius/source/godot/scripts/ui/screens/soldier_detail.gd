@@ -195,7 +195,9 @@ func refresh() -> void:
 		Tip.attach(line, UI.esc(A.description), true)
 		abc.add_child(line)
 	if def.get("promotion") and not so.get("promoted"):
-		abc.add_child(UI.label("Promotion unlocks: %s" % DB.ABILITIES[def.promotion].name, "SmallMutedLabel"))
+		var promo: Dictionary = DB.ABILITIES[def.promotion]
+		var up: Variant = promo.get("upgrades")
+		abc.add_child(UI.label(("Promotion: %s becomes %s" % [DB.ABILITIES[up].name, promo.name]) if up else "Promotion unlocks: %s" % promo.name, "SmallMutedLabel"))
 	if (def.get("tags", []) as Array).has("firstStrike"):
 		abc.add_child(UI.rich("Passive: strikes first at enemies that close in from the front.", "SmallMutedText"))
 	if (def.get("tags", []) as Array).has("impale"):

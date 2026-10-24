@@ -30,7 +30,9 @@
    ],
    "shieldFront": 12,
    "abilities": [
-    "shieldwall"
+    "shieldwall",
+    "shield_charge",
+    "defend"
    ],
    "promotion": "shieldbash",
    "commandCost": 3,
@@ -69,7 +71,8 @@
    ],
    "meleePierce": 0.25,
    "abilities": [
-    "spearwall"
+    "spearwall",
+    "square"
    ],
    "promotion": "pikethrust",
    "commandCost": 2,
@@ -120,7 +123,8 @@
     "ammo": 6
    },
    "abilities": [
-    "overwatch"
+    "overwatch",
+    "aimed_shot"
    ],
    "promotion": "heavybolt",
    "commandCost": 3,
@@ -159,9 +163,12 @@
    ],
    "shieldFront": 12,
    "abilities": [
-    "shieldwall"
+    "growl",
+    "hound_charge",
+    "defend",
+    "lick_wounds"
    ],
-   "promotion": "shieldbash",
+   "promotion": "howl",
    "commandCost": 4,
    "recruitCost": 85,
    "weaponLine": "sword",

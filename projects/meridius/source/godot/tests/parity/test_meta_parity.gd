@@ -1,6 +1,7 @@
 ## Soldiers, new games, the roster economy and save migration must match the
 ## original exactly: state after every step of scripted economy runs.
 ## Golden: tools/parity/meta_golden.ts -> tests/fixtures/golden/meta_golden.json
+## (no recorder; its ability lists are read in today's kits, H.current_kits).
 extends "res://tests/test_case.gd"
 
 const H = preload("res://tests/parity/test_meta_support.gd")
@@ -13,7 +14,8 @@ var golden: Dictionary
 
 
 func before_all() -> void:
-	golden = H.load_golden("meta_golden.json")
+	# Recorded before the squad skills: ability lists in today's kits (H.OLD_KITS).
+	golden = H.current_kits(H.load_golden("meta_golden.json"))
 
 
 func _match(actual: Variant, expected: Variant, msg: String) -> bool:
@@ -43,7 +45,7 @@ func test_soldier_functions_match() -> void:
 		_match(Soldier.weapon_bonus(s), c.weaponBonus, label + " weaponBonus")
 		_match(Soldier.soldier_damage(s), c.damage, label + " damage")
 		_match(Soldier.command_cost(s), c.commandCost, label + " commandCost")
-		_match(Soldier.abilities_of(s), c.abilities, label + " abilities")
+		_match(Soldier.abilities_of(s), H.current_kit(c.abilities, s.typeId), label + " abilities")
 		_match(Soldier.can_promote(s), c.canPromote, label + " canPromote")
 		_match(Soldier.xp_to_next(s), c.xpToNext, label + " xpToNext")
 		_match(Soldier.squad_max_hp(s), c.maxHp, label + " maxHp")

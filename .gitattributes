@@ -11,3 +11,4 @@
 *.jpg binary
 *.mp4 binary
 *.ico binary
+projects/meridius/source/godot/assets/sprites/anim/*.png filter=lfs diff=lfs merge=lfs -text

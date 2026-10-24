@@ -1,0 +1,61 @@
+{
+ "source": "art/squads/mangonel (Higgsfield sheet), built by tools/anim/squadgen.py",
+ "file": "res://assets/sprites/anim/mangonel.png",
+ "scale": 0.44554,
+ "soldiers": 1,
+ "facings": [
+  "f",
+  "b"
+ ],
+ "engine": true,
+ "frames": {
+  "idle_f": [
+   {
+    "region": [
+     731,
+     3,
+     239,
+     203
+    ],
+    "ax": 99.7,
+    "ay": 202.0
+   }
+  ],
+  "atk_f": [
+   {
+    "region": [
+     3,
+     3,
+     240,
+     234
+    ],
+    "ax": 100.5,
+    "ay": 233.0
+   }
+  ],
+  "idle_b": [
+   {
+    "region": [
+     246,
+     3,
+     240,
+     219
+    ],
+    "ax": 102.2,
+    "ay": 218.0
+   }
+  ],
+  "atk_b": [
+   {
+    "region": [
+     489,
+     3,
+     239,
+     218
+    ],
+    "ax": 100.6,
+    "ay": 217.0
+   }
+  ]
+ }
+}

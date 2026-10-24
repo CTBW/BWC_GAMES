@@ -1,0 +1,61 @@
+{
+ "source": "art/squads/war_wagon (Higgsfield sheet), built by tools/anim/squadgen.py",
+ "file": "res://assets/sprites/anim/war_wagon.png",
+ "scale": 0.66675,
+ "soldiers": 1,
+ "facings": [
+  "f",
+  "b"
+ ],
+ "engine": true,
+ "frames": {
+  "idle_f": [
+   {
+    "region": [
+     3,
+     3,
+     198,
+     201
+    ],
+    "ax": 89.2,
+    "ay": 200.0
+   }
+  ],
+  "atk_f": [
+   {
+    "region": [
+     204,
+     3,
+     188,
+     195
+    ],
+    "ax": 88.9,
+    "ay": 194.0
+   }
+  ],
+  "idle_b": [
+   {
+    "region": [
+     613,
+     3,
+     214,
+     159
+    ],
+    "ax": 104.5,
+    "ay": 158.0
+   }
+  ],
+  "atk_b": [
+   {
+    "region": [
+     395,
+     3,
+     215,
+     163
+    ],
+    "ax": 99.2,
+    "ay": 162.0
+   }
+  ]
+ }
+}

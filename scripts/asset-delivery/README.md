@@ -1,5 +1,29 @@
 # Asset delivery evidence
 
+For a completed browser download, `collect-download.ps1` validates PNG, JPEG,
+binary FBX or ZIP content and copies the exact selected file into this repository.
+It does not change browser settings, initiate network requests or spend credits.
+It refuses path escapes, destination junctions and overwriting different bytes.
+Images are decoded; ZIP entries are read and checked for unsafe paths. FBX still
+requires a Blender import check. For example, after observing the actual download:
+
+```powershell
+& scripts/asset-delivery/collect-download.ps1 -Source 'C:/Users/owner/Downloads/observed-download.tmp' -Destination 'projects/example/references/model.zip' -Kind ZIP -ExpectedArchiveEntry 'model.fbx'
+```
+
+Do not guess a GUID or choose the newest file when concurrent downloads make its
+identity ambiguous. Keep the returned hash and dimensions with the task receipt.
+
+For Meridius Tripo exports use the destination-selecting wrapper:
+
+```powershell
+& scripts/asset-delivery/collect-tripo.ps1 -Source 'C:/Users/owner/Downloads/observed-export.zip' -Character rauk -Asset body -Boss -ExpectedArchiveEntry 'model.fbx'
+```
+
+This saves into `projects/meridius/references/characters/bosses/tripo/rauk/`.
+Omit `-Boss` for `characters/tripo/<character>/`. The browser's remembered
+download folder is only temporary staging, never the final model destination.
+
 This optional, offline tool records the local input and output files for a Workspace card. Existing cards work without a manifest. The manifest proves only that the selected files still have the recorded size and SHA-256 hash. Visual approval and engine readiness require their own review.
 
 ## Build and verify

@@ -5,7 +5,7 @@
     "file": "sheets/idle_sw.webp",
     "frames": 43,
     "cols": 9,
-    "w": 120,
+    "w": 129,
     "h": 225,
     "x": 124.5,
     "y": 157.5
@@ -32,9 +32,9 @@
     "file": "sheets/idle_ne.webp",
     "frames": 43,
     "cols": 12,
-    "w": 120,
+    "w": 129,
     "h": 372,
-    "x": 144.8,
+    "x": 136.5,
     "y": 0.0
    }
   },
@@ -43,7 +43,7 @@
     "file": "sheets/idle_rest_sw.webp",
     "frames": 129,
     "cols": 21,
-    "w": 118,
+    "w": 114,
     "h": 366,
     "x": 143.2,
     "y": 5.2
@@ -52,16 +52,16 @@
     "file": "sheets/idle_rest_se.webp",
     "frames": 129,
     "cols": 19,
-    "w": 123,
+    "w": 126,
     "h": 328,
-    "x": 138.8,
+    "x": 136.5,
     "y": 28.5
    },
    "nw": {
     "file": "sheets/idle_rest_nw.webp",
     "frames": 129,
-    "cols": 20,
-    "w": 124,
+    "cols": 19,
+    "w": 126,
     "h": 351,
     "x": 126.8,
     "y": 0.0
@@ -70,9 +70,9 @@
     "file": "sheets/idle_rest_ne.webp",
     "frames": 129,
     "cols": 20,
-    "w": 117,
+    "w": 114,
     "h": 345,
-    "x": 129.0,
+    "x": 132.8,
     "y": 12.8
    }
   },
@@ -81,7 +81,7 @@
     "file": "sheets/walk_sw.webp",
     "frames": 42,
     "cols": 11,
-    "w": 144,
+    "w": 138,
     "h": 372,
     "x": 119.2,
     "y": 10.5
@@ -108,9 +108,9 @@
     "file": "sheets/walk_ne.webp",
     "frames": 42,
     "cols": 11,
-    "w": 145,
+    "w": 138,
     "h": 366,
-    "x": 125.2,
+    "x": 132.0,
     "y": 0.0
    }
   },
@@ -146,9 +146,9 @@
     "file": "sheets/attack_ne.webp",
     "frames": 64,
     "cols": 10,
-    "w": 257,
+    "w": 258,
     "h": 372,
-    "x": 132.8,
+    "x": 132.0,
     "y": 0.0
    }
   },
@@ -176,7 +176,7 @@
     "frames": 61,
     "cols": 8,
     "w": 375,
-    "h": 390,
+    "h": 388,
     "x": 0.0,
     "y": 19.5
    },
@@ -271,7 +271,7 @@
     "file": "sheets/death_3_sw.webp",
     "frames": 118,
     "cols": 11,
-    "w": 256,
+    "w": 255,
     "h": 258,
     "x": 0.0,
     "y": 161.2
@@ -298,9 +298,9 @@
     "file": "sheets/death_3_ne.webp",
     "frames": 118,
     "cols": 14,
-    "w": 256,
+    "w": 255,
     "h": 376,
-    "x": 133.5,
+    "x": 134.2,
     "y": 0.0
    }
   },

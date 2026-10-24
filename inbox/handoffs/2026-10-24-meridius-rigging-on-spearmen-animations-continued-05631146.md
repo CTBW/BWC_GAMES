@@ -34,14 +34,17 @@ Changed in `906687a`:
 - `workspace/2026-10-20_meridius/spearman-3d/sheets/hit_*.webp` and `frames.json`
 - the tab's frames data, its "Holding the spear" sentence on the hit, and the clearance line
 
-**`cape_cache/hit.pc2` is unchanged on purpose.** The wrist isn't a cloth collider: bakes from the rig before and after the wrist fix are identical. Cape poke-through for hit is unchanged at 49 total, worst 3.
+**`906687a` kept `cape_cache/hit.pc2` on purpose.** The wrist isn't a cloth collider: bakes from the rig before and after the wrist fix are identical. Cape poke-through for hit is unchanged at 49 total, worst 3. All caches were re-baked later for the leftover-scale fix below.
 
-**Cape bakes depend on leftover pose scale (found 2026-10-24, not fixed).** A re-bake of hit from the current rig differs from the committed `hit.pc2` (max 0.33 m, mean 1.7 cm), and so does a re-bake from the `e40ed6a` rig. Only a re-bake from the `f6c6e32` rig reproduces it exactly.
-- **Cause:** the IK steps set `pb.matrix` directly, which leaves unkeyed pose scales of about 1.0001 on the right-arm bones. Their values depend on which clips `spear_motion.py` processed last, and they are saved in the file. `cape_cloth.py sim` keys only rotation and location, and the chaotic cloth sim amplifies that noise.
-- **Proof:** with all pose scales reset to 1, the `f6c6e32` and current rigs bake hit identically.
-- **Who it affects:** the committed caches stay valid simulations of their clips, but only step_lane's reproduces from the current rig.
-- **Possible fix** (needs the user's go-ahead, since all ten clips would need re-baking and re-rendering): reset pose scale to 1 in `cape_cloth.py sim`, and key or reset scale after the IK in `spear_motion.py`.
-- Render differences are sub-pixel: 60–76 anti-aliased pixels along the spear per frame.
+**Leftover pose scale fixed (2026-10-24, not committed yet).** The user asked to "fix the leftover pose scales in the cape bakes". The same clip used to bake different cloth depending on the file: a re-bake of hit from the `906687a` rig differed from the committed `hit.pc2` by up to 0.33 m.
+- **Cause:** the IK steps in `spear_motion.py` set `pb.matrix` directly. That left unkeyed float noise in pose scale (up to 1.4e-4 on the right forearm and hand) and location (~1e-7) on the arm, neck and head bones. It was saved in the file, depended on which clips ran last, and moved bones by at most 0.05 mm. The chaotic cloth sim turned that into a different cape.
+- **Fix in `tools/spear_motion.py`:** every pose-matrix assignment goes through `set_matrix()`, which calls `clear_unkeyed()` (scale 1, and location 0 on every bone except the hips, which is the only keyed location). The script also clears all bones at the start, which cleans files saved before the fix, and asserts a clean pose before saving. `set_bone_dir` uses the column-normalised matrix, so scale can't compound.
+- **Fix in `tools/cape_cloth.py sim`:** it clears the same channels before reading the poses, so even a rig with leftovers bakes the same cloth.
+- **Rig rebuilt from the sources:** `retarget_clips.py` (all ten clips) and then `spear_motion.py` (all), about 30 s in total. It prints the same results as before: step_lane wrist bend 11° and chest −40…−32°; hit wrist bend frames 8–41, up to 10°. Every clip matches the old keys within 0.39 mm (the largest is at the spear tip). No leftover scale or location remains. Objects, modifiers, cloth settings and the cape mesh are unchanged (file fingerprint).
+- **Proof:** hit baked from the old `906687a` rig (leftovers still saved in it) with the fixed sim is byte-identical to the clean bake. The hit keys are identical in both rigs.
+- **Re-baked and re-rendered:** all ten caches, all 40 sheets and `frames.json` (the tab's frames data is updated). Also the three figures that show the cape: `img/deaths.webp`, `img/cape_cloth.webp` (before frames from the d8823a10 scratchpad's `capeba_old`) and `img/lineup.webp`. The lineup used the 11:30 copies of the footman and crossbowman rigs (this session's scratchpad `lineup/`), because their live files changed at 17:49–17:51, so only the spearman's cape changed. The lineup is now 2526 px wide, and the tab's `width` attribute is updated.
+- **The new cloth** differs from the old bakes by a mean of 1–4 cm per clip (chaotic). The largest visible change is the march from the NE, where the cape now hangs closer to his back instead of flaring wide. Lowest points and poke-through are in "Verification" below. Spear clearance is unchanged.
+- **Tab:** the Cape note now gives the march's worst view as six points (f9 NE, his left hand at the cape's edge) and says why all clips were re-baked.
 
 - Commits on `godot-migration`, pushed to `origin/godot-migration` (public repo `CTBW/BWC_GAMES`):
   - `f6c6e32` Meridius: spearman 3D rig with cloth cape, clips and report (94 files)
@@ -61,7 +64,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 
 | File | sha256 (first 12) |
 |---|---|
-| `spearman_rig.blend` | `94d4d4c23257` (`906687a`; `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
+| `spearman_rig.blend` | `c1d4854542e3` (rebuilt for the scale fix, uncommitted; `94d4d4c23257` in `906687a`, `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
 | `spearman_base.blend` | `358886dd37fd` |
 | `spear.blend` | `88330b84d248` |
 
@@ -74,26 +77,26 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
     - `blender_env.sh`, `bake_cape.sh`, `render_clips.sh`, `poke_cape.sh`
     - `cape_poke.py`, `cape_inspect.py`, `cape_peek.py`, `lineup.py`, `pc2_check.py`
     - `pack_sheets.py`, `deaths_figure.py`, `cape_figure.py`, `lineup_compose.py`, `contact_strip.py`
-- `cape_cache/*.pc2`, baked 2026-10-24 11:40 from the fixed setup:
+- `cape_cache/*.pc2`, re-baked 2026-10-24 ~17:40 for the leftover-scale fix (uncommitted):
 
   | Clip | sha256 (first 12) |
   |---|---|
-  | attack | `7255ab8631e3` |
-  | death | `bcf718cd0216` |
-  | death_2 | `48ae010cc94a` |
-  | death_3 | `f27607cca0b1` |
-  | hit | `9eb388bd0e49` |
-  | idle | `9df3000cdbf5` |
-  | idle_rest | `8b4fdfd2aa52` |
-  | step_lane | `784298fb95c8` (re-baked for the neck fix, `e40ed6a`) |
-  | turn_90 | `26b10c3afd32` |
-  | walk | `20e3aa11dd73` |
+  | attack | `4fbe212b4b85` |
+  | death | `1b2ee405a07c` |
+  | death_2 | `922e8d962fcd` |
+  | death_3 | `71c8071b4071` |
+  | hit | `13413931b2d1` |
+  | idle | `4b8a6313ae5e` |
+  | idle_rest | `3feaf10d105b` |
+  | step_lane | `98c087cfa65b` |
+  | turn_90 | `f5c17710837d` |
+  | walk | `632dd2c21a78` |
 
 - Sources: `projects/meridius/references/characters/Spearman TRIPO/` (Tripo FBX files, body v1–v4 and spear v1, plus textured body v4 and spear) and `references/characters/spearman_idle/*.png` (cut sheet figure and Nano Banana T-pose references).
 - Report media in `workspace/2026-10-20_meridius/spearman-3d/`:
   - `sheets/*.webp`: 10 clips × 4 facings.
   - `frames.json`: 30 fps, canvas 390×420. Its JSON is also pasted into the tab's `<script id="frames-data">`.
-  - `img/`: `deaths`, `cape_cloth` (before/after), `lineup` (re-rendered today), and `cape`, `chain`, `spearhead`, `turnaround` (older, still valid).
+  - `img/`: `deaths`, `cape_cloth` (before/after), `lineup` (all three regenerated for the scale fix), and `cape`, `chain`, `spearhead`, `turnaround` (older, still valid).
 - Frames per clip:
 
   | Clip | Frames |
@@ -121,20 +124,20 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 - Before applying anything, re-read the tab and `git log origin/godot-migration`; other sessions commit and push to this branch.
 
 ## Verification (agent, 2026-10-24)
-- **Bake.** One background Blender per clip, peak 300–370 MB each. The new idle bake is bit-identical to the 2026-10-23 idle. The sim is deterministic for an identical file, but see the leftover-pose-scale note above. Lowest cape point per clip:
+- **Bake.** One background Blender per clip, peak 300–370 MB each. The sim is deterministic, and since the leftover-scale fix it no longer depends on unkeyed values in the file. Lowest cape point per clip (the re-bake for the scale fix; the earlier bake in brackets):
 
   | Clip | Lowest point |
   |---|---|
-  | idle | 0.70 m |
-  | walk | 0.72 m |
-  | step_lane | 0.72 m (0.69 m after the neck fix) |
-  | attack | 0.66 m |
-  | hit | 0.56 m |
+  | idle | 0.69 m (0.70) |
+  | walk | 0.74 m (0.72) |
+  | step_lane | 0.75 m (0.69) |
+  | attack | 0.68 m (0.66) |
+  | hit | 0.57 m (0.56) |
   | death | 0.11 m |
   | death_2 | 0.01 m (on the 1 cm ground clamp from f35, lying flat) |
   | death_3 | 0.25 m |
-  | turn_90 | 0.70 m |
-  | idle_rest | 0.76 m |
+  | turn_90 | 0.69 m (0.70) |
+  | idle_rest | 0.76 m (0.76) |
 
 - **Deaths** (chest normal through `mixamorig:Spine2`):
   - Death 1 and Death 3 end face down with the cape on the back (0% in front).
@@ -142,15 +145,22 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   - Death 1 is relabelled "thrown back, lands face down".
   - The cape still moves up to 0.2–0.5 m/s in the last 10 frames (the game holds the last frame).
   - The hem jumps 28 cm in one frame at death f50 and 24 cm at death_2 f33, during the fall.
-- **Body through the cape** (counted with the scratch `poke_all.py`, now `tools/cape_poke.py` / `poke_cape.sh`; step 4, all four facings): sampled body points showing through the cape.
+- **Body through the cape** (`poke_cape.sh`, step 4, all four facings): sampled body points showing through the cape, for the re-bake after the scale fix. The earlier caches, counted with the same tool on the rebuilt rig, are in brackets.
 
   | Clip | Total | Worst view |
   |---|---|---|
-  | hit | 49 | 3 |
-  | idle_rest | 144 (over 260 views) | 2 |
-  | step_lane | 42; 12 after the neck fix | 3; 2 after the neck fix (27 before the collision group fix) |
-  | walk | 43 | 9 at f5 SW, his left forearm passing the cape edge |
-  | attack | 30 | 2 |
+  | idle | 5 (5) | 2 at f17 NW (2) |
+  | idle_rest | 136 over 260 views (144) | 2 (2) |
+  | walk | 43 (43) | 6 at f9 NE, his left hand at the cape's edge (8 at f5 SW) |
+  | step_lane | 15 (12) | 2 (2) |
+  | attack | 25 (30) | 2 (2) |
+  | hit | 49 (49) | 3 (3) |
+  | turn_90 | 12 (13) | 2 (2) |
+  | death | 97 (82) | 9 at f25 NE (9) |
+  | death_2 | 159 (125) | 8 at f49 SW (6) |
+  | death_3 | 56 (56) | 2 (2) |
+
+  The deaths and step_lane count more than before. In side-by-side renders the cloth looks alike: Death 2's cape bunches a little more at his right shoulder while he lies on his back. These are fresh samples of a chaotic sim, not a regression in the setup.
 
 - **Spear clearance** (frames where the spear crosses the body), unchanged by the cape bake:
 
@@ -173,8 +183,9 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 2. **Hit** (wrist fix in `906687a`): does the up-to-10° wrist bend read naturally? It is subtle from the battle camera: the shaft lies a little further from his belly at frames 17–19 and from his left forearm at frames 39–41.
 3. **Death 1:** from above, the cape ends bunched on the upper back and shoulders, because it is flung up as he pitches forward. From the battle camera it reads as lying on his back.
 4. The death caches are still settling slightly in their last frames.
+5. **The re-baked cape** (leftover-scale fix, uncommitted): every clip's cloth is a new sample. Check the march from the NE, where the cape now hangs closer to his back instead of flaring wide, and the deaths, which count more poke-through (Death 2 159 vs 125). If an old bake looked better, its cache can't be reproduced from the fixed rig; the alternative is a deliberate change to the cloth settings.
 
-Items 3–4 have no decided fix. Wait for the user's verdict before changing anything.
+Items 3–5 have no decided fix. Wait for the user's verdict before changing anything.
 
 ## Accepted decisions (keep)
 - **Shoulder carry:** `SHOULDER_CFG = contact [-0.20,-0.11,1.55], len 0.16, fwd -22, out 3, butt_z 0.85, pole [-0.3,0.6,-1.0], travel 0.75`. The palm faces the chest.

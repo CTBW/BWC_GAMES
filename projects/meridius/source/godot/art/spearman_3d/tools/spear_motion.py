@@ -133,15 +133,29 @@ def two_handed():
     return M
 
 
+def clear_unkeyed(pb):
+    """No clip keys scale, nor location below the hips. Assigning pb.matrix leaves float noise
+    there (scale up to 1.0001 on the right arm), saved in the file and shared by every clip; the
+    cape sim amplified it into different bakes from the same keys."""
+    pb.scale = (1, 1, 1)
+    if pb.name != "mixamorig:Hips":
+        pb.location = (0, 0, 0)
+
+
+def set_matrix(pb, M):
+    pb.matrix = M
+    clear_unkeyed(pb)
+    bpy.context.view_layer.update()
+
+
 def set_bone_dir(pb, target_dir):
     """Turn a pose bone (armature space) so its Y axis points along target_dir, with the least twist."""
     M = pb.matrix.copy()
     cur = (M.to_3x3() @ Vector((0, 1, 0))).normalized()
     q = cur.rotation_difference(target_dir.normalized())
-    R = (q.to_matrix() @ M.to_3x3()).to_4x4()
+    R = (q.to_matrix() @ M.to_3x3().normalized()).to_4x4()
     R.translation = M.translation
-    pb.matrix = R
-    bpy.context.view_layer.update()
+    set_matrix(pb, R)
 
 
 def solve_arm(side, T, pole, grip=None, palm=None, bend=False):
@@ -179,8 +193,7 @@ def solve_arm(side, T, pole, grip=None, palm=None, bend=False):
         z = x.cross(y)
         Mh = Matrix((x, y, z)).transposed().to_4x4()
         Mh.translation = hand.matrix.translation
-        hand.matrix = Mh
-        bpy.context.view_layer.update()
+        set_matrix(hand, Mh)
     for pb in (arm, fore, hand):
         pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
 
@@ -265,8 +278,7 @@ def head_forward():
         rest.make_compatible(cur)
         M = cur.slerp(rest, k).to_matrix().to_4x4()
         M.translation = pb.matrix.translation
-        pb.matrix = M
-        bpy.context.view_layer.update()
+        set_matrix(pb, M)
         if name == "Neck":
             twist_to((("Neck", 1.0),), 0.5 * ground_yaw("mixamorig:Spine2"))
         else:
@@ -411,6 +423,9 @@ def wrist_clear(act, frames):
     return out
 
 
+for pb in PB:          # rigs saved before set_matrix kept that noise
+    clear_unkeyed(pb)
+
 # The rigid hold: the spear in the right fist as in the idle's first frame.
 rig.animation_data_create()
 rig.animation_data.action = bpy.data.actions["idle"]
@@ -545,5 +560,6 @@ for clip in clips:
 rig.animation_data.action = bpy.data.actions["idle"]
 spear.animation_data.action = bpy.data.actions["idle__spear"]
 sc.frame_set(1)
+assert all(tuple(pb.scale) == (1, 1, 1) and (pb.name == "mixamorig:Hips" or not any(pb.location)) for pb in PB)
 bpy.ops.wm.save_mainfile(compress=True)
 print("SPEAR_SAVED", bpy.data.filepath)

@@ -24,9 +24,10 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
 
 - Export is free: FBX, preset Blender, texture resolution up to 4K. Textured
   exports arrive as a zip (FBX plus a `.fbm` folder with the texture).
-- The browser can reuse the last save folder, including `E:\Ability Icons`.
-  Select the model destination explicitly; never treat that shared folder as
-  the final model library. New exports belong in
+- The browser can reuse the last save folder, such as the ability paintings
+  (`E:\Ability Icons` until 2026-10-24, now `local/ability-icons/`). Select the
+  model destination explicitly; never treat that folder as the final model
+  library. New exports belong in
   `projects/meridius/references/characters/tripo/<character>/`; boss exports
   belong in `projects/meridius/references/characters/bosses/tripo/<boss>/`.
 - Use `scripts/asset-delivery/collect-tripo.ps1` with the exact observed source,

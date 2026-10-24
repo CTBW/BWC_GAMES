@@ -35,6 +35,20 @@ inbox/*
 **/receipts/
 **/*.blend1
 
+# Local-only material: licensed sounds, raw downloads, third-party references
+# and review captures stay off the public remote ("Where things live" in AGENTS.md)
+/local/*
+!/local/README.md
+projects/meridius/Animations/
+**/animation-sources/
+projects/meridius/references/style/*.png
+projects/meridius/review/**/*.png
+projects/meridius/review/**/*.jpg
+projects/meridius/review/**/*.jpeg
+projects/meridius/review/**/*.webp
+projects/meridius/review/**/*.gif
+projects/meridius/review/**/*.mp4
+
 # Editor and operating-system files
 .vscode/
 .idea/

@@ -14,3 +14,6 @@
   small-screen layouts or phone/tablet checks, including for Meridius reports
   (desktop-only rule in `AGENTS.md`).
 - No work on other games or projects, such as My Dream Game.
+- fal.ai and Unity MCP are unused for this project for now (2026-10-24). Do not
+  check, troubleshoot, sign in to or report their errors or disconnects unless
+  the user asks.

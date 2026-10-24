@@ -36,7 +36,7 @@ Changed in `906687a`:
 
 **`906687a` kept `cape_cache/hit.pc2` on purpose.** The wrist isn't a cloth collider: bakes from the rig before and after the wrist fix are identical. Cape poke-through for hit is unchanged at 49 total, worst 3. All caches were re-baked later for the leftover-scale fix below.
 
-**Leftover pose scale fixed (2026-10-24, not committed yet).** The user asked to "fix the leftover pose scales in the cape bakes". The same clip used to bake different cloth depending on the file: a re-bake of hit from the `906687a` rig differed from the committed `hit.pc2` by up to 0.33 m.
+**Leftover pose scale fixed in `627c2c1` (2026-10-24, pushed).** The user asked to "fix the leftover pose scales in the cape bakes". The same clip used to bake different cloth depending on the file: a re-bake of hit from the `906687a` rig differed from the committed `hit.pc2` by up to 0.33 m.
 - **Cause:** the IK steps in `spear_motion.py` set `pb.matrix` directly. That left unkeyed float noise in pose scale (up to 1.4e-4 on the right forearm and hand) and location (~1e-7) on the arm, neck and head bones. It was saved in the file, depended on which clips ran last, and moved bones by at most 0.05 mm. The chaotic cloth sim turned that into a different cape.
 - **Fix in `tools/spear_motion.py`:** every pose-matrix assignment goes through `set_matrix()`, which calls `clear_unkeyed()` (scale 1, and location 0 on every bone except the hips, which is the only keyed location). The script also clears all bones at the start, which cleans files saved before the fix, and asserts a clean pose before saving. `set_bone_dir` uses the column-normalised matrix, so scale can't compound.
 - **Fix in `tools/cape_cloth.py sim`:** it clears the same channels before reading the poses, so even a rig with leftovers bakes the same cloth.
@@ -52,19 +52,21 @@ Changed in `906687a`:
   - `aa697b4` Meridius: spearman helper scripts for baking, renders and report figures (14 files in `art/spearman_3d/tools/`)
   - `e40ed6a` Meridius: spearman step into lane, neck twist spread over spine, neck and head (9 files)
   - `aa82847` handoff update; `906687a` Meridius: spearman hit, wrist bends the rigid spear clear of his body (8 files), pushed by the coordinating session.
+  - `2714427` handoff update and the Animations path in the tab.
+  - `627c2c1` Meridius: spearman cape bakes no longer depend on leftover pose scale (59 files: the two scripts, the rebuilt rig, all ten caches, 40 sheets, `frames.json`, three figures, the tab and this handoff).
   - **Pushing:** the coordinating session (`bwc-games-godot-1c`) now pushes and opens PRs for everyone. Commit your own files by explicit path, then send it the hash. The folder and public-Git policy is in the "Where things live" section of `AGENTS.md`.
-  - `906687a` is on `origin/godot-migration` (with the coordinator's `7ac84ec` and `82ebed4` after it). The handoff and Animations path update is committed after that. Other sessions commit and push to this branch too.
+  - `origin/godot-migration` is at `627c2c1`, with another session's `f4f1110` (painted rocks) under it. The user asked to push `627c2c1` and approved `f4f1110`'s Nano Banana Pro rocks for the public repo, since pushing one publishes the other. The coordinator pushed both at the same moment, so my own push was rejected as a duplicate. Other sessions commit and push to this branch too.
 - Report: `workspace/2026-10-20_meridius/spearman-3d.html`, card "Spearman 3D rig" (group Character rigs, subgroup Spearman) in `workspace/workspace.json`.
 - **Not in the game.** The Godot game still draws the spearman from 2D sprites (`art/squads/spearman`, `assets/sprites/anim/spearman.*`), which another session made. No game code was changed for this work. Two earlier items were answered but not built:
   - per-figure death variant via `Rng.hash2` in `squad_view.gd` and `battle_view.gd:_drop_victim`;
   - troll overkill ragdoll.
 
-## Files (committed in `f6c6e32`; helper scripts in `aa697b4`; neck fix in `e40ed6a`; hit fix in `906687a`)
+## Files (committed in `f6c6e32`; helper scripts in `aa697b4`; neck fix in `e40ed6a`; hit fix in `906687a`; scale fix in `627c2c1`)
 All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless noted.
 
 | File | sha256 (first 12) |
 |---|---|
-| `spearman_rig.blend` | `c1d4854542e3` (rebuilt for the scale fix, uncommitted; `94d4d4c23257` in `906687a`, `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
+| `spearman_rig.blend` | `c1d4854542e3` (`627c2c1`, rebuilt for the scale fix; `94d4d4c23257` in `906687a`, `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
 | `spearman_base.blend` | `358886dd37fd` |
 | `spear.blend` | `88330b84d248` |
 
@@ -77,7 +79,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
     - `blender_env.sh`, `bake_cape.sh`, `render_clips.sh`, `poke_cape.sh`
     - `cape_poke.py`, `cape_inspect.py`, `cape_peek.py`, `lineup.py`, `pc2_check.py`
     - `pack_sheets.py`, `deaths_figure.py`, `cape_figure.py`, `lineup_compose.py`, `contact_strip.py`
-- `cape_cache/*.pc2`, re-baked 2026-10-24 ~17:40 for the leftover-scale fix (uncommitted):
+- `cape_cache/*.pc2`, re-baked 2026-10-24 ~17:40 for the leftover-scale fix (`627c2c1`):
 
   | Clip | sha256 (first 12) |
   |---|---|
@@ -183,7 +185,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 2. **Hit** (wrist fix in `906687a`): does the up-to-10° wrist bend read naturally? It is subtle from the battle camera: the shaft lies a little further from his belly at frames 17–19 and from his left forearm at frames 39–41.
 3. **Death 1:** from above, the cape ends bunched on the upper back and shoulders, because it is flung up as he pitches forward. From the battle camera it reads as lying on his back.
 4. The death caches are still settling slightly in their last frames.
-5. **The re-baked cape** (leftover-scale fix, uncommitted): every clip's cloth is a new sample. Check the march from the NE, where the cape now hangs closer to his back instead of flaring wide, and the deaths, which count more poke-through (Death 2 159 vs 125). If an old bake looked better, its cache can't be reproduced from the fixed rig; the alternative is a deliberate change to the cloth settings.
+5. **The re-baked cape** (leftover-scale fix in `627c2c1`): every clip's cloth is a new sample. Check the march from the NE, where the cape now hangs closer to his back instead of flaring wide, and the deaths, which count more poke-through (Death 2 159 vs 125). If an old bake looked better, its cache can't be reproduced from the fixed rig; the alternative is a deliberate change to the cloth settings.
 
 Items 3–5 have no decided fix. Wait for the user's verdict before changing anything.
 
@@ -254,6 +256,8 @@ Notes:
 **Godot tests at `aa697b4`.** `tools/test.sh --quick` gave 398 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread` (6 footmen marching 2 s, 10 treads heard). That test file, `tests/unit/test_audio.gd`, is untracked. It belongs to another session's uncommitted audio work (`scripts/audio/sfx.gd`, `battle_view.gd`, `battle_draw.gd`). It isn't part of the spearman commits; leave it to that session.
 
 **`906687a`** was committed after a full `tools/test.sh` run that gave 389 passed and 4 failed: two campaign parity tests, `test_audio`, and `test_squad_skills.gd`, which doesn't parse because `icon.gd` has no `painted()`. All four come from other sessions' uncommitted game code. The commit changes only `art/` and `workspace/`.
+
+**`627c2c1`** was committed at the user's request ("commit now, don't wait") without waiting for the full `tools/test.sh`. `tools/test.sh --quick` on the same files gave 402 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread`. Per the coordinator, that failure comes from another session's unit-outline shader draft (the `custom_samplers` shader error), which the user chose to discard; the coordinator is removing it. The commit changes only `art/` (which Godot ignores via `.gdignore`) and `workspace/`.
 
 **`e40ed6a`** was committed at the user's request ("commit now, don't wait") before the full `tools/test.sh` run finished. It changes only `art/spearman_3d/` (Godot ignores `art/` through `.gdignore`) and `workspace/`, outside the Godot project, so no game code or imported asset changed.
 

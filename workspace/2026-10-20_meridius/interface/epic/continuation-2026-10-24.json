@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-24",
+  "scope": "Continuation audit of the existing painted interface delivery; no game source or artwork changed",
+  "branch": "godot-migration",
+  "baseline": "source-manifest.json (2026-10-23)",
+  "sourceComparison": {
+    "files": 18,
+    "byteIdentical": 13,
+    "lineEndingOnly": [
+      "scripts/ui/theme_builder.gd",
+      "scripts/ui/ui.gd"
+    ],
+    "changed": [
+      "scripts/ui/screens/title_screen.gd",
+      "scripts/ui/battle_hud.gd",
+      "tests/visual/playthrough.gd"
+    ],
+    "notes": "Paths in the lists are relative to projects/meridius/source/godot. All three runtime PNGs, their imports, saved themes, painted_frames.gd and forged_style.gd match the original manifest. The title now includes Unit Playground and Terrain Test Fields. The stored source manifest remains historical."
+  },
+  "test": {
+    "command": "tools/test.sh --quick test_audio",
+    "directory": "projects/meridius/source/godot",
+    "engine": "Godot 4.7.2 stable official ed1daf0bf",
+    "passed": 16,
+    "failed": 2,
+    "skipped": 0,
+    "seconds": 15.0,
+    "exitCode": 1,
+    "failures": [
+      {
+        "name": "test_audio::test_a_marching_squad_is_one_tread",
+        "error": "Condition !actions.custom_samplers.has(function->arguments[j].tex_builtin); servers/rendering/shader_compiler.cpp:1329",
+        "stack": ["scripts/render/battle_draw.gd:48", "scripts/render/battle_view.gd:322", "tests/unit/test_audio.gd:642"],
+        "observation": "The same compiler condition was logged twice. The tread counter itself reported 10 treads for six footmen marching for two seconds."
+      },
+      {
+        "name": "test_audio::test_volume_prefs_round_trip",
+        "error": "JSON parse failures at line 0: Unknown error getting token; Expected EOF",
+        "assertions": ["expected 0.0, got 1.0", "expected 0.25, got 1.0", "expected -24.0823996531185, got 0.0"],
+        "observation": "Cause unconfirmed. The test uses the shared user://prefs.json and other Godot processes were present; concurrent writes are a possibility, not a confirmed diagnosis."
+      }
+    ],
+    "evidenceType": "Result transcribed from command output; this JSON is not a full raw test log",
+    "launchNote": "Initial sandboxed launch produced no output and its command was cancelled. The reported result is from the subsequent escalated invocation."
+  },
+  "review": {
+    "existingNativeCapturesInspected": ["prep.png", "title.png"],
+    "freshNativeCaptures": false,
+    "browserReport": "Opened in Brave; image preview opened and displayed the native expedition capture. Close worked. Updated note inspected at 1440x1000 dark and 1024x900 light; no horizontal overflow. Audit link opened successfully; viewport override reset.",
+    "localReferences": {"currentReport": 28, "preservedReport": 21, "missing": 0},
+    "registry": "Existing Meridius card already references interface.html and is updated 2026-10-24; no registry edit needed",
+    "download": "Clicked Download; completion event timed out again. No saved-file receipt confirmed.",
+    "aestheticAcceptance": "Pending user feedback"
+  },
+  "remaining": [
+    "Confirm whether another chat owns the outline shader before changing it",
+    "Diagnose the volume preferences failure with isolated test storage or coordinated test execution",
+    "Refresh native captures and input checks after a requested UI change",
+    "Obtain visual feedback on the existing painted interface"
+  ]
+}

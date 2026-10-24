@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-23",
+  "pages": [
+    {
+      "page": "interface.html",
+      "references": 27,
+      "missing": 0
+    },
+    {
+      "page": "interface-first-pass.html",
+      "references": 21,
+      "missing": 0
+    }
+  ],
+  "registry": "Existing Meridius card retains interface.html; updated 2026-10-23",
+  "browser": {
+    "widths": [
+      1440,
+      1024
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "horizontalOverflow": false,
+    "imagePreview": "open, 100% zoom, close verified",
+    "download": "click attempted; automation timed out before saved-file receipt",
+    "method": "CUA Brave browser with the shared report theme CSS"
+  },
+  "nativeCaptures": {
+    "count": 31,
+    "errors": 0
+  },
+  "input": {
+    "passed": 235,
+    "failed": 0,
+    "errors": 0,
+    "warnings": 0,
+    "completeBattles": 1
+  },
+  "quickSuite": {
+    "passed": 363,
+    "failed": 1,
+    "skipped": 10,
+    "seconds": 185.7,
+    "failure": "test_audio::test_a_marching_squad_is_one_tread: shader_compiler.cpp:1329 custom_samplers",
+    "focusedAudioRerun": {
+      "passed": 17,
+      "failed": 1
+    },
+    "uiTests": "passed"
+  }
+}

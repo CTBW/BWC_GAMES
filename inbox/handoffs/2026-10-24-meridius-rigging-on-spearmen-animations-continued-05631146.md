@@ -240,7 +240,7 @@ Notes:
 - `render_preview.py` reads `CLIP_SCALE` / `CLIP_Z` for close-ups (default 3.7 / 1.25; the cape figure used 2.6 / 1.0).
 - Call Blender with absolute paths. Relative ones resolved to `C:\` in a test.
 - The Mixamo FBX sources are in `projects/meridius/Animations/`, their final location since 2026-10-24 (formerly `E:\Animations`). The folder is gitignored; never commit raw Mixamo files.
-- Python with Pillow and numpy: `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\d8823a10-5e83-448e-b4e6-5c6ea96da2ae\scratchpad\venv-art\Scripts\python.exe` (run it with `-I`). It is a temp folder, so any Python with Pillow and numpy will do.
+- Python with Pillow and numpy: this work used a venv in an earlier session's scratchpad (`<scratchpad>\venv-art\Scripts\python.exe`, run with `-I`). Scratchpads are temporary, so any Python with Pillow and numpy will do.
 - The old skinned-cape rig (`rig_tw.blend`, used for the figure's "before" frames) stays only in that scratchpad.
 - `spear_motion.py` edits the clip's keys in place (spine untwist, neck, arm). Always re-run the retarget before it. For step_lane, run `retarget_clips.py -- 'E:/ProjektM/BWC_GAMES-godot/projects/meridius/Animations' step_lane` (source `projects/meridius/Animations/Standing Walk Right.fbx`), then `spear_motion.py -- step_lane`. It prints the wrist bend and the chest's turn (−40…−32° now).
 

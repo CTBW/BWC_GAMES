@@ -48,6 +48,12 @@ projects/meridius/review/**/*.jpeg
 projects/meridius/review/**/*.webp
 projects/meridius/review/**/*.gif
 projects/meridius/review/**/*.mp4
+# Approved paid generations go public as WebP copies; the full-size PNG
+# originals they were made from stay local.
+projects/meridius/references/characters/goblin_*/*.png
+!projects/meridius/references/characters/goblin_archer/source_crop.png
+!projects/meridius/references/characters/goblin_spear/source_crop.png
+!projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
 
 # Editor and operating-system files
 .vscode/

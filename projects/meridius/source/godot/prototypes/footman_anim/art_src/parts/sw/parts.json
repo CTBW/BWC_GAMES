@@ -1,0 +1,337 @@
+{
+ "view": "sw",
+ "size": [
+  420,
+  480
+ ],
+ "parts": [
+  {
+   "name": "thigh_r",
+   "layer": 5,
+   "x": 120,
+   "y": 205,
+   "w": 96,
+   "h": 118,
+   "own_px": 1530,
+   "under_px": 2379
+  },
+  {
+   "name": "foot_r",
+   "layer": 6,
+   "x": 95,
+   "y": 312,
+   "w": 90,
+   "h": 69,
+   "own_px": 1230,
+   "under_px": 1216
+  },
+  {
+   "name": "shin_r",
+   "layer": 7,
+   "x": 117,
+   "y": 285,
+   "w": 78,
+   "h": 77,
+   "own_px": 2638,
+   "under_px": 0
+  },
+  {
+   "name": "upper_r",
+   "layer": 9,
+   "x": 156,
+   "y": 76,
+   "w": 70,
+   "h": 97,
+   "own_px": 1247,
+   "under_px": 1040
+  },
+  {
+   "name": "fore_r",
+   "layer": 10,
+   "x": 134,
+   "y": 112,
+   "w": 58,
+   "h": 69,
+   "own_px": 1411,
+   "under_px": 21
+  },
+  {
+   "name": "sword",
+   "layer": 11,
+   "x": 5,
+   "y": 29,
+   "w": 155,
+   "h": 199,
+   "own_px": 4462,
+   "under_px": 0
+  },
+  {
+   "name": "hand_r",
+   "layer": 12,
+   "x": 102,
+   "y": 142,
+   "w": 71,
+   "h": 77,
+   "own_px": 2182,
+   "under_px": 0
+  },
+  {
+   "name": "thigh_l",
+   "layer": 12,
+   "x": 245,
+   "y": 235,
+   "w": 126,
+   "h": 131,
+   "own_px": 2165,
+   "under_px": 3366
+  },
+  {
+   "name": "foot_l",
+   "layer": 13,
+   "x": 330,
+   "y": 370,
+   "w": 68,
+   "h": 99,
+   "own_px": 1827,
+   "under_px": 970
+  },
+  {
+   "name": "shin_l",
+   "layer": 14,
+   "x": 297,
+   "y": 324,
+   "w": 91,
+   "h": 96,
+   "own_px": 3569,
+   "under_px": 0
+  },
+  {
+   "name": "skirt_rear",
+   "layer": 20,
+   "x": 143,
+   "y": 184,
+   "w": 70,
+   "h": 122,
+   "own_px": 3615,
+   "under_px": 17
+  },
+  {
+   "name": "tabard",
+   "layer": 21,
+   "x": 189,
+   "y": 188,
+   "w": 76,
+   "h": 133,
+   "own_px": 3607,
+   "under_px": 671
+  },
+  {
+   "name": "skirt_front",
+   "layer": 22,
+   "x": 230,
+   "y": 188,
+   "w": 84,
+   "h": 132,
+   "own_px": 4411,
+   "under_px": 2046
+  },
+  {
+   "name": "chest",
+   "layer": 25,
+   "x": 184,
+   "y": 86,
+   "w": 139,
+   "h": 139,
+   "own_px": 2011,
+   "under_px": 10443
+  },
+  {
+   "name": "pelvis",
+   "layer": 28,
+   "x": 186,
+   "y": 170,
+   "w": 125,
+   "h": 61,
+   "own_px": 2205,
+   "under_px": 1101
+  },
+  {
+   "name": "cowl_back",
+   "layer": 30,
+   "x": 172,
+   "y": 30,
+   "w": 166,
+   "h": 91,
+   "own_px": 2554,
+   "under_px": 4025
+  },
+  {
+   "name": "head",
+   "layer": 32,
+   "x": 189,
+   "y": 6,
+   "w": 97,
+   "h": 125,
+   "own_px": 5516,
+   "under_px": 1316
+  },
+  {
+   "name": "upper_l",
+   "layer": 34,
+   "x": 286,
+   "y": 81,
+   "w": 78,
+   "h": 74,
+   "own_px": 1407,
+   "under_px": 91
+  },
+  {
+   "name": "cowl_front",
+   "layer": 36,
+   "x": 187,
+   "y": 85,
+   "w": 133,
+   "h": 90,
+   "own_px": 6144,
+   "under_px": 0
+  },
+  {
+   "name": "shield",
+   "layer": 50,
+   "x": 257,
+   "y": 104,
+   "w": 151,
+   "h": 246,
+   "own_px": 21280,
+   "under_px": 0
+  }
+ ],
+ "joints": {
+  "neck": [
+   240,
+   100
+  ],
+  "head_top": [
+   240,
+   10
+  ],
+  "chest_top": [
+   240,
+   115
+  ],
+  "waist": [
+   240,
+   195
+  ],
+  "hip_c": [
+   235,
+   225
+  ],
+  "shoulder_r": [
+   190,
+   112
+  ],
+  "elbow_r": [
+   165,
+   148
+  ],
+  "wrist_r": [
+   142,
+   172
+  ],
+  "grip_r": [
+   136,
+   182
+  ],
+  "sword_pommel": [
+   145,
+   212
+  ],
+  "sword_tip": [
+   12,
+   36
+  ],
+  "shoulder_l": [
+   312,
+   115
+  ],
+  "elbow_l": [
+   332,
+   172
+  ],
+  "grip_l": [
+   332,
+   230
+  ],
+  "shield_center": [
+   332,
+   230
+  ],
+  "hip_r": [
+   190,
+   245
+  ],
+  "knee_r": [
+   150,
+   298
+  ],
+  "ankle_r": [
+   140,
+   345
+  ],
+  "toe_r": [
+   100,
+   362
+  ],
+  "heel_r": [
+   176,
+   368
+  ],
+  "hip_l": [
+   282,
+   258
+  ],
+  "knee_l": [
+   332,
+   345
+  ],
+  "ankle_l": [
+   358,
+   405
+  ],
+  "toe_l": [
+   374,
+   464
+  ],
+  "heel_l": [
+   350,
+   455
+  ],
+  "wrist_l": [
+   332,
+   214
+  ]
+ },
+ "owner_index": [
+  "thigh_r",
+  "foot_r",
+  "shin_r",
+  "upper_r",
+  "fore_r",
+  "sword",
+  "hand_r",
+  "thigh_l",
+  "foot_l",
+  "shin_l",
+  "skirt_rear",
+  "tabard",
+  "skirt_front",
+  "chest",
+  "pelvis",
+  "cowl_back",
+  "head",
+  "upper_l",
+  "cowl_front",
+  "shield"
+ ]
+}

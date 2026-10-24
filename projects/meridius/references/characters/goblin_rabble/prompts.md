@@ -181,3 +181,43 @@ painted shield, `rabble_plank_shield_front.png` is new, and `rabble_tpose_front_
 replaces the painted T-pose. All three pass; the scalp scar is kept because it is a scar,
 not paint. The earlier files stay as history. With the paint gone, the proposed red sun on
 the chest and shield is dropped.
+
+## 5. Tripo meshes and textures
+
+The user approved the images on 24 October 2026 ("These looks good") and asked for six
+separate Tripo models, with a check-in before texturing. They approved texturing the same
+day ("Don't forget to texturize the units and equipment"). Route: Tripo Studio web,
+Smart Mesh, Quad, AI model P2.0, one variant each. Each model took one 2048 px RGB copy of
+its approved image. Texture panel: the model's own image as reference, style None,
+Remove Lighting off, 4K. Task IDs, credits and hashes are in `jobs.json`.
+
+| Model | Image | Polycount set | Faces / vertices |
+|---|---|---|---|
+| `body` | `rabble_tpose_front_v2.png` | 5,000 | 5,841 / 5,539 |
+| `knife` | `rabble_knife_front.png` | 500 | 627 / 561 |
+| `hatchet` | `rabble_hatchet_front.png` | 500 | 618 / 526 |
+| `cleaver` | `rabble_cleaver_front.png` | 500 | 556 / 515 |
+| `shield_barrel` | `rabble_shield_plain_front.png` | 1,000 | 917 / 975 |
+| `shield_plank` | `rabble_plank_shield_front.png` | 1,000 | 1,254 / 1,143 |
+
+Cost: 6 × 100 for the meshes and 6 × 20 for the textures, 720 Tripo credits in all
+(balance 1,520 → 800).
+
+Exports (free) are in `../tripo/goblin_rabble/`: `<model>__take-01.zip`, each an FBX
+(Blender preset) with a 4096² base colour in its `.fbm` folder. There are also untextured
+FBX files of the cleaver and both shields. The user's save folder `../FBX/` holds the
+same downloads and stays out of Git.
+
+Blender check (5.2, background import): every model is one mesh with UVs and no n-gons.
+Each is normalised to 1 unit on its longest side, so it must be scaled when assembled.
+Findings:
+
+- Body: the broken chain on the collar is modelled rigid and sticks out forward and down
+  in side view. Fixed, and all six models scaled, in
+  `../blender/goblin_rabble/goblin_rabble_base.blend` (see its README). The back of the
+  body and the loincloth are painted darker and flatter than the front, because the
+  texture is inferred from the front image.
+- Barrel shield: the front is a flat disc with the staves painted on, and the back has no
+  grip or strap.
+- Plank shield: the nails come through at the back, which suits a hammered-together
+  shield.

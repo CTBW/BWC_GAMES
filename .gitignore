@@ -54,6 +54,8 @@ projects/meridius/references/characters/goblin_*/*.png
 !projects/meridius/references/characters/goblin_archer/source_crop.png
 !projects/meridius/references/characters/goblin_spear/source_crop.png
 !projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
+# Tripo downloads in the owner's Chrome save folder; tripo/<unit>/ holds the copies.
+projects/meridius/references/characters/FBX/
 
 # Editor and operating-system files
 .vscode/

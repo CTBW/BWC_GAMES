@@ -67,6 +67,20 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
 - Texturing ends Edit Mesh, so finish retries first. Receipts:
   `projects/meridius/references/characters/spearman_idle/jobs.json`.
 
+## Goblin rabble, 24 October 2026
+
+- Smart Mesh still charged 100 per single-variant run; texture 20.
+- The left-sidebar **Texture** panel shows settings before charging: image
+  reference (the model's own input image), texture style, Remove Lighting,
+  and 2K / 4K / 8K (one trial). The bottom-toolbar Texture button skips it.
+  Several texture jobs can run at once; each took about one minute.
+- The Assets panel mixes older models with new ones, such as a textured knife
+  from 01:01. Check the task ID in the URL before charging.
+- With Chrome's "Ask where to save" on, every export waits for the user to
+  click Save. Find the file by its exact name, not by recency.
+- Exported models are normalised to 1 unit on their longest side.
+- Receipts: `projects/meridius/references/characters/goblin_rabble/jobs.json`.
+
 ## Blender in the background
 
 - `blender -b --factory-startup` with the normal user profile removes the

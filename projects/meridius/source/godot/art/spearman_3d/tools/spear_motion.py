@@ -21,7 +21,9 @@ the rig for the game's facings turns the spear too. Three ways of holding it:
   turn   the turn: both hands on the shaft as in the guard (the arms take the guard's pose
          on the turning body), the spear lowered a little (TURN_LOWER, eased in and out) with
          the front arm re-solved so its fist stays on the shaft;
-  rigid  fixed in the right fist as it is held in the idle's first frame (hit);
+  rigid  fixed in the right fist as it is held in the idle's first frame (hit); where the
+         flinch would swing the shaft through him, his wrist bends it clear (wrist_clear:
+         edits the right hand's keys in place, so retarget the clip again before a re-run);
   drop   deaths: rigid until his hips start to sink, then he lets go and the spear falls
          flat onto the ground (accelerating, like a dropped rod), landing below his hands.
 """
@@ -32,6 +34,7 @@ import sys
 
 import bpy
 from mathutils import Matrix, Quaternion, Vector
+from mathutils.bvhtree import BVHTree
 
 GRIP = 0.14            # m from the butt to the rear fist in two-handed holds: at the butt cap, for reach
                        # (at full lunge the right arm lies along the shaft's line, so more shaft behind
@@ -65,6 +68,19 @@ MODES = {"idle": "two", "attack": "two",
          "hit": os.environ.get("SPEAR_HIT_MODE", "rigid"), "death": "drop", "death_2": "drop", "death_3": "drop", "turn_90": "turn"}
 SHAFT_R = 0.02
 DROP_FRAMES = 14       # 0.47 s from letting go to lying on the ground
+# Hit: the rigid spear swung through his belly and his left forearm in 10 of 61 frames as he
+# flinched. The wrist bends it clear instead, about one axis in the hand's X-Z plane per
+# stretch of such frames (12 directions tried), so that in every frame neither the shaft's
+# axis nor four lines CLEAR_R off it cross the body outside the fists. The bend per frame is
+# the cheapest path in 2-degree steps (least bend, least change from frame to frame, at most
+# CLEAR_STEP per frame) from a straight wrist CLEAR_PAD frames before the stretch back to a
+# straight wrist CLEAR_PAD frames after it. One fixed bend for the whole stretch pushed the
+# shaft into his left arm in frames that were clear before.
+CLEAR_R = SHAFT_R + 0.005
+CLEAR_MAX = 30         # degrees the wrist may bend for it
+CLEAR_STEP = 6         # degrees per frame at most
+CLEAR_PAD = 8          # frames
+SPEAR_L, STEP = 2.40, 0.04   # the walk along the shaft, as in spear_clearance.py
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 only = argv[0].split(",") if argv and argv[0] else None
@@ -304,6 +320,97 @@ def frames_of(act):
     return list(range(f0, f1 + 1))
 
 
+def body_bvh():
+    ev = bpy.data.objects["Spearman"].evaluated_get(bpy.context.evaluated_depsgraph_get())
+    me = ev.to_mesh()
+    bvh = BVHTree.FromPolygons([v.co.copy() for v in me.vertices], [tuple(p.vertices) for p in me.polygons])
+    ev.to_mesh_clear()
+    return bvh
+
+
+def crosses(bvh, M, fists):
+    """Does the spear at M cross the body anywhere more than 10 cm from the fists? Walks its
+    axis and four lines CLEAR_R off it in STEP pieces, ray-casting each piece."""
+    for ox, oy in ((0, 0), (CLEAR_R, 0), (-CLEAR_R, 0), (0, CLEAR_R), (0, -CLEAR_R)):
+        p0 = M @ Vector((ox, oy, 0.0))
+        for i in range(1, int(round(SPEAR_L / STEP)) + 1):
+            p1 = M @ Vector((ox, oy, i * STEP))
+            d = p1 - p0
+            loc = bvh.ray_cast(p0, d.normalized(), d.length)[0]
+            if loc is not None and min((loc - h).length for h in fists) > 0.10:
+                return True
+            p0 = p1
+    return False
+
+
+def wrist_clear(act, frames):
+    """Bend the right wrist where the rigid spear would cross his body (see CLEAR_R). Returns
+    [(first frame, last frame, direction degrees, largest bend degrees)] per stretch, the
+    direction None where no bend up to CLEAR_MAX clears it (left straight)."""
+    assert "wrist_clear" not in act, f"{act.name}: wrist already bent; run retarget_clips.py on it first"
+    hand = PB["mixamorig:RightHand"]
+    dirs = [Vector((math.cos(a), 0, math.sin(a))) for a in (math.radians(30 * k) for k in range(12))]
+    angles = list(range(0, CLEAR_MAX + 1, 2))
+    step = CLEAR_STEP // 2
+
+    def tester(f):
+        sc.frame_set(f)
+        bvh, H, left = body_bvh(), hand.matrix.copy(), fist("Left")
+        return lambda R: not crosses(bvh, H @ R @ REL, [H @ R @ fist_off["Right"], left])
+
+    bad = [f for f in frames if not tester(f)(Matrix.Identity(4))]
+    groups = []
+    for f in bad:
+        if groups and f - groups[-1][-1] <= 2 * CLEAR_PAD:
+            groups[-1].append(f)
+        else:
+            groups.append([f])
+    # States: the straight wrist, and each bend angle in each direction, as a 2D bend vector.
+    states = [(0, 0)] + [(k, a) for k in range(len(dirs)) for a in angles[1:]]
+    vec = [Vector((math.cos(math.radians(30 * k)), math.sin(math.radians(30 * k)))) * a for k, a in states]
+    near = [[(j, (vec[i] - vec[j]).length_squared) for j in range(len(states))
+             if (vec[i] - vec[j]).length <= CLEAR_STEP + 1e-6] for i in range(len(states))]
+    rot = [Matrix.Rotation(math.radians(a), 4, dirs[k]) for k, a in states]
+    out = []
+    for g in groups:
+        span = [f for f in frames if g[0] - CLEAR_PAD <= f <= g[-1] + CLEAR_PAD]
+        ok = {}
+        for f in span:
+            clear = tester(f)
+            ok[f] = [clear(R) for R in rot]
+        cost = [0.0] + [math.inf] * (len(states) - 1)           # straight wrist before the span
+        back = []
+        for f in span:
+            cur, arg = [math.inf] * len(states), [0] * len(states)
+            for i in range(len(states)):
+                if ok[f][i]:
+                    for j, d2 in near[i]:
+                        c = cost[j] + d2 + 0.2 * vec[i].length_squared
+                        if c < cur[i]:
+                            cur[i], arg[i] = c, j
+            back.append(arg)
+            cost = cur
+        end = min((i for i in range(len(states)) if vec[i].length <= CLEAR_STEP + 1e-6),
+                  key=lambda i: cost[i] + vec[i].length_squared)  # and straight again after it
+        if cost[end] == math.inf:
+            out.append((g[0], g[-1], [f for f in span if not any(ok[f])]))
+            continue
+        path, i = [], end
+        for arg in reversed(back):
+            path.append(i)
+            i = arg[i]
+        path.reverse()
+        for f, i in zip(span, path):
+            if i:
+                sc.frame_set(f)
+                k, a = states[i]
+                hand.rotation_quaternion = hand.rotation_quaternion @ Quaternion(dirs[k], math.radians(a))
+                hand.keyframe_insert("rotation_quaternion", frame=f)
+        out.append((g[0], g[-1], max(states[i][1] for i in path)))
+    act["wrist_clear"] = [str(o) for o in out]
+    return out
+
+
 # The rigid hold: the spear in the right fist as in the idle's first frame.
 rig.animation_data_create()
 rig.animation_data.action = bpy.data.actions["idle"]
@@ -339,6 +446,7 @@ for clip in clips:
         grip_c = sum(fist_z) / len(fist_z) - cfg["butt_z"]
     if mode == "turn":
         turn_two_handed(act, frames)
+    wrist = wrist_clear(act, frames) if mode == "rigid" else None
     release = None
     if mode == "drop":
         sc.frame_set(frames[0])
@@ -432,7 +540,8 @@ for clip in clips:
     if release:
         sact["release_frame"] = release
     print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "",
-          "chest turned %.0f to %.0f deg" % (min(chest_yaw), max(chest_yaw)) if chest_yaw else "")
+          "chest turned %.0f to %.0f deg" % (min(chest_yaw), max(chest_yaw)) if chest_yaw else "",
+          "wrist bent clear (first, last crossing frame, largest bend deg): %s" % wrist if wrist is not None else "")
 rig.animation_data.action = bpy.data.actions["idle"]
 spear.animation_data.action = bpy.data.actions["idle__spear"]
 sc.frame_set(1)

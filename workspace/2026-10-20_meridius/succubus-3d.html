@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Succubus 3D rig</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<link rel="stylesheet" href="rig-viewer/viewer.css">
+<link rel="stylesheet" href="rig-viewer/combat.css">
+<style>.whip-videos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}.whip-videos figure{margin:0}.whip-videos video{display:block;width:100%;height:auto;border-radius:8px;background:#303030}.whip-videos.ref video{max-height:320px;object-fit:contain}@media(max-width:700px){.whip-videos{grid-template-columns:1fr}}</style>
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / SUCCUBUS (GERMAN SHEPHERD HYBRID) / 3D RIG / 24 OCT 2026</p>
+<h1>Succubus 3D rig</h1>
+<p>A succubus and German shepherd hybrid: horns, drooping deer ears, bat wings, a bushy tail, paws, and a coiled razor whip in her left hand. She was drawn in Higgsfield, modelled in Tripo as four separate parts, reworked and rigged in Blender, and exported as one FBX that plays in the Godot 3D sandbox. Eight clips from <code>E:\Animations</code> play below from the game's battle camera, in all four facings. Her tail, wings and loincloth move on their own on top of the Mixamo motion, and in the attack a bladed lash plays out of the whip's collar.</p>
+</header>
+
+<!-- rig-combat:start -->
+<section class="rig-combat" id="combat-skills" aria-labelledby="combat-skills-title">
+<h2 id="combat-skills-title">Combat skills</h2>
+<p class="rig-combat-status"><strong>Combat animation and approved spell concept; gameplay kit pending</strong> · 2026-10-24</p>
+<p>The Succubus is currently a 3D sandbox character, with no unit entry or combat ability kit in the Godot gameplay data.</p>
+<div class="rig-combat-table"><table><caption>Succubus combat skills</caption><thead><tr><th scope="col">Skill</th><th scope="col">Availability</th><th scope="col">Effect</th></tr></thead><tbody>
+<tr data-skill="whip_attack"><th scope="row">Whip attack</th><td>Existing animation · Sandbox only</td><td>A left-handed bladed lash extends and cracks like a whip twice, an overhand strike and a rising underhand one, both forward at the tile ahead, then recoils and falls. Damage, gameplay reach, costs and cooldown are not defined; the two animated strikes do not establish two gameplay hits.</td></tr>
+<tr data-skill="sovereign_kiss"><th scope="row">Sovereign Kiss</th><td>Approved visual direction · Gameplay pending</td><td>A blown kiss becomes a large heart of pink fog that passes through opponents, enthralls eligible targets and dissolves beyond the formation. Cast with the free right hand while the left keeps the whip lowered. Target count, duration, resistance, range, cost and cooldown remain undecided.</td></tr>
+</tbody></table></div>
+
+<p><strong>3D animation status.</strong> The whip Attack clip is available in the pose viewer. Sovereign Kiss has an approved visual direction and a Blender handoff; its animation and gameplay implementation remain pending.</p>
+<p class="rig-combat-sources"><a href="sovereign-kiss.html">Sovereign Kiss schematic and icon</a> · <a href="sovereign-kiss/blender-handoff.html">Spell animation handoff</a> · <a href="rig-viewer/combat-skills.json" download>Combat skill source snapshot</a></p>
+</section>
+<!-- rig-combat:end -->
+
+<h2>Animations to fix</h2>
+<p>Step to the frame that is wrong in the pose viewer below, press <strong>Copy frame reference</strong>, and send it with a note. Each fix is recorded here with what changed.</p>
+<div class="table-wrap"><table>
+<thead><tr><th><div style="min-width:6rem">Clip</div></th><th><div style="min-width:10rem">Source</div></th><th><div style="min-width:6.5rem">Length</div></th><th><div style="min-width:5rem">Status</div></th><th><div style="min-width:18rem">Notes</div></th></tr></thead>
+<tbody>
+<tr><td>Idle</td><td>Idle standing - Succubus-German Shepherd</td><td>16.6 s loop</td><td>New · to review</td><td>Her standing idle, added 24 Oct. Her hand and the coiled whip sank 6–7 cm into her fur hips: the whip arm is now held 15–24° out from her side and the whip rolled outward in her fist. Wings sway nine times per loop.</td></tr>
+<tr><td>Idle flourish</td><td>Idle - Succubus-German Shepherd</td><td>7.8 s, one-off</td><td>Fixed · to review</td><td>The bending idle, now played from the idle now and then: each succubus waits her own random 9–22 s, so a squad never moves in step. Eased in from and back to the idle's first pose. <strong>Frame 220:</strong> the whip arm is turned out from her side while her hands rest on her knees (up to 42° in this clip), so it no longer cuts into her legs. <strong>Frame 166:</strong> the whip rolled in her fist so the coil lies behind her head instead of through it (it still touches her hair).</td></tr>
+<tr><td>Walk</td><td>Walking - Succubus-German Shepherd</td><td>1.17 s loop, 1.0 m/s</td><td>To review</td><td>Wings folded. On the back swing the whip's pommel went into her hip fur: the arm now turns out up to 11° there. The loop's last frame differs from its first by 1.7 cm at most.</td></tr>
+<tr><td>Start walking</td><td>Start Walking - Succubus-German Shepherd</td><td>1.87 s</td><td>To review</td><td>Keeps its travel (1.6 m). Tail and wing sway build up. Whip arm 6–15° out.</td></tr>
+<tr><td>Stop walking</td><td>Stop Walking - Succubus-German Shepherd</td><td>1.53 s</td><td>To review</td><td>Keeps its travel (1.4 m). The sway dies down. Whip arm 6–15° out.</td></tr>
+<tr><td>Attack</td><td>Attack - Succubus-German Shepherd</td><td>3.5 s</td><td>Changed · to review</td><td><strong>Extending whip, revised 24 Oct.</strong> At the top of her wind-up (frames 17–22) the coil rolls up into the collar while a 2 m bladed lash plays out of it, laid back over her shoulder. It then cracks twice like a whip (<a href="#whip-crack">The whip crack</a>): an overhand strike, straight at the tile ahead at frame 27 (0.87 s), and a rising underhand strike at frame 52 (1.70 s, formerly a backhand at frame 55 that cracked behind her). After each crack the lash recoils and falls in front of her; after the second, her arm stops at the target and sinks (edited: the clip pulled it back over her shoulder). It is reeled in at frames 62–70 as the coil returns. The wings flare round frame 42.</td></tr>
+<tr><td>Hit</td><td>Hit - Succubus-German Shepherd</td><td>3.43 s</td><td>To review</td><td>Eased in from and out to the idle; turned 38° to face her facing. Starts and ends with the idle's arm and whip.</td></tr>
+<tr><td>Death</td><td>Death - Succubus-German Shepherd</td><td>3.5 s, still at 2.87 s</td><td>To review</td><td>Falls on her back 1.3 m to her right; hips lifted up to 0.23 m to keep her above the ground. The wings open and lie beside her; their membranes dip up to 2.6 cm into the ground near the end.</td></tr>
+</tbody></table></div>
+
+<h2>Pose viewer</h2>
+<p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
+<div class="viewer">
+  <div class="vbar" role="group" aria-label="Clip"><span class="vlbl">Clip</span><div class="vchips" id="clipChips"></div></div>
+  <div class="vbar" role="group" aria-label="Facing"><span class="vlbl">Facing</span><div class="vchips" id="faceChips"></div></div>
+  <div class="vbar" role="group" aria-label="Playback">
+    <button id="first" class="vbtn" title="First frame (Home)" aria-label="First frame">⏮</button>
+    <button id="prev" class="vbtn" title="Previous frame (←)" aria-label="Previous frame">◀</button>
+    <button id="play" class="vbtn" title="Play / pause (Space)" aria-label="Play or pause">❚❚</button>
+    <button id="next" class="vbtn" title="Next frame (→)" aria-label="Next frame">▶</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <label class="vsel">Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+    <label class="vsel">Zoom <select id="zoom"><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+    <label class="vsel">Ground <select id="ground"><option value="paper">Paper</option><option value="grass">Grass</option><option value="dark">Dark</option></select></label>
+  </div>
+  <div class="readout"><span id="readout" aria-live="polite">Loading frames…</span><button id="copy" class="vcopy">Copy frame reference</button><span id="copied" class="copied" hidden>Copied</span></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="steps">
+  <div><strong>1 · Concept</strong><p>From the user's three references, Nano Banana Pro on Higgsfield drew her in a T-pose at 4K. The drooping-ear version was chosen; wings, tail and whip were drawn on their own. Higgsfield's filter refused every edit without the wings (five tries, none charged), so the user cut the body out by hand.</p></div>
+  <div><strong>2 · Tripo</strong><p>Smart Mesh in quads, one variant each: body (6,162 faces), wings, tail and whip, each textured at 4096 px. 400 + 80 credits.</p></div>
+  <div><strong>3 · Fixed in Blender</strong><p>A spike Tripo invented behind her hips deleted. Hips 15 % wider and buttocks 10 % fuller; legs 15 % longer, then scaled back to 1.95 m with the horns.</p></div>
+  <div><strong>4 · Paws and fur</strong><p>Black paw pads on both soles, one behind each claw where the user marked them, turned with her feet. 288 fur tufts on her hips and thighs, with a fringe over the stocking tops.</p></div>
+  <div><strong>5 · Rigged</strong><p>62 bones with Mixamo names, fitted to her: a six-bone tail at her lower back, four bones per wing on the shoulder blades, three on the loincloth, the whip's handle and coil on their own bones in her left fist, and a 16-bone lash.</p></div>
+  <div><strong>6 · Clips retargeted</strong><p>Each limb is first turned onto Mixamo's rest pose, so her wide stance and turned-out paws do not carry into her stride.</p></div>
+  <div><strong>7 · Tail, wings, loincloth</strong><p>Wings folded while walking and half spread at idle, after the user's reference video. The tail sways once per stride. The loincloth rides over whichever thigh is furthest forward.</p></div>
+  <div><strong>8 · FBX and Godot</strong><p>One 9.1 MB FBX with all clips, checked by re-import, plays in <code>footman3d_sandbox.tscn</code> next to the 3D footman, his game sprite and an oak prop.</p></div>
+</div>
+
+<h2>From concept to Tripo</h2>
+<figure><img src="succubus-3d/img/chain.webp" width="2400" height="461" loading="lazy" alt="The Higgsfield T-pose with wings and tail, the body the user cut out, and the separate wings, tail and coiled whip">
+<figcaption>The Higgsfield T-pose, the body as the user cut it out (no wings, no tail), and the three parts drawn on their own for Tripo: wings, tail and whip.</figcaption></figure>
+
+<h2>The model in Blender</h2>
+<figure><img src="succubus-3d/img/base_model.webp" width="2400" height="609" loading="lazy" alt="The textured body from the front, the side, three-quarter back and the back, without wings and tail">
+<figcaption>The body after the fixes, in the game's flat-lit look: front, side, three-quarter back and back.</figcaption></figure>
+<div class="figs">
+<figure><img src="succubus-3d/img/hips_legs.webp" width="2400" height="760" loading="lazy" alt="Front and side views: Tripo's original, with wider hips, and with wider hips and longer legs">
+<figcaption>Tripo's original, the hips widened, and the legs lengthened as well (front and side).</figcaption></figure>
+<figure><img src="succubus-3d/img/paw_pads.webp" width="900" height="680" loading="lazy" alt="The soles from below with four black toe pads and a heel pad each, and a low front view of the paws">
+<figcaption>Paw pads: a toe pad behind each claw, at the positions the user marked, and a heel pad turned with the foot.</figcaption></figure>
+</div>
+<div class="figs">
+<figure><img src="succubus-3d/img/fur.webp" width="2000" height="1000" loading="lazy" alt="Close-ups of her hips before and after the fur tufts, from four angles">
+<figcaption>Fur tufts: before (top) and after (bottom). The outline turns ragged; the surface stays smooth.</figcaption></figure>
+<figure><img src="succubus-3d/img/fur_game.webp" width="1200" height="700" loading="lazy" alt="The whole figure from the game's camera before and after the fur tufts">
+<figcaption>The same from the game's camera, before and after.</figcaption></figure>
+</div>
+
+<h2>Rig</h2>
+<figure><img src="succubus-3d/img/skeleton.webp" width="2100" height="760" loading="lazy" alt="The skeleton drawn over the clay model from the front, the side and three-quarter back, with tail, wing and loincloth bones">
+<figcaption>The skeleton from the front, the side and three-quarter back. The tail hangs 45° back from vertical, as in the reference.</figcaption></figure>
+<figure><img src="succubus-3d/img/pose_tests.webp" width="2400" height="869" loading="lazy" alt="Deformation tests: rest, arms down, an arm overhead, a knee bend, a head turn, and the tail and wings swung, from the front and the game camera">
+<figcaption>Deformation tests: rest, arms down, an arm overhead, a deep knee bend, a head turn, and the tail and wings swung.</figcaption></figure>
+<figure><img src="succubus-3d/img/wing_poses.webp" width="1560" height="1260" loading="lazy" alt="The wings spread, half spread and folded, from the front, the side, three-quarter back and the game camera">
+<figcaption>Wing poses: spread (the concept), half spread (idle) and folded (walking, as in the reference video).</figcaption></figure>
+
+<h2>Loincloth</h2>
+<p>Skinned with the legs, the front panel was dragged towards whichever leg moved. It now hangs on its own three bones from her hips and swings forward with the thigh that is furthest forward, never sideways, so it keeps covering her. Left: the old panel; right: the one in use.</p>
+<div class="figs">
+<figure><img src="succubus-3d/img/loincloth_walk.webp" width="1040" height="288" loading="lazy" alt="The walk, hip close-ups: the old loincloth skinned with the legs and the new one on its own bones">
+<figcaption>Walk.</figcaption></figure>
+<figure><img src="succubus-3d/img/loincloth_attack.webp" width="1040" height="288" loading="lazy" alt="The attack, hip close-ups: the old loincloth and the new one">
+<figcaption>Attack.</figcaption></figure>
+</div>
+
+<h2>The whip</h2>
+<p>Tripo modelled the whip coiled, so the rig splits it: the handle stays in her fist, the coil sits on a bone of its own at the collar. For the attack a lash was built in Blender from the concept (no paid generation): a tapering core, scale-like blades in pairs pointing back to the handle, a gold ferrule and a hooked tip, coloured from the coil's own texture. It is 2 m long on 16 bones, twice as thick as a real lash so it still reads at the game's zoom.</p>
+<figure><img src="succubus-3d/img/whip_lash_model.webp" width="1282" height="680" loading="lazy" alt="The lash straight out of her fist at rest, with pink-edged blades, a gold ferrule and a hooked tip, beside the coiled whip">
+<figcaption>The lash at rest (left), and its root beside the coil it replaces in the attack (right).</figcaption></figure>
+<p>In the attack the coil rolls up as the lash plays out, the lash cracks twice as a whip (<a href="#whip-crack">below</a>), and it is reeled back in. Step through it in the pose viewer: clip <strong>Attack</strong>, frames 17–72.</p>
+<p>Wherever her whip arm or the whip cut into her, the arm is now turned out from her chest and the whip rolled in her fist. Both turns are chosen over the whole clip at once and smoothed, so they ease in and out. Clips that start or end in the idle pose take the idle's own turn there.</p>
+<figure><img src="succubus-3d/img/whip_idle_hand.webp" width="1680" height="840" loading="lazy" alt="Close-ups of her left hand at the first frame of the standing idle from four sides: before, the hand and the coil sink into her fur hip; after, the hand rests on it and the coil hangs clear">
+<figcaption>The standing idle's first frame from four sides. Top: before, the hand and coil inside her fur hip. Bottom: the arm turned out 18°, the whip rolled outward.</figcaption></figure>
+
+<h2 id="whip-crack">The whip crack</h2>
+<p><strong>Result.</strong> The lash now moves like the whip in the user's reference. It loads behind her, a loop rolls out to the tip, and the lash snaps straight at the crack, then recoils, droops and lies on the ground. Both cracks aim at the tile ahead: frame 27 (0.87 s) and frame 52 (1.70 s), and after each the lash falls in front of her. Before, it swung as a stiff rope, and the second strike cracked behind her. Nothing was generated and no credits were spent.</p>
+<p>The reference (<a href="https://www.youtube.com/watch?v=ASK_NEQ3C8Y">YouTube</a>) is a 2.5 s line animation at 24 fps of an arm cracking a tapered whip. These observations are from all 59 frames. The download has no audio.</p>
+<ul>
+<li><strong>0.21–0.33 s:</strong> the arm lifts; the lash trails below the hand.</li>
+<li><strong>0.38–0.58 s:</strong> wind-up; the lash is dragged up and back over.</li>
+<li><strong>0.63–0.75 s:</strong> forward stroke; the lash lies in a long arc behind and above the hand (loaded).</li>
+<li><strong>0.79–0.83 s:</strong> the arm stops at the target. A narrow loop forms: the part by the hand runs straight along the strike line, turns, and the rest folds back. The loop rolls out to the tip.</li>
+<li><strong>0.88–0.92 s:</strong> the lash snaps straight along the arm's line: the crack.</li>
+<li><strong>0.96–1.00 s:</strong> it recoils in an S-wave.</li>
+<li><strong>1.04–1.17 s:</strong> it droops, and hangs straight down by about 1.3 s.</li>
+</ul>
+<div class="whip-videos ref">
+<figure><video controls preload="metadata" playsinline loop src="succubus-3d/video/whip_reference.mp4" aria-label="The whip reference animation: an arm winds up, a loop rolls out along the whip and it snaps straight, then droops"></video><figcaption>The reference, 2.5 s · <a href="succubus-3d/video/whip_reference.mp4" download>Download MP4</a></figcaption></figure>
+</div>
+<figure><img src="succubus-3d/img/whip_ref_vs_lash.webp" width="1200" height="1230" loading="lazy" alt="Eight reference frames from wind-up to hanging, each above the new lash at the matching attack frame in side view: laid back, loop, loop rolling out, straight at the crack, S-wave, drooping, lying by her hand">
+<figcaption>Reference frames (top) over the new lash at the same phase (below, side view, each panel centred on her hand). Strike 1, frames 20–37.</figcaption></figure>
+<p>The lash is still a simulated tapered rope (<code>whip_motion.py</code>), now steered through a whip's phases:</p>
+<ul>
+<li><strong>Loaded.</strong> As it plays out, it is laid back over her shoulder (frames 15–24).</li>
+<li><strong>Loop and crack.</strong> For each strike, the lash straightens out of the handle towards the crack point, handle first and faster and faster. The rest rolls over in a loop that runs out to the tip, so the lash is straight at the crack. Strike 1 cracks 2.6 m ahead, 1.0 m up. Strike 2 cracks 2.5 m ahead, 1.1 m up. The tile's centre is 2.7 m ahead.</li>
+<li><strong>Recoil and fall.</strong> An S-wave runs out to the tip. The lash then falls three times as fast as gravity, which matches the reference's quick droop, and hangs from her hand onto the ground. Drag on its motion relative to her hand stops the old flailing. Between strikes the tip now peaks at 19 m/s, where the old rope reached 40–60 m/s and cracked a second time.</li>
+<li><strong>Strike 2</strong> starts from her hip: the lash lying behind her is dragged up into the loop. <strong>Follow-through, revised 24 Oct.</strong> In the clip, her chest kept turning about 90° to her left after this crack and pulled her hand back over her shoulder, so the lash fell behind her. Now her chest's turn eases to a stop at about 37°, and her arm stops at the target and then sinks forward to waist height (frames 50–72, IK on the upper arm and forearm, the whip along her forearm). It then eases back into the clip's ending (by frame 92). The lash droops and hangs from her hand in front of her, tip on the ground 0.75 m ahead, as in the reference, until it is reeled in at frames 62–70. The crack is also cleaner: the tip reaches 42 m/s, up from 28, and stays under 8 m/s afterwards. Her legs, hips, wings and tail are unchanged.</li>
+</ul>
+<h3>In Godot</h3>
+<figure><img src="succubus-3d/img/whip_godot_seq.webp" width="1548" height="440" loading="lazy" alt="Godot sandbox frames of both strikes facing SE: the lash loaded, looping, straight at the crack with the crack burst, recoiling, drooping and lying or hanging in front of her">
+<figcaption>Both strikes in the sandbox, facing SE: strike 1 (top) and strike 2 (bottom).</figcaption></figure>
+<div class="whip-videos">
+<figure><video controls preload="metadata" playsinline src="succubus-3d/video/whip_slash.mp4" aria-label="Godot: the attack with the new whip and its slash effects, real time"></video><figcaption>Real time, 0.45–2.45 s of the clip · <a href="succubus-3d/video/whip_slash.mp4" download>Download MP4</a></figcaption></figure>
+<figure><video controls preload="metadata" playsinline src="succubus-3d/video/whip_slash_slow.mp4" aria-label="Godot: the attack with the new whip and its slash effects, quarter speed"></video><figcaption>Quarter speed · <a href="succubus-3d/video/whip_slash_slow.mp4" download>Download MP4</a></figcaption></figure>
+</div>
+<details><summary>Before: the rope lash, and strike 2 falling behind her (same captures)</summary>
+<p>Before the follow-through fix: the whip as above, but after strike 2 her hand swings back over her shoulder and the lash falls behind her.</p>
+<div class="whip-videos">
+<figure><video controls preload="none" playsinline src="succubus-3d/video/whip_slash_v2.mp4" aria-label="Godot: strike 2 falling behind her, real time"></video><figcaption>Real time · <a href="succubus-3d/video/whip_slash_v2.mp4" download>Download MP4</a></figcaption></figure>
+<figure><video controls preload="none" playsinline src="succubus-3d/video/whip_slash_slow_v2.mp4" aria-label="Godot: strike 2 falling behind her, quarter speed"></video><figcaption>Quarter speed · <a href="succubus-3d/video/whip_slash_slow_v2.mp4" download>Download MP4</a></figcaption></figure>
+</div>
+<p>The rope lash, before the whip revision:</p>
+<div class="whip-videos">
+<figure><video controls preload="none" playsinline src="succubus-3d/video/whip_slash_v1.mp4" aria-label="Godot: the old rope lash, real time"></video><figcaption>Real time · <a href="succubus-3d/video/whip_slash_v1.mp4" download>Download MP4</a></figcaption></figure>
+<figure><video controls preload="none" playsinline src="succubus-3d/video/whip_slash_slow_v1.mp4" aria-label="Godot: the old rope lash, quarter speed"></video><figcaption>Quarter speed · <a href="succubus-3d/video/whip_slash_slow_v1.mp4" download>Download MP4</a></figcaption></figure>
+</div>
+</details>
+<p>The sandbox's slash effects (<code>whip_fx.gd</code>, a look test, not the game's effects) needed no change, because they sample the lash path from the clip. Each crack gets a star, a shock ring and streaks at the tip. The slash crescent is now a short flare behind the crack, since the tip snaps along the line instead of sweeping an arc. No ground slap fires, because both cracks are in the air.</p>
+<figure><img src="succubus-3d/img/whip_slash_game.webp" width="686" height="460" loading="lazy" alt="Godot at the game's zoom, native pixels: each crack with the effects off and on; the crack burst sits just short of the footman on the tile ahead">
+<figcaption>At the game's zoom, native pixels: each crack with the effects off and on.</figcaption></figure>
+<figure><img src="succubus-3d/img/whip_slash_schematic.webp" width="1800" height="3190" loading="lazy" alt="Schematic: how the lash extends out of the collar; each strike from the game camera with the lash per frame and the effects at their peak; the effect layers and their timing">
+<figcaption>Schematic drawn from the attack clip by <code>slash_schematic.py</code>: the lash extending, both strikes from the game camera, and the effect timing.</figcaption></figure>
+
+<h2>In the Godot sandbox</h2>
+<figure><img src="succubus-3d/img/godot_overview.webp" width="1000" height="600" loading="lazy" alt="Godot sandbox: the succubus, the 3D footman, his game sprite, a training dummy and an oak prop with its painted shadow">
+<figcaption>Under the game's camera: her, the 3D footman, his game sprite and an oak from the game's props.</figcaption></figure>
+<figure><img src="succubus-3d/img/godot_close.webp" width="2072" height="560" loading="lazy" alt="Godot sandbox close-ups: her idle, her attack and her death">
+<figcaption>Idle, attack and death, toon look with outline.</figcaption></figure>
+<figure><img src="succubus-3d/img/godot_whip.webp" width="1242" height="400" loading="lazy" alt="Godot sandbox: the lash swinging down at the strike, the lash held straight up at the backhand in close-up, and the flourish's frame 166 with the coil behind her head">
+<figcaption>In Godot, before the whip revision: the strike (frame 28), the old backhand close up (frame 54) and the flourish's frame 166. Godot's bone positions match Blender's to 1 mm.</figcaption></figure>
+<p>Two things only showed in Godot. The lash's faces were wound inside out, which Blender's viewport hides, so Godot drew it black; its normals are now recalculated when it is built. Godot's automatic levels of detail also dropped its blades, ferrule and hook, leaving a bare rod, so the lash is kept at full detail and gets a thinner outline.</p>
+<p>A 2D prop is drawn in two parts: upright above its foot point, so the depth buffer puts her in front of or behind it, and flat on the ground below, where its painted shadow lies. The prop renders also carry a faint black haze over their whole frame; the sandbox takes it off when it loads them.</p>
+
+<h2>Motion reference</h2>
+<p>Measured from the user's reference videos (<a href="https://www.youtube.com/watch?v=dLqI21iT6IY">wings</a>, <a href="https://youtu.be/-zImukzI5Rc?t=276">tail</a>, <a href="https://www.youtube.com/watch?v=ASK_NEQ3C8Y">whip</a>).</p>
+<div class="table-wrap"><table>
+<thead><tr><th><div style="min-width:7rem">Part</div></th><th><div style="min-width:16rem">Reference</div></th><th><div style="min-width:14rem">Used</div></th></tr></thead>
+<tbody>
+<tr><td>Wings, walking</td><td>Folded; a bob each step (about 2.5° at the root, lowest at foot contact); a sideways swing once per stride, opposite to the hips</td><td>The same</td></tr>
+<tr><td>Wings, idle</td><td>Half spread; a sway every 1.75 s</td><td>Every 1.85 s (nine per idle loop); in the flourish every 1.95 s (four)</td></tr>
+<tr><td>Tail</td><td>An animatronic tail with nobody walking: a wag every 1.0 s, about ±30° at the tip, no wave down the tail, hanging 40–45° from vertical</td><td>Once per stride (1.2 s); the tip about ±22°; each bone 22° behind the one before, so it flows; hanging 45°</td></tr>
+<tr><td>Whip</td><td>A line animation of one crack: loaded behind the hand, a loop rolls out to the tip, straight at the crack (0.88 s), an S-wave recoil, then it droops and hangs by 1.3 s</td><td>The same phases, twice; after the second crack her arm stops at the target and sinks (edited; the clip pulled it back), and the lash falls at three times gravity and hangs in front of her</td></tr>
+</tbody></table></div>
+
+<h2>Notes</h2>
+<ul class="notes">
+<li><strong>Not done.</strong> Nothing is wired into the game: the FBX and the slash effects play only in the prototype sandbox. The attack's crack times are in the sidecar (<code>events.strikes</code>: 0.8667 and 1.7 s) but nothing uses them yet. A few frames still touch: in the flourish the coil grazes her hair (frame 166) and rests against her thighs while she bends (around frame 220), and on two walk frames the pommel brushes her hip fur.</li>
+<li><strong>FBX check.</strong> Re-imported from a copied folder into an empty scene: 59 deforming bones, six skinned meshes, eight clips at their lengths, and bone and mesh positions identical to the source in every clip.</li>
+<li><strong>Costs.</strong> Higgsfield: 20 credits (five 4K images kept; five refused by the filter, not charged). Tripo: 480 credits (four Smart Mesh models at 100, four textures at 20).</li>
+<li><strong>Files.</strong> <code>projects/meridius/source/godot/art/succubus_3d/</code>: <code>succubus_base.blend</code>, <code>succubus_rig.blend</code>, <code>succubus_anim.blend</code>, the scripts in <code>tools/</code> (build, rig, retarget, secondary motion, whip motion, export, verify, renders) and <code>README.md</code> with the rebuild steps. The FBX and its sidecar: <code>prototypes/footman_anim/art3d/succubus.fbx</code> and <code>.json</code>. The Tripo exports are in <code>references/characters/Succubus TRIPO/</code>; images, job IDs and costs in <code>references/characters/succubus_idle/</code>.</li>
+</ul>
+</main>
+<script id="frames-data" type="application/json">{"clips":{"idle":{"ne":{"file":"sheets/idle_ne.webp","frames":500,"cols":26,"w":211,"h":274,"x":119,"y":123},"nw":{"file":"sheets/idle_nw.webp","frames":500,"cols":24,"w":242,"h":261,"x":200,"y":135},"se":{"file":"sheets/idle_se.webp","frames":500,"cols":25,"w":242,"h":294,"x":128,"y":108},"sw":{"file":"sheets/idle_sw.webp","frames":500,"cols":27,"w":211,"h":293,"x":240,"y":112}},"idle_flourish":{"ne":{"file":"sheets/idle_flourish_ne.webp","frames":235,"cols":16,"w":279,"h":300,"x":118,"y":114},"nw":{"file":"sheets/idle_flourish_nw.webp","frames":235,"cols":16,"w":308,"h":325,"x":160,"y":89},"se":{"file":"sheets/idle_flourish_se.webp","frames":235,"cols":16,"w":308,"h":313,"x":102,"y":110},"sw":{"file":"sheets/idle_flourish_sw.webp","frames":235,"cols":17,"w":279,"h":321,"x":173,"y":93}},"walk":{"ne":{"file":"sheets/walk_ne.webp","frames":36,"cols":7,"w":215,"h":289,"x":140,"y":120},"nw":{"file":"sheets/walk_nw.webp","frames":36,"cols":7,"w":255,"h":284,"x":171,"y":122},"se":{"file":"sheets/walk_se.webp","frames":36,"cols":7,"w":255,"h":295,"x":144,"y":114},"sw":{"file":"sheets/walk_sw.webp","frames":36,"cols":7,"w":215,"h":292,"x":215,"y":114}},"walk_start":{"ne":{"file":"sheets/walk_start_ne.webp","frames":57,"cols":8,"w":342,"h":356,"x":446,"y":294},"nw":{"file":"sheets/walk_start_nw.webp","frames":57,"cols":8,"w":405,"h":357,"x":294,"y":294},"se":{"file":"sheets/walk_start_se.webp","frames":57,"cols":8,"w":404,"h":374,"x":441,"y":366},"sw":{"file":"sheets/walk_start_sw.webp","frames":57,"cols":8,"w":341,"h":375,"x":353,"y":366},"canvas":[1140,1020]},"walk_stop":{"ne":{"file":"sheets/walk_stop_ne.webp","frames":47,"cols":8,"w":324,"h":339,"x":436,"y":309},"nw":{"file":"sheets/walk_stop_nw.webp","frames":47,"cols":7,"w":368,"h":337,"x":326,"y":311},"se":{"file":"sheets/walk_stop_se.webp","frames":47,"cols":7,"w":367,"h":368,"x":446,"y":366},"sw":{"file":"sheets/walk_stop_sw.webp","frames":47,"cols":8,"w":324,"h":363,"x":380,"y":368},"canvas":[1140,1020]},"attack":{"ne":{"file":"sheets/attack_ne.webp","frames":106,"cols":11,"w":443,"h":456,"x":411,"y":265},"nw":{"file":"sheets/attack_nw.webp","frames":106,"cols":10,"w":449,"h":422,"x":296,"y":279},"se":{"file":"sheets/attack_se.webp","frames":106,"cols":11,"w":448,"h":482,"x":395,"y":177},"sw":{"file":"sheets/attack_sw.webp","frames":106,"cols":11,"w":443,"h":500,"x":286,"y":175},"canvas":[1140,1020]},"hit":{"ne":{"file":"sheets/hit_ne.webp","frames":104,"cols":12,"w":220,"h":298,"x":125,"y":105},"nw":{"file":"sheets/hit_nw.webp","frames":104,"cols":11,"w":264,"h":278,"x":153,"y":123},"se":{"file":"sheets/hit_se.webp","frames":104,"cols":11,"w":264,"h":292,"x":153,"y":112},"sw":{"file":"sheets/hit_sw.webp","frames":104,"cols":13,"w":221,"h":316,"x":224,"y":114}},"death":{"ne":{"file":"sheets/death_ne.webp","frames":106,"cols":10,"w":476,"h":391,"x":407,"y":382},"nw":{"file":"sheets/death_nw.webp","frames":106,"cols":9,"w":390,"h":296,"x":455,"y":354},"se":{"file":"sheets/death_se.webp","frames":106,"cols":11,"w":390,"h":423,"x":295,"y":367},"sw":{"file":"sheets/death_sw.webp","frames":106,"cols":9,"w":475,"h":295,"x":257,"y":370},"canvas":[1140,1020]}},"fps":30,"canvas":[570,510]}</script>
+<script id="viewer-config" type="application/json">{"base": "succubus-3d/", "start": "attack", "key": "succubus-pose-viewer", "clips": [["idle", "Idle"], ["idle_flourish", "Idle flourish"], ["walk", "Walk"], ["walk_start", "Start walking"], ["walk_stop", "Stop walking"], ["attack", "Attack"], ["hit", "Hit"], ["death", "Death"]]}</script>
+<script src="rig-viewer/viewer.js"></script>
+</body>
+</html>

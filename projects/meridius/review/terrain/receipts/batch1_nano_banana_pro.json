@@ -1,0 +1,17 @@
+{
+  "provider": "higgsfield", "model": "nano_banana_pro", "submitted": "2026-10-22",
+  "inputs": {"feef85a6-36df-4a30-bdc5-4062a057e39a": "input_battle_deploy.jpg (game capture)",
+             "6c148919-ef43-4279-a26d-44a9cc48d96a": "input_style_battlefield1.jpg (references/backgrounds/Battlefield 1.png)"},
+  "jobs": [
+    {"index": 0, "name": "concept_a_repaint", "job_id": "5060e1d9-4b09-4a8a-85fb-8b10949fd1b4"},
+    {"index": 1, "name": "concept_b_moody", "job_id": "981704de-ff31-472f-9670-acaffcd5f1c4"},
+    {"index": 2, "name": "concept_c_hill_study", "job_id": "18f64dd9-580b-4563-ae18-b225ae8d163e"},
+    {"index": 3, "name": "tex_grass", "job_id": "3573988e-32c2-4a6b-8d7a-d532d1804e17"},
+    {"index": 4, "name": "tex_dry_grass", "job_id": "8cf84032-a68e-4c83-8348-dfe5b789c215"},
+    {"index": 5, "name": "tex_dirt", "job_id": "63db00b7-14f3-4263-9e8e-c26727437d71"},
+    {"index": 6, "name": "tex_forest_floor", "job_id": "d08f217c-5dd4-4003-a34b-446850b4b34a"},
+    {"index": 7, "name": "tex_rock", "job_id": "b915ca40-f627-4abd-9c9a-d495ae58ac83"},
+    {"index": 8, "name": "tex_mud", "job_id": "0714b948-fdf7-4c88-966e-afce4beb187f"},
+    {"index": 9, "name": "tex_flagstone", "job_id": "e123e6f5-b5de-439e-96e0-879efc0f40b2"}
+  ]
+}

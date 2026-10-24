@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Terrain relief ground</title><link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css"><script defer src="../_shared/report.js"></script>
+<style>.evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.evidence figure{margin:0;padding:12px;border:1px solid var(--mak-border);border-radius:8px}.evidence img{width:100%;display:block;border-radius:5px}figcaption,.meta{font-size:13px;color:var(--mak-muted)}figcaption{padding-top:10px}.notice{padding:18px;border:1px solid var(--mak-border);border-radius:8px;background:var(--mak-surface)}.evidence .wide{grid-column:1/-1}.evidence video{width:100%;display:block;border-radius:5px;background:#000}@media(max-width:760px){.evidence{grid-template-columns:1fr}}</style></head>
+<body><main class="container"><p class="meta">MERIDIUS / NATIVE GODOT TERRAIN STUDY / 24 OCTOBER 2026</p>
+<h1>Relief ground: hills, banks and slopes</h1>
+<p>Open <strong>Terrain Test Fields</strong> on the title screen and choose <strong>Bluff and hollow</strong> or <strong>Rolling meadow</strong>. This pass reworks the ground under the woodland: real raised ground with crumbling earth banks, and gentle hills that read through their light. Trees and the lab screen are unchanged.</p>
+<p class="notice"><strong>Result:</strong> the bluff now stands as a plateau with a stratified face of sandy soil and pale stone, turf hanging over its crest and fallen blocks at its foot. Gentle slopes turn golden toward the sun and cool teal away from it, as in the hill study. All captures are native Godot (GL Compatibility, 1920&times;1080) with zero recorded errors. This is still a lab-only renderer and has not been accepted for battles.</p>
+
+<h2>Concept A in motion</h2>
+<p>An 8-second Seedance 2.5 clip made from concept A (Higgsfield, image as the start frame, 1080p, no sound, 128 credits). The camera pushes in slowly and drifts across the bluff, a warm sun shaft opens over the upper left, the trolls turn their heads and the red banners stir. The painted style, the high camera and every unit stay as painted: one continuous shot with no cuts, new objects or text.</p>
+<div class="evidence">
+<figure class="wide"><video controls loop muted playsinline preload="metadata" poster="terrain-relief/concept_a_seedance_poster.jpg" src="terrain-relief/concept_a_seedance.mp4"></video><figcaption>Seedance 2.5, 8.04 s, 1920&times;1080, 24 fps. <a href="terrain-relief/concept_a_seedance.mp4" download>Download MP4</a> (H.264 copy for the browser; the original HEVC file is in <code>projects/meridius/review/terrain/concept_a_seedance.mp4</code>).</figcaption></figure>
+<figure><img src="terrain-relief/seedance/sheet_1s.jpg" alt="Nine frames of the Seedance clip, one per second from 0 to 8 seconds, showing a slow push-in on the bluff." width="1920" height="1080" loading="lazy"><figcaption>One frame per second, 0&ndash;8 s. <a href="terrain-relief/seedance/sheet_1s.jpg" download>Download JPG</a></figcaption></figure>
+<figure><img src="terrain-relief/seedance/t_last.jpg" alt="The clip's last frame: the bluff and its crumbling banks closer, with a warm sun shaft at the upper left." width="1920" height="1080" loading="lazy"><figcaption>Last frame (8.04 s). <a href="terrain-relief/seedance/t_last.jpg" download>Download JPG</a></figcaption></figure>
+<figure class="wide"><img src="terrain-relief/seedance/strip_trolls.jpg" alt="The two trolls at 0, 2, 4, 6 and 8 seconds: the same design throughout, with small head turns." width="2100" height="320" loading="lazy"><figcaption>Trolls at 0, 2, 4, 6 and 8 s: on model throughout, small head turns. <a href="terrain-relief/seedance/strip_trolls.jpg" download>Download JPG</a></figcaption></figure>
+<figure class="wide"><img src="terrain-relief/seedance/strip_soldiers.jpg" alt="The blue soldiers at 0, 2, 4, 6 and 8 seconds: the formation holds with small shifts." width="2300" height="340" loading="lazy"><figcaption>Blue soldiers at the same times: the block holds its formation with small shifts. <a href="terrain-relief/seedance/strip_soldiers.jpg" download>Download JPG</a></figcaption></figure>
+<figure class="wide"><img src="terrain-relief/seedance/strip_banners.jpg" alt="The red-bannered enemy squads at 0, 2, 4, 6 and 8 seconds: the banners change shape as they stir." width="2100" height="300" loading="lazy"><figcaption>Red banners at the same times. <a href="terrain-relief/seedance/strip_banners.jpg" download>Download JPG</a></figcaption></figure>
+</div>
+<p class="meta">Checks: scene detection found one scene in 193 frames; the largest change between two consecutive frames scores 0.017 (a hard cut scores above 0.3), at 3.7&ndash;4.7 s where the camera moves fastest. Grass and canopy wind is subtle and cannot be judged from stills; play the clip to judge it.</p>
+
+<h2>Raised ground with banks</h2>
+<p>The new field is a three-level plateau, steep toward the camera with a long ramp behind it, a track along its foot and a smaller rise to the east. Its face is painted upright in screen space: thick level beds of sandy soil and darker loam, now and then a pale stone slab, each bed with a lit ledge and a soft undercut, and only a few open cracks. The turf hangs over the crest in ragged tongues, and faceted blocks fallen from the face lie along its foot, lit like the rock props. Patrols can climb the ramp to the top.</p>
+<p>The second pass (24 October, afternoon) removed the masonry look of the first: blocks four times longer, most joints closed, no stone checkerboard and no stepped brightness from block to block.</p>
+<div class="evidence">
+<figure class="wide"><img src="terrain-relief/field_4_day.png" alt="Bluff and hollow, whole field: a raised plateau with a stratified earth face toward the camera." width="1920" height="1080" loading="lazy"><figcaption>Whole field at 0.57&times;. <a href="terrain-relief/field_4_day.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/bluff_east_close.png" alt="Close view of the bluff's face: ochre and grey rock beds, blocks, a grass lip and the smaller eastern rise." width="1920" height="1080" loading="lazy"><figcaption>Play zoom (1.45&times;): beds, turf overhang and fallen blocks. <a href="terrain-relief/bluff_east_close.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/bluff_east_close_before_polish.png" alt="The same view before the second pass: short, even blocks that read as masonry." width="1920" height="1080" loading="lazy"><figcaption>Before the second pass: even blocks that read as masonry. <a href="terrain-relief/bluff_east_close_before_polish.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/bluff_banks.png" alt="The bluff's long front bank above the track at 1.2 times zoom." width="1920" height="1080" loading="lazy"><figcaption>The long front bank above the track. <a href="terrain-relief/bluff_banks.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/bluff_night.png" alt="The bluff under the lab's moonlight setting." width="1920" height="1080" loading="lazy"><figcaption>The lab's moonlight. <a href="terrain-relief/bluff_night.png" download>Download PNG</a></figcaption></figure>
+</div>
+
+<h2>Gentle hills that read</h2>
+<p>The hills' light was already correct, but it was lost in a busy, uniformly green texture. The lit flank of the meadow's main hill now measures about 1.6&times; the flat ground and the shaded flank about 0.7&times; (mist off). The painted textures keep about 70% of their detail contrast, and the slopes shift hue, golden toward the sun and teal away from it.</p>
+<div class="evidence">
+<figure><img src="terrain-relief/field_0_day.png" alt="Rolling meadow, whole field: the main hill's golden lit slope and cool shaded flank." width="1920" height="1080" loading="lazy"><figcaption>Rolling meadow at 0.57&times;. <a href="terrain-relief/field_0_day.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/meadow_close.png" alt="The meadow hill's crest at play zoom: golden dry grass on top, teal shade down the far slope." width="1920" height="1080" loading="lazy"><figcaption>The crest at play zoom. <a href="terrain-relief/meadow_close.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/field_2_day.png" alt="Opposing ridges, whole field: long lit slopes around a worn, muddy valley." width="1920" height="1080" loading="lazy"><figcaption>Opposing ridges. <a href="terrain-relief/field_2_day.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/ridge_close.png" alt="The ridges' valley at 1.2 times: a worn muddy track with puddles between the slopes." width="1920" height="1080" loading="lazy"><figcaption>The worn valley. <a href="terrain-relief/ridge_close.png" download>Download PNG</a></figcaption></figure>
+</div>
+
+<h2>Targets</h2>
+<p>Concept A is the look for raised ground; the hill study shows how a gentle slope should read through hue as much as value.</p>
+<div class="evidence">
+<figure><img src="terrain-relief/concept_a_repaint.png" alt="Concept A: rounded grassy hills with crumbling earth banks, golden grass and painterly trees." width="2752" height="1536" loading="lazy"><figcaption>Concept A (target). <a href="terrain-relief/concept_a_repaint.png" download>Download PNG</a></figcaption></figure>
+<figure><img src="terrain-relief/concept_c_hill_study.png" alt="Hill study: a golden lit plateau, rock banks and a cool teal shaded slope." width="2752" height="1536" loading="lazy"><figcaption>Hill study. <a href="terrain-relief/concept_c_hill_study.png" download>Download PNG</a></figcaption></figure>
+</div>
+
+<h2>Open points</h2>
+<ul>
+<li>The lab's drifting mist lifts shaded slopes noticeably and flattens the gentle hills. Lowering it in open ground would help the slopes read.</li>
+<li>On the bluff's curved west end the strata follow the height lines and still show as faint arcs. The fallen blocks are on the small side compared with concept A.</li>
+<li>Relief stays lab-only. Production battles keep the current renderer until the new terrain is accepted.</li>
+</ul>
+<p class="meta">Sources: <code>scripts/render/relief.gd</code>, <code>assets/shaders/terrain_relief.gdshader</code>, <code>scripts/rules/terrain_test_fields.gd</code> (field 4), <code>tests/unit/test_relief.gd</code>, capture script <code>tests/visual/terrain_relief_shots.gd</code>. Notes in <code>projects/meridius/docs/terrain-test-fields.md</code>.</p>
+</main></body>
+</html>

@@ -298,6 +298,15 @@ to Howl; no rebalancing):
       view work and goes in with it; until then Howl plays the War Cry's
       effect. Its sound is still the growl's roar.
 - [x] Tests: `test_squad_skills.gd` (17; new: one blow per stand, Howl).
+- [x] Two forecast and panel quirks (24 Oct 2026): against a square the
+      forecast shows the charge's own row (+5 / +12) and "Charge broken by the
+      square" taking it back (−5 / −12) instead of a 0 row, so the rows still
+      add up; the chance is unchanged. The unit panel's signature carries each
+      shout's `can_shout` reason, so Lick Wounds greys out (and comes back)
+      when an enemy steps beside the squad (or leaves) while it stays selected.
+      Left as is: the forecast's guard note needs an enemy with Defend, and
+      none has it (a design call); charge aiming tries only the side under the
+      cursor (`battle_view._preview_against`, the animation session's file).
 
 ## Resume here
 1. `tools/test.sh` (full) — green with magic, war machines and the

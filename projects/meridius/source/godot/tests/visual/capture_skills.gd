@@ -9,7 +9,7 @@
 ## Writes tests/visual/out/skills_<name>.png and skills_<name>_bar.png (the
 ## bottom of the screen). Names (default: all): bar_footman, bar_spearman,
 ## bar_crossbowman, bar_collie_guard, tip_square, tip_defend, tip_lick, charge_forecast,
-## use_growl, stances, tip_howl, use_howl.
+## charge_square, use_growl, stances, tip_howl, use_howl.
 extends SceneTree
 
 const OUT := "res://tests/visual/out/"
@@ -146,12 +146,30 @@ func _run() -> void:
 		if d < bd:
 			bd = d
 			best = e
+	# Set it down three tiles off in the open, so the hounds have a run at it.
 	if best != null:
-		var p: Variant = _unit_point(bv, best.uid)
-		if p != null:
-			bv.pointer_move(p)
-			await _frames(10)
+		for d in Grid.DIRS:
+			var path := [1, 2, 3].map(func(k): return {"x": int(c.x) + d.x * k, "y": int(c.y) + d.y * k})
+			if path.all(func(p): return Grid.tile_passable(b.map, p.x, p.y) and Grid.unit_at(b.units, p.x, p.y) == null):
+				best.x = path[2].x
+				best.y = path[2].y
+				bv._sync_views()
+				await _frames(10)
+				break
+	var bp: Variant = _unit_point(bv, best.uid) if best != null else null
+	if bp != null:
+		bv.pointer_move(bp)
+		await _frames(10)
 	await _shot("charge_forecast")
+	# The same Charge against a square: its +12 and the square taking it back.
+	if bp != null and _want("charge_square"):
+		best.stance = "square"
+		bv.pointer_move(Vector2.ZERO)
+		await _frames(5)
+		bv.pointer_move(bp)
+		await _frames(10)
+		await _shot("charge_square")
+		best.stance = null
 	bv.set_ability(null)
 
 	# The skills used: Growl (the shout and the cowed), Square and Defend (stance tags).

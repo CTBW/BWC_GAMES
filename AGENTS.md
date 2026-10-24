@@ -48,6 +48,9 @@ working. Ask for missing personal preferences; do not invent a biography.
   - captures in `projects/meridius/review/`; its scripts and notes are committed.
   - third-party images in `projects/meridius/references/style/`.
   - paid generations until the owner approves them for the public repository.
+- A fresh clone needs Git LFS (`git lfs install`; the battle animation sheets
+  use it) and, on Windows, `git config core.longpaths true`: some Tripo
+  texture paths pass 260 characters below a deep folder.
 - Several agents share this working tree. Stage your own files by explicit path
   (never `git add -A`, `git add .` or `commit -a`), stage only your own hunks in
   shared files, and leave other agents' changes alone.

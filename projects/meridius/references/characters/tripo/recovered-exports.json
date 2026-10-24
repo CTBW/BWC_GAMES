@@ -1,0 +1,232 @@
+{
+    "updated":  "2026-10-24T10:03:36.0752855Z",
+    "status":  "collected_and_hash_verified",
+    "source":  "Misplaced model exports recovered from ability-icons staging",
+    "originalsPreserved":  true,
+    "blenderImportVerified":  false,
+    "exports":  [
+                    {
+                        "originalName":  "crossbowman_crossbow_tex (2).zip",
+                        "file":  "projects/meridius/references/characters/tripo/crossbowman/crossbow_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2089604,
+                        "sha256":  "F2A33ED981C857990170B248B2D2B847D13C3BCB864181D373772DA716C6EE0D",
+                        "details":  {
+                                        "entries":  [
+                                                        "crossbowman_crossbow_tex.fbx",
+                                                        "crossbowman_crossbow_tex.fbm/crossbowman_crossbow_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "mage_body_textured_4k.zip",
+                        "file":  "projects/meridius/references/characters/tripo/mage/body_textured_4k__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2555969,
+                        "sha256":  "864A5BE3853A788753398EB8A07157F8D176E9CCA012680F825DC1C4FCAA146A",
+                        "details":  {
+                                        "entries":  [
+                                                        "mage_body_textured_4k.fbx",
+                                                        "mage_body_textured_4k.fbm/mage_body_textured_4k_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "mage_body_untextured.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/mage/body_untextured__take-01.fbx",
+                        "kind":  "FBX",
+                        "bytes":  246432,
+                        "sha256":  "0AC17FAB4E25DD870997686905CB6FC70679A915DDE7AEB68E89F31BE9848652",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_body_v1.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/body_untextured__take-01.fbx",
+                        "kind":  "FBX",
+                        "bytes":  240016,
+                        "sha256":  "86E529E3D581EEFFF48F4983B946FB85F8E6A35B64E13F220BA232DD6520593C",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_body_v2.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/body_untextured__take-02.fbx",
+                        "kind":  "FBX",
+                        "bytes":  250752,
+                        "sha256":  "26536BE7C69E781820F2721D8EFD2EC947E5F2D549BC1A45136291CFDA695692",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_body_v3.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/body_untextured__take-03.fbx",
+                        "kind":  "FBX",
+                        "bytes":  244176,
+                        "sha256":  "A4B03066548F50E00B3A6CA9664D89BD1DE3D3E318CADDB1EBF98753CB9AD45E",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_body_v4.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/body_untextured__take-04.fbx",
+                        "kind":  "FBX",
+                        "bytes":  249280,
+                        "sha256":  "732DC91262BB6B5146D4347AEB17B229584C6D4D67B9727E568FC9704339A124",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_body_v4_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/body_textured__take-04.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2775162,
+                        "sha256":  "C108B9787747AD7CF0BD64EDB6332690076BA1467A9142C73EEFF4AB6D821543",
+                        "details":  {
+                                        "entries":  [
+                                                        "spearman_body_v4_tex.fbx",
+                                                        "spearman_body_v4_tex.fbm/spearman_body_v4_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_spear_v1.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/spear_untextured__take-01.fbx",
+                        "kind":  "FBX",
+                        "bytes":  30704,
+                        "sha256":  "F44E36E268662F7686BEE733848C33961AE84074719826E3644DE687F49BF5B3",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_spear_v1_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/spear_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  1651607,
+                        "sha256":  "3A7B3E58E22AADBE5760B153A1D052B9B099AAD5065E1D1687C95F6065B55892",
+                        "details":  {
+                                        "entries":  [
+                                                        "spearman_spear_v1_tex.fbx",
+                                                        "spearman_spear_v1_tex.fbm/spearman_spear_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "spearman_spear_v1_tex (1).zip",
+                        "file":  "projects/meridius/references/characters/tripo/spearman/spear_textured__take-02.zip",
+                        "kind":  "ZIP",
+                        "bytes":  1651608,
+                        "sha256":  "0524481183A46699872A89372B85CBDD0FF6344E69EE9E2A38C5B3CFF1437197",
+                        "details":  {
+                                        "entries":  [
+                                                        "spearman_spear_v1_tex.fbx",
+                                                        "spearman_spear_v1_tex.fbm/spearman_spear_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "succubus_body_v1_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/succubus/body_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2826158,
+                        "sha256":  "1431EBCFC00B47D4B73D8783960EDCA86A3A08088BF585B4D82964FB08F8EAD6",
+                        "details":  {
+                                        "entries":  [
+                                                        "succubus_body_v1_tex.fbx",
+                                                        "succubus_body_v1_tex.fbm/succubus_body_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "succubus_tail_v1_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/succubus/tail_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  1583846,
+                        "sha256":  "2BE51E43745E3D3A02E7099C42F5C6CA9A2E846D99AA17F734DB52AE3E48F4A6",
+                        "details":  {
+                                        "entries":  [
+                                                        "succubus_tail_v1_tex.fbx",
+                                                        "succubus_tail_v1_tex.fbm/succubus_tail_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "succubus_whip_v1_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/succubus/whip_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2472403,
+                        "sha256":  "3DCDC76E3971DEACDBDE98D4DED40AFFAE42F9BD6488A2A0D6643D3453CD2BA4",
+                        "details":  {
+                                        "entries":  [
+                                                        "succubus_whip_v1_tex.fbx",
+                                                        "succubus_whip_v1_tex.fbm/succubus_whip_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "succubus_wings_v1_tex.zip",
+                        "file":  "projects/meridius/references/characters/tripo/succubus/wings_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  2046100,
+                        "sha256":  "F71536674FF438E59B09F7D09F42C19CC67DF5AF578D4ACBCBF543B260F69AFE",
+                        "details":  {
+                                        "entries":  [
+                                                        "succubus_wings_v1_tex.fbx",
+                                                        "succubus_wings_v1_tex.fbm/succubus_wings_v1_tex_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "wolf_scout_body_raw.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/wolf_scout/body_untextured__take-01.fbx",
+                        "kind":  "FBX",
+                        "bytes":  454720,
+                        "sha256":  "F327ECDCB2BA4A5D9E777890E7A003967E2888F589A5DE609E44E205EFA21B5A",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "wolf_scout_body_textured.zip",
+                        "file":  "projects/meridius/references/characters/tripo/wolf_scout/body_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  3504250,
+                        "sha256":  "062B839704EF994C161E761506B29F032C8480FE394FA66265FAFD8793D50B4A",
+                        "details":  {
+                                        "entries":  [
+                                                        "wolf_scout_body_textured.fbx",
+                                                        "wolf_scout_body_textured.fbm/wolf_scout_body_textured_basecolor.jpg"
+                                                    ]
+                                    }
+                    },
+                    {
+                        "originalName":  "wolf_scout_cloak_raw.fbx",
+                        "file":  "projects/meridius/references/characters/tripo/wolf_scout/cloak_untextured__take-01.fbx",
+                        "kind":  "FBX",
+                        "bytes":  127632,
+                        "sha256":  "401A32472051209BD02A20C4FFA5EF12ADAE01F707EDAF91BD794AA4F3E354F7",
+                        "details":  {
+                                        "note":  "Header checked; Blender import is still required."
+                                    }
+                    },
+                    {
+                        "originalName":  "wolf_scout_dagger_textured.zip",
+                        "file":  "projects/meridius/references/characters/tripo/wolf_scout/dagger_textured__take-01.zip",
+                        "kind":  "ZIP",
+                        "bytes":  1719973,
+                        "sha256":  "828E11937B3430DF593715A1B5489F53323A5272C4CB315840732CE80C27F2B8",
+                        "details":  {
+                                        "entries":  [
+                                                        "wolf_scout_dagger_textured.fbx",
+                                                        "wolf_scout_dagger_textured.fbm/wolf_scout_dagger_textured_basecolor.jpg"
+                                                    ]
+                                    }
+                    }
+                ]
+}

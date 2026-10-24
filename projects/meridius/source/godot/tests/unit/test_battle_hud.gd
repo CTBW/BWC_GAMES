@@ -735,7 +735,9 @@ func test_squad_skill_buttons() -> void:
 	for a in Panels.abilities(c):
 		assert_false(_button("Ability_" + a).disabled, a + " usable")
 	# An enemy beside the hounds: no licking wounds, and the reason.
+	# The panel stays selected: the enemy's step alone must refresh the button.
 	var foe: Dictionary = b.active("enemy")[0]
+	var home := {"x": foe.x, "y": foe.y}
 	for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
 		var x: int = c.x + d[0]
 		var y: int = c.y + d[1]
@@ -743,13 +745,14 @@ func test_squad_skill_buttons() -> void:
 			foe.x = x
 			foe.y = y
 			break
-	view.select(f.uid)
-	hud.refresh()
-	view.select(c.uid)
 	hud.refresh()
 	var lick := _button("Ability_lick_wounds")
 	assert_true(lick.disabled, "an enemy beside them")
 	assert_true(_tip(lick).contains("Not with an enemy beside them."), _tip(lick))
+	foe.x = home.x
+	foe.y = home.y
+	hud.refresh()
+	assert_false(_button("Ability_lick_wounds").disabled, "the enemy stepped away")
 	# An aimed shot waits for a squad that has not moved.
 	var xb := _of_type("crossbowman")
 	view.select(xb.uid)

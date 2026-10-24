@@ -692,8 +692,10 @@ func _refresh_unit() -> void:
 	var sig: Array = [show]
 	if show:
 		var v = _v(sel.uid)
+		# A shout can hang on the field around the squad (Lick Wounds: no enemy beside it).
+		var shouts := Panels.abilities(sel).filter(func(a): return DB.ABILITIES.get(a, {}).get("kind") == "shout").map(func(a): return b.can_shout(sel, a).get("reason"))
 		sig = [show, sel.uid, sel.hasMoved, sel.hasActed, sel.get("movedTiles"), sel.get("cooldowns"), sel.get("ammo"), sel.get("stance"), sel.morale, sel.level,
-			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(sel.uid), sel.get("statuses")]
+			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(sel.uid), sel.get("statuses"), shouts]
 	_section("unit", sig, _build_unit.bind(sel if show else null))
 
 

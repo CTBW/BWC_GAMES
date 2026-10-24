@@ -832,11 +832,14 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 			mods.append(["Pack tactics", m])
 
 	var broken := _charge_broken(ab, d)
-	if broken:
-		mods.append(["Charge broken by the square", 0])
-	elif ab != null and ab.get("hitMod"):
+	if ab != null and ab.get("hitMod"):
 		chance += ab.hitMod
 		mods.append([ab.name, ab.hitMod])
+	if broken:
+		# The square takes back what the run gave, so the rows still add up.
+		var lost = -JS.get_or(ab, "hitMod", 0)
+		chance += lost
+		mods.append(["Charge broken by the square", lost])
 	if reaction == "overwatch":
 		chance -= 5
 		mods.append(["Snap shot", -5])

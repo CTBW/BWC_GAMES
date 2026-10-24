@@ -118,6 +118,10 @@ func test_a_square_breaks_a_charge_and_strikes_first_from_any_side() -> void:
 	var pv: Dictionary = b.preview(f, s, {"from": from, "ability": "shield_charge", "movedTiles": 4})
 	assert_eq(pv.arc, "front", "a square has no flank")
 	assert_true(mod_names(pv).has("Charge broken by the square"))
+	var rows := {}
+	for m in pv.mods:
+		rows[m[0]] = m[1]
+	assert_eq([rows.get("Charge"), rows.get("Charge broken by the square")], [5, -5], "the square takes back the charge's +5, not a 0 row")
 	assert_eq([pv.chance, pv.min, pv.max, pv.moraleHit], [plain.chance, plain.min, plain.max, plain.moraleHit], "nothing left of the charge")
 	assert_true(b.move(f.uid, 6, 5), "close in")
 	b.drain()

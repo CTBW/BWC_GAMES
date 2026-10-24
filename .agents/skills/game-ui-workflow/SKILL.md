@@ -22,7 +22,8 @@ unavailable data honestly instead of inventing a currency, timer or gameplay rul
 Include hover, selected, disabled, empty and overflow states when relevant.
 
 Review the actual interface scale and aspect ratios. Corner anchors, minimum
-sizes, long labels and compact rosters should remain usable at a narrow viewport.
+sizes, long labels and compact rosters should remain usable at the smallest
+supported desktop window. Do not design or test for phones or tablets.
 Test the intended selection/grouping rules; unit type and team may be independent
 keys. A combined health display and a range of differing stats are different data.
 

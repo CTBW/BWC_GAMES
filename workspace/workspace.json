@@ -1,6 +1,47 @@
 {
   "entities": [
     {
+      "id": "meridius",
+      "title": "Meridius",
+      "description": "Isometric roguelike tactics RPG: Amberfeld Garrison against the endless Hillsvain Host, with turn-based squad battles, waves and a last stand until dawn. Blender environment art; drawn units until fal is unlocked.",
+      "type": "group",
+      "category": "project",
+      "created": "2026-10-20",
+      "updated": "2026-10-24",
+      "folder": "2026-10-20_meridius",
+      "steps": [
+        {
+          "name": "Magic and war machines",
+          "path": "magic.html"
+        },
+        {
+          "name": "The endless horde",
+          "path": "horde.html"
+        },
+        {
+          "name": "Phase one build",
+          "path": "index.html"
+        },
+        {
+          "name": "Squad system",
+          "path": "squads.html"
+        },
+        {
+          "name": "Loop 1 · Placeholder art",
+          "path": "loop1.html"
+        },
+        {
+          "name": "Spearman 3D rig",
+          "path": "spearman-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Spearman"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0
+    },
+    {
       "id": "my-dream-game",
       "title": "My Dream Game",
       "description": "Mr. Mak 64: a small Sky Islands adventure, with character studies, world layouts and a development board.",

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sprite harness</title>
+    <style>
+      html, body { margin: 0; background: #6f913a; }
+    </style>
+  </head>
+  <body>
+    <!--
+      Standalone review page for the procedural sprites. It imports only the
+      sprite modules, so it keeps working while the rest of the game is being
+      edited. Scripts (scripts/art/newunits.mjs, scripts/lineup.mjs) drive it
+      with playwright and draw through window.__art.
+    -->
+    <script type="module">
+      import * as assets from '/src/render/assets.ts';
+      import * as procedural from '/src/render/procedural.ts';
+      window.__art = { ...assets, ...procedural };
+      window.__artReady = true;
+    </script>
+  </body>
+</html>

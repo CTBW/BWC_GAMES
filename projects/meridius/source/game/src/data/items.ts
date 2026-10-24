@@ -1,0 +1,77 @@
+import type { EquipLine, InjuryDef, SupplyDef } from '../core/types';
+
+export const EQUIPMENT: Record<string, EquipLine> = {
+  sword: {
+    id: 'sword',
+    slot: 'weapon',
+    tiers: [
+      { tier: 1, name: 'Arming sword', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Fine longsword', cost: { silver: 70, iron: 2 }, armoryLevel: 2, bonus: { damage: 2, melee: 4 } },
+      { tier: 3, name: 'Masterwork blade', cost: { silver: 150, iron: 4 }, armoryLevel: 3, bonus: { damage: 4, melee: 8 } },
+    ],
+  },
+  spear: {
+    id: 'spear',
+    slot: 'weapon',
+    tiers: [
+      { tier: 1, name: 'Ash spear', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Winged spear', cost: { silver: 60, iron: 2 }, armoryLevel: 2, bonus: { damage: 2, melee: 4 } },
+      { tier: 3, name: 'Steel partisan', cost: { silver: 130, iron: 4 }, armoryLevel: 3, bonus: { damage: 4, melee: 7 } },
+    ],
+  },
+  crossbow: {
+    id: 'crossbow',
+    slot: 'weapon',
+    tiers: [
+      { tier: 1, name: 'Hunting crossbow', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Goat-foot crossbow', cost: { silver: 75, iron: 2, timber: 1 }, armoryLevel: 2, bonus: { damage: 2, ranged: 4 } },
+      { tier: 3, name: 'Windlass arbalest', cost: { silver: 160, iron: 4, timber: 2 }, armoryLevel: 3, bonus: { damage: 5, ranged: 6 } },
+    ],
+  },
+  heavy: {
+    id: 'heavy',
+    slot: 'armor',
+    tiers: [
+      { tier: 1, name: 'Gambeson and mail shirt', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Riveted hauberk', cost: { silver: 80, iron: 3 }, armoryLevel: 2, bonus: { armor: 2, hp: 3 } },
+      { tier: 3, name: 'Coat of plates', cost: { silver: 170, iron: 6 }, armoryLevel: 3, bonus: { armor: 4, hp: 5 } },
+    ],
+  },
+  medium: {
+    id: 'medium',
+    slot: 'armor',
+    tiers: [
+      { tier: 1, name: 'Padded jack', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Mail shirt', cost: { silver: 60, iron: 2 }, armoryLevel: 2, bonus: { armor: 1, hp: 3 } },
+      { tier: 3, name: 'Brigandine', cost: { silver: 130, iron: 4 }, armoryLevel: 3, bonus: { armor: 3, hp: 4 } },
+    ],
+  },
+  light: {
+    id: 'light',
+    slot: 'armor',
+    tiers: [
+      { tier: 1, name: 'Hooded cloak', cost: { silver: 0 }, armoryLevel: 1, bonus: {} },
+      { tier: 2, name: 'Leather jerkin', cost: { silver: 50, timber: 1 }, armoryLevel: 2, bonus: { armor: 1, rangedDefense: 4 } },
+      { tier: 3, name: 'Light brigandine', cost: { silver: 110, iron: 3 }, armoryLevel: 3, bonus: { armor: 2, rangedDefense: 6, hp: 3 } },
+    ],
+  },
+};
+
+export const SUPPLIES: Record<string, SupplyDef> = {
+  rations: { id: 'rations', name: 'Rations', cost: 2, weight: 1, icon: 'rations', description: 'The army eats one ration per two soldiers on every march. Camps use more. Hunger saps morale and strength.' },
+  bandages: { id: 'bandages', name: 'Bandages', cost: 9, weight: 1, icon: 'bandages', description: 'Heal 10 HP per soldier of a squad on the march (never the dead). Carried bandages also improve the odds of saving the sergeant of a squad cut down.' },
+  bolts: { id: 'bolts', name: 'Spare bolts', cost: 6, weight: 1, icon: 'bolts', description: 'A bundle of six bolts. Crossbowmen refill their quivers from it after each battle.' },
+  torches: { id: 'torches', name: 'Torches', cost: 5, weight: 1, icon: 'torches', description: 'Light for night camps and dark places. Keeps night raids and terrors at bay.' },
+  tools: { id: 'tools', name: 'Tools', cost: 12, weight: 2, icon: 'tools', description: 'Repair armour at camp (+40% condition for the army) and force open locked caches.' },
+};
+
+export const SUPPLY_ORDER = ['rations', 'bandages', 'bolts', 'torches', 'tools'] as const;
+
+export const INJURIES: Record<string, InjuryDef> = {
+  gashed_arm: { id: 'gashed_arm', name: 'Gashed arm', description: 'A deep cut across the sword arm.', effect: { melee: -8, ranged: -6 }, severity: 1 },
+  cracked_ribs: { id: 'cracked_ribs', name: 'Cracked ribs', description: 'Every breath hurts.', effect: { hp: -6 }, severity: 1 },
+  twisted_knee: { id: 'twisted_knee', name: 'Twisted knee', description: 'Slow on the march and in the line.', effect: { move: -1, defense: -4 }, severity: 2 },
+  concussion: { id: 'concussion', name: 'Concussion', description: 'Ringing ears and blurred sight.', effect: { morale: -12, ranged: -8 }, severity: 2 },
+  broken_hand: { id: 'broken_hand', name: 'Broken hand', description: 'Grip is weak and clumsy.', effect: { melee: -12, defense: -6 }, severity: 3 },
+  arrow_wound: { id: 'arrow_wound', name: 'Arrow in the shoulder', description: 'The head was cut out; the shoulder is stiff.', effect: { ranged: -10, melee: -5, hp: -3 }, severity: 2 },
+};

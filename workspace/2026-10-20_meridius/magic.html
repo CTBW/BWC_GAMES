@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Magic and war machines</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .shots.wide { grid-template-columns: 1fr; }
+    .shots figure { margin: 0; }
+    .shots img { width: 100%; border-radius: 6px; display: block; cursor: zoom-in; }
+    .shots figcaption { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); vertical-align: top; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: magic and war machines</h1>
+  <p><strong>Status, 21 October 2026:</strong> mage squads for both sides and two war machines for each side are in the TypeScript game, with their spells, conditions, AI, effects, figures, HUD, recruitment and encounters. They play through the real interface without errors, 85 automated tests pass, and balance was checked by simulation. The user has not accepted the result yet. The same squads are now ported to the Godot version too (branch <code>godot-migration</code>, not committed; see <a href="#godot">Godot version</a>).</p>
+
+  <h2>What was added</h2>
+  <ul>
+    <li><b>Battle Mages</b> (company, three to a squad): Chain Lightning, Frost Blast and Healing Light; promoted mages learn the Mending Circle. Weak arcane bolts between spells.</li>
+    <li><b>Goblin Shamans</b> (host, three to a squad): Fireball, Bloodlust and Gutripper; hex bolts between spells.</li>
+    <li><b>War machines</b>, each one engine and a crew of three (the crew is the squad's health and strength; the engine is wrecked when the last crewman falls):
+      <ul>
+        <li><b>Ballista</b> (company): a great bolt that goes on through into the foe behind it.</li>
+        <li><b>Mangonel</b> (company): a stone lobbed over walls and heads that smashes the squad struck and those beside it, friend or foe.</li>
+        <li><b>Rock Lobber</b> (host): a cruder catapult that often lands astray.</li>
+        <li><b>Spiked War Wagon</b> (host): rams a squad back out of the line and rolls into the gap.</li>
+      </ul>
+    </li>
+    <li><b>One roll per squad.</b> Every spell makes one hit roll; each squad it touches then takes one damage or healing roll, scaled by the casters standing (three mages cast three times as hard as one). Animations only play the result back.</li>
+    <li><b>Conditions:</b> chilled (half movement, worse to hit, easier to hit), bloodlust (harder blows, no fear, lower guard), bleeding (loses HP and soldiers at the start of its next two turns).</li>
+    <li><b>Rules for machines:</b> they cannot loose in a turn they have moved; lobbed stones need no line of sight but not closer than three tiles; a miss lands a tile astray and still strikes whoever stands there.</li>
+    <li><b>Where they appear:</b> the Barracks offers one specialist squad each muster (mages, a ballista or a mangonel). Two new encounters, <i>Shamans of the host</i> and <i>The host's war engines</i>; a shaman marches with the warchief in the last stand.</li>
+  </ul>
+
+  <h2>Spells</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Spell</th><th>Cast at</th><th>Effect (per caster)</th><th>Ready again</th></tr>
+    <tr><td>Chain Lightning</td><td>enemy in sight, 6 tiles</td><td>9–12, ignores armour; arcs to the two nearest other foes (60%, 36%)</td><td>every other turn</td></tr>
+    <tr><td>Frost Blast</td><td>enemy in sight, 5</td><td>5–7, ignores armour; half to enemies beside it; all chilled</td><td>every 3rd turn</td></tr>
+    <tr><td>Healing Light</td><td>friendly squad, 5</td><td>heals 8–11, +8 morale; never raises the dead</td><td>every other turn</td></tr>
+    <tr><td>Mending Circle</td><td>the mages (promotion)</td><td>every friendly squad within 2 tiles heals 4–6</td><td>every 3rd turn</td></tr>
+    <tr><td>Fireball</td><td>tile in sight, 6</td><td>7–10; half to every squad beside it, friend or foe; strays on a miss</td><td>every other turn</td></tr>
+    <tr><td>Bloodlust</td><td>friendly squad, 4</td><td>frenzy until the end of its next turn</td><td>every 3rd turn</td></tr>
+    <tr><td>Gutripper</td><td>enemy in sight, 5</td><td>5–7, ignores armour; bleeds 40% of it on each of the next two turns</td><td>every other turn</td></tr>
+    <tr><td>Hurl Stone / Lob Rock</td><td>tile, 3–9 / 3–8, no sight needed</td><td>10–14 / 11–16 per crewman; 40% / 50% beside it; strays on a miss</td><td>every turn</td></tr>
+  </table>
+  </div>
+
+  <h2>In the game</h2>
+  <div class="shots">
+    <figure><img src="media/magic-forecast-lightning.jpg" alt="Battle HUD with Chain Lightning chosen: the spell forecast lists three goblin squads the lightning would strike, with damage and soldiers slain" loading="lazy"><figcaption>Chain Lightning chosen with its key: the forecast lists every squad it would arc through</figcaption></figure>
+    <figure><img src="media/magic-forecast-mangonel.jpg" alt="A mangonel aiming at goblin rabble: the blast area is marked on the field and the forecast shows the squad beside it" loading="lazy"><figcaption>A mangonel aims at the enemy under the cursor; the blast area and the squad beside it are shown</figcaption></figure>
+    <figure><img src="media/magic-conditions.jpg" alt="Chilled goblins tinted blue, frenzied orc brutes tinted red, bleeding footmen, a mage squad, a ballista and a war wagon" loading="lazy"><figcaption>Conditions: chilled (blue), frenzy (red), bleeding; mages, a ballista and a war wagon on the field</figcaption></figure>
+    <figure><img src="media/magic-barracks.jpg" alt="Barracks recruit panel offering a squad of battle mages beside footmen and spearmen" loading="lazy"><figcaption>The Barracks offers one specialist squad each muster</figcaption></figure>
+  </div>
+
+  <h2>Spells and machines, frame by frame</h2>
+  <p>Staged in the real renderer (<code>scripts/magiclab.mjs</code>) at half or a third of normal speed, read left to right, top to bottom.</p>
+  <div class="shots wide">
+    <figure><img src="media/magic-lab-lightning.jpg" alt="Three battle mages call lightning onto goblin spearmen; it arcs on to two more goblin squads" loading="lazy"><figcaption>Chain Lightning: 29, then arcs for 15 and 10; soldiers fall in two squads</figcaption></figure>
+    <figure><img src="media/magic-lab-frost.jpg" alt="Ice shards fly from the mages to orc warriors; the orcs and the goblins beside them turn frosty blue" loading="lazy"><figcaption>Frost Blast: the squad struck and the one beside it are chilled</figcaption></figure>
+    <figure><img src="media/magic-lab-heal.jpg" alt="Mages raise their staffs; golden light falls on a wounded footman squad" loading="lazy"><figcaption>Healing Light: +20 to the survivors; the fallen soldier's share stays crossed out</figcaption></figure>
+    <figure><img src="media/magic-lab-fireball.jpg" alt="Goblin shamans hurl a fireball that bursts among footmen, crossbowmen and goblins" loading="lazy"><figcaption>Fireball: it burns the goblins beside the footmen too (friendly fire)</figcaption></figure>
+    <figure><img src="media/magic-lab-bloodlust.jpg" alt="Red tendrils reach from goblin shamans to orc brutes, who turn red with frenzy" loading="lazy"><figcaption>Bloodlust drives orc brutes into a frenzy</figcaption></figure>
+    <figure><img src="media/magic-lab-gutripper.jpg" alt="Dark crimson tendrils from goblin shamans strike footmen, who bleed" loading="lazy"><figcaption>Gutripper: the footmen take 16 and bleed</figcaption></figure>
+    <figure><img src="media/magic-lab-ballista.jpg" alt="A ballista bolt kills four goblin spearmen and runs through into the goblin rabble behind, killing three" loading="lazy"><figcaption>Ballista: 64 and four slain, then run through for 32 and three more</figcaption></figure>
+    <figure><img src="media/magic-lab-mangonel.jpg" alt="A mangonel stone arcs high and smashes into goblin rabble in a burst of dust" loading="lazy"><figcaption>Mangonel: the stone lobbed high, 32 to the rabble and 12 to the spearmen beside them</figcaption></figure>
+    <figure><img src="media/magic-lab-war-wagon.jpg" alt="A spiked war wagon rams footmen, kills one and smashes the squad back, rolling into the gap" loading="lazy"><figcaption>Spiked War Wagon rams, smashes the footmen back and rolls into the gap</figcaption></figure>
+  </div>
+
+  <h2>Figures and engines</h2>
+  <div class="shots">
+    <figure><img src="media/magic-engines-company.jpg" alt="Ballistae and mangonels with their crews in all four facings" loading="lazy"><figcaption>Ballista and mangonel in all four facings; crews step to the flanks when the engine faces away</figcaption></figure>
+    <figure><img src="media/magic-engines-host.jpg" alt="Goblin rock lobbers and spiked war wagons with goblin crews in all four facings" loading="lazy"><figcaption>Rock lobber and war wagon; the goblins shove the wagon from behind</figcaption></figure>
+    <figure><img src="media/magic-figures-squads.jpg" alt="Squads of mages, shamans and engineers, and the four engines with crews, facing toward and away from the camera" loading="lazy"><figcaption>New squads at battle scale beside the existing troops</figcaption></figure>
+    <figure><img src="media/magic-figures-poses.jpg" alt="Battle mage, goblin shaman and engineer in idle, casting, back, flee and fallen poses" loading="lazy"><figcaption>Mage, shaman and crewman in every pose</figcaption></figure>
+    <figure><img src="media/magic-portraits.jpg" alt="Portraits of battle mages, goblin shamans and the four engines" loading="lazy"><figcaption>Portraits for the HUD and roster</figcaption></figure>
+  </div>
+
+  <h2 id="godot">Godot version</h2>
+  <p>Ported rule for rule to <code>projects/meridius/source/godot</code> on the <code>godot-migration</code> branch (worktree <code>D:\ProjektM\BWC_GAMES-godot</code>). 77 recorded battles, including both new encounters and a scripted company that casts every spell, replay identically to the TypeScript game: 30,361 events and 41,064 rule queries, random state included. Figures, engines, portraits, sounds and icons are baked from the TypeScript renderer. Captures below are from the Godot build at 1920×1080. The TypeScript version was archived on 21 October; Godot is the version developed from now on.</p>
+  <div class="shots">
+    <figure><img src="media/magic-godot-forecast-lightning.jpg" alt="Godot battle HUD with Chain Lightning chosen: the forecast lists the goblin spearmen struck and the two squads the lightning arcs to, with damage and soldiers slain" loading="lazy"><figcaption>Godot: Chain Lightning chosen; the forecast lists every squad it would arc through</figcaption></figure>
+    <figure><img src="media/magic-godot-forecast-mangonel.jpg" alt="Godot battle HUD: a mangonel crew selected; the Hurl Stone forecast shows 53% against goblin rabble and the spearmen beside them" loading="lazy"><figcaption>Godot: the mangonel's Hurl Stone forecast, with the squad beside the target</figcaption></figure>
+    <figure><img src="media/magic-godot-conditions.jpg" alt="Godot battle on the next turn: a bleeding mage squad with its Chain, Frost and Healing buttons, chilled goblins drawn pale blue, and an attack forecast with target chilled +10" loading="lazy"><figcaption>Godot: conditions on the field, on the squad card and in the forecast (target chilled +10)</figcaption></figure>
+    <figure><img src="media/magic-godot-detail-ballista.jpg" alt="Godot soldier detail for a ballista: crew, bolt damage, the run-through ability and the war machine rule" loading="lazy"><figcaption>Godot: a ballista's detail card in the garrison</figcaption></figure>
+  </div>
+  <div class="shots wide" style="margin-top:12px">
+    <figure><img src="media/magic-godot-lab-lightning.jpg" alt="Godot frames: battle mages call lightning onto goblin spearmen, which arcs on to two more goblin squads" loading="lazy"><figcaption>Godot: Chain Lightning, 29 then 15 and 10</figcaption></figure>
+    <figure><img src="media/magic-godot-lab-ballista.jpg" alt="Godot frames: a ballista bolt kills four goblin spearmen and runs through into the squad behind, killing three" loading="lazy"><figcaption>Godot: ballista bolt, 64 and four slain, run through for 32 and three more</figcaption></figure>
+    <figure><img src="media/magic-godot-lab-fireball.jpg" alt="Godot frames: a shaman fireball bursts among footmen and crossbowmen and burns the goblins beside them" loading="lazy"><figcaption>Godot: Fireball with friendly fire</figcaption></figure>
+    <figure><img src="media/magic-godot-engines.jpg" alt="Godot frames: ballistae and mangonels with their crews in several facings" loading="lazy"><figcaption>Godot: the company's engines and crews</figcaption></figure>
+  </div>
+  <p><b>Checks:</b> all 340 Godot tests pass, including 19 new rule tests for spells and machines; the exported Windows build passes its smoke test (all 13 encounters fought to an end, 42 sounds, 1,588 sprite variants); an input-driven play-through in a 1920×1080 window passed 236 checks. A headless stress run found a bug the original already had: two squads could end a move on one tile. The cause was a path crossing a routing enemy, or a free attack breaking a squad as it passed through an ally's tile. The rate was the same before and after the port (9 in 33 battles, 10 in 39). With the TypeScript version archived, it is fixed in Godot only: routing enemies block paths, and a squad cut short on an ally's tile falls back to the last tile it had to itself. The recorded test battles were re-recorded from Godot.</p>
+  <div class="shots wide">
+    <figure><img src="media/magic-godot-fallback.jpg" alt="Godot frames: footmen march into the spearmen's tile, take a free attack from goblin spearmen, rout, and back off to their own tile" loading="lazy"><figcaption>Godot: footmen passing through the spearmen are broken by a free attack and fall back to their own tile instead of staying on the spearmen's</figcaption></figure>
+  </div>
+  <p>Deliberate differences from the TypeScript game: an engine stays drawn until its wreck appears (the original drops it a moment earlier); cancelling a spell with Esc clears its forecast at once; tall tooltips stay whole on screen. Full list: <code>source/godot/MIGRATION.md</code>, section “Magic and war machines”.</p>
+
+  <h2>Balance</h2>
+  <p>The standard army (two footmen, two spearmen) with a fifth squad of each kind, 120 battles per encounter (<code>npm run sim -- specialists</code>). All win 95–100%; the share of the army's HP left:</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Fifth squad</th><th>Raiders</th><th>Orc overseer</th><th>Shamans</th><th>War engines</th><th>Moss trolls</th></tr>
+    <tr><td>Crossbowmen</td><td>73%</td><td>66%</td><td>79%</td><td>58%</td><td>75%</td></tr>
+    <tr><td>Battle mages</td><td>68%</td><td>68%</td><td>79%</td><td>60%</td><td>74%</td></tr>
+    <tr><td>Ballista</td><td>70%</td><td>69%</td><td>74%</td><td>58%</td><td>77%</td></tr>
+    <tr><td>Mangonel</td><td>77%</td><td>72%</td><td>80%</td><td>63%</td><td>80%</td></tr>
+  </table>
+  </div>
+  <p>Tuning on the way: mages were lost in 47% of battles at first (now about a quarter), ballistae idled after moving (now they hold their ground and loose about five and a half bolts a battle), and the mangonel won everything until its stone was cut to 10–14 with a smaller splash. Over whole campaigns (180 companies × 6 expeditions, two seed sets) 39.4% and 36.9% of expeditions succeed, against 40.8% and 41.0% before. A rock lobber and a shaman together in the last stand cost about six points, so the lobber was left out of it.</p>
+
+  <h2>Checks run</h2>
+  <ul>
+    <li><code>npx tsc --noEmit</code> clean; <code>npx vitest run</code> 85/85, 19 new in <code>tests/spells.test.ts</code>: one roll per squad, scaling with casters, chain arcs, chill timing, healing without resurrection, friendly fire and scatter, bloodlust, bleeding, the machines' setup rule, the bolt running through, lobbed stones, the wagon's smash, the AI casting on both sides, whole battles.</li>
+    <li>Battles without the new units play exactly as before (same win rates and losses in the simulator).</li>
+    <li>Every spell, shot and condition staged in the real renderer with no page errors; spells chosen, previewed and cast through the real interface (<code>scripts/magicui.mjs</code>).</li>
+    <li>Two full expeditions through the UI: no console errors, no failed requests.</li>
+    <li>The worst enemy turn with shamans and lobbers took under 10 ms headless.</li>
+  </ul>
+
+  <h2>Known limits</h2>
+  <ul>
+    <li>The art is drawn procedural figures like the rest of the game; engines have no wheel or arm animation beyond their loosing pose.</li>
+    <li>Glows baked into the staff and engine sprites cast faint shadows.</li>
+    <li>In a dense melee the condition labels beside the health bars can overlap their neighbours'.</li>
+    <li>The automated campaign player rarely hires specialists, so campaign balance with them in the company is untested.</li>
+    <li>Campaigns are about two to four points harder than before.</li>
+  </ul>
+  <p>Specification: <code>projects/meridius/docs/magic-and-machines.md</code>.</p>
+</main>
+</body>
+</html>

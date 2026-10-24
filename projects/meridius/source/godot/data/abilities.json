@@ -1,0 +1,370 @@
+{
+ "ABILITIES": {
+  "shieldwall": {
+   "id": "shieldwall",
+   "name": "Shield Wall",
+   "short": "Wall",
+   "kind": "stance",
+   "stance": "shieldwall",
+   "icon": "shield",
+   "description": "Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense."
+  },
+  "shieldbash": {
+   "id": "shieldbash",
+   "name": "Shield Bash",
+   "short": "Bash",
+   "kind": "attack",
+   "icon": "bash",
+   "reach": 1,
+   "damageMult": 0.55,
+   "hitMod": 10,
+   "push": true,
+   "moraleDamage": 12,
+   "cooldown": 2,
+   "description": "Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage."
+  },
+  "spearwall": {
+   "id": "spearwall",
+   "name": "Spearwall",
+   "kind": "stance",
+   "stance": "spearwall",
+   "icon": "spearwall",
+   "description": "Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance."
+  },
+  "pikethrust": {
+   "id": "pikethrust",
+   "name": "Pike Thrust",
+   "kind": "attack",
+   "icon": "thrust",
+   "reach": 2,
+   "damageMult": 1,
+   "hitMod": -5,
+   "cooldown": 1,
+   "description": "Strike an enemy two tiles away in a straight line, over the head of whoever stands between."
+  },
+  "overwatch": {
+   "id": "overwatch",
+   "name": "Overwatch",
+   "kind": "stance",
+   "stance": "overwatch",
+   "icon": "eye",
+   "requiresNoMove": false,
+   "description": "Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit)."
+  },
+  "heavybolt": {
+   "id": "heavybolt",
+   "name": "Heavy Bolt",
+   "kind": "attack",
+   "ranged": true,
+   "icon": "bolt",
+   "damageMult": 1.5,
+   "hitMod": -8,
+   "ammoCost": 2,
+   "ignoreArmor": true,
+   "moraleDamage": 8,
+   "cooldown": 2,
+   "description": "A fully cranked bolt: +50% damage, ignores armour, costs two bolts."
+  },
+  "charge": {
+   "id": "charge",
+   "name": "Brutal Charge",
+   "kind": "attack",
+   "icon": "charge",
+   "description": "Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale."
+  },
+  "warcry": {
+   "id": "warcry",
+   "name": "War Cry",
+   "kind": "shout",
+   "icon": "horn",
+   "radius": 4,
+   "moraleGain": 20,
+   "moraleDamage": 8,
+   "cooldown": 3,
+   "description": "Allies within 4 tiles gain 20 morale; enemies within 4 tiles lose 8."
+  },
+  "chain_lightning": {
+   "id": "chain_lightning",
+   "name": "Chain Lightning",
+   "kind": "spell",
+   "icon": "lightning",
+   "target": "enemy",
+   "range": 6,
+   "sight": true,
+   "power": [
+    9,
+    12
+   ],
+   "ignoreArmor": true,
+   "chain": {
+    "jumps": 2,
+    "reach": 2,
+    "falloff": 0.6
+   },
+   "hitBonus": 15,
+   "moraleDamage": 6,
+   "cooldown": 2,
+   "fx": "lightning",
+   "description": "Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage)."
+  },
+  "frost_blast": {
+   "id": "frost_blast",
+   "name": "Frost Blast",
+   "kind": "spell",
+   "icon": "frost",
+   "target": "enemy",
+   "range": 5,
+   "sight": true,
+   "power": [
+    5,
+    7
+   ],
+   "ignoreArmor": true,
+   "splash": 0.5,
+   "status": {
+    "id": "chilled",
+    "turns": 1
+   },
+   "hitBonus": 15,
+   "moraleDamage": 4,
+   "cooldown": 3,
+   "fx": "frost",
+   "description": "A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense."
+  },
+  "healing_light": {
+   "id": "healing_light",
+   "name": "Healing Light",
+   "kind": "spell",
+   "icon": "heal",
+   "target": "ally",
+   "range": 5,
+   "heal": [
+    8,
+    11
+   ],
+   "moraleGain": 8,
+   "cooldown": 2,
+   "fx": "heal",
+   "description": "Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead."
+  },
+  "mending_circle": {
+   "id": "mending_circle",
+   "name": "Mending Circle",
+   "kind": "spell",
+   "icon": "circle",
+   "target": "self",
+   "aura": 2,
+   "heal": [
+    4,
+    6
+   ],
+   "moraleGain": 5,
+   "cooldown": 3,
+   "fx": "circle",
+   "description": "Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead."
+  },
+  "fireball": {
+   "id": "fireball",
+   "name": "Fireball",
+   "kind": "spell",
+   "icon": "fire",
+   "target": "tile",
+   "range": 6,
+   "sight": true,
+   "power": [
+    7,
+    10
+   ],
+   "pierce": 0.5,
+   "splash": 0.5,
+   "friendly": true,
+   "scatter": true,
+   "hitBonus": 10,
+   "moraleDamage": 8,
+   "cooldown": 2,
+   "fx": "fire",
+   "description": "A ball of fire hurled at a tile within 6 tiles: 7–10 per shaman to the squad there and half to every squad beside it, friend or foe. A miss bursts one tile astray."
+  },
+  "bloodlust": {
+   "id": "bloodlust",
+   "name": "Bloodlust",
+   "kind": "spell",
+   "icon": "blood",
+   "target": "ally",
+   "range": 4,
+   "status": {
+    "id": "bloodlust",
+    "turns": 2
+   },
+   "moraleGain": 10,
+   "cooldown": 3,
+   "fx": "blood",
+   "description": "Drive a friendly squad within 4 tiles into a killing frenzy until the end of its next turn: +10 to hit and +3 damage per soldier in melee, morale losses halved, but −8 defense."
+  },
+  "gutripper": {
+   "id": "gutripper",
+   "name": "Gutripper",
+   "kind": "spell",
+   "icon": "gut",
+   "target": "enemy",
+   "range": 5,
+   "sight": true,
+   "power": [
+    5,
+    7
+   ],
+   "ignoreArmor": true,
+   "bleed": 0.4,
+   "hitBonus": 15,
+   "moraleDamage": 10,
+   "cooldown": 2,
+   "fx": "gut",
+   "description": "A hex that tears at the insides of an enemy squad within 5 tiles: 5–7 per shaman, ignoring armour, and the squad bleeds for 40% of that again at the start of each of its next two turns."
+  },
+  "hurl_stone": {
+   "id": "hurl_stone",
+   "name": "Hurl Stone",
+   "kind": "spell",
+   "icon": "stone",
+   "target": "tile",
+   "range": 9,
+   "minRange": 3,
+   "power": [
+    10,
+    14
+   ],
+   "pierce": 0.3,
+   "splash": 0.4,
+   "friendly": true,
+   "scatter": true,
+   "engine": true,
+   "moraleDamage": 4,
+   "fx": "stone",
+   "description": "Lob a stone over walls and heads at a tile 3–9 tiles away: 10–14 per crewman to the squad there and 40% of that to every squad beside it, friend or foe. A miss lands one tile astray. Not in a turn the mangonel has moved."
+  },
+  "lob_rock": {
+   "id": "lob_rock",
+   "name": "Lob Rock",
+   "kind": "spell",
+   "icon": "stone",
+   "target": "tile",
+   "range": 8,
+   "minRange": 3,
+   "power": [
+    11,
+    16
+   ],
+   "pierce": 0.3,
+   "splash": 0.5,
+   "friendly": true,
+   "scatter": true,
+   "engine": true,
+   "hitBonus": -5,
+   "moraleDamage": 6,
+   "fx": "rock",
+   "description": "Lob a boulder at a tile 3–8 tiles away: 11–16 per crewman there and half beside it, friend or foe. Often lands a tile astray. Not in a turn it has moved."
+  },
+  "shield_charge": {
+   "id": "shield_charge",
+   "name": "Charge",
+   "kind": "attack",
+   "icon": "shield_charge",
+   "minRun": 2,
+   "damageMult": 1.3,
+   "hitMod": 5,
+   "moraleDamage": 10,
+   "cooldown": 3,
+   "description": "Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge."
+  },
+  "defend": {
+   "id": "defend",
+   "name": "Defend",
+   "kind": "stance",
+   "stance": "defend",
+   "icon": "defend",
+   "description": "Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered."
+  },
+  "square": {
+   "id": "square",
+   "name": "Square",
+   "kind": "stance",
+   "stance": "square",
+   "icon": "square",
+   "description": "Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target."
+  },
+  "growl": {
+   "id": "growl",
+   "name": "Growl",
+   "kind": "shout",
+   "icon": "growl",
+   "radius": 2,
+   "moraleDamage": 12,
+   "status": {
+    "id": "cowed",
+    "turns": 1
+   },
+   "cooldown": 3,
+   "description": "A low growl from the whole pack: enemies within 2 tiles lose 12 morale and are cowed until the end of their next turn (−10 to hit)."
+  },
+  "howl": {
+   "id": "howl",
+   "name": "Howl",
+   "kind": "shout",
+   "icon": "howl",
+   "upgrades": "growl",
+   "radius": 3,
+   "moraleDamage": 16,
+   "status": {
+    "id": "cowed",
+    "turns": 2
+   },
+   "cooldown": 3,
+   "description": "Promotion: the veterans' growl becomes a howl that carries. Enemies within 3 tiles lose 16 morale and are cowed until the end of their second turn (−10 to hit)."
+  },
+  "hound_charge": {
+   "id": "hound_charge",
+   "name": "Charge",
+   "kind": "attack",
+   "icon": "hound_charge",
+   "minRun": 2,
+   "damageMult": 1.2,
+   "hitMod": 12,
+   "moraleDamage": 14,
+   "cooldown": 2,
+   "description": "Bound at least 2 tiles and hit an enemy at full tilt: +20% damage, +12% to hit and 14 more morale lost. A spear square breaks the charge."
+  },
+  "lick_wounds": {
+   "id": "lick_wounds",
+   "name": "Lick Wounds",
+   "kind": "shout",
+   "icon": "lick_wounds",
+   "radius": 0,
+   "selfHeal": [
+    3,
+    5
+   ],
+   "selfMorale": 6,
+   "cleanse": [
+    "bleeding",
+    "chilled"
+   ],
+   "calm": true,
+   "cooldown": 3,
+   "description": "The hounds tend each other's wounds: heal 3–5 per hound standing, stop bleeding, shake off the chill and gain 6 morale. Not with an enemy beside them. The fallen stay dead."
+  },
+  "aimed_shot": {
+   "id": "aimed_shot",
+   "name": "Aimed Shot",
+   "kind": "attack",
+   "ranged": true,
+   "icon": "aimed_shot",
+   "damageMult": 1,
+   "hitMod": 20,
+   "still": true,
+   "ignoreCover": true,
+   "moraleDamage": 6,
+   "cooldown": 2,
+   "description": "Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved."
+  }
+ }
+}

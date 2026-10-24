@@ -1,0 +1,223 @@
+{
+ "master": 0.55,
+ "masterBaked": true,
+ "minGapMs": {
+  "step": 70
+ },
+ "defaultGapMs": 25,
+ "sounds": {
+  "step": [
+   "res://assets/audio/step_0.wav",
+   "res://assets/audio/step_1.wav",
+   "res://assets/audio/step_2.wav",
+   "res://assets/audio/step_3.wav"
+  ],
+  "swing": [
+   "res://assets/audio/swing_0.wav",
+   "res://assets/audio/swing_1.wav",
+   "res://assets/audio/swing_2.wav",
+   "res://assets/audio/swing_3.wav"
+  ],
+  "hit_metal": [
+   "res://assets/audio/hit_metal_0.wav",
+   "res://assets/audio/hit_metal_1.wav",
+   "res://assets/audio/hit_metal_2.wav",
+   "res://assets/audio/hit_metal_3.wav"
+  ],
+  "hit_flesh": [
+   "res://assets/audio/hit_flesh_0.wav",
+   "res://assets/audio/hit_flesh_1.wav",
+   "res://assets/audio/hit_flesh_2.wav",
+   "res://assets/audio/hit_flesh_3.wav"
+  ],
+  "block": [
+   "res://assets/audio/block_0.wav",
+   "res://assets/audio/block_1.wav",
+   "res://assets/audio/block_2.wav",
+   "res://assets/audio/block_3.wav"
+  ],
+  "miss": [
+   "res://assets/audio/miss_0.wav",
+   "res://assets/audio/miss_1.wav",
+   "res://assets/audio/miss_2.wav",
+   "res://assets/audio/miss_3.wav"
+  ],
+  "crossbow": [
+   "res://assets/audio/crossbow_0.wav",
+   "res://assets/audio/crossbow_1.wav",
+   "res://assets/audio/crossbow_2.wav",
+   "res://assets/audio/crossbow_3.wav"
+  ],
+  "bow": [
+   "res://assets/audio/bow_0.wav",
+   "res://assets/audio/bow_1.wav",
+   "res://assets/audio/bow_2.wav",
+   "res://assets/audio/bow_3.wav"
+  ],
+  "bolt_hit": [
+   "res://assets/audio/bolt_hit_0.wav",
+   "res://assets/audio/bolt_hit_1.wav",
+   "res://assets/audio/bolt_hit_2.wav",
+   "res://assets/audio/bolt_hit_3.wav"
+  ],
+  "death": [
+   "res://assets/audio/death_0.wav",
+   "res://assets/audio/death_1.wav",
+   "res://assets/audio/death_2.wav",
+   "res://assets/audio/death_3.wav"
+  ],
+  "death_player": [
+   "res://assets/audio/death_player_0.wav",
+   "res://assets/audio/death_player_1.wav",
+   "res://assets/audio/death_player_2.wav",
+   "res://assets/audio/death_player_3.wav"
+  ],
+  "rout": [
+   "res://assets/audio/rout_0.wav"
+  ],
+  "horn": [
+   "res://assets/audio/horn_0.wav"
+  ],
+  "turn": [
+   "res://assets/audio/turn_0.wav"
+  ],
+  "drum": [
+   "res://assets/audio/drum_0.wav"
+  ],
+  "select": [
+   "res://assets/audio/select_0.wav"
+  ],
+  "click": [
+   "res://assets/audio/click_0.wav"
+  ],
+  "deny": [
+   "res://assets/audio/deny_0.wav"
+  ],
+  "stance": [
+   "res://assets/audio/stance_0.wav",
+   "res://assets/audio/stance_1.wav",
+   "res://assets/audio/stance_2.wav",
+   "res://assets/audio/stance_3.wav"
+  ],
+  "warcry": [
+   "res://assets/audio/warcry_0.wav",
+   "res://assets/audio/warcry_1.wav",
+   "res://assets/audio/warcry_2.wav",
+   "res://assets/audio/warcry_3.wav"
+  ],
+  "coin": [
+   "res://assets/audio/coin_0.wav"
+  ],
+  "build": [
+   "res://assets/audio/build_0.wav",
+   "res://assets/audio/build_1.wav",
+   "res://assets/audio/build_2.wav",
+   "res://assets/audio/build_3.wav"
+  ],
+  "march": [
+   "res://assets/audio/march_0.wav",
+   "res://assets/audio/march_1.wav",
+   "res://assets/audio/march_2.wav",
+   "res://assets/audio/march_3.wav"
+  ],
+  "victory": [
+   "res://assets/audio/victory_0.wav"
+  ],
+  "defeat": [
+   "res://assets/audio/defeat_0.wav"
+  ],
+  "page": [
+   "res://assets/audio/page_0.wav",
+   "res://assets/audio/page_1.wav",
+   "res://assets/audio/page_2.wav",
+   "res://assets/audio/page_3.wav"
+  ],
+  "warhorn": [
+   "res://assets/audio/warhorn_0.wav",
+   "res://assets/audio/warhorn_1.wav",
+   "res://assets/audio/warhorn_2.wav",
+   "res://assets/audio/warhorn_3.wav"
+  ],
+  "roar": [
+   "res://assets/audio/roar_0.wav",
+   "res://assets/audio/roar_1.wav",
+   "res://assets/audio/roar_2.wav",
+   "res://assets/audio/roar_3.wav"
+  ],
+  "relief": [
+   "res://assets/audio/relief_0.wav"
+  ],
+  "hooves": [
+   "res://assets/audio/hooves_0.wav",
+   "res://assets/audio/hooves_1.wav",
+   "res://assets/audio/hooves_2.wav",
+   "res://assets/audio/hooves_3.wav"
+  ],
+  "smash": [
+   "res://assets/audio/smash_0.wav",
+   "res://assets/audio/smash_1.wav",
+   "res://assets/audio/smash_2.wav",
+   "res://assets/audio/smash_3.wav"
+  ],
+  "cast": [
+   "res://assets/audio/cast_0.wav",
+   "res://assets/audio/cast_1.wav",
+   "res://assets/audio/cast_2.wav",
+   "res://assets/audio/cast_3.wav"
+  ],
+  "lightning": [
+   "res://assets/audio/lightning_0.wav",
+   "res://assets/audio/lightning_1.wav",
+   "res://assets/audio/lightning_2.wav",
+   "res://assets/audio/lightning_3.wav"
+  ],
+  "frost": [
+   "res://assets/audio/frost_0.wav",
+   "res://assets/audio/frost_1.wav",
+   "res://assets/audio/frost_2.wav",
+   "res://assets/audio/frost_3.wav"
+  ],
+  "heal": [
+   "res://assets/audio/heal_0.wav"
+  ],
+  "fireball": [
+   "res://assets/audio/fireball_0.wav",
+   "res://assets/audio/fireball_1.wav",
+   "res://assets/audio/fireball_2.wav",
+   "res://assets/audio/fireball_3.wav"
+  ],
+  "explosion": [
+   "res://assets/audio/explosion_0.wav",
+   "res://assets/audio/explosion_1.wav",
+   "res://assets/audio/explosion_2.wav",
+   "res://assets/audio/explosion_3.wav"
+  ],
+  "bloodlust": [
+   "res://assets/audio/bloodlust_0.wav"
+  ],
+  "hex": [
+   "res://assets/audio/hex_0.wav",
+   "res://assets/audio/hex_1.wav",
+   "res://assets/audio/hex_2.wav",
+   "res://assets/audio/hex_3.wav"
+  ],
+  "catapult": [
+   "res://assets/audio/catapult_0.wav",
+   "res://assets/audio/catapult_1.wav",
+   "res://assets/audio/catapult_2.wav",
+   "res://assets/audio/catapult_3.wav"
+  ],
+  "crash": [
+   "res://assets/audio/crash_0.wav",
+   "res://assets/audio/crash_1.wav",
+   "res://assets/audio/crash_2.wav",
+   "res://assets/audio/crash_3.wav"
+  ],
+  "ballista": [
+   "res://assets/audio/ballista_0.wav",
+   "res://assets/audio/ballista_1.wav",
+   "res://assets/audio/ballista_2.wav",
+   "res://assets/audio/ballista_3.wav"
+  ]
+ }
+}

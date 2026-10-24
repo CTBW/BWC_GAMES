@@ -1,0 +1,248 @@
+// Battle map templates. The generator turns a template plus a seed into a
+// concrete map, so every battle on the same template is laid out differently.
+// Small fields are generated from scatter rules; the large grounds of a last
+// stand are drawn by hand (`layout`) and only their details vary.
+
+import type { Edge } from '../battle/types';
+
+/** Inclusive tile rectangle [x0, y0, x1, y1]. */
+export type Rect = [number, number, number, number];
+
+/**
+ * A hand-drawn battlefield. `rows` holds one character per tile (see
+ * `LEGEND` in mapgen.ts), `heights` one digit per tile. Rectangles mark the
+ * company's deployment, the horde's starting ground and the ground to hold;
+ * `entries` gives the stretch of each edge where reinforcements march in.
+ */
+export interface AuthoredLayout {
+  rows: string[];
+  heights: string[];
+  deploy: Rect[];
+  enemy: Rect[];
+  zone?: Rect;
+  zoneName?: string;
+  entries: Partial<Record<Edge, [number, number]>>;
+}
+
+export interface MapTemplate {
+  id: string;
+  name: string;
+  description: string;
+  w: number;
+  h: number;
+  biome: 'forest' | 'river' | 'camp';
+  hills: [number, number];
+  treeClumps: [number, number];
+  rockClumps: [number, number];
+  bushes: [number, number];
+  brush: [number, number];
+  dirt: [number, number];
+  fences: [number, number];
+  ruins: number;
+  river?: boolean;
+  camp?: boolean;
+  scale?: 'small' | 'large';
+  /** The edge the horde comes from, and the edges flanking waves may use. */
+  edges?: { main: Edge; flank: Edge[] };
+  layout?: AuthoredLayout;
+}
+
+export const BATTLE_MAPS: Record<string, MapTemplate> = {
+  forest_clearing: {
+    id: 'forest_clearing',
+    name: 'Forest clearing',
+    description: 'An open glade ringed by pine and oak. Tree clumps and boulders break up the field.',
+    w: 14,
+    h: 12,
+    biome: 'forest',
+    hills: [1, 2],
+    treeClumps: [2, 4],
+    rockClumps: [1, 3],
+    bushes: [3, 6],
+    brush: [2, 4],
+    dirt: [4, 7],
+    fences: [0, 1],
+    ruins: 0,
+  },
+  river_ruins: {
+    id: 'river_ruins',
+    name: 'Ruined steading',
+    description: 'A burned farmstead by a river. The bridge and the ford are the only crossings.',
+    w: 14,
+    h: 12,
+    biome: 'river',
+    hills: [0, 1],
+    treeClumps: [1, 3],
+    rockClumps: [1, 2],
+    bushes: [2, 4],
+    brush: [1, 3],
+    dirt: [3, 5],
+    fences: [1, 2],
+    ruins: 2,
+    river: true,
+  },
+  goblin_camp: {
+    id: 'goblin_camp',
+    name: 'Raider war camp',
+    description: 'The warband\'s camp: tents, totems and cookfires behind a screen of trees.',
+    w: 15,
+    h: 13,
+    biome: 'camp',
+    hills: [1, 1],
+    treeClumps: [2, 3],
+    rockClumps: [1, 2],
+    bushes: [2, 4],
+    brush: [1, 2],
+    dirt: [6, 9],
+    fences: [0, 0],
+    ruins: 0,
+    camp: true,
+  },
+  steading: {
+    id: 'steading',
+    name: 'Brannsted steading',
+    description: 'A palisaded farm on a low rise: two gates, a breach by the corner tower and a gap in the back fence. A stream with a bridge and a ford covers the west.',
+    w: 24,
+    h: 22,
+    biome: 'forest',
+    hills: [0, 0],
+    treeClumps: [0, 0],
+    rockClumps: [0, 0],
+    bushes: [2, 4],
+    brush: [0, 0],
+    dirt: [0, 0],
+    fences: [0, 0],
+    ruins: 0,
+    scale: 'large',
+    edges: { main: 'n', flank: ['w', 'e'] },
+    layout: {
+      rows: [
+        'TTT...~~.....B...,....TT',
+        'TT....~~.........,....TT',
+        'T..B..~~.........,.....T',
+        '......~~.tt.R....,......',
+        'T.....~~.......B.,..WW..',
+        '......~~.r.......,..XW..',
+        '..T...~~.....:::.,......',
+        'B.....~~...B.:::.,...B..',
+        '......==.......r.,......',
+        '.T....~~.......||,||....',
+        '......~~...B.....,...B..',
+        'T.....~~....Xuu##G####F.',
+        '......~~:::.#,,.....ccF.',
+        '..T...~~:::.#.hh......F.',
+        '......~~:::|#...,,,...F.',
+        'B.....~~:::|#..,,o,...,.',
+        '......__....G,,,,,....F.',
+        '.T....__.::|#...,,....F.',
+        '......~~.::|#.......c.F.',
+        'T.....~~.::.#.k.......F.',
+        'TT....~~....#.........F.',
+        'TTT...~~................',
+      ],
+      heights: [
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000111100000000000',
+        '000000000122100000000000',
+        '000000000122100000000000',
+        '000000000111100000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000111111111110',
+        '000000000000000000000000',
+      ],
+      deploy: [[13, 12, 21, 20]],
+      enemy: [[8, 0, 21, 4]],
+      zone: [14, 13, 20, 19],
+      zoneName: 'The steading yard',
+      entries: { n: [8, 21], w: [1, 18], e: [0, 9] },
+    },
+  },
+  ford: {
+    id: 'ford',
+    name: 'Vattern ford',
+    description: 'A river with one bridge and one ford. On the near bank a low ridge with old ruins guards the road the refugees are fleeing down.',
+    w: 24,
+    h: 22,
+    biome: 'river',
+    hills: [0, 0],
+    treeClumps: [0, 0],
+    rockClumps: [0, 0],
+    bushes: [2, 4],
+    brush: [0, 0],
+    dirt: [0, 0],
+    fences: [0, 0],
+    ruins: 0,
+    river: true,
+    scale: 'large',
+    edges: { main: 'n', flank: ['w', 'e'] },
+    layout: {
+      rows: [
+        'TTT...,........B.....TTT',
+        'TT....,..........r....TT',
+        'T.....,..B........RR...T',
+        '......,...WW.:::.....r..',
+        'T.....,...W..:::.......T',
+        '.T....,........B....B...',
+        '......,..tt....,,,......',
+        '.B....,........,,,....B.',
+        '..T...,........,,,......',
+        '~~~~~~=~~~~~~~~___~~~~~~',
+        '~~~~~~=~~~~~~~~___~~~~~~',
+        '.....|,|......|...|.....',
+        '......,..XW..WW....r....',
+        '.T....,........,,,......',
+        '......,...B.....,.....B.',
+        'B.....,.:::.....,...cc..',
+        '......,.:::....h,..k....',
+        ',,,,,,,,,,,,,,,,,,,,,,,,',
+        ',,,,,,,,,,,,,,,,,,,,,,,,',
+        '..B.........o.......B...',
+        'T.......h.........F.FF.T',
+        'TT....................TT',
+      ],
+      heights: [
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000111100',
+        '000000000000000000111100',
+        '000000000000000000111100',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '001111011111111000111000',
+        '001111011111111000111000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+        '000000000000000000000000',
+      ],
+      deploy: [[2, 11, 21, 16]],
+      enemy: [[3, 1, 20, 6]],
+      zone: [5, 17, 18, 18],
+      zoneName: 'The refugee road',
+      entries: { n: [3, 20], w: [11, 15], e: [11, 15] },
+    },
+  },
+};

@@ -492,11 +492,111 @@ button:focus-visible {
 }
 
 /* ─── Content / report iframe ─── */
+.main-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
 .content {
   flex: 1;
+  min-width: 0;
   position: relative;
   overflow: hidden;
   background: #101115;
+}
+
+/* ─── Tab groups: one card per group, left of the report ─── */
+.step-groups {
+  width: 172px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 10px;
+  overflow-y: auto;
+  border-right: 1px solid var(--hairline);
+  background: var(--sidebar-glass);
+}
+
+.step-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 11px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.step-group:hover {
+  background: var(--surface-2);
+  border-color: var(--hairline-strong);
+}
+.step-group.active {
+  background: var(--pink-dim);
+  border-color: rgba(240, 160, 176, 0.3);
+}
+
+.step-group-name {
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+.step-group.active .step-group-name { color: var(--pink-bright); }
+
+.step-group-count {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* A group with subgroups opens to list them beneath its card. */
+.step-group-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.step-group.open { border-color: rgba(240, 160, 176, 0.18); }
+.step-group.open .step-group-name { color: var(--pink-bright); }
+
+.step-group-caret {
+  display: inline-block;
+  width: 1em;
+  color: var(--text-muted);
+}
+.step-group.open .step-group-caret { color: var(--pink); }
+
+.step-subgroups {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--hairline-strong);
+}
+.step-subgroup { padding: 7px 10px; }
+
+/* Narrow: the cards become a scrolling strip above the report. */
+@media (max-width: 720px) {
+  .main-body { flex-direction: column; }
+  .step-groups {
+    width: auto;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .step-group { flex-shrink: 0; max-width: 220px; padding: 7px 11px; }
+  /* Subgroups follow their group in the same strip. */
+  .step-group-block, .step-subgroups { display: contents; }
+  .step-subgroup { border-left: 2px solid var(--hairline-strong); }
 }
 
 .report-document { position: relative; height: 100%; min-height: 0; background: #101115; }

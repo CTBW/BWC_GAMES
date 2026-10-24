@@ -1,0 +1,631 @@
+{
+ "sprites": {
+  "tree_pine": [
+   {
+    "file": "sprites/blender/tree_pine_0.webp",
+    "ax": 226.9,
+    "ay": 746.2,
+    "scale": 0.3201,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/tree_pine_1.webp",
+    "ax": 222.0,
+    "ay": 749.5,
+    "scale": 0.3201,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/tree_pine_2.webp",
+    "ax": 207.4,
+    "ay": 712.3,
+    "scale": 0.3201,
+    "noShadow": true
+   }
+  ],
+  "tree_oak": [
+   {
+    "file": "sprites/blender/tree_oak_0.webp",
+    "ax": 279.5,
+    "ay": 624.9,
+    "scale": 0.3101,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/tree_oak_1.webp",
+    "ax": 254.2,
+    "ay": 644.4,
+    "scale": 0.3101,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/tree_oak_2.webp",
+    "ax": 239.9,
+    "ay": 653.0,
+    "scale": 0.3101,
+    "noShadow": true
+   }
+  ],
+  "bush": [
+   {
+    "file": "sprites/blender/bush_0.webp",
+    "ax": 89.9,
+    "ay": 127.9,
+    "scale": 0.4251,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/bush_1.webp",
+    "ax": 95.7,
+    "ay": 114.4,
+    "scale": 0.4251,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/bush_2.webp",
+    "ax": 105.9,
+    "ay": 116.1,
+    "scale": 0.4251,
+    "noShadow": true
+   }
+  ],
+  "rock_large": [
+   {
+    "file": "sprites/blender/rock_large_0.webp",
+    "ax": 71.9,
+    "ay": 98.2,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/rock_large_1.webp",
+    "ax": 119.7,
+    "ay": 89.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "rock_small": [
+   {
+    "file": "sprites/blender/rock_small_0.webp",
+    "ax": 37.6,
+    "ay": 57.4,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/rock_small_1.webp",
+    "ax": 57.1,
+    "ay": 60.1,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "stump": [
+   {
+    "file": "sprites/blender/stump_0.webp",
+    "ax": 59.1,
+    "ay": 83.5,
+    "scale": 0.4501,
+    "noShadow": true
+   }
+  ],
+  "wall_ruin_x": [
+   {
+    "file": "sprites/blender/wall_ruin_x_0.webp",
+    "ax": 99.0,
+    "ay": 189.2,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/wall_ruin_x_1.webp",
+    "ax": 101.4,
+    "ay": 129.3,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "wall_ruin_y": [
+   {
+    "file": "sprites/blender/wall_ruin_y_0.webp",
+    "ax": 119.0,
+    "ay": 183.1,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/wall_ruin_y_1.webp",
+    "ax": 100.7,
+    "ay": 121.3,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "wall_high": [
+   {
+    "file": "sprites/blender/wall_high_0.webp",
+    "ax": 207.5,
+    "ay": 400.0,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/wall_high_1.webp",
+    "ax": 169.7,
+    "ay": 400.0,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "fence_x": [
+   {
+    "file": "sprites/blender/fence_x_0.webp",
+    "ax": 83.8,
+    "ay": 135.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "fence_y": [
+   {
+    "file": "sprites/blender/fence_y_0.webp",
+    "ax": 82.8,
+    "ay": 150.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "tent": [
+   {
+    "file": "sprites/blender/tent_0.webp",
+    "ax": 167.6,
+    "ay": 346.2,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/tent_1.webp",
+    "ax": 179.1,
+    "ay": 346.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "totem": [
+   {
+    "file": "sprites/blender/totem_0.webp",
+    "ax": 61.9,
+    "ay": 368.6,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "campfire": [
+   {
+    "file": "sprites/blender/campfire_0.webp",
+    "ax": 90.1,
+    "ay": 68.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "crates": [
+   {
+    "file": "sprites/blender/crates_0.webp",
+    "ax": 93.3,
+    "ay": 140.7,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_command_1": [
+   {
+    "file": "sprites/blender/b_command_1_0.webp",
+    "ax": 278.4,
+    "ay": 372.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_barracks_2": [
+   {
+    "file": "sprites/blender/b_barracks_2_0.webp",
+    "ax": 327.5,
+    "ay": 475.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_command_2": [
+   {
+    "file": "sprites/blender/b_command_2_0.webp",
+    "ax": 367.3,
+    "ay": 523.1,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_command_3": [
+   {
+    "file": "sprites/blender/b_command_3_0.webp",
+    "ax": 360.2,
+    "ay": 1030.1,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_barracks_1": [
+   {
+    "file": "sprites/blender/b_barracks_1_0.webp",
+    "ax": 310.8,
+    "ay": 329.3,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_barracks_3": [
+   {
+    "file": "sprites/blender/b_barracks_3_0.webp",
+    "ax": 373.7,
+    "ay": 623.3,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_training_1": [
+   {
+    "file": "sprites/blender/b_training_1_0.webp",
+    "ax": 168.7,
+    "ay": 379.1,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_training_2": [
+   {
+    "file": "sprites/blender/b_training_2_0.webp",
+    "ax": 429.0,
+    "ay": 419.8,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_training_3": [
+   {
+    "file": "sprites/blender/b_training_3_0.webp",
+    "ax": 316.5,
+    "ay": 566.6,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_armoury_1": [
+   {
+    "file": "sprites/blender/b_armoury_1_0.webp",
+    "ax": 256.5,
+    "ay": 474.6,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_armoury_2": [
+   {
+    "file": "sprites/blender/b_armoury_2_0.webp",
+    "ax": 282.7,
+    "ay": 478.5,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_armoury_3": [
+   {
+    "file": "sprites/blender/b_armoury_3_0.webp",
+    "ax": 450.7,
+    "ay": 569.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_infirmary_1": [
+   {
+    "file": "sprites/blender/b_infirmary_1_0.webp",
+    "ax": 265.1,
+    "ay": 315.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_infirmary_2": [
+   {
+    "file": "sprites/blender/b_infirmary_2_0.webp",
+    "ax": 282.7,
+    "ay": 449.5,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_infirmary_3": [
+   {
+    "file": "sprites/blender/b_infirmary_3_0.webp",
+    "ax": 354.6,
+    "ay": 558.1,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_quartermaster_1": [
+   {
+    "file": "sprites/blender/b_quartermaster_1_0.webp",
+    "ax": 262.6,
+    "ay": 244.6,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_quartermaster_2": [
+   {
+    "file": "sprites/blender/b_quartermaster_2_0.webp",
+    "ax": 339.4,
+    "ay": 424.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "b_quartermaster_3": [
+   {
+    "file": "sprites/blender/b_quartermaster_3_0.webp",
+    "ax": 415.9,
+    "ay": 568.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_village": [
+   {
+    "file": "sprites/blender/node_village_0.webp",
+    "ax": 404.0,
+    "ay": 394.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_camp": [
+   {
+    "file": "sprites/blender/node_camp_0.webp",
+    "ax": 220.8,
+    "ay": 259.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_scout": [
+   {
+    "file": "sprites/blender/node_scout_0.webp",
+    "ax": 166.8,
+    "ay": 592.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_battle": [
+   {
+    "file": "sprites/blender/node_battle_0.webp",
+    "ax": 203.2,
+    "ay": 353.6,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_objective": [
+   {
+    "file": "sprites/blender/node_objective_0.webp",
+    "ax": 559.2,
+    "ay": 752.7,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_event": [
+   {
+    "file": "sprites/blender/node_event_0.webp",
+    "ax": 69.9,
+    "ay": 219.8,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_start": [
+   {
+    "file": "sprites/blender/node_start_0.webp",
+    "ax": 74.2,
+    "ay": 403.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "node_ambush": [
+   {
+    "file": "sprites/blender/node_ambush_0.webp",
+    "ax": 61.2,
+    "ay": 232.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "palisade_x": [
+   {
+    "file": "sprites/blender/palisade_x_0.webp",
+    "ax": 81.0,
+    "ay": 259.9,
+    "scale": 0.4101,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/palisade_x_1.webp",
+    "ax": 80.6,
+    "ay": 286.3,
+    "scale": 0.4101,
+    "noShadow": true
+   }
+  ],
+  "palisade_y": [
+   {
+    "file": "sprites/blender/palisade_y_0.webp",
+    "ax": 80.3,
+    "ay": 263.2,
+    "scale": 0.4101,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/palisade_y_1.webp",
+    "ax": 82.2,
+    "ay": 263.2,
+    "scale": 0.4101,
+    "noShadow": true
+   }
+  ],
+  "gate_tower": [
+   {
+    "file": "sprites/blender/gate_tower_0.webp",
+    "ax": 175.1,
+    "ay": 740.4,
+    "scale": 0.4501,
+    "noShadow": true
+   }
+  ],
+  "bwall_x": [
+   {
+    "file": "sprites/blender/bwall_x_0.webp",
+    "ax": 91.6,
+    "ay": 314.6,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/bwall_x_1.webp",
+    "ax": 92.4,
+    "ay": 316.0,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "gate_x": [
+   {
+    "file": "sprites/blender/gate_x_0.webp",
+    "ax": 121.2,
+    "ay": 426.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "bwall_y": [
+   {
+    "file": "sprites/blender/bwall_y_0.webp",
+    "ax": 80.9,
+    "ay": 314.6,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/bwall_y_1.webp",
+    "ax": 80.9,
+    "ay": 316.0,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "gate_y": [
+   {
+    "file": "sprites/blender/gate_y_0.webp",
+    "ax": 98.0,
+    "ay": 426.4,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "stakes_x": [
+   {
+    "file": "sprites/blender/stakes_x_0.webp",
+    "ax": 139.4,
+    "ay": 231.6,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/stakes_x_1.webp",
+    "ax": 142.3,
+    "ay": 232.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "stakes_y": [
+   {
+    "file": "sprites/blender/stakes_y_0.webp",
+    "ax": 137.5,
+    "ay": 231.5,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/stakes_y_1.webp",
+    "ax": 139.4,
+    "ay": 232.2,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "cart": [
+   {
+    "file": "sprites/blender/cart_0.webp",
+    "ax": 134.6,
+    "ay": 141.8,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "haystack": [
+   {
+    "file": "sprites/blender/haystack_0.webp",
+    "ax": 112.2,
+    "ay": 220.5,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/haystack_1.webp",
+    "ax": 118.3,
+    "ay": 219.9,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "well": [
+   {
+    "file": "sprites/blender/well_0.webp",
+    "ax": 110.5,
+    "ay": 272.3,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ],
+  "war_banner": [
+   {
+    "file": "sprites/blender/war_banner_0.webp",
+    "ax": 74.4,
+    "ay": 492.8,
+    "scale": 0.5001,
+    "noShadow": true
+   },
+   {
+    "file": "sprites/blender/war_banner_1.webp",
+    "ax": 74.9,
+    "ay": 492.7,
+    "scale": 0.5001,
+    "noShadow": true
+   }
+  ]
+ },
+ "textures": {}
+}

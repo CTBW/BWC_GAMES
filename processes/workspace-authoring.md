@@ -5,14 +5,19 @@
    output media local to that task or its project folder.
 3. Write the result in English by default. Use stable tab names and relative
    paths. Keep one main project pinned when it is the user's working hub.
+   When a card's tabs pile up, give related tabs the same `group` in the
+   registry: they move behind one card in the rail left of the report. A
+   group can be split further with `subgroup` (one per character in
+   Meridius's "Character rigs"); a new character rig gets its own subgroup.
 4. Add the shared report CSS and script; use `data-mak-report="document"`.
    Markdown requires no HTML wrapper and opens in the formatted document view.
 5. Make every image clickable and downloadable. Videos need native controls.
    Keep source links near claims and label historical model runs as historical.
 6. Update the registry's `updated` date after meaningful changes. Preserve the
    original `created` date. Do not mark personal work `sample: true`.
-7. Open every changed tab at wide and narrow widths, test links and media,
-   then report the outcome. A built installer is not an installed update.
+7. Open every changed tab at desktop window sizes (no phone or tablet checks),
+   test links and media, then report the outcome. A built installer is not an
+   installed update.
 
 New HTML reports can begin with:
 
@@ -21,7 +26,6 @@ New HTML reports can begin with:
 <html lang="en" data-mak-report="document">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project report</title>
   <link rel="stylesheet" href="../_shared/report.css">
   <link rel="stylesheet" href="../_shared/examples.css">

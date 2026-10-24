@@ -7,6 +7,8 @@ import Sidebar from './components/Sidebar'
 import Topbar from './components/Topbar'
 import HomeGrid from './components/HomeGrid'
 import EntityControls from './components/EntityControls'
+import StepGroupRail from './components/StepGroupRail'
+import { stepGroups, type StepGroup, type StepSubgroup } from './lib/stepGroups'
 import ReportBoundary from './components/ReportBoundary'
 import { contentUrl, isDesktop } from './desktop/client'
 
@@ -43,6 +45,20 @@ export default function App() {
     : -1
   const step = entity?.steps[stepIndex]
   const reportUrl = entity && step ? contentUrl(`/workspace/${entity.folder}/${step.path}`) : null
+  // Grouped tabs: the rail picks a group, the top bar lists only that group's tabs.
+  const tabGroups = entity ? stepGroups(entity.steps) : []
+  const tabGroup = tabGroups.find(g => g.indexes.includes(stepIndex)) ?? null
+  const tabSubgroup = tabGroup?.subgroups.find(s => s.indexes.includes(stepIndex)) ?? null
+  const showGroups = tabGroups.some(g => g.name !== null)
+  // Last tab opened in each group and subgroup, so going back to one returns to it.
+  const lastTab = useRef(new Map<string, number>())
+  const tabKey = (...names: (string | null)[]) => (entity ? [entity.id, ...names.map(n => n ?? '')].join('\u0000') : null)
+  const openGroupKey = tabGroup ? tabKey(tabGroup.name) : null
+  const openSubgroupKey = tabGroup && tabSubgroup ? tabKey(tabGroup.name, tabSubgroup.name) : null
+
+  useEffect(() => {
+    for (const key of [openGroupKey, openSubgroupKey]) if (key) lastTab.current.set(key, stepIndex)
+  }, [openGroupKey, openSubgroupKey, stepIndex])
 
   // Hash → state: entity links navigate natively; this also covers back/forward.
   useEffect(() => {
@@ -83,6 +99,17 @@ export default function App() {
     history.replaceState(null, '', entityHash(id, index))
     setRoute({ id, step: index })
   }, [])
+
+  const openTabs = (indexes: number[], key: string | null, preferred?: number) => {
+    if (!entity) return
+    const remembered = key ? lastTab.current.get(key) : undefined
+    const index = [remembered, preferred].find(i => i !== undefined && indexes.includes(i))
+    selectStep(entity.id, index ?? indexes[0])
+  }
+  const pickGroup = (group: StepGroup) =>
+    openTabs(group.indexes, tabKey(group.name), group.name === null ? entity?.defaultStep : undefined)
+  const pickSubgroup = (group: StepGroup, subgroup: StepSubgroup) =>
+    openTabs(subgroup.indexes, tabKey(group.name, subgroup.name))
 
   if (!workspace) {
     return (
@@ -161,8 +188,20 @@ export default function App() {
           // A compare3d step's "report" is a JSON manifest — opening it raw in a
           // tab helps nobody, so the external link is hidden for those.
           reportUrl={step?.viewer === 'compare3d' ? null : reportUrl}
+          tabs={showGroups ? (tabSubgroup ?? tabGroup)?.indexes : undefined}
         />
 
+        <div className="main-body">
+        {entity && showGroups && (
+          <StepGroupRail
+            entity={entity}
+            groups={tabGroups}
+            activeGroup={tabGroup?.name ?? null}
+            activeSubgroup={tabSubgroup?.name ?? null}
+            onPickGroup={pickGroup}
+            onPickSubgroup={pickSubgroup}
+          />
+        )}
         <div className="content">
           <ReportBoundary key={reportUrl || 'home'} onHome={goHome}>
           {entity && reportUrl && step?.viewer === 'compare3d' ? (
@@ -184,6 +223,7 @@ export default function App() {
             />
           )}
           </ReportBoundary>
+        </div>
         </div>
       </main>
     </div>

@@ -1,0 +1,7 @@
+# Godot caches and local output
+.godot/
+/build/
+*.tmp
+/tests/visual/out/
+/tests/out/
+.lock-import/

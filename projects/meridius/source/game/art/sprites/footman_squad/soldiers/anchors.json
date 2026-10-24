@@ -1,0 +1,194 @@
+{
+ "footman_s_1": {
+  "ax": 96.6,
+  "ay": 199
+ },
+ "footman_s_2": {
+  "ax": 59.3,
+  "ay": 191
+ },
+ "footman_s_3": {
+  "ax": 84.8,
+  "ay": 192
+ },
+ "footman_s_4": {
+  "ax": 97.0,
+  "ay": 198
+ },
+ "footman_s_5": {
+  "ax": 97.2,
+  "ay": 199
+ },
+ "footman_s_6": {
+  "ax": 97.4,
+  "ay": 199
+ },
+ "footman_sw_1": {
+  "ax": 108.7,
+  "ay": 192
+ },
+ "footman_sw_2": {
+  "ax": 137.9,
+  "ay": 191
+ },
+ "footman_sw_3": {
+  "ax": 117.6,
+  "ay": 191
+ },
+ "footman_sw_4": {
+  "ax": 111.7,
+  "ay": 191
+ },
+ "footman_sw_5": {
+  "ax": 96.6,
+  "ay": 199
+ },
+ "footman_sw_6": {
+  "ax": 120.0,
+  "ay": 192
+ },
+ "footman_w_1": {
+  "ax": 75.4,
+  "ay": 190
+ },
+ "footman_w_2": {
+  "ax": 65.8,
+  "ay": 190
+ },
+ "footman_w_3": {
+  "ax": 81.8,
+  "ay": 190
+ },
+ "footman_w_4": {
+  "ax": 79.7,
+  "ay": 190
+ },
+ "footman_w_5": {
+  "ax": 65.2,
+  "ay": 190
+ },
+ "footman_w_6": {
+  "ax": 69.9,
+  "ay": 190
+ },
+ "footman_nw_1": {
+  "ax": 41.0,
+  "ay": 205
+ },
+ "footman_nw_2": {
+  "ax": 41.5,
+  "ay": 192
+ },
+ "footman_nw_3": {
+  "ax": 60.3,
+  "ay": 191
+ },
+ "footman_nw_4": {
+  "ax": 46.8,
+  "ay": 207
+ },
+ "footman_nw_5": {
+  "ax": 69.8,
+  "ay": 193
+ },
+ "footman_nw_6": {
+  "ax": 34.7,
+  "ay": 197
+ },
+ "footman_n_1": {
+  "ax": 59.8,
+  "ay": 199
+ },
+ "footman_n_2": {
+  "ax": 65.1,
+  "ay": 193
+ },
+ "footman_n_3": {
+  "ax": 60.3,
+  "ay": 191
+ },
+ "footman_n_4": {
+  "ax": 66.2,
+  "ay": 194
+ },
+ "footman_n_5": {
+  "ax": 60.7,
+  "ay": 192
+ },
+ "footman_n_6": {
+  "ax": 62.1,
+  "ay": 191
+ },
+ "footman_ne_1": {
+  "ax": 88.5,
+  "ay": 191
+ },
+ "footman_ne_2": {
+  "ax": 87.7,
+  "ay": 190
+ },
+ "footman_ne_3": {
+  "ax": 69.1,
+  "ay": 208
+ },
+ "footman_ne_4": {
+  "ax": 83.2,
+  "ay": 190
+ },
+ "footman_ne_5": {
+  "ax": 54.3,
+  "ay": 191
+ },
+ "footman_ne_6": {
+  "ax": 96.3,
+  "ay": 192
+ },
+ "footman_e_1": {
+  "ax": 39.8,
+  "ay": 191
+ },
+ "footman_e_2": {
+  "ax": 46.3,
+  "ay": 190
+ },
+ "footman_e_3": {
+  "ax": 52.2,
+  "ay": 190
+ },
+ "footman_e_4": {
+  "ax": 37.6,
+  "ay": 190
+ },
+ "footman_e_5": {
+  "ax": 40.8,
+  "ay": 190
+ },
+ "footman_e_6": {
+  "ax": 45.1,
+  "ay": 191
+ },
+ "footman_se_1": {
+  "ax": 69.0,
+  "ay": 191
+ },
+ "footman_se_2": {
+  "ax": 70.6,
+  "ay": 192
+ },
+ "footman_se_3": {
+  "ax": 68.3,
+  "ay": 192
+ },
+ "footman_se_4": {
+  "ax": 28.4,
+  "ay": 191
+ },
+ "footman_se_5": {
+  "ax": 28.1,
+  "ay": 191
+ },
+ "footman_se_6": {
+  "ax": 26.8,
+  "ay": 191
+ }
+}

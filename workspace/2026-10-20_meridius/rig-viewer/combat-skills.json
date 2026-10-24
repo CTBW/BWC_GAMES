@@ -1,0 +1,373 @@
+{
+  "updated": "2026-10-24",
+  "sources": [
+    "projects/meridius/source/godot/data/units.json",
+    "projects/meridius/source/godot/data/abilities.json",
+    "projects/meridius/source/godot/scripts/rules/battle.gd",
+    "projects/meridius/source/godot/scripts/meta/game.gd",
+    "projects/meridius/docs/squad-skills.md",
+    "projects/meridius/review/sovereign-kiss/README.md",
+    "projects/meridius/review/wolf-scout/rig-contract.json"
+  ],
+  "cards": [
+    {
+      "file": "footman-3d.html",
+      "unit": "footman",
+      "basics": "Sword attack: 7–10 base melee damage per soldier before armour. The shield adds +12 defense against frontal attacks.",
+      "rig": "Attack and Block are available in the pose viewer. Dedicated Charge, Defend and Shield Bash clips are not listed in the current rig preview.",
+      "status": "Implemented Godot kit",
+      "name": "Footmen",
+      "skills": [
+        {
+          "id": "shieldwall",
+          "name": "Shield Wall",
+          "availability": "Base kit · Key 1 · stance · Every turn",
+          "description": "Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense.",
+          "ability": {
+            "id": "shieldwall",
+            "name": "Shield Wall",
+            "short": "Wall",
+            "kind": "stance",
+            "stance": "shieldwall",
+            "icon": "shield",
+            "description": "Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense."
+          }
+        },
+        {
+          "id": "shield_charge",
+          "name": "Charge",
+          "availability": "Base kit · Key 2 · attack · Every 3 turns",
+          "description": "Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge.",
+          "ability": {
+            "id": "shield_charge",
+            "name": "Charge",
+            "kind": "attack",
+            "icon": "shield_charge",
+            "minRun": 2,
+            "damageMult": 1.3,
+            "hitMod": 5,
+            "moraleDamage": 10,
+            "cooldown": 3,
+            "description": "Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge."
+          }
+        },
+        {
+          "id": "defend",
+          "name": "Defend",
+          "availability": "Base kit · Key 3 · stance · Every turn",
+          "description": "Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.",
+          "ability": {
+            "id": "defend",
+            "name": "Defend",
+            "kind": "stance",
+            "stance": "defend",
+            "icon": "defend",
+            "description": "Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered."
+          }
+        },
+        {
+          "id": "shieldbash",
+          "name": "Shield Bash",
+          "availability": "Promotion · Key 4 · attack · Every other turn",
+          "description": "Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage.",
+          "ability": {
+            "id": "shieldbash",
+            "name": "Shield Bash",
+            "short": "Bash",
+            "kind": "attack",
+            "icon": "bash",
+            "reach": 1,
+            "damageMult": 0.55,
+            "hitMod": 10,
+            "push": true,
+            "moraleDamage": 12,
+            "cooldown": 2,
+            "description": "Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage."
+          }
+        }
+      ]
+    },
+    {
+      "file": "spearman-3d.html",
+      "unit": "spearman",
+      "basics": "Spear attack: 7–11 base melee damage per soldier before armour.",
+      "passive": {
+        "name": "First Strike",
+        "description": "Automatically strikes first when an enemy that moved this turn attacks from the front, once against that attacker per turn. Square extends this protection to every side."
+      },
+      "rig": "Guard and Thrust are available in the pose viewer. Square formation and a dedicated two-tile Pike Thrust are not listed as separate clips.",
+      "status": "Implemented Godot kit",
+      "name": "Spearmen",
+      "skills": [
+        {
+          "id": "spearwall",
+          "name": "Spearwall",
+          "availability": "Base kit · Key 1 · stance · Every turn",
+          "description": "Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.",
+          "ability": {
+            "id": "spearwall",
+            "name": "Spearwall",
+            "kind": "stance",
+            "stance": "spearwall",
+            "icon": "spearwall",
+            "description": "Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance."
+          }
+        },
+        {
+          "id": "square",
+          "name": "Square",
+          "availability": "Base kit · Key 2 · stance · Every turn",
+          "description": "Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.",
+          "ability": {
+            "id": "square",
+            "name": "Square",
+            "kind": "stance",
+            "stance": "square",
+            "icon": "square",
+            "description": "Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target."
+          }
+        },
+        {
+          "id": "pikethrust",
+          "name": "Pike Thrust",
+          "availability": "Promotion · Key 3 · attack · Every turn",
+          "description": "Strike an enemy two tiles away in a straight line, over the head of whoever stands between.",
+          "ability": {
+            "id": "pikethrust",
+            "name": "Pike Thrust",
+            "kind": "attack",
+            "icon": "thrust",
+            "reach": 2,
+            "damageMult": 1,
+            "hitMod": -5,
+            "cooldown": 1,
+            "description": "Strike an enemy two tiles away in a straight line, over the head of whoever stands between."
+          }
+        }
+      ]
+    },
+    {
+      "file": "crossbowman-3d.html",
+      "unit": "crossbowman",
+      "basics": "Crossbow shot: 9–13 base damage per soldier, range 2–7 tiles, ignoring 50% of armour. Six bolts per soldier at full supply; an ordinary shot uses one. Melee fallback: 3–5 per soldier.",
+      "passive": {
+        "name": "Steady aim",
+        "description": "An ordinary shot gains +8 to hit if the squad has not moved this turn. This bonus also stacks with Aimed Shot."
+      },
+      "rig": "Shoot, Shoot 2, Steady shot and Reload are available in the pose viewer. Dedicated skill animation integration remains separate work.",
+      "status": "Implemented Godot kit",
+      "name": "Crossbowmen",
+      "skills": [
+        {
+          "id": "overwatch",
+          "name": "Overwatch",
+          "availability": "Base kit · Key 1 · stance · Every turn",
+          "description": "Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit).",
+          "ability": {
+            "id": "overwatch",
+            "name": "Overwatch",
+            "kind": "stance",
+            "stance": "overwatch",
+            "icon": "eye",
+            "requiresNoMove": false,
+            "description": "Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit)."
+          }
+        },
+        {
+          "id": "aimed_shot",
+          "name": "Aimed Shot",
+          "availability": "Base kit · Key 2 · attack · Every other turn",
+          "description": "Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved.",
+          "ability": {
+            "id": "aimed_shot",
+            "name": "Aimed Shot",
+            "kind": "attack",
+            "ranged": true,
+            "icon": "aimed_shot",
+            "damageMult": 1,
+            "hitMod": 20,
+            "still": true,
+            "ignoreCover": true,
+            "moraleDamage": 6,
+            "cooldown": 2,
+            "description": "Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved."
+          }
+        },
+        {
+          "id": "heavybolt",
+          "name": "Heavy Bolt",
+          "availability": "Promotion · Key 3 · attack · Every other turn",
+          "description": "A fully cranked bolt: +50% damage, ignores armour, costs two bolts.",
+          "ability": {
+            "id": "heavybolt",
+            "name": "Heavy Bolt",
+            "kind": "attack",
+            "ranged": true,
+            "icon": "bolt",
+            "damageMult": 1.5,
+            "hitMod": -8,
+            "ammoCost": 2,
+            "ignoreArmor": true,
+            "moraleDamage": 8,
+            "cooldown": 2,
+            "description": "A fully cranked bolt: +50% damage, ignores armour, costs two bolts."
+          }
+        }
+      ]
+    },
+    {
+      "file": "mage-3d.html",
+      "unit": "battle_mage",
+      "basics": "Arcane bolt: 5–7 base damage per mage, range 2–5 tiles, ignoring 50% of armour, with unlimited ammunition. Melee fallback: 3–5 per mage. Spell damage and healing scale with the mages still standing.",
+      "rig": "The current 3D Mage is a static model. These gameplay spells already exist in Godot; the model still needs a rig, casting clips and game integration.",
+      "status": "Implemented Godot kit",
+      "name": "Battle Mages",
+      "skills": [
+        {
+          "id": "chain_lightning",
+          "name": "Chain Lightning",
+          "availability": "Base kit · Key 1 · spell · Every other turn",
+          "description": "Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage).",
+          "ability": {
+            "id": "chain_lightning",
+            "name": "Chain Lightning",
+            "kind": "spell",
+            "icon": "lightning",
+            "target": "enemy",
+            "range": 6,
+            "sight": true,
+            "power": [
+              9,
+              12
+            ],
+            "ignoreArmor": true,
+            "chain": {
+              "jumps": 2,
+              "reach": 2,
+              "falloff": 0.6
+            },
+            "hitBonus": 15,
+            "moraleDamage": 6,
+            "cooldown": 2,
+            "fx": "lightning",
+            "description": "Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage)."
+          }
+        },
+        {
+          "id": "frost_blast",
+          "name": "Frost Blast",
+          "availability": "Base kit · Key 2 · spell · Every 3 turns",
+          "description": "A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense.",
+          "ability": {
+            "id": "frost_blast",
+            "name": "Frost Blast",
+            "kind": "spell",
+            "icon": "frost",
+            "target": "enemy",
+            "range": 5,
+            "sight": true,
+            "power": [
+              5,
+              7
+            ],
+            "ignoreArmor": true,
+            "splash": 0.5,
+            "status": {
+              "id": "chilled",
+              "turns": 1
+            },
+            "hitBonus": 15,
+            "moraleDamage": 4,
+            "cooldown": 3,
+            "fx": "frost",
+            "description": "A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense."
+          }
+        },
+        {
+          "id": "healing_light",
+          "name": "Healing Light",
+          "availability": "Base kit · Key 3 · spell · Every other turn",
+          "description": "Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead.",
+          "ability": {
+            "id": "healing_light",
+            "name": "Healing Light",
+            "kind": "spell",
+            "icon": "heal",
+            "target": "ally",
+            "range": 5,
+            "heal": [
+              8,
+              11
+            ],
+            "moraleGain": 8,
+            "cooldown": 2,
+            "fx": "heal",
+            "description": "Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead."
+          }
+        },
+        {
+          "id": "mending_circle",
+          "name": "Mending Circle",
+          "availability": "Promotion · Key 4 · spell · Every 3 turns",
+          "description": "Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead.",
+          "ability": {
+            "id": "mending_circle",
+            "name": "Mending Circle",
+            "kind": "spell",
+            "icon": "circle",
+            "target": "self",
+            "aura": 2,
+            "heal": [
+              4,
+              6
+            ],
+            "moraleGain": 5,
+            "cooldown": 3,
+            "fx": "circle",
+            "description": "Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead."
+          }
+        }
+      ]
+    },
+    {
+      "file": "succubus-3d.html",
+      "unit": null,
+      "name": "Succubus",
+      "status": "Combat animation and approved spell concept; gameplay kit pending",
+      "basics": "The Succubus is currently a 3D sandbox character, with no unit entry or combat ability kit in the Godot gameplay data.",
+      "rig": "The whip Attack clip is available in the pose viewer. Sovereign Kiss has an approved visual direction and a Blender handoff; its animation and gameplay implementation remain pending.",
+      "skills": [
+        {
+          "id": "whip_attack",
+          "name": "Whip attack",
+          "availability": "Existing animation · Sandbox only",
+          "description": "A left-handed bladed lash extends and cracks like a whip twice, an overhand strike and a rising underhand one, both forward at the tile ahead, then recoils and falls. Damage, gameplay reach, costs and cooldown are not defined; the two animated strikes do not establish two gameplay hits."
+        },
+        {
+          "id": "sovereign_kiss",
+          "name": "Sovereign Kiss",
+          "availability": "Approved visual direction · Gameplay pending",
+          "description": "A blown kiss becomes a large heart of pink fog that passes through opponents, enthralls eligible targets and dissolves beyond the formation. Cast with the free right hand while the left keeps the whip lowered. Target count, duration, resistance, range, cost and cooldown remain undecided."
+        }
+      ],
+      "links": "<a href=\"sovereign-kiss.html\">Sovereign Kiss schematic and icon</a> · <a href=\"sovereign-kiss/blender-handoff.html\">Spell animation handoff</a>"
+    },
+    {
+      "file": "wolf-scout.html",
+      "unit": null,
+      "name": "Wolf Scout",
+      "status": "Animation direction only; gameplay kit pending",
+      "basics": "The Wolf Scout has no unit entry, named combat skills, passive abilities or promotion in the current Godot gameplay data. Its rig contract defines the following attack direction.",
+      "rig": "The editable rig is delivered; production attack clips and a verified game export remain pending.",
+      "skills": [
+        {
+          "id": "dual_dagger_attack",
+          "name": "Dual-dagger attack",
+          "availability": "Planned animation · Gameplay pending",
+          "description": "Readable alternating dagger arcs with independent hand attachments. Exact impact timing will be set during integration. Damage, reach, costs, cooldown and any special effects have not been defined."
+        }
+      ],
+      "links": "<a href=\"wolf-scout/rig-contract.json\" download>Rig and animation contract</a>"
+    }
+  ]
+}

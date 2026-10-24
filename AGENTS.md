@@ -9,6 +9,11 @@ working. Ask for missing personal preferences; do not invent a biography.
 - Keep Workspace content in English unless another language is explicitly
   requested for that output. A conversation in another language does not change
   the default language of stored work.
+- Desktop only: optimise nothing for phones or tablets. This covers games,
+  reports, artifacts, pages and tools: no responsive or small-screen layouts,
+  touch controls, mobile variants or phone/tablet checks. Verify at desktop
+  window sizes only. The existing Mobile Access feature stays as it is; do not
+  extend or test it unless asked.
 - Check `processes/` for an existing workflow and `knowledge/` for prior decisions.
 - Use the project skills in `.agents/skills/`. Claude entries in
   `.claude/skills/` are complete distribution copies. After editing a shared skill,

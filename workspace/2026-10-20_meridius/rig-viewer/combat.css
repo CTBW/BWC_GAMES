@@ -1,0 +1,12 @@
+/* Combat reference shared by the six character model and rig cards. */
+.rig-combat{margin:28px 0;padding:22px;border:1px solid var(--mak-border);background:var(--mak-surface);scroll-margin-top:20px}
+html[data-mak-report=document] .rig-combat h2{margin:0 0 8px;padding:0}
+.rig-combat p{margin:12px 0}
+.rig-combat-status,.rig-combat-note,.rig-combat-sources{font-size:13px;color:var(--mak-muted)}
+.rig-combat-table{overflow-x:auto;max-width:100%;margin:18px 0}
+html[data-mak-report=document] .rig-combat table{display:table;min-width:640px;width:100%}
+.rig-combat caption{text-align:left;font-weight:600;padding:0 0 10px}
+html[data-mak-report=document] .rig-combat :is(th,td){text-align:left;vertical-align:top;border-bottom:1px solid var(--mak-border);white-space:normal}
+.rig-combat th:first-child{width:17%}
+.rig-combat td:nth-child(2){width:23%;color:var(--mak-muted)}
+.rig-combat td:nth-child(3){width:60%}

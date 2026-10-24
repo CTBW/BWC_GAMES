@@ -32,6 +32,7 @@ inbox/*
 **/jobs.json
 **/result.json
 **/upload.json
+**/receipts/
 **/*.blend1
 
 # Editor and operating-system files

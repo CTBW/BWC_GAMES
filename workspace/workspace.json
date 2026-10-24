@@ -11,6 +11,10 @@
       "folder": "2026-10-20_meridius",
       "steps": [
         {
+          "name": "Game guide",
+          "path": "hub.html"
+        },
+        {
           "name": "Magic and war machines",
           "path": "magic.html"
         },

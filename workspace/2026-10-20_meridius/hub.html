@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Game guide</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <link rel="stylesheet" href="hub/hub.css">
+  <script defer src="../_shared/report.js"></script>
+  <script defer src="hub/hub.js"></script>
+</head>
+<body class="hub-document">
+<svg class="icon-sprite" aria-hidden="true"><symbol id="icon-aimed_shot" viewBox="0 0 24 24"><circle cx="13.5" cy="10.5" r="7" fill="#f2ecdc" stroke="#2b1d10" stroke-width="1.2"></circle><circle cx="13.5" cy="10.5" r="4.4" fill="#a3261c" stroke="#2b1d10" stroke-width="0.8"></circle><circle cx="13.5" cy="10.5" r="1.9" fill="#f2ecdc" stroke="#2b1d10" stroke-width="0.6"></circle><path d="M13.5 1.2 V3.6 M20.5 10.5 H22.9 M13.5 17.4 V19.8 M4.1 10.5 H6.5" stroke="#ffd76a" stroke-width="1.4" stroke-linecap="round"></path><path d="M2.4 21.6 L12 12" stroke="#2b1d10" stroke-width="3" stroke-linecap="round"></path><path d="M2.4 21.6 L12 12" stroke="#a8743f" stroke-width="1.7" stroke-linecap="round"></path><path d="M13.5 10.5 L10.7 11.5 L12.5 13.3 Z" fill="#cfd3d6" stroke="#2b1d10" stroke-width="0.6" stroke-linejoin="round"></path><path d="M4.6 19.4 L1.6 18.7 L2.8 20.4 Z M4.6 19.4 L5.3 22.4 L3.6 21.2 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.5" stroke-linejoin="round"></path></symbol><symbol id="icon-bash" viewBox="0 0 24 24"><path d="M10 3 L17 5.5 V10 C17 14 14 17 10 18.5 C6 17 3 14 3 10 V5.5 Z" fill="#2f58b8" stroke="#2b1d10" stroke-width="1.2"></path><path d="M17 12 L22 10 M17 15 L22 15 M16 18 L21 20" stroke="#ffd76a" stroke-width="1.6"></path></symbol><symbol id="icon-blood" viewBox="0 0 24 24"><path d="M12 2.5 C15.5 8 18.5 11 18.5 15 C18.5 18.6 15.6 21.5 12 21.5 C8.4 21.5 5.5 18.6 5.5 15 C5.5 11 8.5 8 12 2.5 Z" fill="#c8241a" stroke="#4a0a06" stroke-width="1.2"></path><path d="M8.5 13 L10.5 15 L8.5 17 M15.5 13 L13.5 15 L15.5 17" fill="none" stroke="#ffd0b0" stroke-width="1.4"></path></symbol><symbol id="icon-bolt" viewBox="0 0 24 24"><path d="M3 21 L19 5" stroke="#5a3a22" stroke-width="2.6"></path><path d="M19 5 L22 2 L21 8 Z" fill="#cfd3d6" stroke="#2b1d10"></path><path d="M8 6 L10 9 L7 10 L10 13" stroke="#ffd76a" stroke-width="1.6" fill="none"></path></symbol><symbol id="icon-charge" viewBox="0 0 24 24"><path d="M3 8 H13 V4 L21 12 L13 20 V16 H3 Z" fill="#a3261c" stroke="#2b1d10" stroke-width="1.2"></path></symbol><symbol id="icon-circle" viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="9.5" ry="5" fill="none" stroke="#c99a3c" stroke-width="2.2"></ellipse><ellipse cx="12" cy="14" rx="5.5" ry="2.8" fill="#fff0b0" stroke="#8a6a18" stroke-width="1"></ellipse><path d="M12 3 V9 M9 6 H15" stroke="#5aa83a" stroke-width="2.2"></path></symbol><symbol id="icon-defend" viewBox="0 0 24 24"><path d="M2.4 5.6 C7 0.9 17 0.9 21.6 5.6" fill="none" stroke="#ffd76a" stroke-width="1.4" stroke-linecap="round"></path><circle cx="17" cy="8.3" r="2.7" fill="#f2ecdc" stroke="#2b1d10" stroke-width="1.1"></circle><path d="M12.2 20.5 V15.6 C12.2 12.6 14.4 11.2 17 11.2 C19.6 11.2 21.8 12.6 21.8 15.6 V20.5 Z" fill="#f2ecdc" stroke="#2b1d10" stroke-width="1.1" stroke-linejoin="round"></path><path d="M9.5 5 L16 7.5 V12.5 C16 16.8 13.2 19.8 9.5 21.8 C5.8 19.8 3 16.8 3 12.5 V7.5 Z" fill="#2f58b8" stroke="#2b1d10" stroke-width="1.4" stroke-linejoin="round"></path><path d="M9.5 6.6 L4.5 8.5 V12.5 C4.5 16 6.6 18.6 9.5 20.2 Z" fill="#4a78d8"></path><path d="M9.5 9.6 L12 13 L9.5 16.4 L7 13 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.6"></path></symbol><symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2 12 C6 6 18 6 22 12 C18 18 6 18 2 12 Z" fill="#f2ecdc" stroke="#2b1d10" stroke-width="1.2"></path><circle cx="12" cy="12" r="3.4" fill="#c99a3c" stroke="#2b1d10"></circle></symbol><symbol id="icon-fire" viewBox="0 0 24 24"><path d="M12 2 C17 7 19 11 18 15 C17 19 14.5 21 12 21 C8 21 5.5 18 6 14 C6.5 11 9 10 9 6 C11 8 11.5 9 11.5 11 C13 9 13 5 12 2 Z" fill="#ff8a2a" stroke="#7a2a0a" stroke-width="1.2" stroke-linejoin="round"></path><path d="M12 12 C14.5 14 15 16 14 18 C13 19.5 11 19.5 10 18.2 C9 16.5 10.5 15 12 12 Z" fill="#ffe08a"></path></symbol><symbol id="icon-frost" viewBox="0 0 24 24"><path d="M12 2 V22 M3.5 7 L20.5 17 M3.5 17 L20.5 7" stroke="#2a5a8a" stroke-width="3.2" stroke-linecap="round"></path><path d="M12 2 V22 M3.5 7 L20.5 17 M3.5 17 L20.5 7" stroke="#d4f0ff" stroke-width="1.6" stroke-linecap="round"></path><path d="M9.5 4 L12 6.5 L14.5 4 M9.5 20 L12 17.5 L14.5 20" fill="none" stroke="#d4f0ff" stroke-width="1.3"></path></symbol><symbol id="icon-growl" viewBox="0 0 24 24"><path d="M2.6 21.5 C2 16 2.6 12 4.4 9.6 L4.3 2.6 L9.2 7.1 C10.8 6.5 12.2 6.8 13.2 7.6 L17.8 9.7 C18.6 10.1 18.7 11.1 18 11.6 L16.6 14.4 C16.2 15.4 15 15.8 13.6 15.8 C11.6 15.9 10.2 16.8 9.8 18.6 L10 21.5 Z" fill="#3a3442" stroke="#2b1d10" stroke-width="1.1" stroke-linejoin="round"></path><path d="M5.3 4.7 L5.4 8.4 L7.9 6.9 Z" fill="#8a5a50"></path><path d="M10.4 7.1 C11.5 7.4 12.5 8 13.3 8.8 L17.5 10.4 C17.9 10.7 17.9 11.2 17.5 11.4 L16.6 11.9 L13 12.6 C12.2 11.2 11.1 9.2 10.4 7.1 Z" fill="#f4f1ea"></path><path d="M9.8 18.6 C10.2 16.8 11.6 15.9 13.6 15.8 C14.6 17.6 14.4 19.8 13.6 21.5 L10 21.5 Z" fill="#f4f1ea" stroke="#2b1d10" stroke-width="0.9" stroke-linejoin="round"></path><path d="M12.9 12.7 L16.8 12 L16.3 14.2 Z" fill="#7a1a14"></path><path d="M15.5 12.2 L15.85 13.7 L16.3 12.05 Z M14 13.6 L14.35 12.5 L14.8 13.8 Z" fill="#ffffff"></path><circle cx="18.1" cy="10.6" r="0.95" fill="#141016"></circle><path d="M11.2 9.3 L13.1 9.8 L11.4 10.2 Z" fill="#ffd76a"></path><path d="M10.5 8.5 L13.5 9.4" stroke="#2b1d10" stroke-width="0.9" stroke-linecap="round"></path><path d="M2.4 18.4 C4.8 19.4 7.6 19.6 9.9 18.9 L9.95 20.5 C7.4 21.2 4.6 21.1 2.5 20.1 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.7" stroke-linejoin="round"></path><path d="M19.9 8.6 C21.1 10.1 21.1 12.9 19.9 14.4 M21.9 7 C23.7 9.3 23.7 13.7 21.9 16" fill="none" stroke="#e8553d" stroke-width="1.3" stroke-linecap="round"></path></symbol><symbol id="icon-gut" viewBox="0 0 24 24"><path d="M4 20 C6 14 4 9 8 6 C11 4 13 8 11 10 C9 12 12 14 15 12 C18 10 17 5 21 4" fill="none" stroke="#4a0a14" stroke-width="3.4" stroke-linecap="round"></path><path d="M4 20 C6 14 4 9 8 6 C11 4 13 8 11 10 C9 12 12 14 15 12 C18 10 17 5 21 4" fill="none" stroke="#d04050" stroke-width="1.6" stroke-linecap="round"></path><circle cx="18" cy="17" r="2.6" fill="#a6ff5a" stroke="#2b4a12"></circle></symbol><symbol id="icon-heal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#fff0b0" stroke="#8a6a18" stroke-width="1.2"></circle><path d="M10 6.5 H14 V10 H17.5 V14 H14 V17.5 H10 V14 H6.5 V10 H10 Z" fill="#5aa83a" stroke="#2b4a12" stroke-width="1"></path></symbol><symbol id="icon-horn" viewBox="0 0 24 24"><path d="M3 9 L12 7 C17 6 21 9 21 14 L17 15 C16 12 14 11 12 12 L3 13 Z" fill="#e9dcc0" stroke="#2b1d10" stroke-width="1.2"></path></symbol><symbol id="icon-hound_charge" viewBox="0 0 24 24"><path d="M1.2 8.6 H6.4 M0.8 12.8 H5.4 M1.2 17 H6.4" stroke="#f2ecdc" stroke-width="1.5" stroke-linecap="round"></path><g transform="translate(14 12.6) rotate(24) translate(-14 -12.6)"><path d="M14 12.2 C17 12.2 19 14.8 19 16.8 C19 18.7 17.4 19.5 16 19.1 C15 18.8 13 18.8 12 19.1 C10.6 19.5 9 18.7 9 16.8 C9 14.8 11 12.2 14 12.2 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="1.2" stroke-linejoin="round"></path><ellipse cx="9.3" cy="10.9" rx="1.75" ry="2.25" fill="#ffd76a" stroke="#2b1d10" stroke-width="1.1"></ellipse><ellipse cx="12.2" cy="7.7" rx="1.8" ry="2.4" fill="#ffd76a" stroke="#2b1d10" stroke-width="1.1"></ellipse><ellipse cx="15.8" cy="7.7" rx="1.8" ry="2.4" fill="#ffd76a" stroke="#2b1d10" stroke-width="1.1"></ellipse><ellipse cx="18.7" cy="10.9" rx="1.75" ry="2.25" fill="#ffd76a" stroke="#2b1d10" stroke-width="1.1"></ellipse><path d="M10.6 14.6 C11.6 13.6 12.8 13.2 14 13.2" fill="none" stroke="#fff6d0" stroke-width="1" stroke-linecap="round"></path></g></symbol><symbol id="icon-howl" viewBox="0 0 24 24"><path d="M6.9 0.9 A2.7 2.7 0 1 0 9.6 5.2 A2.2 2.2 0 1 1 6.9 0.9 Z" fill="#f3e7b4" stroke="#2b1d10" stroke-width="0.6" stroke-linejoin="round"></path><g transform="translate(2.4 0.6) translate(6.5 21.5) rotate(-24) scale(0.88) translate(-6.5 -21.5)"><path d="M1.6 26 L2.5 20.5 C2 16 2.6 12 4.4 9.6 L4.3 2.6 L9.2 7.1 C10.8 6.5 12.2 6.8 13.2 7.6 L17.8 9.7 C18.6 10.1 18.7 11.1 18 11.6 L16.6 14.4 C16.2 15.4 15 15.8 13.6 15.8 C11.6 15.9 10.2 16.8 9.8 18.6 L11.2 26 Z" fill="#3a3442" stroke="#2b1d10" stroke-width="1.1" stroke-linejoin="round"></path><path d="M5.3 4.7 L5.4 8.4 L7.9 6.9 Z" fill="#8a5a50"></path><path d="M10.4 7.1 C11.5 7.4 12.5 8 13.3 8.8 L17.5 10.4 C17.9 10.7 17.9 11.2 17.5 11.4 L16.6 11.9 L13 12.6 C12.2 11.2 11.1 9.2 10.4 7.1 Z" fill="#f4f1ea"></path><path d="M9.8 18.6 C10.2 16.8 11.6 15.9 13.6 15.8 C14.6 17.6 15 21.5 14.6 26 L11.2 26 Z" fill="#f4f1ea" stroke="#2b1d10" stroke-width="0.9" stroke-linejoin="round"></path><path d="M12.9 12.7 L16.8 12 L16.3 14.2 Z" fill="#7a1a14"></path><path d="M15.5 12.2 L15.85 13.7 L16.3 12.05 Z M14 13.6 L14.35 12.5 L14.8 13.8 Z" fill="#ffffff"></path><circle cx="18.1" cy="10.6" r="0.95" fill="#141016"></circle><path d="M11.2 9.3 L13.1 9.8 L11.4 10.2 Z" fill="#ffd76a"></path><path d="M10.5 8.5 L13.5 9.4" stroke="#2b1d10" stroke-width="0.9" stroke-linecap="round"></path><path d="M2.4 18.4 C4.8 19.4 7.6 19.6 9.9 18.9 L9.95 20.5 C7.4 21.2 4.6 21.1 2.5 20.1 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.7" stroke-linejoin="round"></path><path d="M19.9 8.6 C21.1 10.1 21.1 12.9 19.9 14.4 M21.9 7 C23.7 9.3 23.7 13.7 21.9 16 M23.9 5.4 C26.3 8.5 26.3 14.5 23.9 17.6" fill="none" stroke="#e8553d" stroke-width="1.4" stroke-linecap="round"></path></g></symbol><symbol id="icon-lick_wounds" viewBox="0 0 24 24"><path d="M3.6 4 H12.4 V11.6 C12.4 15.6 10.4 18.2 8 18.2 C5.6 18.2 3.6 15.6 3.6 11.6 Z" fill="#e8798c" stroke="#2b1d10" stroke-width="1.2" stroke-linejoin="round"></path><path d="M8 5.4 V12.6" stroke="#b04a5e" stroke-width="1.1" stroke-linecap="round"></path><path d="M5.5 6.2 V10.8" stroke="#f8bcc6" stroke-width="1.1" stroke-linecap="round"></path><path d="M1.8 2 H14.2 V4.4 C10.2 5.8 5.8 5.8 1.8 4.4 Z" fill="#f4f1ea" stroke="#2b1d10" stroke-width="1" stroke-linejoin="round"></path><path d="M16 4.6 H19 V7.6 H22 V10.6 H19 V13.6 H16 V10.6 H13 V7.6 H16 Z" fill="#6cc04a" stroke="#234a12" stroke-width="1" stroke-linejoin="round"></path><path d="M19 15.4 L19.8 17.7 L22.1 18.5 L19.8 19.3 L19 21.6 L18.2 19.3 L15.9 18.5 L18.2 17.7 Z" fill="#fff0b0" stroke="#8a6a18" stroke-width="0.6" stroke-linejoin="round"></path><path d="M13.4 20.6 L13.8 21.6 L14.8 22 L13.8 22.4 L13.4 23.4 L13 22.4 L12 22 L13 21.6 Z" fill="#b8f09a"></path></symbol><symbol id="icon-lightning" viewBox="0 0 24 24"><path d="M14 2 L5 13 H11 L8 22 L19 9 H13 L16 2 Z" fill="#9fd0ff" stroke="#1d3a6a" stroke-width="1.3" stroke-linejoin="round"></path><path d="M13.5 4 L8 11.5 H12" fill="none" stroke="#ffffff" stroke-width="1"></path></symbol><symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 2.5 L20 5.5 V11 C20 16 16.5 19.5 12 21.5 C7.5 19.5 4 16 4 11 V5.5 Z" fill="#2f58b8" stroke="#2b1d10" stroke-width="1.3"></path><path d="M12 7 L15 11 L12 15 L9 11 Z" fill="#f2efe4"></path></symbol><symbol id="icon-shield_charge" viewBox="0 0 24 24"><path d="M1.6 7.6 H7 M0.9 12 H5.8 M1.6 16.4 H7" stroke="#ffd76a" stroke-width="1.5" stroke-linecap="round"></path><g transform="translate(12.2 12) rotate(16) scale(0.86) translate(-12 -12)"><path d="M12 2.5 L20 5.5 V11 C20 16 16.5 19.5 12 21.5 C7.5 19.5 4 16 4 11 V5.5 Z" fill="#2f58b8" stroke="#2b1d10" stroke-width="1.4" stroke-linejoin="round"></path><path d="M12 4.1 L5.5 6.5 V11 C5.5 15 8.2 18 12 19.8 Z" fill="#4a78d8"></path><path d="M12 7 L15 11 L12 15 L9 11 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.6"></path></g><path d="M20.4 6.4 L21.3 10 L23.4 11.6 L21.3 13.2 L20.4 16.8 L19.5 13.2 L17.6 11.6 L19.5 10 Z" fill="#fff0b0" stroke="#a3261c" stroke-width="0.8" stroke-linejoin="round"></path></symbol><symbol id="icon-spearwall" viewBox="0 0 24 24"><path d="M4 21 L11 6 M10 21 L15 6 M16 21 L19 6" stroke="#7a5532" stroke-width="1.8"></path><path d="M11 6 L12 2 L9.5 5.5 Z M15 6 L16 2 L13.5 5.5 Z M19 6 L20 2 L17.5 5.5 Z" fill="#d7dbe0" stroke="#2b1d10" stroke-width="0.8"></path></symbol><symbol id="icon-square" viewBox="0 0 24 24"><path d="M16.38 13.56 L19.35 16.53 M13.56 16.38 L16.53 19.35 M10.44 16.38 L7.47 19.35 M7.62 13.56 L4.65 16.53 M7.62 10.44 L4.65 7.47 M10.44 7.62 L7.47 4.65 M13.56 7.62 L16.53 4.65 M16.38 10.44 L19.35 7.47" stroke="#c08a52" stroke-width="1.4" stroke-linecap="round"></path><path d="M21.19 18.36 L18.58 17.30 L18.93 16.10 L20.13 15.75 Z M18.36 21.19 L15.75 20.13 L16.10 18.93 L17.30 18.58 Z M5.64 21.19 L6.70 18.58 L7.90 18.93 L8.25 20.13 Z M2.81 18.36 L3.87 15.75 L5.07 16.10 L5.42 17.30 Z M2.81 5.64 L5.42 6.70 L5.07 7.90 L3.87 8.25 Z M5.64 2.81 L8.25 3.87 L7.90 5.07 L6.70 5.42 Z M18.36 2.81 L17.30 5.42 L16.10 5.07 L15.75 3.87 Z M21.19 5.64 L20.13 8.25 L18.93 7.90 L18.58 6.70 Z" fill="#e4e8ec" stroke="#2b1d10" stroke-width="0.6" stroke-linejoin="round"></path><path d="M12 5.2 L18.8 12 L12 18.8 L5.2 12 Z" fill="#2f58b8" stroke="#2b1d10" stroke-width="1.3" stroke-linejoin="round"></path><path d="M12 6.9 L7 12 L12 17.1 Z" fill="#4a78d8"></path><path d="M12 9 L14.6 12 L12 15 L9.4 12 Z" fill="#ffd76a" stroke="#2b1d10" stroke-width="0.6"></path></symbol><symbol id="icon-stone" viewBox="0 0 24 24"><path d="M3 20 C6 12 10 8 16 6" fill="none" stroke="#c9b79a" stroke-width="1.6" stroke-dasharray="2 2.5"></path><path d="M15 3 L20.5 4.5 L22 9.5 L18.5 13 L13.5 12 L12 7.5 Z" fill="#8a8378" stroke="#2b1d10" stroke-width="1.3" stroke-linejoin="round"></path><circle cx="15.5" cy="6.5" r="1.3" fill="#c9c2b4"></circle></symbol><symbol id="icon-thrust" viewBox="0 0 24 24"><path d="M2 18 L16 9" stroke="#7a5532" stroke-width="2"></path><path d="M16 9 L22 5.5 L18.5 11 Z" fill="#d7dbe0" stroke="#2b1d10"></path><path d="M17 15 L22 15 M18 18 L22 19" stroke="#ffd76a" stroke-width="1.5"></path></symbol></svg>
+<div class="hub-shell">
+  <aside class="hub-rail">
+    <a class="hub-brand" href="#overview"><span class="brand-mark" aria-hidden="true">M</span><span>MERIDIUS<small>Amberfeld against the host</small></span></a>
+    <div class="rail-label">Game guide</div>
+    <nav role="tablist" aria-label="Game guide sections" aria-orientation="vertical"><button type="button" role="tab" id="nav-overview" data-page="overview" aria-controls="overview" aria-selected="true"><span>01</span>Overview</button><button type="button" role="tab" id="nav-characters" data-page="characters" aria-controls="characters" aria-selected="false" tabindex="-1"><span>02</span>Characters</button><button type="button" role="tab" id="nav-factions" data-page="factions" aria-controls="factions" aria-selected="false" tabindex="-1"><span>03</span>Factions</button><button type="button" role="tab" id="nav-abilities" data-page="abilities" aria-controls="abilities" aria-selected="false" tabindex="-1"><span>04</span>Abilities</button><button type="button" role="tab" id="nav-animations" data-page="animations" aria-controls="animations" aria-selected="false" tabindex="-1"><span>05</span>Animations</button><button type="button" role="tab" id="nav-terrain" data-page="terrain" aria-controls="terrain" aria-selected="false" tabindex="-1"><span>06</span>Terrain</button><button type="button" role="tab" id="nav-pages" data-page="pages" aria-controls="pages" aria-selected="false" tabindex="-1"><span>07</span>More pages</button></nav>
+    <div class="rail-note"><span class="dot"></span>Built from the game data<br>24 October 2026</div>
+  </aside>
+  <main class="hub-main">
+    <div class="hub-topline"><span>Project / Meridius</span><span class="hub-pill">Godot build · game data</span></div>
+    <div class="hub-page" id="overview" role="tabpanel" aria-labelledby="nav-overview" tabindex="-1">
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">Isometric roguelike tactics</p><h1>Hold the line<br>until dawn.</h1></div>
+        <p>Isometric roguelike tactics RPG: Amberfeld Garrison against the endless Hillsvain Host, with turn-based squad battles, waves and a last stand until dawn. Blender environment art; drawn units until fal is unlocked.</p>
+      </div>
+      <figure class="hub-hero">
+        <img src="media/horde-stand-dawn.jpg" alt="Battle capture of the last stand at Brannsted: the garrison's blue squads hold a palisaded steading by a river while the host's red-marked goblins and orcs press in from the north" width="1920" height="1080">
+        <div class="hero-overlay">
+          <div class="hero-kicker">The Hillsvain Host · Hillsvain Woods</div>
+          <div class="hero-wordmark">MERIDIUS</div>
+          <div class="hero-line">Hold Brannsted until the Margrave's riders come.</div>
+        </div>
+        <figcaption>Battle capture · The last stand at Brannsted</figcaption>
+      </figure>
+      <div class="hub-actions">
+        <button type="button" class="primary-action" data-open="characters">Meet the units <span>→</span></button>
+        <button type="button" class="secondary-action" data-open="abilities">Abilities <span>→</span></button>
+        <button type="button" class="secondary-action" data-open="terrain">Terrain <span>→</span></button>
+      </div>
+      <div class="hub-stats"><div><strong>22</strong><span>figures on the field</span></div><div><strong>25</strong><span>abilities</span></div><div><strong>13</strong><span>encounters</span></div><div><strong>11</strong><span>kinds of ground</span></div></div>
+      <div class="editorial-grid">
+        <section class="note-card">
+          <p class="hub-eyebrow">The campaign</p>
+          <h2>The Hillsvain Host</h2>
+          <p>A host of orcs and goblins is pouring out of the Hillsvain Woods, burning every steading west of the Vattern. The Margrave&#x27;s riders are days away. March out, slow the horde, and hold Brannsted until they come: you are all that stands between the host and the river.</p>
+          <p class="muted">5 stages · 6 squads in the company · 14 command points · tier 1, apprentice</p>
+        </section>
+        <section class="note-card">
+          <p class="hub-eyebrow">In this guide</p>
+          <h2>Everything the game knows, in one place.</h2>
+          <ul class="guide-list"><li><button type="button" class="text-action" data-open="characters">Characters</button> every unit with its stats, abilities, poses and where it fights.</li><li><button type="button" class="text-action" data-open="factions">Factions</button> the garrison, its allies and the host, side by side.</li><li><button type="button" class="text-action" data-open="abilities">Abilities</button> all abilities by kind, and which units carry them.</li><li><button type="button" class="text-action" data-open="animations">Animations</button> the drawn battle poses, playing at game timing, and the 3D rigs.</li><li><button type="button" class="text-action" data-open="terrain">Terrain</button> ground, obstacles and the five battlefields.</li><li><button type="button" class="text-action" data-open="pages">More pages</button> the card&#x27;s other tabs and where to find them.</li></ul>
+        </section>
+      </div>
+      <div class="section-heading"><h2>Encounters</h2><span>13 in the campaign · units listed include later waves and allies</span></div>
+      <div class="encounter-grid"><article class="encounter">
+            <span class="encounter-kind">patrol</span>
+            <h3>Scouts of the host</h3>
+            <p>A scouting band of the host. Its horn-bearer will call the rest if you give him three turns: cut him down first.</p>
+            <p class="muted">Silence the horn · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:goblin_horn"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_horn.png')"></span>Goblin Horn-bearer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Stragglers ahead of the host</h3>
+            <p>A mob of rabble running ahead of the host, burning as it goes. Their outriders are not far behind.</p>
+            <p class="muted">Break the stragglers · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">raid</span>
+            <h3>Raiders burning the steadings</h3>
+            <p>Raiders are firing the farms. Their main body is coming back down the road with the loot: finish the first band before it arrives.</p>
+            <p class="muted">Drive off the raiders · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Wolf riders on the road</h3>
+            <p>Wolf riders and archers. The riders will circle your line for your crossbowmen: keep your flanks closed and your spears set.</p>
+            <p class="muted">Hold against the riders · Forest clearing</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Vanguard of the host</h3>
+            <p>An orc drives the vanguard of the host before him. Behind it the next band is already on the road.</p>
+            <p class="muted">Break the vanguard · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:orc_warrior"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span>Orc Warrior</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Orc brutes and their goblins</h3>
+            <p>Brutes smash squads out of the line and push into the gap. Do not let the goblins follow them through.</p>
+            <p class="muted">Stop the brutes · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:orc_brute"><span class="chip-face" style="background-image:url('unit-roster/img/orc_brute.png')"></span>Orc Brute</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Moss trolls of the deep wood</h3>
+            <p>The host has woken the trolls of the deep wood. Their wounds close as you watch: concentrate your blows.</p>
+            <p class="muted">Fell the trolls · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:troll"><span class="chip-face" style="background-image:url('unit-roster/img/troll.png')"></span>Moss Troll</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>Shamans of the host</h3>
+            <p>Goblin witch-doctors walk with this band. Their fire falls on your ranks, careless of their own, and their hexes drive the goblins mad. Get at the shamans before they burn the company.</p>
+            <p class="muted">Silence the shamans · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>The host&#x27;s war engines</h3>
+            <p>The host is dragging its war engines to the front: a rock lobber and a spiked war wagon, with spears to guard them. Meet the wagon&#x27;s charge with set spears, then rush the lobber before it pounds your line flat.</p>
+            <p class="muted">Wreck the engines · Forest clearing, Ruined steading</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:rock_lobber"><span class="chip-face" style="background-image:url('unit-roster/img/rock_lobber.png')"></span>Rock Lobber</button><button type="button" class="unit-chip" data-goto="characters:war_wagon"><span class="chip-face" style="background-image:url('unit-roster/img/war_wagon.png')"></span>Spiked War Wagon</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">ambush</span>
+            <h3>Ambush on the road</h3>
+            <p>They were waiting on both sides of the road. Form a ring, then break them.</p>
+            <p class="muted">Fight free · Forest clearing</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">stand</span>
+            <h3>Cover the refugees</h3>
+            <p>The people of Ostby are crossing behind you. Keep the horde off the road until the last cart is through.</p>
+            <p class="muted">Hold the ford for six turns · Vattern ford</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button><button type="button" class="unit-chip" data-goto="characters:orc_warrior"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span>Orc Warrior</button><button type="button" class="unit-chip" data-goto="characters:militia"><span class="chip-face" style="background-image:url('unit-roster/img/militia.png')"></span>Militiaman</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">skirmish</span>
+            <h3>The vanguard&#x27;s camp</h3>
+            <p></p>
+            <p class="muted">Raider war camp</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:orc_warlord"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warlord.png')"></span>Orc Warlord</button><button type="button" class="unit-chip" data-goto="characters:orc_warrior"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span>Orc Warrior</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button></div>
+          </article><article class="encounter">
+            <span class="encounter-kind">stand · objective</span>
+            <h3>The last stand at Brannsted</h3>
+            <p>The whole host is coming, by night. Hold the ground until the Margrave&#x27;s riders arrive at dawn, or slay the warchief and break the horde.</p>
+            <p class="muted">Hold until dawn · Brannsted steading, Vattern ford</p>
+            <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_rabble"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span>Goblin Rabble</button><button type="button" class="unit-chip" data-goto="characters:goblin_spear"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span>Goblin Spearman</button><button type="button" class="unit-chip" data-goto="characters:goblin_archer"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span>Goblin Archer</button><button type="button" class="unit-chip" data-goto="characters:wolf_rider"><span class="chip-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span>Goblin Wolf Rider</button><button type="button" class="unit-chip" data-goto="characters:orc_warrior"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span>Orc Warrior</button><button type="button" class="unit-chip" data-goto="characters:orc_brute"><span class="chip-face" style="background-image:url('unit-roster/img/orc_brute.png')"></span>Orc Brute</button><button type="button" class="unit-chip" data-goto="characters:orc_warlord"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warlord.png')"></span>Orc Warlord</button><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button><button type="button" class="unit-chip" data-goto="characters:militia"><span class="chip-face" style="background-image:url('unit-roster/img/militia.png')"></span>Militiaman</button></div>
+          </article></div>
+    </div>
+    <div class="hub-page" id="characters" role="tabpanel" aria-labelledby="nav-characters" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">02 · Characters</p><h1>Every figure on the field.</h1></div>
+        <p>The in-game battle frame of each unit, with its rules from the game data. Stats are per soldier at level 1. Ability names open the ability; poses open its animations.</p>
+      </div>
+      <div class="filter-row" role="group" aria-label="Show units of"><button type="button" data-filter="all" aria-pressed="true">All <span>22</span></button><button type="button" data-filter="garrison" aria-pressed="false">Amberfeld Garrison <span>7</span></button><button type="button" data-filter="allies" aria-pressed="false">Allies and crews <span>3</span></button><button type="button" data-filter="host" aria-pressed="false">Hillsvain Host <span>12</span></button></div>
+      <div class="unit-list">
+<article class="unit-card" id="unit-footman" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/footman.png" alt="Footman in a blue cloak and cream tabard with a sword and a blue kite shield bearing a white eagle" width="138" height="193" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Footman</h3>
+            <span class="role">Line holder</span>
+            <p>Armoured infantry with sword and eagle kite shield. Holds the line and shelters weaker troops behind the shield wall.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>32</dd></div><div><dt>Morale</dt><dd>70</dd></div><div><dt>Melee</dt><dd>64</dd></div><div><dt>Defense</dt><dd>14 <small>+12 shield</small></dd></div><div><dt>Ranged def.</dt><dd>10</dd></div><div><dt>Armour</dt><dd>3</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>7–10</dd></div></dl><p class="facts">Squad of 6 · 45 silver, 3 command · per level +4 HP, +4 melee, +2 defense, +4 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:footman">10 battle poses</button> · front, front side, back, back side</li><li>3D rig: Character rigs ▸ Footman (Footmen motion study, Footman 3D rig)</li><li>Barracks, every muster</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-shield"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:shieldwall">Shield Wall</button>
+              <span class="ability-meta">Stance</span>
+              <p>Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-shield_charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:shield_charge">Charge</button>
+              <span class="ability-meta">Attack · cooldown 3</span>
+              <p>Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-defend"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:defend">Defend</button>
+              <span class="ability-meta">Stance</span>
+              <p>Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-bash"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:shieldbash">Shield Bash</button> <em>promotion</em>
+              <span class="ability-meta">Attack · reach 1 · cooldown 2</span>
+              <p>Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-spearman" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/spearman.png" alt="Bearded spearman in a blue cloak holding an upright spear" width="137" height="209" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Spearman</h3>
+            <span class="role">Anti-charge</span>
+            <p>Long spears set against the charge. Strikes first at anything that closes in, and turns choke points into killing ground.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>27</dd></div><div><dt>Morale</dt><dd>64</dd></div><div><dt>Melee</dt><dd>62</dd></div><div><dt>Defense</dt><dd>8</dd></div><div><dt>Ranged def.</dt><dd>4</dd></div><div><dt>Armour</dt><dd>2</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>7–11</dd></div></dl><p class="facts">Squad of 6 · 30 silver, 2 command · per level +4 HP, +4 melee, +2 defense, +4 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:spearman">10 battle poses</button> · front, back</li><li>3D rig: Character rigs ▸ Spearman (Spearman 3D rig)</li><li>Barracks, every muster</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-spearwall"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:spearwall">Spearwall</button>
+              <span class="ability-meta">Stance</span>
+              <p>Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-square"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:square">Square</button>
+              <span class="ability-meta">Stance</span>
+              <p>Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-thrust"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:pikethrust">Pike Thrust</button> <em>promotion</em>
+              <span class="ability-meta">Attack · reach 2 · cooldown 1</span>
+              <p>Strike an enemy two tiles away in a straight line, over the head of whoever stands between.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-crossbowman" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/crossbowman.png" alt="Crossbowman in a blue cloak holding a loaded crossbow" width="131" height="193" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Crossbowman</h3>
+            <span class="role">Ranged</span>
+            <p>Heavy bolts that punch through mail at range. Deadly behind a screen, helpless once the enemy reaches them.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>22</dd></div><div><dt>Morale</dt><dd>56</dd></div><div><dt>Melee</dt><dd>40</dd></div><div><dt>Defense</dt><dd>4</dd></div><div><dt>Ranged def.</dt><dd>6</dd></div><div><dt>Armour</dt><dd>1</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Shot</dt><dd>9–13 <small>2–7 tiles</small></dd></div></dl><p class="facts">Squad of 6 · 40 silver, 3 command · per level +3 HP, +4 ranged, +1 defense, +4 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:crossbowman">10 battle poses</button> · front, back</li><li>3D rig: Character rigs ▸ Crossbowman (Crossbowman 3D rig)</li><li>Barracks, every muster</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-eye"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:overwatch">Overwatch</button>
+              <span class="ability-meta">Stance</span>
+              <p>Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit).</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-aimed_shot"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:aimed_shot">Aimed Shot</button>
+              <span class="ability-meta">Attack · cooldown 2</span>
+              <p>Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-bolt"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:heavybolt">Heavy Bolt</button> <em>promotion</em>
+              <span class="ability-meta">Attack · cooldown 2</span>
+              <p>A fully cranked bolt: +50% damage, ignores armour, costs two bolts.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-collie_guard" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/collie_guard.png" alt="Border collie in black plate with a sword and a black shield bearing a gold eagle" width="164" height="204" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Border Collie Royal Guard</h3>
+            <span class="role">Elite guard</span>
+            <p>Sworn hounds of the royal house in black-and-gold plate. Quick on their feet, stubborn in the line and very hard to break.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>34</dd></div><div><dt>Morale</dt><dd>82</dd></div><div><dt>Melee</dt><dd>68</dd></div><div><dt>Defense</dt><dd>16 <small>+12 shield</small></dd></div><div><dt>Ranged def.</dt><dd>12</dd></div><div><dt>Armour</dt><dd>4</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Damage</dt><dd>8–11</dd></div></dl><p class="facts">Squad of 6 · 85 silver, 4 command · per level +4 HP, +4 melee, +2 defense, +4 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:collie_guard">10 battle poses</button> · front, front side, back, back side</li><li>Barracks level 2, now and then</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-growl"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:growl">Growl</button>
+              <span class="ability-meta">Shout · cooldown 3</span>
+              <p>A low growl from the whole pack: enemies within 2 tiles lose 12 morale and are cowed until the end of their next turn (−10 to hit).</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-hound_charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:hound_charge">Charge</button>
+              <span class="ability-meta">Attack · cooldown 2</span>
+              <p>Bound at least 2 tiles and hit an enemy at full tilt: +20% damage, +12% to hit and 14 more morale lost. A spear square breaks the charge.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-defend"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:defend">Defend</button>
+              <span class="ability-meta">Stance</span>
+              <p>Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-lick_wounds"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:lick_wounds">Lick Wounds</button>
+              <span class="ability-meta">Shout · cooldown 3</span>
+              <p>The hounds tend each other&#x27;s wounds: heal 3–5 per hound standing, stop bleeding, shake off the chill and gain 6 morale. Not with an enemy beside them. The fallen stay dead.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-howl"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:howl">Howl</button> <em>promotion</em>
+              <span class="ability-meta">Shout · cooldown 3</span>
+              <p>Promotion: the veterans&#x27; growl becomes a howl that carries. Enemies within 3 tiles lose 16 morale and are cowed until the end of their second turn (−10 to hit).</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-battle_mage" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/battle_mage.png" alt="Grey-bearded mage in hooded blue robes with a staff topped by a glowing orb" width="127" height="193" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Battle Mage</h3>
+            <span class="role">Spellcaster</span>
+            <p>Three magi of the Amberfeld circle in the company blue. They call down chain lightning, freeze a charge in its tracks and close the wounds of the line, but an enemy blade within reach of them is a disaster.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>25</dd></div><div><dt>Morale</dt><dd>70</dd></div><div><dt>Melee</dt><dd>40</dd></div><div><dt>Defense</dt><dd>8</dd></div><div><dt>Ranged def.</dt><dd>12</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Shot</dt><dd>5–7 <small>2–5 tiles</small></dd></div></dl><p class="facts">Squad of 3 · 80 silver, 3 command · per level +3 HP, +4 ranged, +1 defense, +4 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:battle_mage">10 battle poses</button> · front, back</li><li>3D rig: Character rigs ▸ Mage (Mage rig &amp; animations)</li><li>Barracks specialist offer</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-lightning"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:chain_lightning">Chain Lightning</button>
+              <span class="ability-meta">Spell · range 6 · cooldown 2</span>
+              <p>Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage).</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-frost"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:frost_blast">Frost Blast</button>
+              <span class="ability-meta">Spell · range 5 · cooldown 3</span>
+              <p>A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-heal"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:healing_light">Healing Light</button>
+              <span class="ability-meta">Spell · range 5 · cooldown 2</span>
+              <p>Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-circle"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:mending_circle">Mending Circle</button> <em>promotion</em>
+              <span class="ability-meta">Spell · cooldown 3</span>
+              <p>Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-ballista" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/ballista.png" alt="Wheeled ballista carriage in blue and timber with a loaded bolt and a blue pennant" width="230" height="152" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Ballista</h3>
+            <span class="role">War machine</span>
+            <p>A great bolt-thrower on a wheeled carriage, worked by a crew of three. Its bolt punches through one squad and into the next one behind it. It cannot loose in a turn it has been moved, and its crew are no fighters.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>23</dd></div><div><dt>Morale</dt><dd>64</dd></div><div><dt>Melee</dt><dd>36</dd></div><div><dt>Defense</dt><dd>4</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>2</dd></div><div><dt>Move</dt><dd>3</dd></div><div><dt>Shot</dt><dd>20–26 <small>2–9 tiles</small></dd></div></dl><p class="facts">1 machine, crew of 3 · 90 silver, 3 command · per level +3 HP, +4 ranged, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:ballista">2 battle poses</button> · front, back</li><li>Barracks specialist offer</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-mangonel" data-faction="garrison">
+          <figure class="unit-figure"><img src="unit-roster/img/mangonel.png" alt="Blue-painted mangonel on wheels with its throwing arm loaded with a stone" width="239" height="203" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3>Mangonel</h3>
+            <span class="role">War machine</span>
+            <p>A torsion catapult that lobs stones over walls and heads into the enemy ranks. A stone smashes the squad it lands on and everyone beside it, friend or foe, and a miss lands a tile astray. It cannot loose in a turn it has been moved, nor at anything closer than three tiles.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>20</dd></div><div><dt>Morale</dt><dd>60</dd></div><div><dt>Melee</dt><dd>36</dd></div><div><dt>Defense</dt><dd>4</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>2</dd></div><div><dt>Move</dt><dd>3</dd></div></dl><p class="facts">1 machine, crew of 3 · 100 silver, 4 command · per level +3 HP, +4 ranged, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:mangonel">2 battle poses</button> · front, back</li><li>Barracks specialist offer</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-stone"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:hurl_stone">Hurl Stone</button>
+              <span class="ability-meta">Spell · range 3–9</span>
+              <p>Lob a stone over walls and heads at a tile 3–9 tiles away: 10–14 per crewman to the squad there and 40% of that to every squad beside it, friend or foe. A miss lands one tile astray. Not in a turn the mangonel has moved.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-militia" data-faction="allies">
+          <figure class="unit-figure"><img src="unit-roster/img/militia.png" alt="Bald farmer in a brown tunic holding a pitchfork" width="135" height="197" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3>Militiaman</h3>
+            <span class="role">Local levy</span>
+            <p>Farmers and woodcutters with spears and pitchforks, defending their own homes. Brave, untrained, and quick to break if the line around them gives.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>18</dd></div><div><dt>Morale</dt><dd>48</dd></div><div><dt>Melee</dt><dd>50</dd></div><div><dt>Defense</dt><dd>6</dd></div><div><dt>Ranged def.</dt><dd>4</dd></div><div><dt>Armour</dt><dd>1</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>5–8</dd></div></dl><p class="facts">Squad of 6 · per level +2 HP, +2 melee, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:militia">10 battle poses</button> · front, back</li><li>Fights in: Cover the refugees, The last stand at Brannsted</li><li>Fights beside you in Cover the refugees and The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-engineer" data-faction="allies">
+          <figure class="unit-figure"><img src="unit-roster/img/engineer.png" alt="Bearded engineer in a leather apron carrying a large mallet" width="149" height="193" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3>Engineer</h3>
+            <span class="role">War machine crew</span>
+            <p>Garrison craftsmen in leather aprons who wheel, wind and loose the ballista and the mangonel. They come with the machine, three to a crew, and are no fighters.</p>
+            <p class="facts">Crew of the Ballista and Mangonel · Uses the machine&#x27;s stats</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:engineer">10 battle poses</button> · front, back</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-margrave_rider" data-faction="allies">
+          <figure class="unit-figure"><img src="unit-roster/img/margrave_rider.png" alt="Lancer in a steel helmet on a horse with a blue star caparison, lance raised with a pennant" width="174" height="228" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3>Margrave&#x27;s Rider</h3>
+            <span class="role">Dawn relief</span>
+            <p>The Margrave&#x27;s lancers. If the last stand at Brannsted holds through the night, they crest the hill at sunrise and charge into the host. The player never commands them.</p>
+            <p class="facts">Rides in at dawn · Drawn only: no stats or rules</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:margrave_rider">10 battle poses</button> · front, back</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-goblin_rabble" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/goblin_rabble.png" alt="Lean goblin in a loincloth with a knife and a battered wooden shield" width="160" height="193" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Rabble</h3>
+            <span class="role">Swarm</span>
+            <p>Nine half-starved goblins with knives and hatchets, driven ahead of the host. Weak alone, deadly in a pack: they pour into every gap and swarm round the flanks.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>9</dd></div><div><dt>Morale</dt><dd>36</dd></div><div><dt>Melee</dt><dd>52</dd></div><div><dt>Defense</dt><dd>6</dd></div><div><dt>Ranged def.</dt><dd>4</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Damage</dt><dd>3–5</dd></div></dl><p class="facts">Squad of 9 · per level +1 HP, +2 melee, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:goblin_rabble">10 battle poses</button> · front, front side, back, back side</li><li>Fights in: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Wolf riders on the road, Vanguard of the host, Orc brutes and their goblins, Moss trolls of the deep wood, Shamans of the host, The host&#x27;s war engines, Ambush on the road, Cover the refugees, The vanguard&#x27;s camp, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-goblin_spear" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/goblin_spear.png" alt="Green goblin in a spiked helmet and leather straps holding a spear" width="161" height="185" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Spearman</h3>
+            <span class="role">Skirmisher</span>
+            <p>Quick, cruel and cowardly. Dangerous in packs, quick to break when the pack thins.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>15</dd></div><div><dt>Morale</dt><dd>42</dd></div><div><dt>Melee</dt><dd>58</dd></div><div><dt>Defense</dt><dd>10</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Damage</dt><dd>4–7</dd></div></dl><p class="facts">Squad of 6 · per level +2 HP, +2 melee, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:goblin_spear">10 battle poses</button> · front, back</li><li>Fights in: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Wolf riders on the road, Vanguard of the host, Orc brutes and their goblins, Moss trolls of the deep wood, Shamans of the host, The host&#x27;s war engines, Ambush on the road, Cover the refugees, The vanguard&#x27;s camp, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-goblin_archer" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/goblin_archer.png" alt="Hooded goblin archer with a longbow and a quiver" width="132" height="201" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Archer</h3>
+            <span class="role">Archer</span>
+            <p>Hooded archers who loose from the treeline and scatter when pressed.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>13</dd></div><div><dt>Morale</dt><dd>38</dd></div><div><dt>Melee</dt><dd>40</dd></div><div><dt>Defense</dt><dd>6</dd></div><div><dt>Ranged def.</dt><dd>10</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Shot</dt><dd>4–7 <small>2–7 tiles</small></dd></div></dl><p class="facts">Squad of 6 · per level +2 HP, +2 ranged, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:goblin_archer">10 battle poses</button> · front, back</li><li>Fights in: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Wolf riders on the road, Vanguard of the host, Orc brutes and their goblins, Moss trolls of the deep wood, Shamans of the host, Ambush on the road, Cover the refugees, The vanguard&#x27;s camp, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-wolf_rider" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/wolf_rider.png" alt="Hooded goblin with a spear riding a snarling grey wolf" width="199" height="206" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Wolf Rider</h3>
+            <span class="role">Raider</span>
+            <p>Goblins on great grey wolves, faster than any soldier on foot. They circle a line to fall on crossbowmen and exposed flanks, and wheel away before a blow can answer. Set spears stop them.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>24</dd></div><div><dt>Morale</dt><dd>56</dd></div><div><dt>Melee</dt><dd>62</dd></div><div><dt>Defense</dt><dd>12</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>1</dd></div><div><dt>Move</dt><dd>7</dd></div><div><dt>Damage</dt><dd>6–9</dd></div></dl><p class="facts">Squad of 4 · per level +3 HP, +2 melee, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:wolf_rider">10 battle poses</button> · front, back</li><li>Fights in: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Wolf riders on the road, Vanguard of the host, Orc brutes and their goblins, The host&#x27;s war engines, Ambush on the road, Cover the refugees, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-goblin_horn" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/goblin_horn.png" alt="Goblin blowing a long curved war horn, with a red banner on its back" width="161" height="208" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Horn-bearer</h3>
+            <span class="role">Herald</span>
+            <p>A goblin with a great war horn and a few spears to guard it. If he lives long enough to sound it, more of the horde will answer. Kill him first.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>13</dd></div><div><dt>Morale</dt><dd>44</dd></div><div><dt>Melee</dt><dd>46</dd></div><div><dt>Defense</dt><dd>8</dd></div><div><dt>Ranged def.</dt><dd>10</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Damage</dt><dd>3–6</dd></div></dl><p class="facts">Squad of 4 with escort · per level +2 HP, +2 melee, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:goblin_horn">10 battle poses</button> · front, back</li><li>Fights in: Scouts of the host</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-goblin_shaman" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/goblin_shaman.png" alt="Goblin shaman wearing antlers, holding a staff topped with a horned skull" width="149" height="200" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Goblin Shaman</h3>
+            <span class="role">Hexer</span>
+            <p>Bone-hung witch-doctors of the host, three to a fire. They hurl fireballs into packed ranks, careless of their own, whip the horde into a killing frenzy and tear at a squad&#x27;s insides with the gutripper hex.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>16</dd></div><div><dt>Morale</dt><dd>50</dd></div><div><dt>Melee</dt><dd>40</dd></div><div><dt>Defense</dt><dd>6</dd></div><div><dt>Ranged def.</dt><dd>10</dd></div><div><dt>Armour</dt><dd>0</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Shot</dt><dd>3–5 <small>2–5 tiles</small></dd></div></dl><p class="facts">Squad of 3 · per level +2 HP, +3 ranged, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:goblin_shaman">10 battle poses</button> · front, back</li><li>Fights in: Shamans of the host, Cover the refugees, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-fire"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:fireball">Fireball</button>
+              <span class="ability-meta">Spell · range 6 · cooldown 2</span>
+              <p>A ball of fire hurled at a tile within 6 tiles: 7–10 per shaman to the squad there and half to every squad beside it, friend or foe. A miss bursts one tile astray.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-blood"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:bloodlust">Bloodlust</button>
+              <span class="ability-meta">Spell · range 4 · cooldown 3</span>
+              <p>Drive a friendly squad within 4 tiles into a killing frenzy until the end of its next turn: +10 to hit and +3 damage per soldier in melee, morale losses halved, but −8 defense.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-gut"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:gutripper">Gutripper</button>
+              <span class="ability-meta">Spell · range 5 · cooldown 2</span>
+              <p>A hex that tears at the insides of an enemy squad within 5 tiles: 5–7 per shaman, ignoring armour, and the squad bleeds for 40% of that again at the start of each of its next two turns.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-orc_warrior" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/orc_warrior.png" alt="Orc warrior in a crested helmet with a cleaver and a round red shield" width="157" height="202" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Orc Warrior</h3>
+            <span class="role">Brute</span>
+            <p>Iron-shod and fearless. Charges straight at the line and cleaves through it.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>38</dd></div><div><dt>Morale</dt><dd>78</dd></div><div><dt>Melee</dt><dd>64</dd></div><div><dt>Defense</dt><dd>12 <small>+8 shield</small></dd></div><div><dt>Ranged def.</dt><dd>12</dd></div><div><dt>Armour</dt><dd>3</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>8–12</dd></div></dl><p class="facts">Squad of 6 · per level +4 HP, +2 melee, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:orc_warrior">10 battle poses</button> · front, front side, back, back side</li><li>Fights in: Vanguard of the host, Cover the refugees, The vanguard&#x27;s camp, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:charge">Brutal Charge</button>
+              <span class="ability-meta">Attack</span>
+              <p>Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-orc_brute" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/orc_brute.png" alt="Orc with a red crest, spiked pauldrons and a spiked club" width="166" height="209" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Orc Brute</h3>
+            <span class="role">Shock troops</span>
+            <p>Savage orcs with spiked war-clubs and no shields. Every blow that lands smashes a squad back out of the line, and the brutes force their way into the gap.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>40</dd></div><div><dt>Morale</dt><dd>72</dd></div><div><dt>Melee</dt><dd>62</dd></div><div><dt>Defense</dt><dd>8</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>2</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>9–14</dd></div></dl><p class="facts">Squad of 6 · per level +4 HP, +2 melee, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:orc_brute">10 battle poses</button> · front, back</li><li>Fights in: Orc brutes and their goblins, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:charge">Brutal Charge</button>
+              <span class="ability-meta">Attack</span>
+              <p>Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-orc_warlord" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/orc_warlord.png" alt="Orc warlord in red armour with a horned helm, a great axe and twin banners" width="163" height="217" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Orc Warlord</h3>
+            <span class="role">Warband leader</span>
+            <p>The will behind the raids. His war cry steadies the goblins; his fall shatters them.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>46</dd></div><div><dt>Morale</dt><dd>100</dd></div><div><dt>Melee</dt><dd>64</dd></div><div><dt>Defense</dt><dd>12 <small>+8 shield</small></dd></div><div><dt>Ranged def.</dt><dd>10</dd></div><div><dt>Armour</dt><dd>3</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>8–12</dd></div></dl><p class="facts">Squad of 6 with escort · per level +5 HP, +2 melee · leads the host as warchief</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:orc_warlord">10 battle poses</button> · front, back</li><li>Fights in: The vanguard&#x27;s camp, The last stand at Brannsted</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:charge">Brutal Charge</button>
+              <span class="ability-meta">Attack</span>
+              <p>Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.</p></div></li><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-horn"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:warcry">War Cry</button>
+              <span class="ability-meta">Shout · cooldown 3</span>
+              <p>Allies within 4 tiles gain 20 morale; enemies within 4 tiles lose 8.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-troll" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/troll.png" alt="Hunched pale troll with a mossy log over one shoulder and green swirling markings" width="223" height="302" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Moss Troll</h3>
+            <span class="role">Monster</span>
+            <p>Ancient trolls grown over with moss and fungus, swinging uprooted logs. Their wounds close as you watch, but a fallen troll does not get up again.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>66</dd></div><div><dt>Morale</dt><dd>90</dd></div><div><dt>Melee</dt><dd>56</dd></div><div><dt>Defense</dt><dd>4</dd></div><div><dt>Ranged def.</dt><dd>6</dd></div><div><dt>Armour</dt><dd>2</dd></div><div><dt>Move</dt><dd>4</dd></div><div><dt>Damage</dt><dd>14–20</dd></div></dl><p class="facts">Squad of 3 · per level +8 HP, +2 melee, +3 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:troll">10 battle poses</button> · front, back</li><li>Fights in: Moss trolls of the deep wood</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><p class="muted">No abilities of its own.</p></div>
+        </article>
+<article class="unit-card" id="unit-rock_lobber" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/rock_lobber.png" alt="Crude timber catapult hung with skulls, with a sack of stones and a red flag" width="214" height="188" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Rock Lobber</h3>
+            <span class="role">War machine</span>
+            <p>A crooked goblin catapult lashed together from stolen timber. It lobs boulders into the enemy ranks and anyone near them, its own kind included, and as often as not lands them a tile off. It cannot loose in a turn it has moved.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>15</dd></div><div><dt>Morale</dt><dd>44</dd></div><div><dt>Melee</dt><dd>40</dd></div><div><dt>Defense</dt><dd>6</dd></div><div><dt>Ranged def.</dt><dd>8</dd></div><div><dt>Armour</dt><dd>1</dd></div><div><dt>Move</dt><dd>3</dd></div></dl><p class="facts">1 machine, crew of 3 · per level +2 HP, +2 ranged, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:rock_lobber">2 battle poses</button> · front, back</li><li>Fights in: The host&#x27;s war engines</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-stone"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:lob_rock">Lob Rock</button>
+              <span class="ability-meta">Spell · range 3–8</span>
+              <p>Lob a boulder at a tile 3–8 tiles away: 11–16 per crewman there and half beside it, friend or foe. Often lands a tile astray. Not in a turn it has moved.</p></div></li></ul></div>
+        </article>
+<article class="unit-card" id="unit-war_wagon" data-faction="host">
+          <figure class="unit-figure"><img src="unit-roster/img/war_wagon.png" alt="Wooden cart bristling with iron spikes and skulls, flying red flags" width="198" height="201" loading="lazy"></figure>
+          <div class="unit-info">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3>Spiked War Wagon</h3>
+            <span class="role">War machine</span>
+            <p>A heavy cart bristling with iron spikes, shoved at a run by its goblin crew. It rams into the line, smashes a squad back out of it and rolls into the gap. Set spears still hurt it.</p>
+            <dl class="stat-grid"><div><dt>HP</dt><dd>38</dd></div><div><dt>Morale</dt><dd>62</dd></div><div><dt>Melee</dt><dd>60</dd></div><div><dt>Defense</dt><dd>8</dd></div><div><dt>Ranged def.</dt><dd>14</dd></div><div><dt>Armour</dt><dd>5</dd></div><div><dt>Move</dt><dd>5</dd></div><div><dt>Damage</dt><dd>12–17</dd></div></dl><p class="facts">1 machine, crew of 3 · per level +4 HP, +2 melee, +2 morale</p>
+            <ul class="unit-links"><li><button type="button" class="text-action" data-goto="animations:war_wagon">2 battle poses</button> · front, back</li><li>Fights in: The host&#x27;s war engines</li></ul>
+          </div>
+          <div class="unit-abilities"><p class="hub-eyebrow">Abilities</p><ul class="ability-list"><li><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-charge"></use></svg></span><div>
+              <button type="button" class="ability-name" data-goto="abilities:charge">Brutal Charge</button>
+              <span class="ability-meta">Attack</span>
+              <p>Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.</p></div></li></ul></div>
+        </article>
+      </div>
+      <p class="hub-footnote">The succubus and wolf scout rigs under Character rigs are prototypes without a unit entry, so they are not listed here.</p>
+    </div>
+    <div class="hub-page" id="factions" role="tabpanel" aria-labelledby="nav-factions" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">03 · Factions</p><h1>Three sides of one war.</h1></div>
+        <p>The garrison the player commands, the friends who fight beside it and the host it has to outlast. Pick a unit to open its card.</p>
+      </div>
+      <section class="faction-block" data-faction="garrison">
+          <div class="faction-head">
+            <span class="faction-tag" data-faction="garrison">7 units</span>
+            <h2>Amberfeld Garrison</h2>
+            <p>The 7 squad types the player can recruit and command. Footmen, spearmen and crossbowmen come from every muster at the Barracks; the Border Collie Royal Guard can answer once it reaches level 2; and each muster offers one specialist squad: battle mages, a ballista or a mangonel.</p>
+          </div>
+          <h3>Line troops</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:footman"><span class="faction-face" style="background-image:url('unit-roster/img/footman.png')"></span><b>Footman</b><small>Line holder</small></button><button type="button" class="faction-unit" data-goto="characters:spearman"><span class="faction-face" style="background-image:url('unit-roster/img/spearman.png')"></span><b>Spearman</b><small>Anti-charge</small></button><button type="button" class="faction-unit" data-goto="characters:crossbowman"><span class="faction-face" style="background-image:url('unit-roster/img/crossbowman.png')"></span><b>Crossbowman</b><small>Ranged</small></button><button type="button" class="faction-unit" data-goto="characters:collie_guard"><span class="faction-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span><b>Border Collie Royal Guard</b><small>Elite guard</small></button></div><h3>Specialists</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:battle_mage"><span class="faction-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span><b>Battle Mage</b><small>Spellcaster</small></button><button type="button" class="faction-unit" data-goto="characters:ballista"><span class="faction-face" style="background-image:url('unit-roster/img/ballista.png')"></span><b>Ballista</b><small>War machine</small></button><button type="button" class="faction-unit" data-goto="characters:mangonel"><span class="faction-face" style="background-image:url('unit-roster/img/mangonel.png')"></span><b>Mangonel</b><small>War machine</small></button></div>
+        </section><section class="faction-block" data-faction="allies">
+          <div class="faction-head">
+            <span class="faction-tag" data-faction="allies">3 units</span>
+            <h2>Allies and crews</h2>
+            <p>The 3 friendly figures that fight on the garrison&#x27;s side without being recruited: the local militia in two encounters, the engineers who crew the war machines and the Margrave&#x27;s riders who end the last stand at dawn.</p>
+          </div>
+          <h3>Allies and crews</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:militia"><span class="faction-face" style="background-image:url('unit-roster/img/militia.png')"></span><b>Militiaman</b><small>Local levy</small></button><button type="button" class="faction-unit" data-goto="characters:engineer"><span class="faction-face" style="background-image:url('unit-roster/img/engineer.png')"></span><b>Engineer</b><small>War machine crew</small></button><button type="button" class="faction-unit" data-goto="characters:margrave_rider"><span class="faction-face" style="background-image:url('unit-roster/img/margrave_rider.png')"></span><b>Margrave&#x27;s Rider</b><small>Dawn relief</small></button></div>
+        </section><section class="faction-block" data-faction="host">
+          <div class="faction-head">
+            <span class="faction-tag" data-faction="host">12 units</span>
+            <h2>Hillsvain Host</h2>
+            <p>The 12 enemy units of the Hillsvain Host. Goblins make up the bulk of every wave, orcs and trolls break the line, and two crude war engines appear in their own encounter.</p><p class="muted">A host of orcs and goblins is pouring out of the Hillsvain Woods, burning every steading west of the Vattern. The Margrave&#x27;s riders are days away. March out, slow the horde, and hold Brannsted until they come: you are all that stands between the host and the river.</p>
+          </div>
+          <h3>Goblins</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:goblin_rabble"><span class="faction-face" style="background-image:url('unit-roster/img/goblin_rabble.png')"></span><b>Goblin Rabble</b><small>Swarm</small></button><button type="button" class="faction-unit" data-goto="characters:goblin_spear"><span class="faction-face" style="background-image:url('unit-roster/img/goblin_spear.png')"></span><b>Goblin Spearman</b><small>Skirmisher</small></button><button type="button" class="faction-unit" data-goto="characters:goblin_archer"><span class="faction-face" style="background-image:url('unit-roster/img/goblin_archer.png')"></span><b>Goblin Archer</b><small>Archer</small></button><button type="button" class="faction-unit" data-goto="characters:wolf_rider"><span class="faction-face" style="background-image:url('unit-roster/img/wolf_rider.png')"></span><b>Goblin Wolf Rider</b><small>Raider</small></button><button type="button" class="faction-unit" data-goto="characters:goblin_horn"><span class="faction-face" style="background-image:url('unit-roster/img/goblin_horn.png')"></span><b>Goblin Horn-bearer</b><small>Herald</small></button><button type="button" class="faction-unit" data-goto="characters:goblin_shaman"><span class="faction-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span><b>Goblin Shaman</b><small>Hexer</small></button></div><h3>Orcs and trolls</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:orc_warrior"><span class="faction-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span><b>Orc Warrior</b><small>Brute</small></button><button type="button" class="faction-unit" data-goto="characters:orc_brute"><span class="faction-face" style="background-image:url('unit-roster/img/orc_brute.png')"></span><b>Orc Brute</b><small>Shock troops</small></button><button type="button" class="faction-unit" data-goto="characters:orc_warlord"><span class="faction-face" style="background-image:url('unit-roster/img/orc_warlord.png')"></span><b>Orc Warlord</b><small>Warband leader</small></button><button type="button" class="faction-unit" data-goto="characters:troll"><span class="faction-face" style="background-image:url('unit-roster/img/troll.png')"></span><b>Moss Troll</b><small>Monster</small></button></div><h3>War engines</h3><div class="faction-units"><button type="button" class="faction-unit" data-goto="characters:rock_lobber"><span class="faction-face" style="background-image:url('unit-roster/img/rock_lobber.png')"></span><b>Rock Lobber</b><small>War machine</small></button><button type="button" class="faction-unit" data-goto="characters:war_wagon"><span class="faction-face" style="background-image:url('unit-roster/img/war_wagon.png')"></span><b>Spiked War Wagon</b><small>War machine</small></button></div>
+        </section>
+    </div>
+    <div class="hub-page" id="abilities" role="tabpanel" aria-labelledby="nav-abilities" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">04 · Abilities</p><h1>What each squad can do.</h1></div>
+        <p>All 25 abilities in the game data, with the in-game icon and the units that carry them. A promotion is learned when the squad is promoted.</p>
+      </div>
+      <div class="section-heading"><h2>Stances</h2><span>5</span></div><div class="ability-grid"><article class="ability-card" id="ability-shieldwall">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-shield"></use></svg></span><div><h3>Shield Wall</h3><span class="ability-meta">Stance</span></div></div>
+              <p>Until your next turn: +20 defense and +15 ranged defense, attacks from the sides count as frontal, and adjacent allies gain +6 defense.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:footman"><span class="chip-face" style="background-image:url('unit-roster/img/footman.png')"></span>Footman</button></div>
+            </article><article class="ability-card" id="ability-spearwall">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-spearwall"></use></svg></span><div><h3>Spearwall</h3><span class="ability-meta">Stance</span></div></div>
+              <p>Until your next turn: the first enemy to step into a tile in front of or beside this spearman takes a free attack at +15% hit and +50% damage. A hit stops its advance.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:spearman"><span class="chip-face" style="background-image:url('unit-roster/img/spearman.png')"></span>Spearman</button></div>
+            </article><article class="ability-card" id="ability-overwatch">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-eye"></use></svg></span><div><h3>Overwatch</h3><span class="ability-meta">Stance</span></div></div>
+              <p>Hold fire. During the enemy turn, shoot the first enemy that moves within range and sight (-5% hit).</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:crossbowman"><span class="chip-face" style="background-image:url('unit-roster/img/crossbowman.png')"></span>Crossbowman</button></div>
+            </article><article class="ability-card" id="ability-defend">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-defend"></use></svg></span><div><h3>Defend</h3><span class="ability-meta">Stance</span></div></div>
+              <p>Until your next turn: stand guard over every friendly squad beside this one. The first attack or shot aimed at one of them strikes the guard instead, always on its front. Free attacks, spells and squads that stand guard themselves are not covered.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:footman"><span class="chip-face" style="background-image:url('unit-roster/img/footman.png')"></span>Footman</button><button type="button" class="unit-chip" data-goto="characters:collie_guard"><span class="chip-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span>Border Collie Royal Guard</button></div>
+            </article><article class="ability-card" id="ability-square">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-square"></use></svg></span><div><h3>Square</h3><span class="ability-meta">Stance</span></div></div>
+              <p>Until your next turn: spears out on every side. Every attack counts as frontal, the spears strike first at anyone who closes in from any side, charges lose their bonus and the square cannot be pushed. +6 defense, but −10 ranged defense: a packed target.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:spearman"><span class="chip-face" style="background-image:url('unit-roster/img/spearman.png')"></span>Spearman</button></div>
+            </article></div><div class="section-heading"><h2>Attacks</h2><span>7</span></div><div class="ability-grid"><article class="ability-card" id="ability-shieldbash">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-bash"></use></svg></span><div><h3>Shield Bash</h3><span class="ability-meta">Attack · reach 1 · cooldown 2</span></div></div>
+              <p>Slam an adjacent enemy for light damage, shaking its morale and pushing it back one tile. Blocked pushes deal extra damage.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:footman"><span class="chip-face" style="background-image:url('unit-roster/img/footman.png')"></span>Footman <small>promotion</small></button></div>
+            </article><article class="ability-card" id="ability-pikethrust">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-thrust"></use></svg></span><div><h3>Pike Thrust</h3><span class="ability-meta">Attack · reach 2 · cooldown 1</span></div></div>
+              <p>Strike an enemy two tiles away in a straight line, over the head of whoever stands between.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:spearman"><span class="chip-face" style="background-image:url('unit-roster/img/spearman.png')"></span>Spearman <small>promotion</small></button></div>
+            </article><article class="ability-card" id="ability-heavybolt">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-bolt"></use></svg></span><div><h3>Heavy Bolt</h3><span class="ability-meta">Attack · cooldown 2</span></div></div>
+              <p>A fully cranked bolt: +50% damage, ignores armour, costs two bolts.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:crossbowman"><span class="chip-face" style="background-image:url('unit-roster/img/crossbowman.png')"></span>Crossbowman <small>promotion</small></button></div>
+            </article><article class="ability-card" id="ability-charge">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-charge"></use></svg></span><div><h3>Brutal Charge</h3><span class="ability-meta">Attack</span></div></div>
+              <p>Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:orc_warrior"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warrior.png')"></span>Orc Warrior</button><button type="button" class="unit-chip" data-goto="characters:orc_brute"><span class="chip-face" style="background-image:url('unit-roster/img/orc_brute.png')"></span>Orc Brute</button><button type="button" class="unit-chip" data-goto="characters:orc_warlord"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warlord.png')"></span>Orc Warlord</button><button type="button" class="unit-chip" data-goto="characters:war_wagon"><span class="chip-face" style="background-image:url('unit-roster/img/war_wagon.png')"></span>Spiked War Wagon</button></div>
+            </article><article class="ability-card" id="ability-shield_charge">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-shield_charge"></use></svg></span><div><h3>Charge</h3><span class="ability-meta">Attack · cooldown 3</span></div></div>
+              <p>Run at least 2 tiles and crash into an enemy behind the shields: +30% damage, +5% to hit and 10 more morale lost. A spear square breaks the charge.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:footman"><span class="chip-face" style="background-image:url('unit-roster/img/footman.png')"></span>Footman</button></div>
+            </article><article class="ability-card" id="ability-hound_charge">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-hound_charge"></use></svg></span><div><h3>Charge</h3><span class="ability-meta">Attack · cooldown 2</span></div></div>
+              <p>Bound at least 2 tiles and hit an enemy at full tilt: +20% damage, +12% to hit and 14 more morale lost. A spear square breaks the charge.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:collie_guard"><span class="chip-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span>Border Collie Royal Guard</button></div>
+            </article><article class="ability-card" id="ability-aimed_shot">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-aimed_shot"></use></svg></span><div><h3>Aimed Shot</h3><span class="ability-meta">Attack · cooldown 2</span></div></div>
+              <p>Take the time to aim: +20% to hit, ignoring cover, an obstructed view and troops in the way, and 6 more morale lost. Only in a turn the crossbowmen have not moved.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:crossbowman"><span class="chip-face" style="background-image:url('unit-roster/img/crossbowman.png')"></span>Crossbowman</button></div>
+            </article></div><div class="section-heading"><h2>Shouts</h2><span>4</span></div><div class="ability-grid"><article class="ability-card" id="ability-warcry">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-horn"></use></svg></span><div><h3>War Cry</h3><span class="ability-meta">Shout · cooldown 3</span></div></div>
+              <p>Allies within 4 tiles gain 20 morale; enemies within 4 tiles lose 8.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:orc_warlord"><span class="chip-face" style="background-image:url('unit-roster/img/orc_warlord.png')"></span>Orc Warlord</button></div>
+            </article><article class="ability-card" id="ability-growl">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-growl"></use></svg></span><div><h3>Growl</h3><span class="ability-meta">Shout · cooldown 3</span></div></div>
+              <p>A low growl from the whole pack: enemies within 2 tiles lose 12 morale and are cowed until the end of their next turn (−10 to hit).</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:collie_guard"><span class="chip-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span>Border Collie Royal Guard</button></div>
+            </article><article class="ability-card" id="ability-howl">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-howl"></use></svg></span><div><h3>Howl</h3><span class="ability-meta">Shout · cooldown 3</span></div></div>
+              <p>Promotion: the veterans&#x27; growl becomes a howl that carries. Enemies within 3 tiles lose 16 morale and are cowed until the end of their second turn (−10 to hit).</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:collie_guard"><span class="chip-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span>Border Collie Royal Guard <small>promotion</small></button></div>
+            </article><article class="ability-card" id="ability-lick_wounds">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-lick_wounds"></use></svg></span><div><h3>Lick Wounds</h3><span class="ability-meta">Shout · cooldown 3</span></div></div>
+              <p>The hounds tend each other&#x27;s wounds: heal 3–5 per hound standing, stop bleeding, shake off the chill and gain 6 morale. Not with an enemy beside them. The fallen stay dead.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:collie_guard"><span class="chip-face" style="background-image:url('unit-roster/img/collie_guard.png')"></span>Border Collie Royal Guard</button></div>
+            </article></div><div class="section-heading"><h2>Spells</h2><span>9</span></div><div class="ability-grid"><article class="ability-card" id="ability-chain_lightning">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-lightning"></use></svg></span><div><h3>Chain Lightning</h3><span class="ability-meta">Spell · range 6 · cooldown 2</span></div></div>
+              <p>Lightning strikes an enemy squad in sight within 6 tiles for 9–12 per mage, ignoring armour, then arcs to the nearest other enemy within 2 tiles, and on to a third (60% and 36% of the damage).</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:battle_mage"><span class="chip-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span>Battle Mage</button></div>
+            </article><article class="ability-card" id="ability-frost_blast">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-frost"></use></svg></span><div><h3>Frost Blast</h3><span class="ability-meta">Spell · range 5 · cooldown 3</span></div></div>
+              <p>A blast of ice at an enemy squad within 5 tiles: 5–7 per mage, half that to enemies beside it. Everyone struck is chilled through their next turn: half movement, −10 to hit and −10 defense.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:battle_mage"><span class="chip-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span>Battle Mage</button></div>
+            </article><article class="ability-card" id="ability-healing_light">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-heal"></use></svg></span><div><h3>Healing Light</h3><span class="ability-meta">Spell · range 5 · cooldown 2</span></div></div>
+              <p>Heal a friendly squad (or the mages themselves) within 5 tiles for 8–11 per mage and steady them (+8 morale). Wounds close; the fallen stay dead.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:battle_mage"><span class="chip-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span>Battle Mage</button></div>
+            </article><article class="ability-card" id="ability-mending_circle">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-circle"></use></svg></span><div><h3>Mending Circle</h3><span class="ability-meta">Spell · cooldown 3</span></div></div>
+              <p>Every friendly squad within 2 tiles of the mages, themselves included, heals 4–6 per mage and gains 5 morale. The fallen stay dead.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:battle_mage"><span class="chip-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span>Battle Mage <small>promotion</small></button></div>
+            </article><article class="ability-card" id="ability-fireball">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-fire"></use></svg></span><div><h3>Fireball</h3><span class="ability-meta">Spell · range 6 · cooldown 2</span></div></div>
+              <p>A ball of fire hurled at a tile within 6 tiles: 7–10 per shaman to the squad there and half to every squad beside it, friend or foe. A miss bursts one tile astray.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button></div>
+            </article><article class="ability-card" id="ability-bloodlust">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-blood"></use></svg></span><div><h3>Bloodlust</h3><span class="ability-meta">Spell · range 4 · cooldown 3</span></div></div>
+              <p>Drive a friendly squad within 4 tiles into a killing frenzy until the end of its next turn: +10 to hit and +3 damage per soldier in melee, morale losses halved, but −8 defense.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button></div>
+            </article><article class="ability-card" id="ability-gutripper">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-gut"></use></svg></span><div><h3>Gutripper</h3><span class="ability-meta">Spell · range 5 · cooldown 2</span></div></div>
+              <p>A hex that tears at the insides of an enemy squad within 5 tiles: 5–7 per shaman, ignoring armour, and the squad bleeds for 40% of that again at the start of each of its next two turns.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:goblin_shaman"><span class="chip-face" style="background-image:url('unit-roster/img/goblin_shaman.png')"></span>Goblin Shaman</button></div>
+            </article><article class="ability-card" id="ability-hurl_stone">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-stone"></use></svg></span><div><h3>Hurl Stone</h3><span class="ability-meta">Spell · range 3–9</span></div></div>
+              <p>Lob a stone over walls and heads at a tile 3–9 tiles away: 10–14 per crewman to the squad there and 40% of that to every squad beside it, friend or foe. A miss lands one tile astray. Not in a turn the mangonel has moved.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:mangonel"><span class="chip-face" style="background-image:url('unit-roster/img/mangonel.png')"></span>Mangonel</button></div>
+            </article><article class="ability-card" id="ability-lob_rock">
+              <div class="ability-head"><span class="icon-tile" aria-hidden="true"><svg><use href="#icon-stone"></use></svg></span><div><h3>Lob Rock</h3><span class="ability-meta">Spell · range 3–8</span></div></div>
+              <p>Lob a boulder at a tile 3–8 tiles away: 11–16 per crewman there and half beside it, friend or foe. Often lands a tile astray. Not in a turn it has moved.</p>
+              <div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:rock_lobber"><span class="chip-face" style="background-image:url('unit-roster/img/rock_lobber.png')"></span>Rock Lobber</button></div>
+            </article></div>
+    </div>
+    <div class="hub-page" id="animations" role="tabpanel" aria-labelledby="nav-animations" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">05 · Animations</p><h1>How the squads move.</h1></div>
+        <p>Battle figures are drawn poses. <code>soldier_anim.gd</code> plays them and adds the stride, bounce, breathing and lean from <code>_gait.json</code>, so in battle they move more than these previews.</p>
+      </div>
+      <div class="section-heading"><h2>3D rigs in progress</h2><span>open them from Character rigs, left of this page</span></div>
+      <div class="rig-grid"><article class="rig-card"><h3>Footman</h3><ul><li>Footmen motion study</li><li>Footman 3D rig</li></ul><div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:footman"><span class="chip-face" style="background-image:url('unit-roster/img/footman.png')"></span>Footman</button></div></article><article class="rig-card"><h3>Crossbowman</h3><ul><li>Crossbowman 3D rig</li></ul><div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:crossbowman"><span class="chip-face" style="background-image:url('unit-roster/img/crossbowman.png')"></span>Crossbowman</button></div></article><article class="rig-card"><h3>Spearman</h3><ul><li>Spearman 3D rig</li></ul><div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:spearman"><span class="chip-face" style="background-image:url('unit-roster/img/spearman.png')"></span>Spearman</button></div></article><article class="rig-card"><h3>Succubus</h3><ul><li>Succubus 3D rig</li></ul><div class="chip-row"><span class="muted">Prototype or shared tooling, no unit entry</span></div></article><article class="rig-card"><h3>Wolf scouts</h3><ul><li>Wolf scout vanguard</li></ul><div class="chip-row"><span class="muted">Prototype or shared tooling, no unit entry</span></div></article><article class="rig-card"><h3>Mage</h3><ul><li>Mage rig &amp; animations</li></ul><div class="chip-row"><button type="button" class="unit-chip" data-goto="characters:battle_mage"><span class="chip-face" style="background-image:url('unit-roster/img/battle_mage.png')"></span>Battle Mage</button></div></article><article class="rig-card"><h3>Shared</h3><ul><li>Mixar setup</li><li>Facial features</li></ul><div class="chip-row"><span class="muted">Prototype or shared tooling, no unit entry</span></div></article></div>
+      <div class="section-heading"><h2>Battle poses</h2><span>first soldier, front view · previews cycle the poses at game timing</span></div>
+      <div class="anim-list">
+<article class="anim-row" id="anim-footman" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:footman">Footman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, front side, back, back side</li><li>Idle frames hold 0.42 s; a stride takes 0.42 s.</li><li>3D rig: Character rigs ▸ Footman (Footmen motion study, Footman 3D rig)</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Footman, idle preview" style="background-image:url('hub/poses/footman.webp');background-size:1000% 100%;aspect-ratio:239/273" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Footman, walk preview" style="background-image:url('hub/poses/footman.webp');background-size:1000% 100%;aspect-ratio:239/273" data-n="10" data-seq="3,4,5,4" data-times="0.105,0.105,0.105,0.105"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Footman, strike preview" style="background-image:url('hub/poses/footman.webp');background-size:1000% 100%;aspect-ratio:239/273" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/footman.webp" alt="Footman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2390" height="273" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-spearman" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:spearman">Spearman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.5 s.</li><li>3D rig: Character rigs ▸ Spearman (Spearman 3D rig)</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Spearman, idle preview" style="background-image:url('hub/poses/spearman.webp');background-size:1000% 100%;aspect-ratio:243/308" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Spearman, walk preview" style="background-image:url('hub/poses/spearman.webp');background-size:1000% 100%;aspect-ratio:243/308" data-n="10" data-seq="3,4,5,4" data-times="0.125,0.125,0.125,0.125"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Spearman, strike preview" style="background-image:url('hub/poses/spearman.webp');background-size:1000% 100%;aspect-ratio:243/308" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/spearman.webp" alt="Spearman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2430" height="308" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-crossbowman" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:crossbowman">Crossbowman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.48 s.</li><li>3D rig: Character rigs ▸ Crossbowman (Crossbowman 3D rig)</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Crossbowman, idle preview" style="background-image:url('hub/poses/crossbowman.webp');background-size:1000% 100%;aspect-ratio:236/240" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Crossbowman, walk preview" style="background-image:url('hub/poses/crossbowman.webp');background-size:1000% 100%;aspect-ratio:236/240" data-n="10" data-seq="3,4,5,4" data-times="0.12,0.12,0.12,0.12"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Crossbowman, strike preview" style="background-image:url('hub/poses/crossbowman.webp');background-size:1000% 100%;aspect-ratio:236/240" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/crossbowman.webp" alt="Crossbowman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2360" height="240" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-collie_guard" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:collie_guard">Border Collie Royal Guard</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, front side, back, back side</li><li>Idle frames hold 0.42 s; a stride takes 0.46 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Border Collie Royal Guard, idle preview" style="background-image:url('hub/poses/collie_guard.webp');background-size:1000% 100%;aspect-ratio:233/247" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Border Collie Royal Guard, walk preview" style="background-image:url('hub/poses/collie_guard.webp');background-size:1000% 100%;aspect-ratio:233/247" data-n="10" data-seq="3,4,5,4" data-times="0.115,0.115,0.115,0.115"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Border Collie Royal Guard, strike preview" style="background-image:url('hub/poses/collie_guard.webp');background-size:1000% 100%;aspect-ratio:233/247" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/collie_guard.webp" alt="Border Collie Royal Guard: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2330" height="247" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-battle_mage" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:battle_mage">Battle Mage</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.56 s.</li><li>3D rig: Character rigs ▸ Mage (Mage rig &amp; animations)</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Battle Mage, idle preview" style="background-image:url('hub/poses/battle_mage.webp');background-size:1000% 100%;aspect-ratio:240/237" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Battle Mage, walk preview" style="background-image:url('hub/poses/battle_mage.webp');background-size:1000% 100%;aspect-ratio:240/237" data-n="10" data-seq="3,4,5,4" data-times="0.14,0.14,0.14,0.14"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Battle Mage, strike preview" style="background-image:url('hub/poses/battle_mage.webp');background-size:1000% 100%;aspect-ratio:240/237" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/battle_mage.webp" alt="Battle Mage: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2400" height="237" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-ballista" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:ballista">Ballista</button></h3>
+            <ul class="unit-links"><li>1 drawn soldier · front, back</li><li>Engines are drawn at rest and loosing.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Ballista, at rest preview" style="background-image:url('hub/poses/ballista.webp');background-size:200% 100%;aspect-ratio:263/170" data-n="2" data-seq="0" data-times="1.0"></div><span>At rest</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Ballista, loosing preview" style="background-image:url('hub/poses/ballista.webp');background-size:200% 100%;aspect-ratio:263/170" data-n="2" data-seq="0,1,0" data-times="0.9,0.55,0.25"></div><span>Loosing</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/ballista.webp" alt="Ballista: 2 battle poses of the first soldier, front view, left to right: at rest, loosing" width="526" height="170" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(2,minmax(0,1fr))"><span>At rest</span><span>Loosing</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-mangonel" data-faction="garrison">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="garrison">Amberfeld Garrison</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:mangonel">Mangonel</button></h3>
+            <ul class="unit-links"><li>1 drawn soldier · front, back</li><li>Engines are drawn at rest and loosing.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Mangonel, at rest preview" style="background-image:url('hub/poses/mangonel.webp');background-size:200% 100%;aspect-ratio:256/250" data-n="2" data-seq="0" data-times="1.0"></div><span>At rest</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Mangonel, loosing preview" style="background-image:url('hub/poses/mangonel.webp');background-size:200% 100%;aspect-ratio:256/250" data-n="2" data-seq="0,1,0" data-times="0.9,0.55,0.25"></div><span>Loosing</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/mangonel.webp" alt="Mangonel: 2 battle poses of the first soldier, front view, left to right: at rest, loosing" width="512" height="250" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(2,minmax(0,1fr))"><span>At rest</span><span>Loosing</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-militia" data-faction="allies">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:militia">Militiaman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.46 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Militiaman, idle preview" style="background-image:url('hub/poses/militia.webp');background-size:1000% 100%;aspect-ratio:234/296" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Militiaman, walk preview" style="background-image:url('hub/poses/militia.webp');background-size:1000% 100%;aspect-ratio:234/296" data-n="10" data-seq="3,4,5,4" data-times="0.115,0.115,0.115,0.115"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Militiaman, strike preview" style="background-image:url('hub/poses/militia.webp');background-size:1000% 100%;aspect-ratio:234/296" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/militia.webp" alt="Militiaman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2340" height="296" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-engineer" data-faction="allies">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:engineer">Engineer</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.5 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Engineer, idle preview" style="background-image:url('hub/poses/engineer.webp');background-size:1000% 100%;aspect-ratio:246/226" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Engineer, walk preview" style="background-image:url('hub/poses/engineer.webp');background-size:1000% 100%;aspect-ratio:246/226" data-n="10" data-seq="3,4,5,4" data-times="0.125,0.125,0.125,0.125"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Engineer, strike preview" style="background-image:url('hub/poses/engineer.webp');background-size:1000% 100%;aspect-ratio:246/226" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/engineer.webp" alt="Engineer: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2460" height="226" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-margrave_rider" data-faction="allies">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="allies">Allies and crews</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:margrave_rider">Margrave&#x27;s Rider</button></h3>
+            <ul class="unit-links"><li>4 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.36 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Margrave&#x27;s Rider, idle preview" style="background-image:url('hub/poses/margrave_rider.webp');background-size:1000% 100%;aspect-ratio:223/244" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Margrave&#x27;s Rider, walk preview" style="background-image:url('hub/poses/margrave_rider.webp');background-size:1000% 100%;aspect-ratio:223/244" data-n="10" data-seq="3,4,5,4" data-times="0.09,0.09,0.09,0.09"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Margrave&#x27;s Rider, strike preview" style="background-image:url('hub/poses/margrave_rider.webp');background-size:1000% 100%;aspect-ratio:223/244" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/margrave_rider.webp" alt="Margrave&#x27;s Rider: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2230" height="244" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-goblin_rabble" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:goblin_rabble">Goblin Rabble</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, front side, back, back side</li><li>Idle frames hold 0.42 s; a stride takes 0.28 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Rabble, idle preview" style="background-image:url('hub/poses/goblin_rabble.webp');background-size:1000% 100%;aspect-ratio:252/220" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Rabble, walk preview" style="background-image:url('hub/poses/goblin_rabble.webp');background-size:1000% 100%;aspect-ratio:252/220" data-n="10" data-seq="3,4,5,4" data-times="0.07,0.07,0.07,0.07"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Rabble, strike preview" style="background-image:url('hub/poses/goblin_rabble.webp');background-size:1000% 100%;aspect-ratio:252/220" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/goblin_rabble.webp" alt="Goblin Rabble: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2520" height="220" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-goblin_spear" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:goblin_spear">Goblin Spearman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.3 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Spearman, idle preview" style="background-image:url('hub/poses/goblin_spear.webp');background-size:1000% 100%;aspect-ratio:240/218" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Spearman, walk preview" style="background-image:url('hub/poses/goblin_spear.webp');background-size:1000% 100%;aspect-ratio:240/218" data-n="10" data-seq="3,4,5,4" data-times="0.075,0.075,0.075,0.075"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Spearman, strike preview" style="background-image:url('hub/poses/goblin_spear.webp');background-size:1000% 100%;aspect-ratio:240/218" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/goblin_spear.webp" alt="Goblin Spearman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2400" height="218" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-goblin_archer" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:goblin_archer">Goblin Archer</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.32 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Archer, idle preview" style="background-image:url('hub/poses/goblin_archer.webp');background-size:1000% 100%;aspect-ratio:211/230" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Archer, walk preview" style="background-image:url('hub/poses/goblin_archer.webp');background-size:1000% 100%;aspect-ratio:211/230" data-n="10" data-seq="3,4,5,4" data-times="0.08,0.08,0.08,0.08"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Archer, strike preview" style="background-image:url('hub/poses/goblin_archer.webp');background-size:1000% 100%;aspect-ratio:211/230" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/goblin_archer.webp" alt="Goblin Archer: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2110" height="230" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-wolf_rider" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:wolf_rider">Goblin Wolf Rider</button></h3>
+            <ul class="unit-links"><li>4 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.3 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Wolf Rider, idle preview" style="background-image:url('hub/poses/wolf_rider.webp');background-size:1000% 100%;aspect-ratio:226/243" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Wolf Rider, walk preview" style="background-image:url('hub/poses/wolf_rider.webp');background-size:1000% 100%;aspect-ratio:226/243" data-n="10" data-seq="3,4,5,4" data-times="0.075,0.075,0.075,0.075"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Wolf Rider, strike preview" style="background-image:url('hub/poses/wolf_rider.webp');background-size:1000% 100%;aspect-ratio:226/243" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/wolf_rider.webp" alt="Goblin Wolf Rider: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2260" height="243" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-goblin_horn" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:goblin_horn">Goblin Horn-bearer</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.32 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Horn-bearer, idle preview" style="background-image:url('hub/poses/goblin_horn.webp');background-size:1000% 100%;aspect-ratio:244/224" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Horn-bearer, walk preview" style="background-image:url('hub/poses/goblin_horn.webp');background-size:1000% 100%;aspect-ratio:244/224" data-n="10" data-seq="3,4,5,4" data-times="0.08,0.08,0.08,0.08"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Horn-bearer, strike preview" style="background-image:url('hub/poses/goblin_horn.webp');background-size:1000% 100%;aspect-ratio:244/224" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/goblin_horn.webp" alt="Goblin Horn-bearer: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2440" height="224" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-goblin_shaman" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:goblin_shaman">Goblin Shaman</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.36 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Shaman, idle preview" style="background-image:url('hub/poses/goblin_shaman.webp');background-size:1000% 100%;aspect-ratio:225/233" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Shaman, walk preview" style="background-image:url('hub/poses/goblin_shaman.webp');background-size:1000% 100%;aspect-ratio:225/233" data-n="10" data-seq="3,4,5,4" data-times="0.09,0.09,0.09,0.09"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Goblin Shaman, strike preview" style="background-image:url('hub/poses/goblin_shaman.webp');background-size:1000% 100%;aspect-ratio:225/233" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/goblin_shaman.webp" alt="Goblin Shaman: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2250" height="233" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-orc_warrior" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:orc_warrior">Orc Warrior</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, front side, back, back side</li><li>Idle frames hold 0.42 s; a stride takes 0.5 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warrior, idle preview" style="background-image:url('hub/poses/orc_warrior.webp');background-size:1000% 100%;aspect-ratio:250/240" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warrior, walk preview" style="background-image:url('hub/poses/orc_warrior.webp');background-size:1000% 100%;aspect-ratio:250/240" data-n="10" data-seq="3,4,5,4" data-times="0.125,0.125,0.125,0.125"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warrior, strike preview" style="background-image:url('hub/poses/orc_warrior.webp');background-size:1000% 100%;aspect-ratio:250/240" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/orc_warrior.webp" alt="Orc Warrior: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2500" height="240" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-orc_brute" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:orc_brute">Orc Brute</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.62 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Brute, idle preview" style="background-image:url('hub/poses/orc_brute.webp');background-size:1000% 100%;aspect-ratio:250/272" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Brute, walk preview" style="background-image:url('hub/poses/orc_brute.webp');background-size:1000% 100%;aspect-ratio:250/272" data-n="10" data-seq="3,4,5,4" data-times="0.155,0.155,0.155,0.155"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Brute, strike preview" style="background-image:url('hub/poses/orc_brute.webp');background-size:1000% 100%;aspect-ratio:250/272" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/orc_brute.webp" alt="Orc Brute: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2500" height="272" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-orc_warlord" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:orc_warlord">Orc Warlord</button></h3>
+            <ul class="unit-links"><li>6 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.6 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warlord, idle preview" style="background-image:url('hub/poses/orc_warlord.webp');background-size:1000% 100%;aspect-ratio:224/331" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warlord, walk preview" style="background-image:url('hub/poses/orc_warlord.webp');background-size:1000% 100%;aspect-ratio:224/331" data-n="10" data-seq="3,4,5,4" data-times="0.15,0.15,0.15,0.15"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Orc Warlord, strike preview" style="background-image:url('hub/poses/orc_warlord.webp');background-size:1000% 100%;aspect-ratio:224/331" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/orc_warlord.webp" alt="Orc Warlord: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="2240" height="331" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-troll" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:troll">Moss Troll</button></h3>
+            <ul class="unit-links"><li>3 drawn soldiers · front, back</li><li>Idle frames hold 0.42 s; a stride takes 0.78 s.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Moss Troll, idle preview" style="background-image:url('hub/poses/troll.webp');background-size:1000% 100%;aspect-ratio:309/353" data-n="10" data-seq="0,1,2,1" data-times="0.42,0.42,0.42,0.42"></div><span>Idle</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Moss Troll, walk preview" style="background-image:url('hub/poses/troll.webp');background-size:1000% 100%;aspect-ratio:309/353" data-n="10" data-seq="3,4,5,4" data-times="0.195,0.195,0.195,0.195"></div><span>Walk</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Moss Troll, strike preview" style="background-image:url('hub/poses/troll.webp');background-size:1000% 100%;aspect-ratio:309/353" data-n="10" data-seq="0,6,7,0" data-times="0.7,0.18,0.26,0.3"></div><span>Strike</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/troll.webp" alt="Moss Troll: 10 battle poses of the first soldier, front view, left to right: idle 1, idle 2, idle 3, walk 1, walk 2, walk 3, wind-up, strike, falling, down" width="3090" height="353" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(10,minmax(0,1fr))"><span>Idle 1</span><span>Idle 2</span><span>Idle 3</span><span>Walk 1</span><span>Walk 2</span><span>Walk 3</span><span>Wind-up</span><span>Strike</span><span>Falling</span><span>Down</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-rock_lobber" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:rock_lobber">Rock Lobber</button></h3>
+            <ul class="unit-links"><li>1 drawn soldier · front, back</li><li>Engines are drawn at rest and loosing.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Rock Lobber, at rest preview" style="background-image:url('hub/poses/rock_lobber.webp');background-size:200% 100%;aspect-ratio:230/204" data-n="2" data-seq="0" data-times="1.0"></div><span>At rest</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Rock Lobber, loosing preview" style="background-image:url('hub/poses/rock_lobber.webp');background-size:200% 100%;aspect-ratio:230/204" data-n="2" data-seq="0,1,0" data-times="0.9,0.55,0.25"></div><span>Loosing</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/rock_lobber.webp" alt="Rock Lobber: 2 battle poses of the first soldier, front view, left to right: at rest, loosing" width="460" height="204" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(2,minmax(0,1fr))"><span>At rest</span><span>Loosing</span></figcaption></figure>
+        </article>
+<article class="anim-row" id="anim-war_wagon" data-faction="host">
+          <div class="anim-head">
+            <span class="faction-tag" data-faction="host">Hillsvain Host</span>
+            <h3><button type="button" class="ability-name" data-goto="characters:war_wagon">Spiked War Wagon</button></h3>
+            <ul class="unit-links"><li>1 drawn soldier · front, back</li><li>Engines are drawn at rest and loosing.</li></ul>
+          </div>
+          <div class="pose-previews"><div class="pose-box"><div class="pose-preview" role="img" aria-label="Spiked War Wagon, at rest preview" style="background-image:url('hub/poses/war_wagon.webp');background-size:200% 100%;aspect-ratio:214/217" data-n="2" data-seq="0" data-times="1.0"></div><span>At rest</span></div><div class="pose-box"><div class="pose-preview" role="img" aria-label="Spiked War Wagon, loosing preview" style="background-image:url('hub/poses/war_wagon.webp');background-size:200% 100%;aspect-ratio:214/217" data-n="2" data-seq="0,1,0" data-times="0.9,0.55,0.25"></div><span>Loosing</span></div></div>
+          <figure class="pose-strip"><img src="hub/poses/war_wagon.webp" alt="Spiked War Wagon: 2 battle poses of the first soldier, front view, left to right: at rest, loosing" width="428" height="217" loading="lazy">
+            <figcaption class="strip-labels" style="grid-template-columns:repeat(2,minmax(0,1fr))"><span>At rest</span><span>Loosing</span></figcaption></figure>
+        </article>
+      </div>
+    </div>
+    <div class="hub-page" id="terrain" role="tabpanel" aria-labelledby="nav-terrain" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">06 · Terrain</p><h1>The ground decides the fight.</h1></div>
+        <p>Ground types, obstacles and battlefields from <code>terrain.json</code> and <code>maps.json</code>. Height, which raises the line of sight, comes from each map.</p>
+      </div>
+      <div class="section-heading"><h2>Ground</h2><span>11 kinds</span></div>
+      <div class="table-scroll"><table class="terrain-table">
+        <thead><tr><th>Ground</th><th>Id</th><th>Move cost</th><th>Defense</th><th>Ranged cover</th><th>Blocks sight</th></tr></thead>
+        <tbody><tr><td><span class="swatch" style="background:#7fa23a"></span>Meadow</td><td><code>grass</code></td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#a98a4f"></span>Trampled earth</td><td><code>dirt</code></td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#b49866"></span>Road</td><td><code>road</code></td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#4f7a2a"></span>Thicket</td><td><code>brush</code></td><td>2</td><td>—</td><td>−15%</td><td>half</td></tr><tr><td><span class="swatch" style="background:#2f5a26"></span>Woods</td><td><code>forest</code></td><td>2</td><td>+5</td><td>−20%</td><td>three quarters</td></tr><tr><td><span class="swatch" style="background:#4f8fa6"></span>Shallow ford</td><td><code>shallows</code></td><td>3</td><td>−10</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#3b7896"></span>Deep water</td><td><code>water</code></td><td>impassable</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#9a9a8c"></span>Flagstones</td><td><code>stone</code></td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#8a8478"></span>Bridge</td><td><code>bridge</code></td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#6b5a3a"></span>Mire</td><td><code>mud</code></td><td>2</td><td>−5</td><td>—</td><td>—</td></tr><tr><td><span class="swatch" style="background:#8f8a7c"></span>Rubble</td><td><code>rubble</code></td><td>2</td><td>+5</td><td>−10%</td><td>—</td></tr></tbody></table></div>
+      <p class="hub-footnote">Ranged cover lowers the chance to hit a squad standing there. Sight blocking adds up along the line: two tiles of thicket, or one of woods plus anything leafy, hide what lies behind.</p>
+      <div class="section-heading"><h2>Obstacles</h2><span>Blender renders used in battle</span></div>
+      <div class="prop-grid"><article class="prop-card"><figure><img src="hub/props/rock_large.webp" alt="Boulders: battlefield prop rendered in Blender" width="198" height="154" loading="lazy"></figure><h3>Boulders</h3><p>blocks movement · blocks sight · −25% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/rock_small.webp" alt="Stones: battlefield prop rendered in Blender" width="108" height="92" loading="lazy"></figure><h3>Stones</h3><p>blocks movement · open sight · −20% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/tree_pine.webp" alt="Pine: battlefield prop rendered in Blender" width="239" height="260" loading="lazy"></figure><h3>Pine</h3><p>blocks movement · blocks sight · −25% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/tree_oak.webp" alt="Oak: battlefield prop rendered in Blender" width="260" height="244" loading="lazy"></figure><h3>Oak</h3><p>blocks movement · blocks sight · −25% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/bush.webp" alt="Bush: battlefield prop rendered in Blender" width="246" height="200" loading="lazy"></figure><h3>Bush</h3><p>blocks movement · partly blocks sight · −15% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/wall_ruin_x.webp" alt="Ruined wall: battlefield prop rendered in Blender" width="260" height="238" loading="lazy"></figure><h3>Ruined wall</h3><p>blocks movement · open sight · −30% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/wall_high.webp" alt="Ruined tower: battlefield prop rendered in Blender" width="260" height="229" loading="lazy"></figure><h3>Ruined tower</h3><p>blocks movement · blocks sight · −30% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/fence_x.webp" alt="Fence: battlefield prop rendered in Blender" width="250" height="208" loading="lazy"></figure><h3>Fence</h3><p>blocks movement · open sight · −15% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/stump.webp" alt="Stump: battlefield prop rendered in Blender" width="156" height="130" loading="lazy"></figure><h3>Stump</h3><p>blocks movement · open sight · −10% to shots past it</p></article><article class="prop-card"><figure><span class="muted">No render</span></figure><h3>Fallen log</h3><p>blocks movement · open sight · −20% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/crates.webp" alt="Crates: battlefield prop rendered in Blender" width="222" height="214" loading="lazy"></figure><h3>Crates</h3><p>blocks movement · partly blocks sight · −25% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/tent.webp" alt="Tent: battlefield prop rendered in Blender" width="260" height="247" loading="lazy"></figure><h3>Tent</h3><p>blocks movement · blocks sight · −20% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/totem.webp" alt="War totem: battlefield prop rendered in Blender" width="212" height="260" loading="lazy"></figure><h3>War totem</h3><p>blocks movement · open sight · −10% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/campfire.webp" alt="Campfire: battlefield prop rendered in Blender" width="194" height="126" loading="lazy"></figure><h3>Campfire</h3><p>blocks movement · open sight</p></article><article class="prop-card"><figure><img src="hub/props/bwall_x.webp" alt="Palisade: battlefield prop rendered in Blender" width="240" height="260" loading="lazy"></figure><h3>Palisade</h3><p>blocks movement · open sight · −35% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/gate_x.webp" alt="Gateway: battlefield prop rendered in Blender" width="257" height="260" loading="lazy"></figure><h3>Gateway</h3><p>walkable · open sight · +10 defense</p></article><article class="prop-card"><figure><img src="hub/props/stakes_x.webp" alt="Sharpened stakes: battlefield prop rendered in Blender" width="260" height="229" loading="lazy"></figure><h3>Sharpened stakes</h3><p>blocks movement · open sight · −15% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/war_banner.webp" alt="War standard: battlefield prop rendered in Blender" width="211" height="260" loading="lazy"></figure><h3>War standard</h3><p>blocks movement · open sight</p></article><article class="prop-card"><figure><img src="hub/props/cart.webp" alt="Overturned cart: battlefield prop rendered in Blender" width="260" height="153" loading="lazy"></figure><h3>Overturned cart</h3><p>blocks movement · partly blocks sight · −25% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/haystack.webp" alt="Haystack: battlefield prop rendered in Blender" width="260" height="247" loading="lazy"></figure><h3>Haystack</h3><p>blocks movement · partly blocks sight · −20% to shots past it</p></article><article class="prop-card"><figure><img src="hub/props/well.webp" alt="Well: battlefield prop rendered in Blender" width="260" height="257" loading="lazy"></figure><h3>Well</h3><p>blocks movement · open sight · −20% to shots past it</p></article></div>
+      <div class="section-heading"><h2>Battlefields</h2><span>5 maps</span></div>
+      <div class="map-grid"><article class="note-card map-card"><p class="hub-eyebrow">14 × 12 tiles · forest</p>
+          <h3>Forest clearing</h3><p>An open glade ringed by pine and oak. Tree clumps and boulders break up the field.</p><p class="muted">Used by: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Wolf riders on the road, Vanguard of the host, Orc brutes and their goblins, Moss trolls of the deep wood, Shamans of the host, The host&#x27;s war engines, Ambush on the road</p></article><article class="note-card map-card"><p class="hub-eyebrow">14 × 12 tiles · river</p>
+          <h3>Ruined steading</h3><p>A burned farmstead by a river. The bridge and the ford are the only crossings.</p><p class="muted">Used by: Scouts of the host, Stragglers ahead of the host, Raiders burning the steadings, Vanguard of the host, Orc brutes and their goblins, Moss trolls of the deep wood, Shamans of the host, The host&#x27;s war engines</p></article><article class="note-card map-card"><p class="hub-eyebrow">15 × 13 tiles · camp</p>
+          <h3>Raider war camp</h3><p>The warband&#x27;s camp: tents, totems and cookfires behind a screen of trees.</p><p class="muted">Used by: The vanguard&#x27;s camp</p></article><article class="note-card map-card"><p class="hub-eyebrow">24 × 22 tiles · forest</p>
+          <h3>Brannsted steading</h3><p>A palisaded farm on a low rise: two gates, a breach by the corner tower and a gap in the back fence. A stream with a bridge and a ford covers the west.</p><p class="muted">Used by: The last stand at Brannsted</p></article><article class="note-card map-card"><p class="hub-eyebrow">24 × 22 tiles · river</p>
+          <h3>Vattern ford</h3><p>A river with one bridge and one ford. On the near bank a low ridge with old ruins guards the road the refugees are fleeing down.</p><p class="muted">Used by: Cover the refugees, The last stand at Brannsted</p></article></div>
+    </div>
+    <div class="hub-page" id="pages" role="tabpanel" aria-labelledby="nav-pages" tabindex="-1" hidden>
+      <div class="page-heading">
+        <div><p class="hub-eyebrow">07 · More pages</p><h1>The rest of the card.</h1></div>
+        <p>Design notes, labs and rigs live in their own tabs. Pick the group in the rail left of this page, then the tab in the bar above.</p>
+      </div>
+      <div class="pages-grid"><section class="note-card"><p class="hub-eyebrow">16 tabs</p><h2>Meridius</h2><ul class="page-list"><li>Magic and war machines</li><li>The endless horde</li><li>Phase one build</li><li>Squad system</li><li>Loop 1 · Placeholder art</li><li>Ability icons</li><li>Ability prompts</li><li>Sovereign Kiss</li><li>Terrain, towns and map edges</li><li>Terrain tests and fog of war</li><li>Terrain relief ground</li><li>Woodland camp remodel</li><li>Colossal boss fights</li><li>Interface redesign</li><li>Unit playground</li><li>Sound map and camp choices</li></ul></section><section class="note-card"><p class="hub-eyebrow">9 tabs</p><h2>Character rigs</h2><ul class="page-list"><li><b>Footman</b><ul><li>Footmen motion study</li><li>Footman 3D rig</li></ul></li><li><b>Crossbowman</b><ul><li>Crossbowman 3D rig</li></ul></li><li><b>Spearman</b><ul><li>Spearman 3D rig</li></ul></li><li><b>Succubus</b><ul><li>Succubus 3D rig</li></ul></li><li><b>Wolf scouts</b><ul><li>Wolf scout vanguard</li></ul></li><li><b>Mage</b><ul><li>Mage rig &amp; animations</li></ul></li><li><b>Shared</b><ul><li>Mixar setup</li><li>Facial features</li></ul></li></ul></section><section class="note-card"><p class="hub-eyebrow">3 tabs</p><h2>Unit roster</h2><ul class="page-list"><li><b>Garrison</b><ul><li>Garrison units</li></ul></li><li><b>Allies and crews</b><ul><li>Allies and crews</li></ul></li><li><b>Hillsvain Host</b><ul><li>Hillsvain Host units</li></ul></li></ul></section></div>
+    </div>
+    <p class="hub-footnote">Source: <code>projects/meridius/source/godot/data/</code>, <code>assets/sprites/anim/</code>, <code>assets/icons/</code> and <code>assets/sprites/blender/</code>.
+      Rebuild with <code>python workspace/2026-10-20_meridius/hub/build.py</code>.</p>
+  </main>
+</div>
+</body>
+</html>

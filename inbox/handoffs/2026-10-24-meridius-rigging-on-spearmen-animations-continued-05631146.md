@@ -257,7 +257,12 @@ Notes:
 
 **`906687a`** was committed after a full `tools/test.sh` run that gave 389 passed and 4 failed: two campaign parity tests, `test_audio`, and `test_squad_skills.gd`, which doesn't parse because `icon.gd` has no `painted()`. All four come from other sessions' uncommitted game code. The commit changes only `art/` and `workspace/`.
 
-**`627c2c1`** was committed at the user's request ("commit now, don't wait") without waiting for the full `tools/test.sh`. `tools/test.sh --quick` on the same files gave 402 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread`. Per the coordinator, that failure comes from another session's unit-outline shader draft (the `custom_samplers` shader error), which the user chose to discard; the coordinator is removing it. The commit changes only `art/` (which Godot ignores via `.gdignore`) and `workspace/`.
+**`627c2c1`** was committed at the user's request ("commit now, don't wait") without waiting for the full `tools/test.sh`. `tools/test.sh --quick` on the same files gave 402 passed and 1 failed: `test_audio::test_a_marching_squad_is_one_tread`. Per the coordinator, that failure comes from another session's unit-outline shader draft (the `custom_samplers` shader error), which the user chose to discard; the coordinator has since removed it. The commit changes only `art/` (which Godot ignores via `.gdignore`) and `workspace/`.
+
+The full `tools/test.sh` that started before `627c2c1`, on the shared working tree, finished with 408 passed and 5 failed. None of the failures come from the spearman commits, and the coordinator confirmed that all five were known:
+- `test_campaign_parity::test_driven_runs_with_ai_battles_match` and `test_autoplay_campaigns_match` (silver loot and one outcome differ from the golden files): the fog session's rule change for passable woodland, whose campaign recording was never redone. The coordinator is re-recording it and will commit it with the fog rules.
+- `test_assets::test_figure_anchor_and_scale` and `test_opaque_at_matches_original_masks` (`tree_pine` is 1411×1269, expected 890×976): another session's unfinished painted woodland work in `assets/sprites.json`, which that session owns.
+- `test_audio::test_a_marching_squad_is_one_tread` (`custom_samplers` shader error): the outline shader draft, deleted after the run started. The coordinator reports that `test_audio` now gives 25 passed, 0 failed.
 
 **`e40ed6a`** was committed at the user's request ("commit now, don't wait") before the full `tools/test.sh` run finished. It changes only `art/spearman_3d/` (Godot ignores `art/` through `.gdignore`) and `workspace/`, outside the Godot project, so no game code or imported asset changed.
 

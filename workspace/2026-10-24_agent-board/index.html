@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <title>Agent board</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="board.css">
+  <script defer src="../_shared/report.js"></script>
+  <script defer src="board.js"></script>
+</head>
+<body>
+  <main class="board">
+    <div class="board-head">
+      <div>
+        <p class="eyebrow">Mr. Mak · live</p>
+        <h1>Agent board</h1>
+        <p class="feed" id="feed">Loading the board…</p>
+      </div>
+      <div class="head-actions" id="popout-box" hidden>
+        <button type="button" id="popout">Open in its own window</button>
+        <span>Opens in your browser. The desktop shortcut “Agent Board” opens it as an app window.</span>
+      </div>
+    </div>
+
+    <div class="stale" id="stale" role="status" hidden></div>
+    <div class="summary" id="summary" aria-label="Summary"></div>
+    <div class="lanes" id="lanes"></div>
+    <div class="repo" id="repo" aria-label="Git and commit lock"></div>
+
+    <details class="about">
+      <summary>How this board works</summary>
+      <p>Every minute the scheduled task “Mr Mak Agent Board” runs <code>build_board.py</code>. It reads the Claude Code session registry, the end of each live session’s transcript, background jobs from the last 12 hours and this repository’s Git state, and writes <code>live/board-data.js</code>. This page reloads that file every 20 seconds.</p>
+      <ul>
+        <li><strong>Working</strong>: the session is busy now. The time is how long the current turn has run.</li>
+        <li><strong>Stopped mid-step</strong>: the session is idle, but its transcript ends on a prompt, a tool call or a tool result instead of a reply. It was interrupted or is waiting for a permission prompt. Open its chat and say “continue”.</li>
+        <li><strong>Your turn</strong>: the session finished its reply and waits for you.</li>
+        <li><strong>Done and quiet</strong>: quiet for more than 3 hours, marked done by the coordinator, or a finished background job.</li>
+      </ul>
+      <p>A coordinator session can add <code>live/notes.json</code> to name tasks, sort a quiet session and record the commit lock. A note stops applying as soon as that session does something new. The <code>live/</code> folder holds prompt excerpts and stays out of Git.</p>
+      <p>To set up the task and the desktop shortcut again, run <code>python build_board.py --install</code> in <code>workspace/2026-10-24_agent-board</code>. <code>--uninstall</code> removes both. If a run fails, the reason is in <code>live/last-error.txt</code>.</p>
+    </details>
+  </main>
+</body>
+</html>

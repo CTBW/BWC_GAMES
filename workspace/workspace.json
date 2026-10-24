@@ -78,6 +78,25 @@
       "defaultStep": 0
     },
     {
+      "id": "agent-board",
+      "title": "Agent board",
+      "description": "Live overview of every Claude session on this project: who is working, who stopped mid-step, who waits for you, and the commit lock. Updates every minute and opens in its own window.",
+      "type": "group",
+      "category": "dev",
+      "created": "2026-10-24",
+      "updated": "2026-10-24",
+      "folder": "2026-10-24_agent-board",
+      "steps": [
+        {
+          "name": "Board",
+          "path": "index.html"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0
+    },
+    {
       "id": "my-dream-game",
       "title": "My Dream Game",
       "description": "Mr. Mak 64: a small Sky Islands adventure, with character studies, world layouts and a development board.",

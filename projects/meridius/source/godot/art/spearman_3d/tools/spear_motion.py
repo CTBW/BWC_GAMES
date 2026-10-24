@@ -12,10 +12,12 @@ the rig for the game's facings turns the spear too. Three ways of holding it:
          so the fist's grip axis stands upright (leaning a little forward and out) and the
          spear runs along it, the butt above knee height so the striding thigh never meets
          it; the right arm's keys in the clip are replaced;
-  shoulder  the sidestep into lane (the clip turns his body ~70 degrees right): the shaft rests
-         against the front of his right shoulder, leaning back from his chest, the fist just
-         below at his collarbone and the elbow back by his ribs; the wrist bends a little
-         (11-15 degrees) so the shaft keeps its lean; his head looks straight ahead throughout;
+  shoulder  the sidestep into lane (the clip turns his hips and chest ~70 degrees right): the
+         spine turns his chest back by SPINE_UNTWIST of that, and the neck and the head's joint
+         share the rest, so his head looks straight ahead throughout; the shaft rests against
+         the front of his right shoulder, leaning back mostly from the way he walks (the hips;
+         "travel"), the fist just below at his collarbone and the elbow back by his ribs; the
+         wrist bends a little (up to ~11 degrees) so the shaft keeps its lean;
   turn   the turn: both hands on the shaft as in the guard (the arms take the guard's pose
          on the turning body), the spear lowered a little (TURN_LOWER, eased in and out) with
          the front arm re-solved so its fist stays on the shaft;
@@ -43,9 +45,18 @@ CARRY_CFG.update(json.loads(os.environ.get("SPEAR_CARRY", "{}")))
 # Sidestep into lane: the spear leans back onto the right shoulder ("fwd" negative = back).
 # "contact": where the shaft touches the front of the shoulder (rest pose), "len": metres down
 # the shaft from there to the fist, "pole": which way the elbow points (rest pose).
+# "travel": how much "back" is measured from his hips (the way he walks) rather than his chest.
+# With the spine untwisted his chest faces ~35 degrees further left than his hips; leaning
+# back from the chest alone stood the spear upright in the SE view, against the owner's
+# 2026-10-23 arrows (tip to the right); 0.75 keeps that lean, and 1.0 ran the shaft over his face.
 SHOULDER_CFG = {"contact": [-0.20, -0.11, 1.55], "len": 0.16, "fwd": -22.0, "out": 3.0, "butt_z": 0.85,
-                "pole": [-0.3, 0.6, -1.0]}
+                "pole": [-0.3, 0.6, -1.0], "travel": 0.75}
 SHOULDER_CFG.update(json.loads(os.environ.get("SPEAR_SHOULDER", "{}")))
+# Share of the chest's turn the spine turns back in the sidestep, spread over its three bones
+# (twisting each about its own length). With the head held straight ahead, the source clip's
+# untwisted spine left the whole 64-79 degrees to the neck.
+SPINE_UNTWIST = float(os.environ.get("SPINE_UNTWIST", "0.5"))
+SPINE_SHARES = (("Spine", 0.3), ("Spine1", 0.35), ("Spine2", 0.35))
 CARRY_POLE = Vector((-0.5, 1.0, -0.25))  # rest-pose world direction: the elbow points back, out and a little down
 TURN_LOWER = 16.0      # degrees the spear dips during the turn
 TURN_EASE = 6          # frames to ease the dip in and out
@@ -178,8 +189,11 @@ def shoulder_ik(cfg):
     the elbow back by his ribs; the wrist bends a little so the shaft keeps its lean, and the
     fist's middle lies towards his chest (thumb up)."""
     chest = PB["mixamorig:Spine2"].matrix
-    fwd = chest.to_3x3() @ Vector((0, 0, 1))      # back from his chest: the sidestep turns him ~70 degrees right
+    fwd = chest.to_3x3() @ Vector((0, 0, 1))      # back from his chest ...
     fwd.z = 0
+    hips = PB["mixamorig:Hips"].matrix.to_3x3() @ Vector((0, 0, 1))
+    hips.z = 0
+    fwd = fwd.normalized().lerp(hips.normalized(), cfg["travel"])   # ... or from his hips, the way he walks
     g = lean_dir(cfg, fwd.normalized())
     P = chest @ (B["mixamorig:Spine2"].matrix_local.inverted() @ Vector(cfg["contact"]))
     F = P - g * cfg["len"]
@@ -194,8 +208,40 @@ def shoulder_ik(cfg):
     return math.degrees(fy.angle(hy))                 # how far the wrist bends sideways
 
 
+def ground_yaw(name):
+    """How far a bone's forward (its Z axis) is turned on the ground from its rest, in radians,
+    + = to his left."""
+    cur = PB[name].matrix.to_3x3() @ Vector((0, 0, 1))
+    rest = B[name].matrix_local.to_3x3() @ Vector((0, 0, 1))
+    a = math.atan2(cur.y, cur.x) - math.atan2(rest.y, rest.x)
+    return (a + math.pi) % (2 * math.pi) - math.pi
+
+
+def twist_to(bones, target):
+    """Twist bones about their own length (Y runs up the spine), each by its share, until the
+    last one's ground yaw is target (radians); the twist about a leaning bone turns it a
+    little more or less on the ground, hence the few rounds."""
+    last = "mixamorig:" + bones[-1][0]
+    for _ in range(3):
+        d = target - ground_yaw(last)
+        for name, w in bones:
+            pb = PB["mixamorig:" + name]
+            pb.rotation_quaternion = pb.rotation_quaternion @ Quaternion((0, 1, 0), d * w)
+        bpy.context.view_layer.update()
+    for name, _ in bones:
+        PB["mixamorig:" + name].keyframe_insert("rotation_quaternion", frame=sc.frame_current)
+
+
+def untwist_spine(share):
+    """Turn his chest back towards his facing by share of its turn, over the spine bones."""
+    twist_to(SPINE_SHARES, (1 - share) * ground_yaw("mixamorig:Spine2"))
+    return math.degrees(ground_yaw("mixamorig:Spine2"))
+
+
 def head_forward():
-    """Neck halfway and head fully back to their rest orientation: looking straight ahead, level."""
+    """Head fully back to its rest orientation: looking straight ahead, level. The neck goes
+    halfway there, then turns to halfway between his chest and his head, so the two joints
+    share the twist."""
     for name, k in (("Neck", 0.5), ("Head", 1.0)):
         pb = PB["mixamorig:" + name]
         cur = pb.matrix.to_quaternion()
@@ -205,7 +251,10 @@ def head_forward():
         M.translation = pb.matrix.translation
         pb.matrix = M
         bpy.context.view_layer.update()
-        pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
+        if name == "Neck":
+            twist_to((("Neck", 1.0),), 0.5 * ground_yaw("mixamorig:Spine2"))
+        else:
+            pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
 
 
 ARM_BONES = [f"mixamorig:{s}{b}" for s in ("Left", "Right") for b in ("Shoulder", "Arm", "ForeArm", "Hand")]
@@ -275,12 +324,13 @@ for clip in clips:
     spear.animation_data_create()
     spear.animation_data.action = sact
     frames = frames_of(act)
-    fist_z, bend = [], []
+    fist_z, bend, chest_yaw = [], [], []
     if mode in ("carry", "shoulder"):
         cfg = CARRY_CFG if mode == "carry" else SHOULDER_CFG
         for f in frames:
             sc.frame_set(f)
             if mode == "shoulder":
+                chest_yaw.append(untwist_spine(SPINE_UNTWIST))
                 head_forward()
                 bend.append(shoulder_ik(cfg))
             else:
@@ -381,7 +431,8 @@ for clip in clips:
     sact["mode"] = mode
     if release:
         sact["release_frame"] = release
-    print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "")
+    print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "",
+          "chest turned %.0f to %.0f deg" % (min(chest_yaw), max(chest_yaw)) if chest_yaw else "")
 rig.animation_data.action = bpy.data.actions["idle"]
 spear.animation_data.action = bpy.data.actions["idle__spear"]
 sc.frame_set(1)

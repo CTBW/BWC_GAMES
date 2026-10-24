@@ -10,5 +10,9 @@ that must not reach the public remote:
   sound bank from it; `MERIDIUS_AUDIO_LIBRARY` overrides the path.
 - `ability-icons/`: the owner's 2048 px ability paintings, the source of the
   painted icons made by `projects/meridius/source/godot/tools/ui_key_icons.py`.
+- `workspace-originals/`: full-size PNG originals of Workspace card media that
+  is committed as WebP, in the card's own folder layout
+  (`workspace-originals/2026-10-20_meridius/interface/` for the Interface
+  redesign card).
 
 GitHub has no copy of this folder. Back it up separately.

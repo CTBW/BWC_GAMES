@@ -14,7 +14,7 @@ Nothing is pending. What's left waits on the owner or other sessions (see "Open 
 - **Earlier handoffs for this work:**
   - `inbox/handoffs/2026-10-24-meridius-add-combat-skills-continued-c4f61b66.md` (this chat started from it).
   - `inbox/handoffs/2026-10-24-meridius-add-combat-skills-merged-4c8d0d1a.md`, committed in `6499291` by a parallel chat. It predates `72e345c`. Its items "the forecast row … shows 0" and "the HUD unit-panel cache can leave the Lick Wounds button stale" are done. The "another session" editing `capture_skills.gd` was this one, and that work is committed. This handoff supersedes those lines.
-- **This chat's transcript:** `C:\Users\calle\.claude\projects\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0.jsonl`.
+- **This chat's transcript:** `%USERPROFILE%\.claude\projects\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0.jsonl`.
 
 ## Current state
 - **Commit `72e345c`:** "Meridius Godot: a square's broken charge in the forecast, a live Lick Wounds button". 6 files, +51/−12.
@@ -47,7 +47,7 @@ Nothing is pending. What's left waits on the owner or other sessions (see "Open 
 - **Two rows, not one negative row:** forecast rows are meant to add up to the chance. A lone −12 row with no +12 row would not.
 - **Guard note left alone:** it appears only when attacking an enemy guarded by Defend, and no enemy kit has Defend. Adding it is a design call for the owner, not a bug fix.
 - **Staging by index blobs:** `battle.gd`, `battle_hud.gd`, `test_battle_hud.gd` and `MIGRATION.md` also hold other sessions' unfinished work (fog of war, dark HUD panels, audio and interface notes). In `MIGRATION.md` our bullet sat inside the same insertion as theirs, so hunk-picking was fragile.
-  - `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0\scratchpad\stage_mine.py` builds each file as `HEAD`'s blob plus our replacements (anchors must match once). It writes the blobs with `git hash-object -w`, then `git update-index --cacheinfo`.
+  - `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0\scratchpad\stage_mine.py` builds each file as `HEAD`'s blob plus our replacements (anchors must match once). It writes the blobs with `git hash-object -w`, then `git update-index --cacheinfo`.
   - The working tree is never touched. After the commit, the working diff of those files holds only the other sessions' work.
 - **Merge:** a merge commit pinned with `--match-head-commit`, no branch deletion, the same as #1. The unpushed `6499291` existed at merge time and was left for its chat; it has since been pushed by others.
 
@@ -80,7 +80,7 @@ Nothing is pending. What's left waits on the owner or other sessions (see "Open 
    - Clean up with `git worktree remove --force <dir>`. It deregisters the worktree but fails to delete the folder ("Filename too long"). Then run PowerShell `Remove-Item -LiteralPath "\\?\<full path written out>" -Recurse -Force`. A variable inside the `\\?\` path is blocked by the permission check.
 
 ## Scratchpad
-`C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0\scratchpad\` holds:
+`%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\372d9c5f-2327-4342-83c1-dd4f0eabbbc0\scratchpad\` holds:
 - `stage_mine.py`
 - `staged.diff`, `staged.bin.diff`
 - `wt_full_test.txt`, `wt_import.txt`

@@ -20,7 +20,7 @@ Animation and effects for the skills come later (spec, "Visual direction (not im
 - **Spec:** `projects/meridius/docs/squad-skills.md` (repo-relative). Keep it current.
 - **Log:** `MIGRATION.md`, section "Squad skills (22 Oct 2026, Godot only)" with its "Follow-up, 23 Oct 2026" list.
 - **Earlier handoffs:** `inbox/handoffs/2026-10-23-meridius-add-combat-skills-9e489a85.md`, `inbox/handoffs/2026-10-24-meridius-add-combat-skills-continued-63018e7b.md`.
-- **This chat's transcript:** `C:\Users\calle\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
+- **This chat's transcript:** `%USERPROFILE%\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
 - **Project rules:** `CLAUDE.md` and `ARCHITECTURE.md` in the Godot project. Read both before changing code.
 
 ## What this session did
@@ -75,13 +75,13 @@ Animation and effects for the skills come later (spec, "Visual direction (not im
    - Windows path limits: delete the worktree folder with PowerShell `Remove-Item -LiteralPath "\\?\<path>" -Recurse -Force`.
 
 ## Other notes
-- **Scratchpad:** `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
+- **Scratchpad:** `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
   - `pick_hunks.py` (keeps chosen hunks of a diff by old start line)
   - the filtered `skills_*.diff` files
   - `wt_full_test.txt` (the committed tree's full run)
 - **Previous scratchpads:**
-  - `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\7891c9ab-6aeb-4e1f-b744-74b89d60f6b9\scratchpad\` (icon contact sheet `render_icons.gd`, Howl drafts, earlier test logs)
-  - `C:\Users\calle\AppData\Local\Temp\claude\D--ProjektM-BWC-GAMES-godot\d379d718-21fd-4cfc-b9d9-cf230a9e35de\scratchpad\` (balance tools such as `sim_skills.gd`)
+  - `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\7891c9ab-6aeb-4e1f-b744-74b89d60f6b9\scratchpad\` (icon contact sheet `render_icons.gd`, Howl drafts, earlier test logs)
+  - `%USERPROFILE%\AppData\Local\Temp\claude\D--ProjektM-BWC-GAMES-godot\d379d718-21fd-4cfc-b9d9-cf230a9e35de\scratchpad\` (balance tools such as `sim_skills.gd`)
 
 ---
 From the Claude Code chat continuing "Meridius - Add combat skills" in E:\ProjektM\BWC_GAMES-godot, 2026-10-24.

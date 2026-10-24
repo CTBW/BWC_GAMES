@@ -205,10 +205,10 @@ so it runs only in the shared tree, not in a clean HEAD worktree.
   `.claude/skills/feature-handoff/`
 - Shader backups (temporary, outside the repo):
   - before the second bank pass:
-    `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\6fc77634-a4d1-4581-af8b-7a88f6010dea\scratchpad\terrain_relief.v3.keep`
+    `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\6fc77634-a4d1-4581-af8b-7a88f6010dea\scratchpad\terrain_relief.v3.keep`
   - older ones, listed in the previous handoff.
 - Full transcript of this chat:
-  `C:\Users\calle\.claude\projects\E--ProjektM-BWC-GAMES-godot\6fc77634-a4d1-4581-af8b-7a88f6010dea.jsonl`
+  `%USERPROFILE%\.claude\projects\E--ProjektM-BWC-GAMES-godot\6fc77634-a4d1-4581-af8b-7a88f6010dea.jsonl`
 
 ---
 From the Claude Code chat continuing "Meridius - Terrain & Battlefield · continued"

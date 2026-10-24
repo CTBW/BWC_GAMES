@@ -15,8 +15,9 @@
    Keep source links near claims and label historical model runs as historical.
 6. Update the registry's `updated` date after meaningful changes. Preserve the
    original `created` date. Do not mark personal work `sample: true`.
-7. Open every changed tab at wide and narrow widths, test links and media,
-   then report the outcome. A built installer is not an installed update.
+7. Open every changed tab at desktop window sizes (no phone or tablet checks),
+   test links and media, then report the outcome. A built installer is not an
+   installed update.
 
 New HTML reports can begin with:
 
@@ -25,7 +26,6 @@ New HTML reports can begin with:
 <html lang="en" data-mak-report="document">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project report</title>
   <link rel="stylesheet" href="../_shared/report.css">
   <link rel="stylesheet" href="../_shared/examples.css">

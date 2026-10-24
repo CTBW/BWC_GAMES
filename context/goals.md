@@ -10,6 +10,7 @@
 - The TypeScript/Canvas game in `projects/meridius/source/game` is a frozen
   reference. Do not add features, fixes, tests or tooling to it. Reading it, or
   running it unchanged to compare behaviour, is fine.
-- No mobile versions and no mobile optimisation: no touch controls, small-screen
-  layouts or mobile checks, including for Meridius reports.
+- No phone or tablet versions and no optimisation for them: no touch controls,
+  small-screen layouts or phone/tablet checks, including for Meridius reports
+  (desktop-only rule in `AGENTS.md`).
 - No work on other games or projects, such as My Dream Game.

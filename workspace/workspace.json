@@ -7,7 +7,7 @@
       "type": "group",
       "category": "project",
       "created": "2026-10-20",
-      "updated": "2026-10-24",
+      "updated": "2026-10-25",
       "folder": "2026-10-20_meridius",
       "steps": [
         {
@@ -33,6 +33,10 @@
         {
           "name": "Loop 1 · Placeholder art",
           "path": "loop1.html"
+        },
+        {
+          "name": "Terrain, towns and map edges",
+          "path": "terrain-prompts.html"
         },
         {
           "name": "Terrain relief ground",

@@ -1,4 +1,4 @@
-"""Review only: retarget the goblin's three Mixamo clips onto GoblinRabbleRig, keep the props
+"""Review only: retarget the goblin's four Mixamo clips onto GoblinRabbleRig, keep the props
 clear of the body, measure every frame and save a scratch copy with the clips (Mixamo motion
 stays out of the repo).
 
@@ -7,10 +7,16 @@ stays out of the repo).
 Retarget as spearman_3d/tools/retarget_clips.py (rest-pose difference, bone by bone, in
 world space; the hips' motion scaled by the hip-height ratio), keying only the Mixamo body
 bones: the fingers keep the grip actions. Options per clip:
-  in_place   remove the drift between the first and last frame
-  loop_blend ease the last N frames back into the first pose
+  in_place   remove the drift between the first and last frame (its speed is kept as the
+             action's root_vel, m/s in Blender x and y)
+  loop       the clip loops (its corrections are smoothed round the seam)
+  loop_blend ease the last N frames back into the first pose (a loop)
   ground     lift the hips wherever the skinned body or a prop dips below the floor (the
              soles may sink FOOT_SINK), widened and averaged so the lift never pops
+  sole       raise or lower the hips so the lowest point of the soles stays at its rest
+             height (the planted foot on the ground; the retarget's shorter legs make the
+             walk's feet sink at the heel strike and float at mid-stance), averaged over
+             SOLE_W frames either side (round the seam of a loop)
 The clips were made for empty hands, so each frame gets the smallest arm correction that
 keeps the props clear of the body:
   left   the wrist held at the standard fist in every frame (the hand grips the strapped
@@ -20,7 +26,9 @@ keeps the props clear of the body:
          upper arm (cheapest first), against both shields and their straps (and the
          barrel's handle); one roll direction per stretch
   right  the whole arm eased toward the standard pose, against all three weapons (the right
-         hand holding them is left out)
+         hand holding them is left out); where no ease clears them (the walk's back swing,
+         the weapon pointing forward into the leg swinging through), the elbow bent or the
+         arm lifted out from the chest, tried only after every ease
 Each correction is widened and averaged over neighbouring frames (round the seam of a loop).
 Per frame and per prop of all three loadouts: body triangles that cut through the prop
 (exact triangle overlap), by the bone weighing most on them, the body's lowest point and
@@ -41,8 +49,10 @@ FOOT_Z = 0.08        # rest height below which vertices are the soles
 FOOT_SINK = 0.01
 PROP_SINK = 0.0
 SMOOTH = 3           # frames either side
+SOLE_W = 1
 CLIPS = {
     "idle": ("Idle - Goblin.fbx", {"in_place": True, "loop_blend": 10}),
+    "walk": ("Walk - Goblin.fbx", {"in_place": True, "loop": True, "sole": True}),
     "attack": ("Attack - Goblin Rabble.fbx", {}),
     "death": ("Death - Goblin.fbx", {"ground": True}),
 }
@@ -86,6 +96,7 @@ TRI_BONE = DOM[TRI[:, 0]]
 RIGHT_HAND = np.array([b.startswith("RightHand") for b in TRI_BONE])
 rest_z = np.array([v.co.z for v in me.vertices])
 floor = np.where(rest_z < FOOT_Z, -FOOT_SINK, 0.0)
+SOLE = rest_z < FOOT_Z
 LOCAL, PROP_NP, PROP_BVH, PROP_SPHERE = {}, {}, {}, {}
 for name in PROPS:
     ob = bpy.data.objects[name]
@@ -102,20 +113,22 @@ assert rig.data.bones[MX + "LeftArm"].head_local.x > 0
 CHEST = MX + "Spine2"
 SIDES = {
     "Left": {"props": ("ShieldBarrel", "ShieldPlank", "ShieldBarrelStraps", "ShieldPlankStraps"), "exclude": None,
-             "lat": Vector((1, 0, 0))},
-    "Right": {"props": ("Knife", "Hatchet", "Cleaver"), "exclude": RIGHT_HAND, "lat": Vector((-1, 0, 0))},
+             "lat": Vector((1, 0, 0)), "elbow": 1},
+    "Right": {"props": ("Knife", "Hatchet", "Cleaver"), "exclude": RIGHT_HAND, "lat": Vector((-1, 0, 0)), "elbow": -1},
 }
 for side, s in SIDES.items():
     s["chain"] = tuple(MX + side + p for p in ("Arm", "ForeArm", "Hand"))
     s["lat_chest"] = rig.data.bones[CHEST].matrix_local.to_3x3().inverted() @ s["lat"]
 # Left (hand at the fist, elbow opened by degrees, arm lifted out by degrees, forearm
 # rolled by degrees to turn the shield away from the upper arm), cheapest first; right (the arm
-# eased to the standard pose).
+# eased to the standard pose, then the clip's own arm with the elbow bent or lifted out).
 GRID = {
     "Left": sorted(((w, a, p, r) for w in (1,) for a in (0, 15, 30, 45, 60)
                     for p in (0, 10, 20, 30, 40) for r in (0, 15, 30, 45)),
                    key=lambda c: c[0] + c[1] / 25 + c[2] / 20 + c[3] / 20),
-    "Right": [(w, 0, 0, 0) for w in (0, .2, .4, .6, .8, 1)],
+    "Right": [(w, 0, 0, 0) for w in (0, .2, .4, .6, .8, 1)]
+    + sorted(((0, a, p, 0) for a in (0, 15, 30, 45) for p in (0, 10, 20, 30) if a or p),
+             key=lambda c: c[1] / 25 + c[2] / 20),
 }
 assert all(rig[p] == 0 for p in ("weapon_ik", "shield_ik", "leg_ik"))
 STAND_Q = {n: rig.pose.bones[n].matrix_basis.to_quaternion() for s in SIDES.values() for n in s["chain"]}
@@ -201,19 +214,25 @@ def corrected(side, base, c, sign=None):
     w, a, p, r = c
     sign = s0 if sign is None else sign
     if side == "Right":
-        return {n: eased(q[n], n, w) for n in (arm, fore, hand)}
-    out = {hand: eased(q[hand], hand, w), fore: q[fore].copy(), arm: q[arm].copy()}
+        out = {n: eased(q[n], n, w) for n in (arm, fore, hand)}
+        if not (a or p):
+            return out
+    else:
+        out = {hand: eased(q[hand], hand, w), fore: q[fore].copy(), arm: q[arm].copy()}
     R = Matrix.Identity(3)
-    ang, axis = min(math.radians(a), max(0.0, fd.angle(ad) - math.radians(5))), fd.cross(ad)
+    if SIDES[side]["elbow"] > 0:      # opened, never past straight
+        ang, axis = min(math.radians(a), max(0.0, fd.angle(ad) - math.radians(5))), fd.cross(ad)
+    else:                             # bent, never past 145 degrees
+        ang, axis = min(math.radians(a), max(0.0, math.radians(145) - fd.angle(ad))), ad.cross(fd)
     if ang > 0 and axis.length > 1e-4:
         R = Matrix.Rotation(ang, 3, axis.normalized())
     if r:
         R = R @ Matrix.Rotation(sign * math.radians(r), 3, fd)
     if a or r:
-        out[fore] = q[fore] @ (W[fore].inverted() @ R @ W[fore]).to_quaternion()
+        out[fore] = out[fore] @ (W[fore].inverted() @ R @ W[fore]).to_quaternion()
     ang, axis = min(math.radians(p), ad.angle(lat)), ad.cross(lat)
     if ang > 0 and axis.length > 0.2:
-        out[arm] = q[arm] @ (W[arm].inverted() @ Matrix.Rotation(ang, 3, axis.normalized()) @ W[arm]).to_quaternion()
+        out[arm] = out[arm] @ (W[arm].inverted() @ Matrix.Rotation(ang, 3, axis.normalized()) @ W[arm]).to_quaternion()
     return out
 
 
@@ -224,11 +243,14 @@ def pose_set(vals):
 
 
 def widen(vals, cyclic, r=SMOOTH):
+    """A loop's last frame repeats its first: it wraps over the others and copies the first."""
     n = len(vals)
-    at = (lambda i: vals[i % n]) if cyclic else (lambda i: vals[min(max(i, 0), n - 1)])
-    wide = [max(at(j) for j in range(i - r, i + r + 1)) for i in range(n)]
-    at = (lambda i: wide[i % n]) if cyclic else (lambda i: wide[min(max(i, 0), n - 1)])
-    return [sum(at(j) for j in range(i - r, i + r + 1)) / (2 * r + 1) for i in range(n)]
+    m = n - 1 if cyclic else n
+    at = (lambda i: vals[i % m]) if cyclic else (lambda i: vals[min(max(i, 0), n - 1)])
+    wide = [max(at(j) for j in range(i - r, i + r + 1)) for i in range(m)]
+    at = (lambda i: wide[i % m]) if cyclic else (lambda i: wide[min(max(i, 0), n - 1)])
+    out = [sum(at(j) for j in range(i - r, i + r + 1)) / (2 * r + 1) for i in range(m)]
+    return out + out[:1] if cyclic else out
 
 
 def correct_arms(clip, n, cyclic):
@@ -261,6 +283,8 @@ def correct_arms(clip, n, cyclic):
         smooth[side] = [list(c) for c in zip(*[widen(list(col), cyclic) for col in cols])]
         # One roll direction over each stretch of rolled frames, so the shield never flips.
         rs, signs = [c[3] for c in smooth[side]], [s for _, _, s in found[side]]
+        if cyclic:
+            smooth[side][-1] = list(smooth[side][0])
         roll_sign[side], i, against = [1.0] * n, 0, 0
         while i < n:
             if rs[i] <= 0:
@@ -274,6 +298,8 @@ def correct_arms(clip, n, cyclic):
                 roll_sign[side][k] = 1.0 if tot >= 0 else -1.0
                 against += roll_sign[side][k] != signs[k]
             i = j
+        if cyclic:
+            roll_sign[side][-1] = roll_sign[side][0]
         left = [i + 1 for i, (k, _, _) in enumerate(found[side]) if k]
         print("CLIP_FIX %s %s: corrected %d of %d frames, largest %s; best grid point still through in %d frames %s; roll against the frame's own way in %d"
               % (clip, side, sum(1 for _, c, _ in found[side] if any(c)), n,
@@ -325,6 +351,8 @@ def correct_arms(clip, n, cyclic):
                     continue
                 w = 1 - d / (SMOOTH + 1)
                 new[g - 1] = [a + (b - a) * w for a, b in zip(smooth[side][g - 1], target[f])]
+            if cyclic:
+                new[-1] = list(new[0])
             smooth[side] = new
         key_all()
     print("CLIP_FIX %s: %d evaluations in %.0f s" % (clip, evals, time.time() - t0))
@@ -340,6 +368,19 @@ def ground_lift(n):
         need.append(max(0.0, body_need, props_need))
     wide = [max(need[max(0, i - 2):i + 3]) for i in range(n)]
     return [sum(wide[max(0, i - 2):i + 3]) / len(wide[max(0, i - 2):i + 3]) for i in range(n)]
+
+
+def sole_follow(n, cyclic):
+    """Per frame, the hips' rise that puts the lowest sole point at its rest height."""
+    rest = float(rest_z[SOLE].min())
+    need = []
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        need.append(rest - float(evaluated()[SOLE, 2].min()))
+    m = n - 1 if cyclic else n      # a loop's last frame repeats its first
+    at = (lambda i: need[i % m]) if cyclic else (lambda i: need[min(max(i, 0), n - 1)])
+    out = [sum(at(j) for j in range(i - SOLE_W, i + SOLE_W + 1)) / (2 * SOLE_W + 1) for i in range(m)]
+    return out + out[:1] if cyclic else out
 
 
 report = {}
@@ -412,11 +453,16 @@ for clip, (fbx, opt) in CLIPS.items():
     act["frames"] = n_fr
     act.use_frame_range = True
     act.frame_start, act.frame_end = 1, n_fr
-    act.use_cyclic = bool(opt.get("loop_blend"))
+    act.use_cyclic = bool(opt.get("loop") or opt.get("loop_blend"))
+    # The seam: how far the last frame's bones are from the first's (0 for a clean loop).
+    seam = max(local[-1][n].rotation_difference(local[0][n]).angle for n in order)
+    seam_hips = (hips_off[-1] - hips_off[0]).length
+    if act.use_cyclic:
+        assert math.degrees(seam) < 0.5 and seam_hips < 0.005, (clip, math.degrees(seam), seam_hips)
     fixes = correct_arms(clip, n_fr, act.use_cyclic)
     lift = [0.0] * n_fr
-    if opt.get("ground"):
-        lift = ground_lift(n_fr)
+    if opt.get("ground") or opt.get("sole"):
+        lift = ground_lift(n_fr) if opt.get("ground") else sole_follow(n_fr, act.use_cyclic)
         for i in range(n_fr):
             hb.location = T_rest[MX + "Hips"].inverted() @ (hips_off[i] + Vector((0, 0, lift[i])))
             hb.keyframe_insert("location", frame=i + 1)
@@ -424,7 +470,9 @@ for clip, (fbx, opt) in CLIPS.items():
         dur = max(1, n_fr - 1) / 30.0
         act["root_vel"] = [drift.x * ratio / dur, drift.y * ratio / dur]
     print("CLIP", clip, fbx, f"{f0}-{f1}", n_fr, "frames (%.2f s), hip ratio %.3f, missing bones %s, in-place drift %.3f m, ground lift up to %.3f m"
-          % ((n_fr - 1) / 30, ratio, missing, drift.length * ratio, max(lift)))
+          % ((n_fr - 1) / 30, ratio, missing, drift.length * ratio, max(lift)),
+          "sole shift %.3f to %.3f m" % (min(lift), max(lift)) if opt.get("sole") else "",
+          "seam %.1f deg, hips %.1f cm" % (math.degrees(seam), 100 * seam_hips))
 
     # Every frame: what cuts through the props, and the lowest points.
     rows = []
@@ -445,7 +493,9 @@ for clip, (fbx, opt) in CLIPS.items():
                 by[str(TRI_BONE[t])] = by.get(str(TRI_BONE[t]), 0) + 1
             row[name] = by
         rows.append(row)
-    report[clip] = {"source": fbx, "frames": n_fr, "rows": rows, "fixes": fixes, "lift": [round(x, 4) for x in lift]}
+    report[clip] = {"source": fbx, "frames": n_fr, "rows": rows, "fixes": fixes, "lift": [round(x, 4) for x in lift],
+                    "seam_deg": round(math.degrees(seam), 2), "seam_hips_cm": round(100 * seam_hips, 2),
+                    "root_vel": list(act.get("root_vel", [0.0, 0.0]))}
     low = [r["lowest"] for r in rows]
     print("CLIP_GROUND", clip, "lowest point from %.3f to %.3f m; props' lowest %s" % (
         min(low), max(low), {nm: round(min(r["props_low"][nm] for r in rows), 3) for nm in PROPS}))

@@ -16,3 +16,7 @@
 /prototypes/footman_anim/art3d/footman.glb
 /prototypes/footman_anim/art3d/footman.glb.import
 /art/footman_3d/footman_rig.blend
+# The goblin rabble's sandbox exports carry Mixamo motion and stay local (their
+# sidecars are in Git); the roster leaves the goblins out where they are missing.
+/prototypes/goblin_rabble_anim/art3d/*
+!/prototypes/goblin_rabble_anim/art3d/*.json

@@ -1,0 +1,151 @@
+{
+ "fps": 30.0,
+ "source": "projects/meridius/references/characters/blender/goblin_rabble/goblin_rabble_rig.blend",
+ "loadout": 0,
+ "weapon": "knife",
+ "props": [
+  "Knife",
+  "ShieldBarrel",
+  "ShieldBarrelStraps"
+ ],
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.234,
+ "height_rest_m": 1.26,
+ "roles": {
+  "idle": "idle",
+  "walk": "walk",
+  "attack": [
+   "attack"
+  ],
+  "death": [
+   "death"
+  ]
+ },
+ "notes": [
+  "Loadout 0: Knife with ShieldBarrel and ShieldBarrelStraps. One export per loadout, since each weapon has its own grip.",
+  "Clips are baked from the rig's evaluated pose (grips, the fist's hold on the shield, forearm twist, the chain and the loincloth flaps); no constraints or drivers go out. The props are skinned to the bones Weapon (child of mixamorig:RightHand) and Shield (child of mixamorig:LeftForeArm).",
+  "Locomotion is in place. walk moves the figure by root_vel (m/s, Godot axes): the travel retarget_clips.py removed (travel_from); speed_footlock_mps is how fast his planted foot slides back. idle stands still. The death keeps its authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "attack: events.contact is when the weapon's tip is furthest forward after the swing's top (tip_reach_m from where he stood, at tip_height_m); events.swing spans the blow.",
+  "No hit clip: the sandbox flinches procedurally.",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "GoblinRabble",
+  "Knife",
+  "ShieldBarrel",
+  "ShieldBarrelStraps"
+ ],
+ "bones": 63,
+ "triangles": 14552,
+ "texture_px": 1024,
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 6.6667,
+   "loop": true,
+   "frames": 201,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.1667,
+   "loop": true,
+   "frames": 36,
+   "root_vel": [
+    -0.0,
+    0.0,
+    0.8555
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.5,
+      "Left"
+     ],
+     [
+      1.0333,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.0,
+   "speed_mps": 0.8555,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 0.8197
+  },
+  "attack": {
+   "anim": "attack",
+   "length": 2.2667,
+   "loop": false,
+   "frames": 69,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "events": {
+    "contact": 0.8667,
+    "swing": [
+     0.7667,
+     0.9667
+    ]
+   },
+   "tip_reach_m": 0.994,
+   "tip_height_m": 0.584,
+   "lead_m": 0.057,
+   "tip_speed_max_mps": 17.51
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.3667,
+   "loop": false,
+   "frames": 72,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 71.7,
+   "hips_drift": [
+    -0.119,
+    -0.1101,
+    0.7673
+   ],
+   "events": {
+    "settled": 2.2
+   }
+  }
+ }
+}

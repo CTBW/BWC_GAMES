@@ -19,13 +19,23 @@ brings an open one to the front).
 The roster: footman (his own controller: start and stop, turns on the planted
 foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
-stealth stance), succubus (whip lash with its slash effects). Players are blue,
-enemies red. Two straw dummies stand in the yard, and a drill line of six in
-its south faces the footman squad.
+stealth stance), succubus (whip lash with its slash effects) and the goblin
+rabble in its three loadouts (knife, hatchet, cleaver: one chop each, with the
+barrel-bottom or plank shield). Players are blue, enemies red. Two straw
+dummies stand in the yard, and a drill line of six in its south faces the
+footman squad.
 
-The footman's model (`footman.glb`) and the wolf scout's export are not in
-Git. Where they are missing, the sandbox leaves those units out (and the squad
-with the footman) and says which in the left panel and the console.
+The **Goblin Rabble** stands by the wolf scouts, one goblin per loadout, each
+with his own roster button. All three share the rig's idle, in-place walk
+(0.86 m/s), chop (the blow at 0.8667 s, the hatchet's at 0.8333 s) and death,
+retargeted from Mixamo and baked per loadout by
+`references/characters/blender/goblin_rabble/tools/export_godot.py`. They
+have no hit clip and flinch procedurally.
+
+The footman's model (`footman.glb`), the wolf scout's export and the goblins'
+GLBs (their sidecars are in Git) are not in Git. Where they are missing, the
+sandbox leaves those units out (and the squad with the footman) and says which
+in the left panel and the console.
 
 ## The footman squad
 
@@ -122,8 +132,9 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   painted cards.
 - `art3d/`: the spearman, crossbowman and battle mage exports with their
   sidecars. The footman and succubus are read from `prototypes/footman_anim/art3d`,
-  the wolf scout from `prototypes/wolf_scout_anim/art3d`, the squad's dress
-  from `prototypes/squad_looks/scripts`.
+  the wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble
+  from `prototypes/goblin_rabble_anim/art3d` (outside the ignored `art/`, so
+  Godot imports it), the squad's dress from `prototypes/squad_looks/scripts`.
 
 ## Adding a unit
 
@@ -134,8 +145,8 @@ Export the rigged model (GLB or FBX) and its sidecar JSON (per clip: `length`,
 `death` clip names if not those, `attacks` (`clip`, `label`, `reach` in metres
 centre to centre, `hits`: the events that land, `missile` for a shot or spell,
 `then`: a clip that follows, such as a reload) and `stances`. A sidecar with
-`roles` (the spearman's and crossbowman's exports) fills the clip roles and
-attacks itself. A profile whose files are missing is left out.
+`roles` (the spearman's, crossbowman's and goblins' exports) fills the clip
+roles and attacks itself. A profile whose files are missing is left out.
 
 ## Checks
 
@@ -175,4 +186,7 @@ attacks itself. A profile whose files are missing is left out.
 - The spearman's `turn_90` clip turns only 67.5 degrees; the sandbox does not use
   it (units turn in place by steering their yaw).
 - The crossbowman's walk speed (1.19 m/s) comes from local Mixamo sources.
-- The wolf scout has no hit clip; he flinches procedurally.
+- The wolf scout and the goblin rabble have no hit clip; they flinch
+  procedurally.
+- The goblins' walk is in place; its planted foot slides about 4% slower than
+  the walk's root speed (`speed_footlock_mps` 0.8197 against 0.8555 m/s).

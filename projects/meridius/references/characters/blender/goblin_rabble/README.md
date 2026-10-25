@@ -115,7 +115,7 @@ any body triangles that cut through a prop.
 
 ## Clips
 
-The goblin's Idle, Attack and Death clips are Mixamo downloads in
+The goblin's Idle, Walk, Attack and Death clips are Mixamo downloads in
 `projects/meridius/Animations/`, which stays local, so the retargeted motion goes
 into a separate scratch copy of the rig rather than into `goblin_rabble_rig.blend`.
 
@@ -123,9 +123,10 @@ into a separate scratch copy of the rig rather than into `goblin_rabble_rig.blen
 "$B" -b $D/goblin_rabble_rig.blend --python $D/tools/retarget_clips.py -- \
   projects/meridius/Animations <goblin_clips.blend> <measure.json>
 "$B" -b <goblin_clips.blend> --python $D/tools/render_clips.py -- <renders> \
-  attack_knife=attack:0 attack_hatchet=attack:1 attack_cleaver=attack:2 idle=idle:0 death=death:0
+  idle=idle:0 walk_knife=walk:0 walk_hatchet=walk:1 walk_cleaver=walk:2 \
+  attack_knife=attack:0 attack_hatchet=attack:1 attack_cleaver=attack:2 death=death:0
 python $D/tools/pack_sheets.py <renders> workspace/2026-10-20_meridius/goblin-rabble-3d \
-  attack_knife attack_hatchet attack_cleaver idle death
+  idle walk_knife walk_hatchet walk_cleaver attack_knife attack_hatchet attack_cleaver death
 ```
 
 - **Retarget:** as the spearman's, bone by bone in world space, with the hips'
@@ -133,19 +134,61 @@ python $D/tools/pack_sheets.py <renders> workspace/2026-10-20_meridius/goblin-ra
   Actions. The idle is kept in place and eases its last 10 frames into its first,
   so it loops. In the death the hips are lifted wherever the body or a prop
   would go below the ground (up to 34 cm), smoothed so the lift never pops.
+- **Walk:** in place and looping: 36 frames (1.17 s at 30 fps), whose last frame
+  repeats the first, so the seam does not jump (0° and 0 cm). The stride covers
+  1.00 m a cycle, 0.86 m/s. The hips rise or drop by up to 2 cm so the lowest
+  point of the soles stays on the ground (within 0.5 cm), and every smoothing
+  wraps round the loop.
 - **Arms:** the clips were made for empty hands. In every frame the left fist
   is held at its standard turn on the shield, then the elbow opens, the arm lifts
   out from the chest or the forearm rolls, cheapest first, until no body
   triangle passes through either shield, its straps or the barrel's handle. The
   right arm is eased toward the standard pose where a weapon would cross the
-  body, which happens only in the idle. Each correction is spread over its
-  neighbouring frames.
+  body, then bends at the elbow (up to 45°) and lifts out (up to 30°) if that is
+  not enough. That happens in the idle and in the walk's second half (bend 15°,
+  lift 30°). Each correction is spread over its neighbouring frames.
 - **Checked:** every prop of all three loadouts is clear of the body in all 201
-  frames of the idle, 69 of the attack and 72 of the death.
+  frames of the idle, 36 of the walk, 69 of the attack and 72 of the death.
 - **Frames:** Workbench, flat-lit with an outline and cavity, an orthographic
   camera 30° above the ground in the four facings, 254.5 px per metre in a
   780 × 580 frame (wide enough for the death in every facing). The sheets are
-  packed at 0.75 for the Workspace's pose viewer.
+  packed at 0.75 for the Workspace's pose viewer: the idle, the walk and the
+  attack with each weapon, and the death, eight clips in all.
+
+## Godot export
+
+`tools/export_godot.py` bakes one loadout of the clips scene into a GLB for the
+Godot sandbox, with a JSON sidecar beside it. `tools/check_export.py` compares
+the GLB with the rig it came from.
+
+```sh
+G=projects/meridius/source/godot/prototypes/goblin_rabble_anim/art3d
+"$B" -b <goblin_clips.blend> --python $D/tools/export_godot.py -- $G/goblin_rabble_knife.glb 0
+"$B" -b <goblin_clips.blend> --python $D/tools/check_export.py -- source 0 <samples.npz>
+"$B" -b --factory-startup --python $D/tools/check_export.py -- glb $G/goblin_rabble_knife.glb <samples.npz>
+```
+
+Loadout 1 is `goblin_rabble_hatchet.glb`, 2 `goblin_rabble_cleaver.glb`. An
+optional third argument sets the textures' size (1024 px by default, JPEG).
+
+- **Bake:** the pose of the 63 deforming bones (the rig's 61 and `Weapon` and
+  `Shield`) is sampled at every frame of each clip. Then the constraints, drivers
+  and the rig's own Actions are removed and the poses keyed as new linear
+  Actions `idle`, `walk`, `attack` and `death` (bake error under 0.001 mm). The
+  other loadouts' props and the bone shapes are deleted, and the props are
+  skinned whole to `Weapon` or `Shield`.
+- **Sidecar:** fps, loadout, height (1.23 m in the standard pose, 1.26 m in the
+  T-pose), forward +Z, `roles` (idle, walk, attack, death; no hit clip) and per
+  clip its length and loop flag. The walk has its `root_vel` (0.8555 m/s
+  forward), the speed under the planted foot and its steps; the attack has its
+  blow (`contact`, 0.8667 s, the hatchet's 0.8333 s), the swing and the tip's
+  reach; the death its root motion and when it settles (2.2 s).
+- **Checked:** reimported into an empty scene, each GLB has 63 bones, 4 meshes
+  and the four clips at full length; in six frames of each clip no vertex is
+  further than 0.01 mm from the rig's.
+- **Local only:** the GLBs carry Mixamo motion, so they and the textures Godot
+  extracts beside them are gitignored; the sidecars are in Git. The sandbox
+  leaves the goblins out where the GLBs are missing.
 
 ## Known limits
 
@@ -156,3 +199,5 @@ python $D/tools/pack_sheets.py <renders> workspace/2026-10-20_meridius/goblin-ra
   closes empty against its boards.
 - The thumb closes against each handle but does not yet fold over the index
   finger as in a real fist.
+- In the walk the planted foot slides a little: the speed under it is 0.82 m/s
+  against the root's 0.86 m/s.

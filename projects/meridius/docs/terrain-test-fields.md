@@ -220,8 +220,20 @@ the painted pine, beech, oak and shrub from the Woodland scouting trial
 (`assets/terrain/woodland/`), cut out of their magenta backdrop by
 `tools/props/woodland_cutout.py` with the cast shadow the game draws for props
 baked in. They keep the lab's sizes and their own colour, and are never mirrored
-(their light is painted from the upper left). The ferns stay in the terrain lab
-for now. MIGRATION.md *Painted woodland* has the details.
+(their light is painted from the upper left). MIGRATION.md *Painted woodland*
+has the details.
+
+Terrain kit 2 (24 October): the woodland keys gain the second Nano Banana Pro
+set, graded to the battle's palette. `tree_pine` now mixes pine, spruce, Scots
+pine and young fir (7 variants) and `tree_oak` beech, oak, birch, willow and
+young oak (8), all summer trees; the autumn and spring trees are cut into
+`tree_oak_autumn` and `tree_oak_spring` for later battlefields and not drawn.
+The stumps (old, sawn, rotten) and the fallen logs every field places (fallen,
+hollow, mossy, stacked) are painted pieces of one trunk sheet. Battles now strew
+ferns under the trees, fallen wood at the foot of some trees and small stones on
+open ground, all for show. With Painted woodland on, fields 1 and 3 still draw
+the lab's own pine, beech and oak paintings; turn it off to see the full mix. MIGRATION.md
+*Terrain kit 2* has the details.
 
 Captures: `tools/godot.sh --path . --resolution 1920x1080 --audio-driver Dummy
 -s res://tests/visual/terrain_relief_shots.gd` (optional `RELIEF_FIELDS=0,4`)

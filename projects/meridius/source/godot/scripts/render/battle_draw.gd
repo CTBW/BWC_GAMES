@@ -697,6 +697,36 @@ func _prop_list() -> Array:
 		var bx0: float = px - (s.w - s.ax) * k if flip else px - s.ax * k
 		_props.append({"x": t.x, "y": t.y, "px": px, "py": py, "s": s, "flip": flip, "d": float(t.x + t.y), "tree": String(prop).begins_with("tree"),
 			"bx0": bx0, "bx1": bx0 + s.w * k, "by0": py - s.ay * k, "k": k})
+	# Ferns, fallen wood and small stones, for show only: no path, cover or line
+	# of sight changes. Each stands off its tile's centre, on the ground beneath it.
+	var decor := func(t: Dictionary, key: String, n: int, dx: float, dy: float) -> void:
+		var s := Assets.sprite(key, n)
+		if s.is_empty():
+			return
+		var x: float = t.x + dx
+		var y: float = t.y + dy
+		var px := Iso.iso_x(x, y)
+		# Without a relief surface (only the terrain lab's view has one), sample
+		# the tile itself: _tile_h truncates.
+		var py := Iso.iso_y(x, y, v._tile_h(x, y) if v.get("terrain_surface") != null else float(t.h))
+		var k: float = s.scale
+		_props.append({"x": x, "y": y, "px": px, "py": py, "s": s, "flip": false, "d": x + y, "tree": false, "under": true, "decor": key,
+			"bx0": px - s.ax * k, "bx1": px + (s.w - s.ax) * k, "by0": py - s.ay * k, "k": k})
+	for t in v.b.map.tiles:
+		var prop = t.get("prop")
+		# Ferns under the trees on about two forest tiles in three.
+		if t.terrain == "forest" and Rng.hash2(t.x, t.y, 817) <= 0.65:
+			decor.call(t, "fern", int(Rng.hash2(t.x, t.y, 820) * 3),
+				(Rng.hash2(t.x, t.y, 818) - 0.5) * 0.65, (Rng.hash2(t.x, t.y, 819) - 0.5) * 0.65)
+		# Fallen wood at the foot of about one tree in four, on the near side of its trunk.
+		if prop != null and String(prop).begins_with("tree") and Rng.hash2(t.x, t.y, 821) < 0.25:
+			var f := 0.14 + Rng.hash2(t.x, t.y, 822) * 0.1
+			var side := (Rng.hash2(t.x, t.y, 823) - 0.5) * 0.24
+			decor.call(t, "deadwood", int(Rng.hash2(t.x, t.y, 824) * 1000), f + side, f - side)
+		# Small stones on about one open tile in twelve.
+		elif prop == null and (t.terrain == "grass" or t.terrain == "dirt") and Rng.hash2(t.x, t.y, 825) < 0.08:
+			decor.call(t, "stones", int(Rng.hash2(t.x, t.y, 826) * 1000),
+				(Rng.hash2(t.x, t.y, 827) - 0.5) * 0.6, (Rng.hash2(t.x, t.y, 828) - 0.5) * 0.6)
 	if _props.is_empty():
 		_props.append(null) # marks the list as built
 	return _props

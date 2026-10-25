@@ -39,6 +39,10 @@
           "path": "terrain-relief.html"
         },
         {
+          "name": "Terrain kit 2: trees, wood, houses, ruins",
+          "path": "terrain-kit-2.html"
+        },
+        {
           "name": "Interface redesign",
           "path": "interface.html"
         },

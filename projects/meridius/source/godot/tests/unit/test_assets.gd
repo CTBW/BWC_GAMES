@@ -6,9 +6,13 @@ extends "res://tests/test_case.gd"
 const Assets = preload("res://scripts/render/assets.gd")
 const DB = preload("res://scripts/data/db.gd")
 const FIXTURE := "res://tests/fixtures/assets/variant_counts.json"
-# Art repainted after the port (MIGRATION.md, "Painted rocks" and "Painted
-# woodland"): its variant counts, and the original's masks no longer apply.
-const REPAINTED := {"rock_small": 4, "rock_large": 4, "tree_pine": 3, "tree_oak": 3, "bush": 3}
+# Art repainted after the port (MIGRATION.md, "Painted rocks", "Painted
+# woodland" and "Terrain kit 2"): its variant counts, and the original's masks
+# no longer apply. All of it is painted art (hasArt).
+const REPAINTED := {"rock_small": 4, "rock_large": 4, "tree_pine": 7, "tree_oak": 8, "bush": 3, "stump": 3, "log": 4}
+# Art the original never had: ferns, fallen wood and small stones strewn for
+# show, and the trees of other seasons.
+const ADDED := {"fern": 3, "tree_oak_autumn": 3, "tree_oak_spring": 2, "deadwood": 5, "stones": 10}
 
 var fx: Dictionary
 var manifest: Dictionary
@@ -42,16 +46,19 @@ func test_every_entry_loads_and_regions_fit() -> void:
 
 func test_keys_and_variant_counts_match_original() -> void:
 	var counts: Dictionary = fx.counts
-	assert_eq(manifest.size(), counts.size(), "same number of keys as the original enumerates")
+	assert_eq(manifest.size(), counts.size() + ADDED.size(), "the original's keys and the added ones")
 	for key in counts:
 		assert_true(manifest.has(key), "%s in sprites.json" % key)
 		assert_eq(Assets.variant_count(key), int(REPAINTED.get(key, counts[key])), "variantCount(%s)" % key)
+	for key in ADDED:
+		assert_false(counts.has(key), "%s is new" % key)
+		assert_eq(Assets.variant_count(key), int(ADDED[key]), "variantCount(%s)" % key)
 
 
 func test_has_art_matches_original() -> void:
 	var art: Array = fx.hasArt
 	for key in fx.counts:
-		assert_eq(Assets.has_art(key), art.has(key), "hasArt(%s)" % key)
+		assert_eq(Assets.has_art(key), art.has(key) or REPAINTED.has(key), "hasArt(%s)" % key)
 	assert_true(Assets.has_art("palisade_x") and Assets.has_art("gate_tower"), "garrison walls have art")
 
 
@@ -92,7 +99,7 @@ func test_variant_wraps_like_the_original() -> void:
 	assert_eq(n, 6)
 	assert_eq(Assets.sprite("footman_idle_f", 7), Assets.sprite("footman_idle_f", 1))
 	assert_eq(Assets.sprite("footman_idle_f", -2), Assets.sprite("footman_idle_f", 2))
-	assert_eq(Assets.sprite("tree_pine", 9).v, 0)
+	assert_eq(Assets.sprite("tree_pine", Assets.variant_count("tree_pine") * 3).v, 0)
 
 
 func test_unknown_key_draws_missing_once() -> void:
@@ -115,6 +122,15 @@ func test_figure_anchor_and_scale() -> void:
 	assert_true(tree.noShadow and tree.art, "painted tree carries its own shadow")
 	assert_almost(tree.scale, 0.3333, 1e-9)
 	assert_almost(tree.ax, 357.7, 1e-9)
+	var fern := Assets.sprite("fern", 0)
+	assert_true(fern.noShadow and fern.art, "painted fern carries its own shadow")
+	assert_almost(fern.scale, 0.3333, 1e-9)
+	# Terrain kit 2: every tree, stump, log and stone painted, its root on the sprite.
+	for k in ["tree_pine", "tree_oak", "tree_oak_autumn", "tree_oak_spring", "stump", "log", "deadwood", "stones"]:
+		for v in Assets.variant_count(k):
+			var w := Assets.sprite(k, v)
+			assert_true(w.noShadow and w.art, "%s %d is painted with its own shadow" % [k, v])
+			assert_true(w.ax > 0 and w.ax < w.w and w.ay > 0 and w.ay < w.h, "%s %d anchor inside the sprite" % [k, v])
 
 
 func test_opaque_at_hit_mask() -> void:

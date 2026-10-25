@@ -361,10 +361,57 @@ for its textured ground). Three variants each, as the original drew: one paintin
 at sizes 1.0, 0.9 and 1.1; `tree_oak` is beech, oak and a smaller beech.
 `noShadow` keeps the game from mirroring them, since their light is painted from
 the upper left. Rules are unchanged. The ferns stay in the lab: they are
-presentation-only undergrowth and need a change to `battle_draw.gd`.
+presentation-only undergrowth and need a change to `battle_draw.gd` (since
+made: see Terrain kit 2 below).
 `test_assets` retires the original's `tree_pine` hit mask (`REPAINTED`) and pins
 the new pine anchor. In the terrain lab the Painted woodland toggle now compares
 the lab's keyed paintings with these sprites rather than with the Blender trees.
 A sprite re-bake writes the Blender trees back (tools/bake/README.md). Native
 battle (deploy, march, night), campaign and garrison captures: 0 errors; frame
 times unchanged against the Blender trees (`battle_fps.gd`, campaign capture).
+
+### 2026-10-24 - Terrain kit 2: more trees, stumps, logs, stones and ferns
+
+A second Nano Banana Pro set in the same style (Workspace: Terrain kit 2;
+originals in `local/workspace-originals/2026-10-20_meridius/terrain-kit-2/`,
+sha256 in `assets/sprites/painted/woodland_sources.json` and
+`stones_sources.json`) adds variety to the woodland. Rules are unchanged: tiles
+keep their `v` and the view picks `v % n`, so the new variants appear wherever
+the keys are drawn (battles, campaign map, garrison) with no code change.
+
+- Trees, summer only, to match the current battlefield. `tree_pine` has 7
+  variants (pine at 1.0, 0.9 and 1.1, spruce at 1.0 and 0.9, Scots pine, young
+  fir) and `tree_oak` 8 (beech at 1.0 and 0.9, oak at 1.0 and 1.1, birch at 1.0
+  and 0.9, willow, young oak). `tools/props/woodland_cutout.py` grades each
+  painting in CIELAB to the battle's palette (`GRADE`): the birch's pale yellow
+  crown is darkened and muted, the spruce and Scots pine lose their blue cast
+  (more so in the light), and the bark from the trunk sheet is darkened and
+  desaturated to the grey-brown of the other trees.
+- Other seasons are cut and listed but not drawn yet: `tree_oak_autumn` (red
+  maple, golden aspen, copper beech) and `tree_oak_spring` (blossom at 1.0 and
+  0.9), for battlefields still to come.
+- `stump` (3: old, sawn, rotten) and `log` (4: fallen, hollow, mossy, stacked)
+  are painted pieces from one trunk sheet, cut by box (`PIECES`), with a skewed
+  cast shadow for the upright stumps and a soft contact shadow for the lying
+  wood. Mapgen places stumps; logs still appear only in the terrain lab's
+  fields.
+- `deadwood` (5: branch, mossy log, fallen and hollow logs at smaller sizes)
+  and `stones` (10 small stones from a 2x5 sheet, cut by
+  `tools/props/rock_cutout.py --stones` and retextured with the terrain's rock
+  like the boulders) are new keys for scatter decoration.
+- Battles now strew this decoration: `battle_draw.gd` `_prop_list()` adds a
+  fern on about two forest tiles in three (up to a third of a tile off
+  centre), fallen wood at the foot of about one tree in four (on the near side
+  of the trunk, inside its tile) and small stones on about one open grass or
+  dirt tile without a prop in twelve. They are `"under"` props tagged with
+  their `decor` key, never mirrored and never swaying, and stand on their
+  tile's own height (`_tile_h` truncates a negative offset onto the
+  neighbour). Presentation only: tiles, paths, cover and line of sight are
+  unchanged. `test_battle_ferns` checks where each kind stands and that the
+  map is left alone.
+
+`test_assets` pins the new counts (`REPAINTED` retires the original's stump and
+log counts; `ADDED` covers the new keys) and checks every new variant is
+painted, keeps its light (`noShadow`) and has its anchor inside the sprite.
+The woodland sprites have mipmaps; the stones, like the rocks, do not. Native
+battle deploy captures and day and night close-ups of the fallen wood: 0 errors.

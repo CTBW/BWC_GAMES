@@ -11,10 +11,13 @@ texture's colour and grain under the painted light, outline and moss.
     python tools/props/rock_cutout.py SHEET [--out assets/sprites/painted]
         [--texture assets/terrain/rock.webp] [--manifest assets/sprites.json]
         [--review DIR]
+    python tools/props/rock_cutout.py --stones STONES_SHEET [the same options]
 
 Prints the sprites.json entries for rock_small and rock_large; with
 --manifest, writes them over those two keys and leaves every other key as it
-was. Then run tools/import.sh.
+was. With --stones, cuts terrain kit 2's sheet of small stones (two rows of
+five) into the `stones` key instead, which battle_draw.gd strews over open
+ground for show, and adds it after rock_small. Then run tools/import.sh.
 """
 
 import argparse
@@ -30,6 +33,11 @@ from PIL import Image, ImageFilter
 # a boulder about a whole tile.
 WIDTH = {"rock_small": 170, "rock_large": 270}
 SCALE = 0.5
+# The small stones in world px (sprite px at SCALE 0.5 are twice that), in the
+# sheet's reading order: flat stone, river stones, leaning stone, pebbles,
+# moss stone; split stone, cairn, standing stone, slate shards, moss and
+# flowers. Small beside a squad of figures about 60 px tall.
+STONES = [50, 45, 40, 42, 45, 48, 34, 30, 42, 38]
 # The terrain texture on the rock: 2.6 sprite pixels per texture pixel, so a
 # boulder face shows one slab's surface rather than the ground's rubble; grain
 # finer than 3.5 px at 0.7 strength; the texture's colour (blurred 4 px) at
@@ -187,33 +195,42 @@ def cut(rgb, a, own, cell, width, tex=None):
 
 def write_manifest(path, entries):
     """Replace the entries' keys in sprites.json as text, so the rest of the
-    file keeps its bytes; the keys must stand next to each other."""
+    file keeps its bytes; the keys must stand next to each other. Keys the
+    file lacks are added after them."""
     text = open(path, encoding="utf-8", newline="").read()
     nl = "\r\n" if "\r\n" in text else "\n"
     doc = json.loads(text)
     keys = list(doc)
-    first = min(keys.index(k) for k in entries)
-    assert sorted(keys.index(k) for k in entries) == list(range(first, first + len(entries))), "keys not adjacent"
+    old = [k for k in entries if k in doc]
+    added = [k for k in entries if k not in doc]
+    first = min(keys.index(k) for k in old)
+    at = first + len(old)
+    assert sorted(keys.index(k) for k in old) == list(range(first, at)), "keys not adjacent"
     start = text.index(f"{nl} {json.dumps(keys[first])}: [") + len(nl)
-    end = text.index(f"{nl} {json.dumps(keys[first + len(entries)])}: [") + len(nl)
+    end = text.index(f"{nl} {json.dumps(keys[at])}: [") + len(nl)
     out = ""
-    for k in keys[first:first + len(entries)]:
+    for k in keys[first:at] + added:
         lines = json.dumps(entries[k], indent=1, ensure_ascii=False).split("\n")
         out += f" {json.dumps(k)}: {lines[0]}{nl}" + nl.join(" " + l for l in lines[1:]) + "," + nl
     new = text[:start] + out + text[end:]
     new_doc = json.loads(new)
-    assert list(new_doc) == keys and all(new_doc[k] == doc[k] for k in keys if k not in entries)
+    assert list(new_doc) == keys[:at] + added + keys[at:]
+    assert all(new_doc[k] == doc[k] for k in keys if k not in entries)
     open(path, "w", encoding="utf-8", newline="").write(new)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("sheet")
+    ap.add_argument("sheet", nargs="?")
+    ap.add_argument("--stones")
     ap.add_argument("--out", default="assets/sprites/painted")
     ap.add_argument("--texture")
     ap.add_argument("--manifest")
     ap.add_argument("--review")
     args = ap.parse_args()
+    if args.stones:
+        cut_stones(args)
+        return
     src = Image.open(args.sheet).convert("RGB")
     rgb = np.asarray(src, dtype=np.float32)
     fg, a = key(rgb)
@@ -252,6 +269,44 @@ def main():
     if args.manifest:
         write_manifest(args.manifest, entries)
     print(json.dumps(entries, indent=1))
+
+
+def cut_stones(args):
+    """The small stones: two rows of five, retextured like the rocks."""
+    rgb = np.asarray(Image.open(args.stones).convert("RGB"), dtype=np.float32)
+    fg, a = key(rgb)
+    own = owners(a, 5, 2)
+    tex = bare_stone(Image.open(args.texture).convert("RGB")) if args.texture else None
+    os.makedirs(args.out, exist_ok=True)
+    stones, cells = [], []
+    for cell, width in enumerate(STONES):
+        img, ax, ay = cut(fg, a, own, cell, round(width / SCALE), tex)
+        path = os.path.join(args.out, f"stones_{cell}.webp")
+        img.save(path, "WEBP", quality=92, alpha_quality=100, method=6)
+        stones.append({"file": "res://" + path.replace(os.sep, "/"), "ax": ax, "ay": ay, "scale": SCALE,
+                       "w": img.width, "h": img.height, "noShadow": True, "art": True})
+        cells.append(img)
+    sources = {"sheet": os.path.basename(args.stones), "sha256": hashlib.sha256(open(args.stones, "rb").read()).hexdigest(),
+               "cells": "2 rows x 5: stones 0-9", "widths": STONES}
+    if args.texture:
+        sources["texture"] = {"file": args.texture.replace(os.sep, "/"),
+                              "sha256": hashlib.sha256(open(args.texture, "rb").read()).hexdigest()}
+    with open(os.path.join(args.out, "stones_sources.json"), "w", newline="\n") as f:
+        json.dump(sources, f, indent=1)
+    if args.review:
+        os.makedirs(args.review, exist_ok=True)
+        tw = sum(c.width for c in cells) + 20 * (len(cells) + 1)
+        board = Image.new("RGBA", (tw, max(c.height for c in cells) + 40), (92, 120, 52, 255))
+        x = 20
+        for c in cells:
+            board.alpha_composite(c, (x, board.height - 20 - c.height))
+            x += c.width + 20
+        board.convert("RGB").save(os.path.join(args.review, "stones_cutout.png"))
+    if args.manifest:
+        # The rock keys as they are, so `stones` lands after them.
+        doc = json.load(open(args.manifest, encoding="utf-8"))
+        write_manifest(args.manifest, {"rock_large": doc["rock_large"], "rock_small": doc["rock_small"], "stones": stones})
+    print(json.dumps({"stones": stones}, indent=1))
 
 
 if __name__ == "__main__":

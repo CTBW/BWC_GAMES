@@ -23151,6 +23151,108 @@
    "art": true
   }
  ],
+ "stones": [
+  {
+   "file": "res://assets/sprites/painted/stones_0.webp",
+   "ax": 57.3,
+   "ay": 59.0,
+   "scale": 0.5,
+   "w": 130,
+   "h": 85,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_1.webp",
+   "ax": 33.1,
+   "ay": 63.2,
+   "scale": 0.5,
+   "w": 118,
+   "h": 88,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_2.webp",
+   "ax": 47.7,
+   "ay": 67.4,
+   "scale": 0.5,
+   "w": 106,
+   "h": 92,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_3.webp",
+   "ax": 62.1,
+   "ay": 57.9,
+   "scale": 0.5,
+   "w": 111,
+   "h": 81,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_4.webp",
+   "ax": 36.5,
+   "ay": 69.2,
+   "scale": 0.5,
+   "w": 118,
+   "h": 95,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_5.webp",
+   "ax": 49.5,
+   "ay": 62.5,
+   "scale": 0.5,
+   "w": 125,
+   "h": 88,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_6.webp",
+   "ax": 39.0,
+   "ay": 60.8,
+   "scale": 0.5,
+   "w": 92,
+   "h": 83,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_7.webp",
+   "ax": 35.6,
+   "ay": 87.8,
+   "scale": 0.5,
+   "w": 83,
+   "h": 112,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_8.webp",
+   "ax": 49.2,
+   "ay": 77.9,
+   "scale": 0.5,
+   "w": 111,
+   "h": 104,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/stones_9.webp",
+   "ax": 42.4,
+   "ay": 72.9,
+   "scale": 0.5,
+   "w": 102,
+   "h": 97,
+   "noShadow": true,
+   "art": true
+  }
+ ],
  "tree_pine": [
   {
    "file": "res://assets/sprites/painted/woodland_pine.webp",
@@ -23179,6 +23281,46 @@
    "scale": 0.3667,
    "w": 1411,
    "h": 1269,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_spruce.webp",
+   "ax": 285.9,
+   "ay": 908.4,
+   "scale": 0.3333,
+   "w": 1326,
+   "h": 1205,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_scots_pine.webp",
+   "ax": 301.2,
+   "ay": 948.5,
+   "scale": 0.3333,
+   "w": 1484,
+   "h": 1258,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_fir_young.webp",
+   "ax": 213.1,
+   "ay": 455.7,
+   "scale": 0.3333,
+   "w": 744,
+   "h": 607,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_spruce.webp",
+   "ax": 285.9,
+   "ay": 908.4,
+   "scale": 0.3,
+   "w": 1326,
+   "h": 1205,
    "noShadow": true,
    "art": true
   }
@@ -23213,6 +23355,56 @@
    "h": 1127,
    "noShadow": true,
    "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_birch.webp",
+   "ax": 381.1,
+   "ay": 773.9,
+   "scale": 0.3333,
+   "w": 1277,
+   "h": 1028,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_willow.webp",
+   "ax": 367.2,
+   "ay": 732.3,
+   "scale": 0.3333,
+   "w": 1179,
+   "h": 973,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_oak_young.webp",
+   "ax": 236.2,
+   "ay": 489.7,
+   "scale": 0.3333,
+   "w": 816,
+   "h": 652,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_birch.webp",
+   "ax": 381.1,
+   "ay": 773.9,
+   "scale": 0.3,
+   "w": 1277,
+   "h": 1028,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_oak.webp",
+   "ax": 338.4,
+   "ay": 736.6,
+   "scale": 0.3667,
+   "w": 1206,
+   "h": 978,
+   "noShadow": true,
+   "art": true
   }
  ],
  "bush": [
@@ -23243,6 +23435,92 @@
    "scale": 0.3833,
    "w": 416,
    "h": 284,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "fern": [
+  {
+   "file": "res://assets/sprites/painted/woodland_fern.webp",
+   "ax": 68.6,
+   "ay": 115.2,
+   "scale": 0.3333,
+   "w": 214,
+   "h": 158,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_fern.webp",
+   "ax": 68.6,
+   "ay": 115.2,
+   "scale": 0.2833,
+   "w": 214,
+   "h": 158,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_fern.webp",
+   "ax": 68.6,
+   "ay": 115.2,
+   "scale": 0.4,
+   "w": 214,
+   "h": 158,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "tree_oak_autumn": [
+  {
+   "file": "res://assets/sprites/painted/woodland_maple_red.webp",
+   "ax": 328.1,
+   "ay": 748.0,
+   "scale": 0.3333,
+   "w": 1213,
+   "h": 993,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_aspen_gold.webp",
+   "ax": 257.5,
+   "ay": 818.0,
+   "scale": 0.3333,
+   "w": 1199,
+   "h": 1086,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_copper_beech.webp",
+   "ax": 344.8,
+   "ay": 773.0,
+   "scale": 0.3333,
+   "w": 1254,
+   "h": 1026,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "tree_oak_spring": [
+  {
+   "file": "res://assets/sprites/painted/woodland_blossom.webp",
+   "ax": 300.0,
+   "ay": 614.2,
+   "scale": 0.3333,
+   "w": 1045,
+   "h": 817,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_blossom.webp",
+   "ax": 300.0,
+   "ay": 614.2,
+   "scale": 0.3,
+   "w": 1045,
+   "h": 817,
    "noShadow": true,
    "art": true
   }
@@ -23339,31 +23617,128 @@
  ],
  "stump": [
   {
-   "file": "res://assets/sprites/blender/stump_0.webp",
-   "ax": 59.1,
-   "ay": 83.5,
-   "scale": 0.4501,
-   "w": 156,
-   "h": 130,
+   "file": "res://assets/sprites/painted/woodland_stump_old.webp",
+   "ax": 158.3,
+   "ay": 199.9,
+   "scale": 0.3333,
+   "w": 458,
+   "h": 270,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_stump_sawn.webp",
+   "ax": 108.5,
+   "ay": 186.4,
+   "scale": 0.3333,
+   "w": 370,
+   "h": 252,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_stump_rotten.webp",
+   "ax": 136.4,
+   "ay": 238.6,
+   "scale": 0.3333,
+   "w": 440,
+   "h": 321,
    "noShadow": true,
    "art": true
   }
  ],
  "log": [
   {
-   "file": "res://assets/sprites/baked/misc.png",
-   "region": [
-    138,
-    6,
-    70,
-    60
-   ],
-   "ax": 35,
-   "ay": 50,
-   "scale": 0.8,
-   "w": 70,
-   "h": 60,
-   "noShadow": false
+   "file": "res://assets/sprites/painted/woodland_log_fallen.webp",
+   "ax": 226.4,
+   "ay": 251.5,
+   "scale": 0.3333,
+   "w": 485,
+   "h": 436,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_hollow.webp",
+   "ax": 195.0,
+   "ay": 239.2,
+   "scale": 0.3333,
+   "w": 399,
+   "h": 402,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_mossy.webp",
+   "ax": 148.8,
+   "ay": 143.8,
+   "scale": 0.3333,
+   "w": 311,
+   "h": 266,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_stack.webp",
+   "ax": 172.4,
+   "ay": 173.3,
+   "scale": 0.3333,
+   "w": 346,
+   "h": 314,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "deadwood": [
+  {
+   "file": "res://assets/sprites/painted/woodland_branch.webp",
+   "ax": 154.7,
+   "ay": 157.5,
+   "scale": 0.3333,
+   "w": 329,
+   "h": 260,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_mossy.webp",
+   "ax": 148.8,
+   "ay": 143.8,
+   "scale": 0.2167,
+   "w": 311,
+   "h": 266,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_branch.webp",
+   "ax": 154.7,
+   "ay": 157.5,
+   "scale": 0.2667,
+   "w": 329,
+   "h": 260,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_fallen.webp",
+   "ax": 226.4,
+   "ay": 251.5,
+   "scale": 0.2,
+   "w": 485,
+   "h": 436,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_log_hollow.webp",
+   "ax": 195.0,
+   "ay": 239.2,
+   "scale": 0.2167,
+   "w": 399,
+   "h": 402,
+   "noShadow": true,
+   "art": true
   }
  ],
  "crates": [

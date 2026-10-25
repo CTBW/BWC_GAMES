@@ -12,7 +12,7 @@
 .vsel select{font:inherit;font-size:13px;color:var(--mak-text);background:var(--mak-bg);border:1px solid var(--mak-border);border-radius:6px;padding:4px 6px}
 .readout{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font:600 14px/1.4 ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
 .copied{color:var(--mak-accent);font-size:12px}
-.stage{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;overflow-x:auto}
+.stage{display:flex;flex-wrap:wrap;gap:10px;justify-content:safe center;overflow-x:auto}
 .cell{position:relative;border-radius:8px;border:1px solid var(--mak-border);max-width:100%;overflow:hidden}
 .cell canvas{display:block;max-width:100%;height:auto}
 .cell .tag,.cell .stamp{position:absolute;font:600 12px/1 ui-monospace,Consolas,monospace;color:#2b2b31;background:#ffffffc0;padding:3px 6px;border-radius:4px;font-variant-numeric:tabular-nums}

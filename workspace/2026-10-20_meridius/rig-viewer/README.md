@@ -17,6 +17,9 @@ copyable frame reference and the detail zoom.
 - Add two JSON script tags:
   - `#viewer-config`: `{"base": "<folder>/", "start": "<clip>", "key": "<storage key>", "clips": [["id", "Label"], ...]}`,
     with an optional `"character"` that prefixes the frame reference.
+    `"sameScale": true` draws a clip wider than the first at the same scale as the others:
+    the picture scrolls sideways, centred, instead of shrinking to the column. Shift and the
+    wheel scroll it.
   - `#frames-data`: the sheets' `frames.json`.
 
 ## Detail zoom

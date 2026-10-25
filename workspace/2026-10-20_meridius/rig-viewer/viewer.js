@@ -54,16 +54,21 @@
     const stage = $("stage"); stage.innerHTML = ""; cells = [];
     const [W, H] = canvasSize();
     const z = state.face === "all" ? Math.min(state.zoom, 1) : state.zoom;
+    // With "sameScale", a clip wider than the first is drawn at the same scale as the others and
+    // the stage scrolls sideways, instead of the picture shrinking to the column.
+    const wide = cfg.sameScale && W > meta.canvas[0];
     const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
     for (const f of faces()) {
       const cell = document.createElement("div"); cell.className = "cell";
       const cv = document.createElement("canvas"); cv.width = Math.round(W * z * dpr); cv.height = Math.round(H * z * dpr);
       cv.style.width = Math.round(W * z) + "px";
+      if (wide) { cell.style.maxWidth = "none"; cell.style.flex = "none"; cell.style.width = `min(${Math.round(W * z)}px, ${(100 * W / meta.canvas[0]).toFixed(2)}%)`; cv.style.width = "100%"; }
       const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = f.toUpperCase();
       const stamp = document.createElement("span"); stamp.className = "stamp";
       cell.append(cv, tag, stamp); stage.appendChild(cell);
       cells.push({ f, cv, stamp, k: z * dpr }); sheet(state.clip, f);
     }
+    stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
     const n = count(); $("scrub").max = String(n - 1); state.frame = Math.min(state.frame, n - 1); clampView(); draw();
   }
   function label() {
@@ -145,8 +150,8 @@
   const cellOf = (e) => cells.find(c => c.cv === e.target);
   stage.addEventListener("wheel", (e) => {
     const c = cellOf(e);
-    // Scrolling down at fit still scrolls the page, so the viewer never traps it.
-    if (!c || !e.deltaY || e.deltaY > 0 && view.d === 1) return;
+    // Scrolling down at fit still scrolls the page, and Shift scrolls a wide picture sideways, so the viewer never traps either.
+    if (!c || e.shiftKey || !e.deltaY || e.deltaY > 0 && view.d === 1) return;
     e.preventDefault();
     const r = c.cv.getBoundingClientRect(), dy = e.deltaY * (e.deltaMode === 1 ? 33 : 1);
     zoomAt((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, Math.exp(-Math.max(-300, Math.min(300, dy)) * 0.003));

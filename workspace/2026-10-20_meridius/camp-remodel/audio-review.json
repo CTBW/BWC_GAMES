@@ -1,0 +1,76 @@
+{
+  "capture": "Godot Movie Maker: native picture and Master-bus audio at 24 fps",
+  "checks": [
+    "fresh game defaults to sound on",
+    "saved game starts with sound on",
+    "Master output is unmuted",
+    "Master and Ambience volumes are audible",
+    "production game booted",
+    "welcome dismissed before recording",
+    "production woodland camp loaded",
+    "day has live ambience beds",
+    "night has live ambience beds",
+    "capture leaves campaign state unchanged",
+    "player save unchanged",
+    "player preferences unchanged"
+  ],
+  "clips": [
+    {
+      "ambience": "camp",
+      "beds": [
+        "wind|res://assets/audio/bank/local/ambience/camp_forest_01.ogg"
+      ],
+      "frames": 288,
+      "lighting": "day",
+      "seconds": 12,
+      "shotsAfter": 2,
+      "shotsBefore": 0,
+      "startFrame": 118,
+      "width": 1600,
+      "height": 900,
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "sampleRate": 48000,
+        "meanDb": -39.1,
+        "peakDb": -13.8,
+        "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+      },
+      "file": "woodland-atmosphere-day.mp4",
+      "sha256": "c303f7c47d0331a97d7b883876e272fc436e1df275be26d73f1233a48b6dcc0c"
+    },
+    {
+      "ambience": "camp_night",
+      "beds": [
+        "wind|res://assets/audio/bank/local/ambience/camp_night_wind_01.ogg",
+        "crickets|res://assets/audio/bank/local/ambience/night_crickets_01.ogg"
+      ],
+      "frames": 144,
+      "lighting": "night",
+      "seconds": 6,
+      "shotsAfter": 3,
+      "shotsBefore": 2,
+      "startFrame": 575,
+      "width": 1600,
+      "height": 900,
+      "audio": {
+        "codec": "aac",
+        "channels": 2,
+        "sampleRate": 48000,
+        "meanDb": -34.6,
+        "peakDb": -11.3,
+        "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+      },
+      "file": "woodland-atmosphere-night.mp4",
+      "sha256": "0ad7c6efcbad90b013114e3cca422f03c59faf255fc117de468501ceb15efa12"
+    }
+  ],
+  "failures": [],
+  "fps": 24,
+  "savedSoundOn": true,
+  "soundDefault": true,
+  "viewport": [
+    1920,
+    1080
+  ]
+}

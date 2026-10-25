@@ -1,0 +1,113 @@
+{
+	"atmosphere": {
+		"birdsMax": 5,
+		"dayFrames": 288,
+		"meanEngineProcessMs": 5.4546,
+		"meanSceneDrawCalls": 538.0,
+		"nightFrames": 144,
+		"nodesBefore": 2,
+		"performanceScope": "90 native frames, whole scene including UI; no readback/encoding; not isolated GPU effect timing",
+		"realTimeFrames": 90
+	},
+	"captures": [
+		{
+			"file": "title.png",
+			"height": 1080,
+			"phase": "title",
+			"width": 1920
+		},
+		{
+			"file": "welcome.png",
+			"height": 1080,
+			"phase": "base",
+			"width": 1920
+		},
+		{
+			"file": "day_1920x1080.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "atmosphere_off.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "atmosphere_on.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "bird_roost_2.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "bird_roost_3.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "barracks.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "armoury_panel.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "training_hover.png",
+			"height": 1080,
+			"phase": "camp-day",
+			"width": 1920
+		},
+		{
+			"file": "night_1920x1080.png",
+			"height": 1080,
+			"phase": "camp-night",
+			"width": 1920
+		},
+		{
+			"file": "zoomed_camp.png",
+			"height": 1080,
+			"phase": "camp-camera",
+			"width": 1920
+		},
+		{
+			"file": "expedition_preparation.png",
+			"height": 1080,
+			"phase": "camp-camera",
+			"width": 1920
+		},
+		{
+			"file": "day_2560x1080.png",
+			"height": 1080,
+			"phase": "camp-wide",
+			"width": 2560
+		}
+	],
+	"checks": 90,
+	"elapsedSeconds": 54.835,
+	"failures": [],
+	"motion": {
+		"directory": "motion",
+		"fps": 24,
+		"frames": 0,
+		"type": "fixed-step native rendering at normal playback; not a performance measurement"
+	},
+	"physicalInputDropped": 34,
+	"runtimeErrors": [],
+	"scenario": "Production woodland camp; synthetic physical-equivalent mouse and keyboard input",
+	"sourceDay": "camp_small_woodland__take-02.png",
+	"sourceNight": "camp_small_woodland_night__take-01.png",
+	"warnings": []
+}

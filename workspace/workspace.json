@@ -83,6 +83,12 @@
           "subgroup": "Succubus"
         },
         {
+          "name": "Mixar setup",
+          "path": "mixar.html",
+          "group": "Character rigs",
+          "subgroup": "Shared"
+        },
+        {
           "name": "Garrison units",
           "path": "unit-roster-garrison.html",
           "group": "Unit roster",

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mixar setup · Meridius</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .evidence img{display:block;width:100%;max-height:390px;object-fit:contain;background:var(--mak-bg);border-radius:8px}
+    .evidence figure{margin:0;padding:16px;border:1px solid var(--mak-border);border-radius:12px}
+    figcaption{margin-top:12px;color:var(--mak-muted)}
+    .downloads{display:flex;flex-wrap:wrap;gap:10px 24px}
+    .mak-card p:last-child{margin-bottom:0}
+    pre{white-space:pre-wrap;overflow-wrap:anywhere}
+  </style>
+</head>
+<body><main class="container">
+  <p class="eyebrow">Meridius · Production tools · 23 October 2026</p>
+  <h1>Mixar is connected and verified</h1>
+  <p class="lead">Mixar 4.3.5 is installed alongside Blender. The workspace can inspect,
+    edit, render, save and export through Mixar's official MCP tools.</p>
+  <div class="mak-card">
+    <h2>Start working</h2>
+    <p>Double-click <strong>Mixar.cmd</strong> in the repository root. Keep Mixar open
+      and signed in, then ask the workspace assistant to work in Mixar. New project
+      sessions load the configured <code>mixar</code> connection.</p>
+    <p>Suggested first request: “Use Mixar to inspect the open scene, then create a
+      separate scene tab for a Meridius environment prop. Preserve the editable source.”</p>
+    <p>For an existing chat, the tested client in <code>scripts/mixar/client.py</code>
+      works immediately. <a href="mixar/setup.md">Setup and recovery notes</a>.</p>
+  </div>
+
+  <h2>Verified results</h2>
+  <table>
+    <thead><tr><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Official Windows release</td><td>SHA-256 matched; valid MIXAR INC signature.</td></tr>
+      <tr><td>Live MCP connection</td><td>Signed in, server connected, scene tools available; 73 tools discovered.</td></tr>
+      <tr><td>Scene editing</td><td>Separate tab, named one-metre cube, supporting base and two materials.</td></tr>
+      <tr><td>Visual and geometry check</td><td>768 × 768 Cycles GPU preview inspected; zero ground penetration.</td></tr>
+      <tr><td>Files and rendering</td><td>Editable source saved; packed texture reopened; transparent PNG rendered with Cycles CPU.</td></tr>
+      <tr><td>Live asset export</td><td>Two meshes, two materials, 200 triangles; GLB and editable source verified.</td></tr>
+      <tr><td>Ordinary Blender</td><td>Blender 5.2.2 LTS retained the test geometry, packed texture and scale.</td></tr>
+      <tr><td>Godot 4.7.2</td><td>PNG and both GLBs loaded; materials, alpha, scale and Y-up orientation passed.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Evidence and editable files</h2>
+  <div class="evidence">
+    <figure>
+      <a href="mixar/live-viewport.jpg"><img src="mixar/live-viewport.jpg" width="768" height="768" loading="lazy" alt="Live Mixar MCP render: a bevelled teal cube resting on a grey base"></a>
+      <figcaption>The live scene created and rendered through MCP. This is a setup test, not production game art.</figcaption>
+      <div class="downloads"><a href="mixar/live-viewport.jpg" download>Image</a><a href="mixar/live-mcp-verification.blend" download>Editable scene</a><a href="mixar/meridius-mcp-test.glb" download>GLB</a></div>
+    </figure>
+    <figure>
+      <a href="mixar/verification.png"><img src="mixar/verification.png" width="512" height="512" loading="lazy" alt="Transparent orthographic render of the packed-texture verification cube"></a>
+      <figcaption>Transparent PNG with a packed source texture. Its alpha and textured mesh were read successfully by Godot.</figcaption>
+      <div class="downloads"><a href="mixar/verification.png" download>PNG</a><a href="mixar/verification.blend" download>Editable scene</a><a href="mixar/verification.glb" download>Textured GLB</a></div>
+    </figure>
+  </div>
+
+  <h2>Use it for Meridius</h2>
+  <p>Keep editable Blender sources in the Meridius project. Save the scene first,
+    then use <code>export_asset</code> with <code>destination: "project"</code> to
+    keep its export package beside it. Transparent orthographic renders fit the
+    current sprite pipeline. The GLB route is also verified.</p>
+  <p>Installation checks used an isolated Godot project. Production game files
+    and the frozen TypeScript game were unchanged.</p>
+
+  <h2>Scope and account status</h2>
+  <p>The account reported <strong>zero generation credits</strong>. All MCP checks
+    charged zero credits. Hosted generation and the built-in Mixie chat were not
+    tested. External MCP editing, rendering and export work with the workspace
+    assistant. No paid provider or subscription was added.</p>
+  <p>The app is a local extraction under <code>.cache/mixar/app</code>; preserve
+    <code>.cache/mixar</code> to retain the installation and profile. Optional MCP
+    interface clicking remains off. Future updates and full layered-paint
+    compatibility with ordinary Blender have not been tested.</p>
+  <p class="meta">Sources:
+    <a href="https://github.com/Mixar-AI/mixar-app/releases/tag/v4.3.5">Official release</a> ·
+    <a href="https://github.com/Mixar-AI/mixar-app/blob/v4.3.5/src/scripts/mixar/modules/mcp_bridge/README.md">Official MCP setup</a> ·
+    <a href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli">Project-local Codex configuration</a>.
+    <a href="mixar/local-checks.json" download>Local checks</a> ·
+    <a href="mixar/godot-checks.json" download>Godot checks</a>.</p>
+</main></body>
+</html>

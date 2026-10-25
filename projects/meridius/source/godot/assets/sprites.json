@@ -23367,12 +23367,12 @@
    "art": true
   },
   {
-   "file": "res://assets/sprites/painted/woodland_willow.webp",
-   "ax": 367.2,
-   "ay": 732.3,
-   "scale": 0.3333,
-   "w": 1179,
-   "h": 973,
+   "file": "res://assets/sprites/painted/woodland_oak.webp",
+   "ax": 338.4,
+   "ay": 736.6,
+   "scale": 0.3,
+   "w": 1206,
+   "h": 978,
    "noShadow": true,
    "art": true
   },
@@ -23447,12 +23447,12 @@
    "art": true
   },
   {
-   "file": "res://assets/sprites/painted/woodland_willow.webp",
-   "ax": 367.2,
-   "ay": 732.3,
-   "scale": 0.3,
-   "w": 1179,
-   "h": 973,
+   "file": "res://assets/sprites/painted/woodland_beech.webp",
+   "ax": 275.0,
+   "ay": 849.2,
+   "scale": 0.3667,
+   "w": 1261,
+   "h": 1127,
    "noShadow": true,
    "art": true
   },

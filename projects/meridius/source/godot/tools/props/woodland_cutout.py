@@ -52,7 +52,6 @@ SOURCES = {
     "shrub": ("lab", "bush_green__take-01.png", (0.46, 0.89), 87.0),
     "fern": ("lab", "undergrowth_ferns__take-01.png", (0.52, 0.88), 44.0),
     "birch": ("kit", "tree_birch__take-02.png", (0.52, 0.92), 292.0),  # 255
-    "willow": ("kit", "tree_willow__take-01.png", (0.569, 0.951), 270.0),  # 240
     "oak_young": ("kit", "tree_young_oak__take-01.png", (0.522, 0.923), 196.0),  # 160
     "spruce": ("kit", "tree_spruce__take-01.png", (0.497, 0.971), 317.0),  # 300
     "scots_pine": ("kit", "tree_scots_pine__take-01.png", (0.402, 0.95), 350.0),  # 313
@@ -89,16 +88,17 @@ DROP = [(1350, 2255), (1600, 2255), (1600, 2750), (1120, 2750), (1100, 2600), (1
 DENSITY = 3.0
 # Variants per key: tree_oak and tree_pine draw one in len() by the tile's
 # variant number, so the counts weight them. The summer battlefield's trees:
-# beech, oak and birch twice as common as willow and young oak, each twice
-# over at slightly different sizes, and one copper beech in 17 for a rare dark
-# red accent; pine three times as common as Scots pine and young fir, spruce
-# twice.
+# beech and oak five times over at slightly different sizes, birch four times,
+# young oak twice and one copper beech in 17 for a rare dark red accent; pine
+# three times as common as Scots pine and young fir, spruce twice. The weeping
+# willow of terrain kit 2 is left out (the owner's call): its two places went
+# to an oak and a beech, so every other tile keeps its tree.
 VARIANTS = {
     "tree_pine": [("pine", 1.0), ("pine", 0.9), ("pine", 1.1), ("spruce", 1.0), ("scots_pine", 1.0),
                   ("fir_young", 1.0), ("spruce", 0.9)],
-    "tree_oak": [("beech", 1.0), ("oak", 1.0), ("beech", 0.9), ("birch", 1.0), ("willow", 1.0),
+    "tree_oak": [("beech", 1.0), ("oak", 1.0), ("beech", 0.9), ("birch", 1.0), ("oak", 0.9),
                  ("oak_young", 1.0), ("birch", 0.9), ("oak", 1.1),
-                 ("beech", 1.05), ("oak", 0.95), ("beech", 0.95), ("birch", 1.05), ("willow", 0.9),
+                 ("beech", 1.05), ("oak", 0.95), ("beech", 0.95), ("birch", 1.05), ("beech", 1.1),
                  ("oak_young", 1.1), ("birch", 0.95), ("oak", 1.05), ("copper_beech", 1.0)],
     "bush": [("shrub", 1.0), ("shrub", 0.85), ("shrub", 1.15)],
     "fern": [("fern", 1.0), ("fern", 0.85), ("fern", 1.2)],

@@ -122,15 +122,6 @@
    ],
    "worldHeight": 292.0
   },
-  "willow": {
-   "file": "tree_willow__take-01.png",
-   "sha256": "4fd874d8e3936507d5bcde94944c97914e65fa746b39b21c3e7bf3e837e27e5d",
-   "anchor": [
-    0.569,
-    0.951
-   ],
-   "worldHeight": 270.0
-  },
   "oak_young": {
    "file": "tree_young_oak__take-01.png",
    "sha256": "4a16d6b05389e6b62d50a6d9bf01c27ee555cd92cd0fda57b273afb09ad430f5",
@@ -339,8 +330,8 @@
     1.0
    ],
    [
-    "willow",
-    1.0
+    "oak",
+    0.9
    ],
    [
     "oak_young",
@@ -371,8 +362,8 @@
     1.05
    ],
    [
-    "willow",
-    0.9
+    "beech",
+    1.1
    ],
    [
     "oak_young",

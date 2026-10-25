@@ -918,3 +918,12 @@ battle deploy captures and day and night close-ups of the fallen wood: 0 errors.
   is still local. Season 0 is the battle's ground as before.
 - `tools/props/iso_check.py` draws the 2:1 camera guides over a painting for
   the isometric art check (`processes/isometric-art-check.md`).
+
+### 2026-10-25 - No weeping willow in the woods
+
+- The weeping willow of terrain kit 2 is left out everywhere (the owner's
+  call). In `tree_oak` its two variants became an oak (0.9) and a beech (1.1),
+  so the key keeps 17 variants and every tile that drew another tree by
+  `v % n` keeps it, in battles, on the campaign map and in the garrison.
+  `tools/props/woodland_cutout.py` no longer cuts it; `woodland_willow.webp`
+  and its entry in `woodland_sources.json` are removed.

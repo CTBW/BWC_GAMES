@@ -1,0 +1,26 @@
+PASS boot to title
+PASS test_roster_clips_and_invulnerable_dummy
+PASS test_approach_from_every_facing_and_repeat_attacks
+PASS test_pause_exact_frame_step_speed_and_cancel
+PASS test_walk_avoids_occupied_tiles_and_comparison_is_independent
+PASS title button opens playground
+PASS pause freezes animation
+PASS frame step advances exactly 1/60 second
+PASS UI click selects clip without field movement
+PASS dummy survives repeated attacks
+PASS melee unit approaches dummy
+PASS Q turns unit
+PASS E turns unit
+PASS field click walks to chosen tile
+PASS clicking dummy queues approach and attack
+PASS Space pauses after world interaction
+PASS unit dropdown chooses displayed model
+PASS grid toggle
+PASS night toggle
+PASS grid and night switch off while paused
+PASS comparison displayed beside independent dummy
+PASS Esc returns to title
+PASS reopening creates a clean field
+PASS Back button returns to title
+PASS save bytes and company state unchanged
+Errors: 0

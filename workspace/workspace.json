@@ -55,6 +55,10 @@
           "path": "interface.html"
         },
         {
+          "name": "Unit playground",
+          "path": "unit-playground.html"
+        },
+        {
           "name": "Spearman 3D rig",
           "path": "spearman-3d.html",
           "group": "Character rigs",

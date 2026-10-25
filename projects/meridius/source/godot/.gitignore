@@ -9,3 +9,10 @@
 # Sound takes with Sonniss sources: licensed for the game, not for redistribution
 # (tools/audio/build_bank.py renders them from the local audio library).
 /assets/audio/bank/local/
+# Raw Mixamo downloads and the Blender scenes built from them: not redistributable.
+/art/footman/mixamo_attacks/
+# The footman's 3D model and rig source stay local by the owner's choice; the
+# sandbox and the footman prototype skip him when the model is missing.
+/prototypes/footman_anim/art3d/footman.glb
+/prototypes/footman_anim/art3d/footman.glb.import
+/art/footman_3d/footman_rig.blend

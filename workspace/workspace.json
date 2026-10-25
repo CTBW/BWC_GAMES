@@ -11,6 +11,10 @@
       "folder": "2026-10-20_meridius",
       "steps": [
         {
+          "name": "Game guide",
+          "path": "hub.html"
+        },
+        {
           "name": "Magic and war machines",
           "path": "magic.html"
         },
@@ -31,6 +35,18 @@
           "path": "loop1.html"
         },
         {
+          "name": "Terrain relief ground",
+          "path": "terrain-relief.html"
+        },
+        {
+          "name": "Terrain kit 2: trees, wood, houses, ruins",
+          "path": "terrain-kit-2.html"
+        },
+        {
+          "name": "Interface redesign",
+          "path": "interface.html"
+        },
+        {
           "name": "Spearman 3D rig",
           "path": "spearman-3d.html",
           "group": "Character rigs",
@@ -41,6 +57,43 @@
           "path": "succubus-3d.html",
           "group": "Character rigs",
           "subgroup": "Succubus"
+        },
+        {
+          "name": "Garrison units",
+          "path": "unit-roster-garrison.html",
+          "group": "Unit roster",
+          "subgroup": "Garrison"
+        },
+        {
+          "name": "Allies and crews",
+          "path": "unit-roster-allies.html",
+          "group": "Unit roster",
+          "subgroup": "Allies and crews"
+        },
+        {
+          "name": "Hillsvain Host units",
+          "path": "unit-roster-host.html",
+          "group": "Unit roster",
+          "subgroup": "Hillsvain Host"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0
+    },
+    {
+      "id": "agent-board",
+      "title": "Agent board",
+      "description": "Live overview of every Claude session on this project: who is working, who stopped mid-step, who waits for you, and the commit lock. Updates every minute and opens in its own window.",
+      "type": "group",
+      "category": "dev",
+      "created": "2026-10-24",
+      "updated": "2026-10-24",
+      "folder": "2026-10-24_agent-board",
+      "steps": [
+        {
+          "name": "Board",
+          "path": "index.html"
         }
       ],
       "status": "active",

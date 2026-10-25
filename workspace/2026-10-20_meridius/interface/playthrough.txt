@@ -1,0 +1,289 @@
+[   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[   3.1s] ok   title: no Continue without a save
+[   4.6s] shot 01_title.png
+[   4.7s] ok   a new company of 6 squads
+[   6.1s] shot 02_welcome.png
+[   6.2s] ok   welcome closed
+[   6.6s] ok   garrison: D pans the camp (tx 0 → 290)
+[   7.0s] ok   garrison: wheel down zooms out (0.62 → 0.56)
+[   7.6s] ok   base view present
+[   7.7s] ok   hover over barracks highlights it (hover barracks)
+[   7.7s] ok   garrison: hover tip for barracks
+[   9.1s] shot 03_barracks.png
+[   9.4s] ok   hire a recruit (roster 6 → 7, silver 220 → 175)
+[   9.5s] ok   base view present
+[   9.5s] ok   hover over training highlights it (hover training)
+[   9.5s] ok   garrison: hover tip for training
+[  10.1s] ok   training panel shown
+[  10.2s] ok   base view present
+[  10.2s] ok   hover over armoury highlights it (hover armoury)
+[  10.2s] ok   garrison: hover tip for armoury
+[  10.8s] ok   armoury panel shown
+[  11.0s] ok   base view present
+[  11.0s] ok   hover over infirmary highlights it (hover infirmary)
+[  11.0s] ok   garrison: hover tip for infirmary
+[  11.5s] ok   infirmary panel shown
+[  11.6s] ok   base view present
+[  11.7s] ok   hover over quartermaster highlights it (hover quartermaster)
+[  11.7s] ok   garrison: hover tip for quartermaster
+[  12.2s] ok   quartermaster panel shown
+[  12.2s] ok   base view present
+[  12.3s] ok   hover over command highlights it (hover command)
+[  12.3s] ok   garrison: hover tip for command
+[  12.8s] ok   command panel shown
+[  14.4s] shot 04_soldier.png
+[  14.8s] ok   Sound toggles mute (now true)
+[  14.9s] ok   Sound toggles back
+[  16.0s] ok   F11: fullscreen
+[  17.8s] shot 05_fullscreen.png
+[  18.9s] ok   F11 again: windowed
+[  18.9s] ok   the window is back at 1920×1080 ((1920, 1080))
+[  19.3s] ok   the world is paused behind the menu
+[  20.4s] shot 06_pause_menu.png
+[  21.3s] shot 07_garrison.png
+[  22.0s] ok   a suggested army (5 squads)
+[  22.3s] ok   the squad leaves the army
+[  22.5s] ok   the squad rejoins the army
+[  23.1s] ok   + adds a rations (23 → 24)
+[  23.3s] ok   − takes it back
+[  24.3s] shot 08_prep_1.png
+[  24.3s] ok   March Out enabled
+[  26.3s] shot 09_campaign.png
+[  26.6s] ok   map: D pans (tx 64 → 485)
+[  26.7s] ok   map: wheel zooms out
+[  27.7s]      march to n2 (battle)
+[  27.8s] ok   map: hover on n2 (battle)
+[  27.8s] ok   map: the node card shows on hover
+[  30.2s] ok   dialog 'battle' shown
+[  30.8s] shot 10_dialog_battle.png
+[  31.4s] shot 11_briefing.png
+[  32.1s] battle 1: Stragglers ahead of the host at Wolfsrun Glade (Forest clearing, 14x12, 7 enemy squads)
+[  32.1s] ok   first battle: the Field Manual opens
+[  33.4s] shot 12_battle_manual.png
+[  35.2s] shot 13_battle_1_deploy.png
+[  35.2s] ok   deployment first
+[  35.5s] ok   deployment: click moves p-u1 to 3,9
+[  35.7s] ok   battle speed 2 (2.0)
+[  36.4s] ok   G hides the grid
+[  36.5s] ok   G shows it again
+[  36.6s] ok   Alt held: danger tiles
+[  37.5s] shot 14_battle_danger.png
+[  37.6s] ok   Alt released
+[  37.7s] ok   wheel up zooms in
+[  38.0s] ok   A pans the field
+[  38.1s] ok   Tab selects a squad
+[  38.4s] ok   battle: hover on squad p-u5
+[  38.6s]      p-u5 crossbowman at 6,11: { "move": { "x": 5, "y": 8 }, "facing": 3, "attack": "e3", "ability": <null>, "stance": <null>, "shout": <null> }
+[  38.7s] ok   battle: hover previews the move to 5,8
+[  38.9s] ok   battle: click moves p-u5 to 5,8
+[  38.9s] ok   battle: arrives facing 3 as previewed (3)
+[  40.3s] ok   Backspace takes the move back (6,11)
+[  40.4s] ok   battle: hover previews the move to 5,8
+[  40.6s] ok   battle: click moves p-u5 to 5,8
+[  40.6s] ok   battle: arrives facing 3 as previewed (3)
+[  41.3s] ok   battle: the attack forecast shows
+[  41.5s] ok   battle: click attacks e3
+[  42.1s]      p-u1 footman at 3,9: { "move": { "x": 5, "y": 7 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": "shieldwall", "shout": <null> }
+[  42.3s] ok   battle: hover previews the move to 5,7
+[  42.5s] ok   battle: click moves p-u1 to 5,7
+[  42.5s] ok   battle: arrives facing 3 as previewed (3)
+[  43.4s] ok   battle: stance shieldwall used
+[  43.6s] ok   battle: hover on squad p-u2
+[  43.7s]      p-u2 footman at 7,9: { "move": { "x": 7, "y": 7 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": "shieldwall", "shout": <null> }
+[  43.8s] ok   battle: hover previews the move to 7,7
+[  44.0s] ok   battle: click moves p-u2 to 7,7
+[  44.0s] ok   battle: arrives facing 3 as previewed (3)
+[  44.6s] ok   battle: stance shieldwall used
+[  44.9s] ok   battle: hover on squad p-u3
+[  45.1s]      p-u3 spearman at 6,10: { "move": { "x": 7, "y": 8 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": "spearwall", "shout": <null> }
+[  45.2s] ok   battle: hover previews the move to 7,8
+[  45.4s] ok   battle: click moves p-u3 to 7,8
+[  45.4s] ok   battle: arrives facing 3 as previewed (3)
+[  46.1s] ok   battle: stance spearwall used
+[  46.3s] ok   battle: hover on squad p-u4
+[  46.4s]      p-u4 spearman at 7,10: { "move": { "x": 7, "y": 9 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": <null>, "shout": <null> }
+[  46.6s] ok   battle: hover previews the move to 7,9
+[  46.7s] ok   battle: click moves p-u4 to 7,9
+[  46.7s] ok   battle: arrives facing 3 as previewed (3)
+[  47.0s] ok   squad p-u4 done
+[  47.9s] shot 15_battle_1_turn1.png
+[  50.1s] ok   battle: hover on squad p-u5
+[  50.3s]      p-u5 crossbowman at 5,8: { "move": <null>, "facing": <null>, "attack": "e6", "ability": "aimed_shot", "stance": <null>, "shout": <null> }
+[  50.4s] ok   battle: Aimed Shot armed (aimed_shot)
+[  50.6s] ok   battle: the attack forecast shows
+[  50.8s] ok   battle: click attacks e6
+[  51.5s] ok   squad p-u5 done
+[  51.5s]      p-u1 footman at 5,7: { "move": { "x": 3, "y": 5 }, "facing": 2, "attack": "e2", "ability": "shield_charge", "stance": <null>, "shout": <null> }
+[  51.7s] ok   battle: hover previews the move to 3,5
+[  51.8s] ok   battle: click moves p-u1 to 3,5
+[  51.8s] ok   battle: arrives facing 2 as previewed (2)
+[  52.7s] ok   battle: Charge armed (shield_charge)
+[  52.8s] ok   battle: the attack forecast shows
+[  53.1s] ok   battle: click attacks e2
+[  53.8s]      p-u2 footman at 7,7: { "move": { "x": 8, "y": 6 }, "facing": 3, "attack": "e0", "ability": "shield_charge", "stance": <null>, "shout": <null> }
+[  53.9s] ok   battle: hover previews the move to 8,6
+[  54.2s] ok   battle: click moves p-u2 to 8,6
+[  54.2s] ok   battle: arrives facing 3 as previewed (3)
+[  54.6s] ok   battle: Charge armed (shield_charge)
+[  54.8s] ok   battle: the attack forecast shows
+[  54.9s] ok   battle: click attacks e0
+[  55.4s]      p-u3 spearman at 7,8: { "move": { "x": 7, "y": 6 }, "facing": 3, "attack": "e3", "ability": <null>, "stance": <null>, "shout": <null> }
+[  55.5s] ok   battle: hover previews the move to 7,6
+[  55.7s] ok   battle: click moves p-u3 to 7,6
+[  55.7s] ok   battle: arrives facing 3 as previewed (3)
+[  56.1s] ok   battle: the attack forecast shows
+[  56.3s] ok   battle: click attacks e3
+[  56.7s]      p-u4 spearman at 7,9: { "move": { "x": 7, "y": 7 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": "spearwall", "shout": <null> }
+[  56.8s] ok   battle: hover previews the move to 7,7
+[  57.0s] ok   battle: click moves p-u4 to 7,7
+[  57.0s] ok   battle: arrives facing 3 as previewed (3)
+[  57.5s] ok   battle: stance spearwall used
+[  61.7s] ok   battle: hover on squad p-u5
+[  61.9s]      p-u5 crossbowman at 5,8: { "move": { "x": 4, "y": 8 }, "facing": 0, "attack": "e3", "ability": <null>, "stance": <null>, "shout": <null> }
+[  62.0s] ok   battle: hover previews the move to 4,8
+[  62.1s] ok   battle: click moves p-u5 to 4,8
+[  62.1s] ok   battle: arrives facing 0 as previewed (0)
+[  62.7s] ok   battle: the attack forecast shows
+[  62.9s] ok   battle: click attacks e3
+[  63.6s]      p-u1 footman at 3,5: { "move": { "x": 6, "y": 5 }, "facing": 0, "attack": "e4", "ability": <null>, "stance": <null>, "shout": <null> }
+[  63.7s] ok   battle: hover previews the move to 6,5
+[  63.9s] ok   battle: click moves p-u1 to 6,5
+[  63.9s] ok   battle: arrives facing 0 as previewed (0)
+[  64.5s] ok   battle: the attack forecast shows
+[  64.6s] ok   battle: click attacks e4
+[  65.0s]      p-u2 footman at 8,6: { "move": <null>, "facing": <null>, "attack": "e1", "ability": <null>, "stance": <null>, "shout": <null> }
+[  65.1s] ok   battle: the attack forecast shows
+[  65.3s] ok   battle: click attacks e1
+[  66.1s] ok   squad p-u2 done
+[  66.1s]      p-u3 spearman at 7,6: { "move": <null>, "facing": <null>, "attack": "e4", "ability": <null>, "stance": <null>, "shout": <null> }
+[  66.2s] ok   battle: the attack forecast shows
+[  66.3s] ok   battle: click attacks e4
+[  67.1s] ok   squad p-u3 done
+[  67.1s]      p-u4 spearman at 7,7: { "move": <null>, "facing": <null>, "attack": "e1", "ability": <null>, "stance": <null>, "shout": <null> }
+[  67.2s] ok   battle: the attack forecast shows
+[  67.4s] ok   battle: click attacks e1
+[  68.2s] ok   squad p-u4 done
+[  72.3s] ok   battle: hover on squad p-u5
+[  72.4s]      p-u5 crossbowman at 4,8: { "move": { "x": 4, "y": 8 }, "facing": 3, "attack": "w0-1", "ability": <null>, "stance": <null>, "shout": <null> }
+[  72.7s] ok   battle: click on the tile edge turns p-u5 to face 3 (3)
+[  73.0s] ok   battle: the attack forecast shows
+[  73.2s] ok   battle: click attacks w0-1
+[  73.7s]      p-u1 footman at 6,5: { "move": { "x": 4, "y": 6 }, "facing": 2, "attack": "w0-1", "ability": <null>, "stance": <null>, "shout": <null> }
+[  73.8s] ok   battle: hover previews the move to 4,6
+[  73.9s] ok   battle: click moves p-u1 to 4,6
+[  73.9s] ok   battle: arrives facing 2 as previewed (2)
+[  75.4s] ok   battle: the attack forecast shows
+[  75.5s] ok   battle: click attacks w0-1
+[  75.9s]      p-u2 footman at 8,6: { "move": { "x": 5, "y": 6 }, "facing": 2, "attack": "w0-0", "ability": <null>, "stance": <null>, "shout": <null> }
+[  76.0s] ok   battle: hover previews the move to 5,6
+[  76.2s] ok   battle: click moves p-u2 to 5,6
+[  76.2s] ok   battle: arrives facing 2 as previewed (2)
+[  76.7s] ok   battle: the attack forecast shows
+[  76.9s] ok   battle: click attacks w0-0
+[  77.3s]      p-u3 spearman at 7,6: { "move": { "x": 6, "y": 5 }, "facing": 2, "attack": "w0-0", "ability": <null>, "stance": <null>, "shout": <null> }
+[  77.5s] ok   battle: hover previews the move to 6,5
+[  77.6s] ok   battle: click moves p-u3 to 6,5
+[  77.6s] ok   battle: arrives facing 2 as previewed (2)
+[  78.0s] ok   battle: the attack forecast shows
+[  78.1s] ok   battle: click attacks w0-0
+[  78.6s]      p-u4 spearman at 7,7: { "move": { "x": 6, "y": 6 }, "facing": 2, "attack": <null>, "ability": <null>, "stance": "spearwall", "shout": <null> }
+[  78.7s] ok   battle: hover previews the move to 6,6
+[  78.8s] ok   battle: click moves p-u4 to 6,6
+[  78.8s] ok   battle: arrives facing 2 as previewed (2)
+[  79.3s] ok   battle: stance spearwall used
+[  81.8s] ok   battle: hover on squad p-u5
+[  81.9s]      p-u5 crossbowman at 4,8: { "move": { "x": 5, "y": 7 }, "facing": 3, "attack": "e6", "ability": <null>, "stance": <null>, "shout": <null> }
+[  82.0s] ok   battle: hover previews the move to 5,7
+[  82.1s] ok   battle: click moves p-u5 to 5,7
+[  82.1s] ok   battle: arrives facing 3 as previewed (3)
+[  82.5s] ok   battle: the attack forecast shows
+[  82.6s] ok   battle: click attacks e6
+[  83.3s]      p-u1 footman at 4,6: { "move": { "x": 4, "y": 5 }, "facing": 3, "attack": "w0-0", "ability": <null>, "stance": <null>, "shout": <null> }
+[  83.4s] ok   battle: hover previews the move to 4,5
+[  83.6s] ok   battle: click moves p-u1 to 4,5
+[  83.6s] ok   battle: arrives facing 3 as previewed (3)
+[  83.7s] ok   battle: the attack forecast shows
+[  83.9s] ok   battle: click attacks w0-0
+[  84.3s]      p-u2 footman at 5,6: { "move": <null>, "facing": <null>, "attack": "w0-0", "ability": <null>, "stance": <null>, "shout": <null> }
+[  84.4s]      no legal attack on w0-0 from here (preview none)
+[  84.5s] ok   squad p-u2 done
+[  84.5s]      p-u3 spearman at 6,5: { "move": { "x": 5, "y": 4 }, "facing": 2, "attack": "w0-0", "ability": <null>, "stance": <null>, "shout": <null> }
+[  84.6s] ok   battle: hover previews the move to 5,4
+[  84.7s] ok   battle: click moves p-u3 to 5,4
+[  84.7s] ok   battle: arrives facing 2 as previewed (2)
+[  85.1s] ok   battle: the attack forecast shows
+[  85.2s] ok   battle: click attacks w0-0
+[  86.0s]      p-u4 spearman at 6,6: { "move": { "x": 7, "y": 3 }, "facing": 3, "attack": <null>, "ability": <null>, "stance": "spearwall", "shout": <null> }
+[  86.1s] ok   battle: hover previews the move to 7,3
+[  86.3s] ok   battle: click moves p-u4 to 7,3
+[  86.3s] ok   battle: arrives facing 3 as previewed (3)
+[  87.0s] ok   battle: stance spearwall used
+[  87.4s] battle 1 over after 5 turns: victory
+[  88.3s] shot 16_battle_1_end.png
+[  88.3s] ok   battle exercised ["redo", "ability", "done_button", "ability_key", "ability_button", "turn"]
+[  90.8s] ok   dialog 'battleResult' shown
+[  91.4s] shot 17_dialog_battleResult.png
+[  91.6s] ok   expedition 1: fought a battle (seen ["battle", "battleResult"])
+[  92.8s] shot 18_retreat_confirm.png
+[  93.7s] ok   the expedition is over
+[  95.0s] shot 19_report_1.png
+[  95.8s] last stand opens in 641 ms
+[  98.3s] ok   a large map with a minimap
+[  99.1s] shot 20_laststand_open.png
+[  99.1s] ok   no HUD control takes clicks over the minimap { "x": 14, "y": 926.0, "w": 250, "h": 140, "k": 0.0695991091314, "ox": -1860.0, "oy": -476.0 } ([])
+[ 100.1s] ok   nothing of the HUD under the pointer on the minimap at (226.5, 954.0) (none)
+[ 100.2s] ok   minimap click moves the camera (-448,785 → 1193,-74)
+[ 101.6s] shot 21_laststand_minimap.png
+[ 103.4s] 
+[ 103.4s] frame times (1920×1080 window, vsync off):
+[ 103.4s]   boot                  1 frames    0.0 s    45.2 fps  p99   22.1 ms  worst   22.1 ms  >33 ms: 0
+[ 103.4s]   title               109 frames    3.7 s    29.3 fps  p99  506.9 ms  worst 1260.5 ms  >33 ms: 10
+[ 103.4s]   base               1074 frames   11.0 s    97.4 fps  p99   45.6 ms  worst  172.8 ms  >33 ms: 11
+[ 103.4s]   prep                120 frames    2.3 s    52.6 fps  p99  131.4 ms  worst  358.2 ms  >33 ms: 6
+[ 103.4s]   campaign            533 frames    7.3 s    72.6 fps  p99   29.0 ms  worst  323.5 ms  >33 ms: 5
+[ 103.4s]   battle             3159 frames   53.4 s    59.2 fps  p99   83.4 ms  worst  432.0 ms  >33 ms: 185
+[ 103.4s]   battle-enemy         38 frames    0.9 s    41.8 fps  p99  124.4 ms  worst  124.4 ms  >33 ms: 7
+[ 103.4s]   report               99 frames    0.7 s   132.1 fps  p99   55.1 ms  worst   55.1 ms  >33 ms: 1
+[ 103.4s]   laststand-load        3 frames    1.2 s     2.6 fps  p99 1128.3 ms  worst 1128.3 ms  >33 ms: 1
+[ 103.4s]   laststand-deploy    243 frames    6.0 s    40.5 fps  p99   55.2 ms  worst  215.8 ms  >33 ms: 19
+[ 103.4s] frames over 100 ms (phase, ms, after):
+[ 103.4s]   title              506.9 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title              176.7 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title              107.3 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title              202.9 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title             1260.5 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title              411.7 ms  after: [   0.2s] window (1920, 1080), viewport (1920.0, 1080.0), screen (3440, 1440), hovered-control API true
+[ 103.4s]   title              113.9 ms  after: [   4.6s] shot 01_title.png
+[ 103.4s]   base               172.8 ms  after: [   7.7s] ok   garrison: hover tip for barracks
+[ 103.4s]   base               119.0 ms  after: [   9.5s] ok   garrison: hover tip for training
+[ 103.4s]   base               132.2 ms  after: [  10.2s] ok   garrison: hover tip for armoury
+[ 103.4s]   prep               117.0 ms  after: [  21.3s] shot 07_garrison.png
+[ 103.4s]   prep               122.3 ms  after: [  22.0s] ok   a suggested army (5 squads)
+[ 103.4s]   prep               126.3 ms  after: [  22.3s] ok   the squad leaves the army
+[ 103.4s]   prep               358.2 ms  after: [  22.5s] ok   the squad rejoins the army
+[ 103.4s]   prep               131.4 ms  after: [  23.1s] ok   + adds a rations (23 → 24)
+[ 103.4s]   prep               131.0 ms  after: [  23.3s] ok   − takes it back
+[ 103.4s]   campaign           323.5 ms  after: [  24.3s] ok   March Out enabled
+[ 103.4s]   battle             432.0 ms  after: [  31.4s] shot 11_briefing.png
+[ 103.4s]   battle             112.3 ms  after: [  35.7s] ok   battle speed 2 (2.0)
+[ 103.4s]   battle             107.3 ms  after: [  41.5s] ok   battle: click attacks e3
+[ 103.4s]   battle             103.6 ms  after: [  44.0s] ok   battle: arrives facing 3 as previewed (3)
+[ 103.4s]   battle             101.5 ms  after: [  44.0s] ok   battle: arrives facing 3 as previewed (3)
+[ 103.4s]   battle             102.5 ms  after: [  50.8s] ok   battle: click attacks e6
+[ 103.4s]   battle             113.0 ms  after: [  51.8s] ok   battle: arrives facing 2 as previewed (2)
+[ 103.4s]   battle             163.3 ms  after: [  53.1s] ok   battle: click attacks e2
+[ 103.4s]   battle             135.7 ms  after: [  54.9s] ok   battle: click attacks e0
+[ 103.4s]   battle             108.5 ms  after: [  56.3s] ok   battle: click attacks e3
+[ 103.4s]   battle             111.9 ms  after: [  73.2s] ok   battle: click attacks w0-1
+[ 103.4s]   battle             115.8 ms  after: [  76.9s] ok   battle: click attacks w0-0
+[ 103.4s]   battle             101.5 ms  after: [  78.1s] ok   battle: click attacks w0-0
+[ 103.4s]   battle-enemy       124.4 ms  after: [  79.3s] ok   battle: stance spearwall used
+[ 103.4s]   battle             102.2 ms  after: [  82.6s] ok   battle: click attacks e6
+[ 103.4s]   battle-enemy       104.9 ms  after: [  87.0s] ok   battle: stance spearwall used
+[ 103.4s]   battle             305.7 ms  after: [  88.3s] ok   battle exercised ["redo", "ability", "done_button", "ability_key", "ability_button", "turn"]
+[ 103.4s]   campaign           141.9 ms  after: [  92.8s] shot 18_retreat_confirm.png
+[ 103.4s]   laststand-load    1128.3 ms  after: [  95.8s] last stand opens in 641 ms
+[ 103.4s]   laststand-deploy   215.8 ms  after: [ 101.6s] shot 21_laststand_minimap.png
+[ 103.4s] real input events dropped: 60 ["InputEventMouseMotion dev 32 at (1796.0, 1043.0)", "InputEventMouseMotion dev 32 at (1886.0, 973.0)", "InputEventMouseMotion dev 32 at (951.0, 201.0)", "InputEventMouseMotion dev 32 at (947.0, 202.0)", "InputEventMouseMotion dev 32 at (943.0, 204.0)", "InputEventMouseMotion dev 32 at (936.0, 206.0)", "InputEventMouseMotion dev 32 at (925.0, 209.0)", "InputEventMouseMotion dev 32 at (911.0, 213.0)"]
+[ 103.4s] orphan nodes: 0
+[ 103.4s] ==== 184 checks, 0 failed, 0 errors, 0 warnings, 1 battles, 103 s ====

@@ -1,4 +1,4 @@
-/* Shared by the Meridius 3D rig tabs (footman-3d.html, crossbowman-3d.html). */
+/* Shared by the Meridius 3D rig tabs: footman, crossbowman, spearman, succubus and mage. */
 .intro{max-width:820px}.eyebrow{font-size:12px;letter-spacing:.13em;color:var(--mak-muted);margin:0 0 6px}
 .viewer{display:grid;gap:12px;margin:18px 0 8px;padding:18px;border:1px solid var(--mak-border);border-radius:12px;background:var(--mak-surface);min-width:0}
 .vbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -17,6 +17,9 @@
 .cell canvas{display:block;max-width:100%;height:auto}
 .cell .tag,.cell .stamp{position:absolute;font:600 12px/1 ui-monospace,Consolas,monospace;color:#2b2b31;background:#ffffffc0;padding:3px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
 .cell .tag{left:8px;top:6px;letter-spacing:.06em}.cell .stamp{right:8px;bottom:6px}
+.vdetail-value{min-width:46px;text-align:center;font:600 13px ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.vhint{font-size:12px;color:var(--mak-muted)}
+.stage.zoomed canvas{cursor:grab;touch-action:none}.stage.dragging canvas{cursor:grabbing}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
 .steps div{padding:16px 18px;border:1px solid var(--mak-border);border-radius:10px;background:var(--mak-surface)}
 .steps strong{display:block;font-size:13px;letter-spacing:.04em;margin-bottom:4px}

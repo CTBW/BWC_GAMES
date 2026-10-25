@@ -1,0 +1,38 @@
+[
+  {
+    "width": 1440,
+    "theme": "dark",
+    "scroll": 1440,
+    "images": 10,
+    "broken": 0,
+    "links": 8,
+    "preview": "open / 100% / download / original / close passed"
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "scroll": 1440,
+    "images": 10,
+    "broken": 0,
+    "links": 8,
+    "preview": "open / 100% / download / original / close passed"
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "scroll": 1024,
+    "images": 10,
+    "broken": 0,
+    "links": 8,
+    "preview": "open / 100% / download / original / close passed"
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "scroll": 1024,
+    "images": 10,
+    "broken": 0,
+    "links": 8,
+    "preview": "open / 100% / download / original / close passed"
+  }
+]

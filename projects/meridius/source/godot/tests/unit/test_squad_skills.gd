@@ -68,6 +68,30 @@ func test_every_skill_has_a_button_and_an_icon() -> void:
 		assert_true(Soldier.kit(t, true).size() <= 4, t + " fits keys 1–4")
 
 
+func test_every_stance_and_condition_wears_its_icon_on_the_map() -> void:
+	# Beside a squad's bar on the field: the icon of the skill behind it.
+	var BattleDraw = load("res://scripts/render/battle_draw.gd")
+	for id in DB.ABILITIES:
+		var ab: Dictionary = DB.ABILITIES[id]
+		if ab.get("kind") == "stance":
+			assert_eq(BattleDraw.stance_icon(str(ab.stance)), ab.icon, id + " on the map")
+	assert_eq(BattleDraw.stance_icon("square"), "square")
+	assert_eq(BattleDraw.stance_icon("no_such_stance"), "", "an unknown stance stays a word")
+	var badges: Array = []
+	for st in load("res://scripts/render/battle_view.gd").STATUS_LABEL:
+		var icon: String = BattleDraw.STATUS_ICON.get(st, "")
+		assert_true(Icon.NAMES.has(icon), "%s wears %s" % [st, icon])
+		badges.append(icon)
+	# Every badge has its painted icon; where none is painted, the SVG.
+	for id in DB.ABILITIES:
+		if DB.ABILITIES[id].get("kind") == "stance":
+			badges.append(str(DB.ABILITIES[id].icon))
+	for icon in badges:
+		assert_eq(Icon.painted(icon).resource_path, "res://assets/icons/painted/%s.png" % icon, icon + " painted")
+		assert_true(Icon.painted(icon).get_width() >= 64, icon + " big enough to shrink")
+	assert_eq(Icon.painted("howl"), Icon.tex("howl"), "Howl has no painting yet")
+
+
 # ---------------------------------------------------------------- charge
 
 func test_a_charge_needs_a_run_and_hits_harder() -> void:

@@ -22,7 +22,7 @@ Kits:
 - **Repo:** `E:\ProjektM\BWC_GAMES-godot`, branch `godot-migration`, which tracks `origin/godot-migration`. Many sessions share this working tree.
 - **Remote:** `https://github.com/CTBW/BWC_GAMES`. GitHub reports it as **public**.
 - **GitHub CLI:** logged in as CTBW (keyring, scopes gist/read:org/repo).
-- **This chat's transcript:** `C:\Users\calle\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
+- **This chat's transcript:** `%USERPROFILE%\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
 
 ## Current state
 - **Pull requests into `main`:** all are merge commits pinned with `--match-head-commit`, and the branch was kept each time.
@@ -83,7 +83,7 @@ Kits:
    - Stage by explicit path only; never `git add -A` or `git add .`. Never stage `assets/audio/bank/local/`.
 
 ## Scratchpad
-`C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
+`%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
 - `pick_hunks.py`
 - `skills_*.diff`
 - `wt_full_test.txt`

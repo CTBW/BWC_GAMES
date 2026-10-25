@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius — Interface redesign</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .review-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+    .review-gallery figure,.hero{padding:12px;border:1px solid var(--mak-border);background:var(--mak-surface);border-radius:10px}
+    .review-gallery img,.hero img{display:block;width:100%;height:auto;border-radius:5px}
+    figcaption{font-size:13px;color:var(--mak-muted);padding:10px 2px 2px}
+    .hero{margin:24px 0}.review-gallery h3{margin:0 0 10px}
+    .source-note{font-size:13px;color:var(--mak-muted)}
+  </style>
+</head>
+<body><main class="container">
+  <p class="eyebrow">MERIDIUS / NORDMARK / 23 OCTOBER 2026</p>
+  <h1>A brighter frontier. A forged interface.</h1>
+  <p class="lead">A forest sunrise welcomes the company. Iron, worn brass, blue heading bands and warm vellum now connect the title, camp menus, expedition planning and battle controls.</p>
+  <p>No heraldic symbol has been added. The sunrise uses the supplied battlefield scenery as its primary style reference; the interface takes inspiration from the substantial frames of Warcraft III and the tactile materials of Diablo II.</p>
+
+  <figure class="hero">
+    <img src="interface/title.webp" alt="Meridius title in Godot: a bright forest valley at sunrise, with iron-framed menu controls" width="1920" height="1080">
+    <figcaption>Implemented title screen, captured from the running Godot game. The rising sun and landscape retain their full brightness. Click any image for its original resolution and download.</figcaption>
+  </figure>
+
+  <h2>One material language throughout</h2>
+  <div class="review-gallery">
+    <figure><h3>Camp buildings</h3><img loading="lazy" src="interface/barracks.webp" alt="Tent Lines recruitment panel with blue header, vellum body and riveted metal corners" width="1920" height="1080"><figcaption>Blue heading bands, framed portraits, gold recruitment actions and readable dark ink.</figcaption></figure>
+    <figure><h3>Expedition preparation</h3><img loading="lazy" src="interface/prep.webp" alt="Plan the Expedition: campaign intelligence, selected army and supply controls" width="1920" height="1080"><figcaption>A stronger header and tighter panel height bring the three planning columns together.</figcaption></figure>
+    <figure><h3>Company roster</h3><img loading="lazy" src="interface/roster.webp" alt="The company roster with parchment squad cards and blue title band" width="1920" height="1080"><figcaption>Inset squad cards keep status colours, health, morale and troop counts distinct.</figcaption></figure>
+    <figure><h3>Pause and settings</h3><img loading="lazy" src="interface/menu.webp" alt="Pause menu with matching dark iron panels, brass buttons and audio sliders" width="1920" height="1080"><figcaption>The menu uses the same dark material as the battlefield HUD.</figcaption></figure>
+  </div>
+
+  <figure class="hero">
+    <img loading="lazy" src="interface/battle_live.webp" alt="Live battle UI: framed company cards, objective banner and selected squad ability panel over the green battlefield" width="1920" height="1080">
+    <figcaption>Native live-battle capture. The dark selected-squad panel separates controls from the green terrain; narrow frames leave the battlefield visible.</figcaption>
+  </figure>
+
+  <h2>Before and after</h2>
+  <div class="review-gallery">
+    <figure><h3>Previous title</h3><img loading="lazy" src="interface/before-title.webp" alt="Original title screen before the redesign" width="1920" height="1080"><figcaption>Original working-tree capture, before this interface pass.</figcaption></figure>
+    <figure><h3>Previous recruitment panel</h3><img loading="lazy" src="interface/before-barracks.webp" alt="Original recruitment menu before the redesign" width="1920" height="1080"><figcaption>Same capture scenario and seed as the new Tent Lines panel above. Animated world details vary between frames.</figcaption></figure>
+  </div>
+
+  <h2>Desktop proportions</h2>
+  <div class="review-gallery">
+    <figure><img loading="lazy" src="interface/title-1440x900.webp" alt="Sunrise title at 1440 by 900, a 16 to 10 desktop window" width="1440" height="900"><figcaption>1440 × 900. The engine uses a 1920 × 1200 logical canvas.</figcaption></figure>
+    <figure><img loading="lazy" src="interface/title-2560x1080.webp" alt="Sunrise title at 2560 by 1080 in an ultrawide window" width="2560" height="1080"><figcaption>2560 × 1080. The sun and garrison remain in the crop.</figcaption></figure>
+  </div>
+
+  <h2>Verification and sources</h2>
+  <ul>
+    <li><strong>364 tests passed, 0 failed.</strong> The final quick suite completed in 201.6 seconds and skipped 10 long campaign and battle tests.</li>
+    <li><strong>31 native captures, 0 rendering/runtime errors.</strong> Twenty-three scenarios at 1920 × 1080, plus title, roster, preparation and live battle at two other desktop resolutions. <a href="interface/review.txt">Capture log</a>.</li>
+    <li id="input-result"><strong>184 input checks passed, 0 failures, errors or warnings.</strong> Recruitment, settings and fullscreen, army and supplies, campaign navigation, deployment, movement, attacks, abilities, undo, end turn, retreat, report, minimap and return to title. <a href="interface/playthrough.txt">Playthrough log</a>.</li>
+    <li>Report checked in light and dark at 1440 and 1024 pixels wide: images load, links resolve, and enlargement, 100% zoom, original image, download and close controls work. <a href="interface/report-checks.json">Report checks</a>.</li>
+  </ul>
+  <p><a href="interface/art-direction.md">Art direction and editable source map</a> · <a href="interface/source-manifest.json">Source checksums</a> · <a href="interface/frontier-title-art.webp" download>Original sunrise artwork</a> · <a href="interface/title.webp" download>Title capture</a> · <a href="interface/battle_live.webp" download>Battle capture</a></p>
+  <p class="source-note">All interface images on this page are native Godot framebuffer captures, not mockups. The backdrop is generated artwork; the frames and controls are reusable engine code. Reviewed against the existing working tree at commit 8adca51 on godot-migration. Agent visual review does not imply final aesthetic acceptance by the user. No Windows export was produced in this pass.</p>
+</main></body>
+</html>

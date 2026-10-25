@@ -1,0 +1,222 @@
+{
+ "_doc": "How each figure walks and stands (scripts/render/soldier_anim.gd). Edit freely; values apply on the next battle. A type takes 'default', then its entry in 'types' ('like' copies another type first). Lengths are world px at zoom 1, angles radians, times seconds. stride: one cycle of two steps. pace: march time per tile (x the base). bounce: rise at the passing step (two per stride). waddle: tilt toward the planted foot. squash/stretch: height lost at a landing / gained at the push-off. surge: forward-and-back swing along the march, slowest at each landing. lean: forward lean on the march; kick: extra lean while the body lags the start or skids at the stop. jitter: uneven, scrambling steps (0..1). tempo: spread of the men's own tempo. stomp: heavy landings (more dust; 1 and above shake the camera). spring/damp: how the body follows the squad's anchor (higher spring follows closer; damping under 1 overshoots at the stop). breath: share of the height the upper body sinks on an out-breath; breath_rate: breaths per second. sway: px of slow weight shifting; bend: lean of the upper body over the hips with it. fidget: mean seconds between idle fidgets (0: none). dust: size of the footstep puffs. march: x the time a squad takes per tile (all kinds). rig: 1 walks a figure's own legs when it walks away from the camera (the standing back view as a mesh; tools/anim/rig.py), 0 keeps its drawn walk frames. duty: share of a stride a foot is planted. step: farthest a foot reaches ahead of or behind the hips, as a share of the figure's height (the march's speed sets it below that, so the planted foot keeps still). lift: how high the swung foot rises (share of height). hip, knee: where the lower body starts to follow the feet and below which it goes with them whole (share of height from the feet).",
+ "default": {
+  "stride": 0.48,
+  "pace": 1.0,
+  "bounce": 2.4,
+  "waddle": 0.03,
+  "squash": 0.035,
+  "stretch": 0.02,
+  "surge": 2.4,
+  "lean": 0.035,
+  "kick": 0.07,
+  "jitter": 0.0,
+  "tempo": 0.1,
+  "stomp": 0.3,
+  "spring": 420.0,
+  "damp": 0.55,
+  "breath": 0.016,
+  "breath_rate": 0.28,
+  "sway": 0.8,
+  "bend": 0.006,
+  "fidget": 9.0,
+  "dust": 1.0,
+  "march": 1.25,
+  "rig": 1.0,
+  "duty": 0.58,
+  "step": 0.085,
+  "lift": 0.05,
+  "hip": 0.36,
+  "knee": 0.12
+ },
+ "types": {
+  "footman": {
+   "stride": 0.42,
+   "pace": 1.06,
+   "bounce": 2.2,
+   "waddle": 0.026,
+   "squash": 0.04,
+   "surge": 2.6,
+   "lean": 0.03,
+   "stomp": 0.5,
+   "dust": 1.1,
+   "knee": 0.19
+  },
+  "collie_guard": {
+   "like": "footman",
+   "stride": 0.46,
+   "pace": 1.0,
+   "bounce": 2.6,
+   "waddle": 0.03
+  },
+  "spearman": {
+   "like": "footman",
+   "stride": 0.5,
+   "pace": 1.04,
+   "waddle": 0.022,
+   "lean": 0.025
+  },
+  "crossbowman": {
+   "stride": 0.48,
+   "pace": 1.02,
+   "bounce": 2.3,
+   "waddle": 0.028
+  },
+  "militia": {
+   "stride": 0.46,
+   "pace": 1.0,
+   "bounce": 2.5,
+   "waddle": 0.038,
+   "tempo": 0.16,
+   "jitter": 0.15
+  },
+  "battle_mage": {
+   "stride": 0.56,
+   "pace": 1.08,
+   "bounce": 1.6,
+   "waddle": 0.014,
+   "squash": 0.02,
+   "surge": 1.8,
+   "lean": 0.018,
+   "breath": 0.012,
+   "fidget": 11.0
+  },
+  "engineer": {
+   "stride": 0.5,
+   "pace": 1.04,
+   "bounce": 2.2,
+   "waddle": 0.032,
+   "squash": 0.04,
+   "stomp": 0.4
+  },
+  "goblin_spear": {
+   "stride": 0.3,
+   "pace": 0.86,
+   "bounce": 2.6,
+   "waddle": 0.05,
+   "squash": 0.03,
+   "stretch": 0.03,
+   "surge": 1.8,
+   "lean": 0.08,
+   "kick": 0.1,
+   "jitter": 0.55,
+   "tempo": 0.2,
+   "stomp": 0.1,
+   "spring": 520.0,
+   "damp": 0.45,
+   "breath": 0.022,
+   "breath_rate": 0.42,
+   "sway": 1.1,
+   "fidget": 5.5,
+   "dust": 0.7
+  },
+  "goblin_archer": {
+   "like": "goblin_spear",
+   "stride": 0.32,
+   "lean": 0.07
+  },
+  "goblin_rabble": {
+   "like": "goblin_spear",
+   "stride": 0.28,
+   "pace": 0.84,
+   "waddle": 0.06,
+   "jitter": 0.7,
+   "tempo": 0.26,
+   "fidget": 4.5
+  },
+  "goblin_horn": {
+   "like": "goblin_spear",
+   "stride": 0.32,
+   "jitter": 0.4
+  },
+  "goblin_shaman": {
+   "like": "goblin_spear",
+   "stride": 0.36,
+   "pace": 0.92,
+   "jitter": 0.3,
+   "lean": 0.09,
+   "fidget": 6.5
+  },
+  "orc_warrior": {
+   "stride": 0.5,
+   "pace": 1.04,
+   "bounce": 2.8,
+   "waddle": 0.04,
+   "squash": 0.045,
+   "surge": 2.8,
+   "lean": 0.045,
+   "stomp": 0.6,
+   "dust": 1.2
+  },
+  "orc_brute": {
+   "stride": 0.62,
+   "pace": 1.16,
+   "bounce": 3.2,
+   "waddle": 0.05,
+   "squash": 0.065,
+   "stretch": 0.025,
+   "surge": 3.6,
+   "lean": 0.05,
+   "kick": 0.09,
+   "stomp": 0.9,
+   "spring": 330.0,
+   "damp": 0.58,
+   "breath": 0.02,
+   "breath_rate": 0.22,
+   "sway": 1.2,
+   "bend": 0.008,
+   "dust": 1.5
+  },
+  "orc_warlord": {
+   "like": "orc_brute",
+   "stride": 0.6,
+   "pace": 1.12,
+   "waddle": 0.04,
+   "stomp": 0.8
+  },
+  "troll": {
+   "stride": 0.78,
+   "pace": 1.28,
+   "bounce": 4.6,
+   "waddle": 0.06,
+   "squash": 0.07,
+   "stretch": 0.03,
+   "surge": 5.0,
+   "lean": 0.05,
+   "kick": 0.08,
+   "stomp": 1.4,
+   "spring": 260.0,
+   "damp": 0.62,
+   "breath": 0.022,
+   "breath_rate": 0.18,
+   "sway": 2.0,
+   "bend": 0.008,
+   "fidget": 8.0,
+   "dust": 2.4
+  },
+  "wolf_rider": {
+   "stride": 0.3,
+   "pace": 0.72,
+   "bounce": 3.4,
+   "waddle": 0.02,
+   "squash": 0.03,
+   "surge": 3.0,
+   "lean": 0.04,
+   "jitter": 0.2,
+   "stomp": 0.3,
+   "spring": 500.0,
+   "breath": 0.018,
+   "breath_rate": 0.5,
+   "sway": 1.4,
+   "fidget": 6.0,
+   "dust": 1.3,
+   "damp": 0.5,
+   "rig": 0.0
+  },
+  "margrave_rider": {
+   "like": "wolf_rider",
+   "stride": 0.36,
+   "rig": 0.0
+  }
+ }
+}

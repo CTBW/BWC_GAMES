@@ -18,7 +18,7 @@ Kits:
 - **Earlier handoffs:**
   - `inbox/handoffs/2026-10-24-meridius-add-combat-skills-committed-4c8d0d1a.md`: committed and force-added, since `inbox/*` is gitignored. Read it first.
   - Older, untracked: `inbox/handoffs/2026-10-24-meridius-add-combat-skills-continued-63018e7b.md`, `inbox/handoffs/2026-10-23-meridius-add-combat-skills-9e489a85.md`.
-- **This chat's transcript:** `C:\Users\calle\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
+- **This chat's transcript:** `%USERPROFILE%\.claude\projects\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c.jsonl` (session bwc-games-godot-8e).
 
 ## Current state
 - **Commits:**
@@ -55,7 +55,7 @@ Paths are relative to `projects/meridius/source/godot` unless marked.
   - `projects/meridius/docs/squad-skills.md` (repo-relative)
   - `inbox/handoffs/2026-10-24-meridius-add-combat-skills-committed-4c8d0d1a.md` (repo-relative)
 - **Uncommitted:** `scripts/render/battle_view.gd` (the Howl branch only).
-- **Scratchpad:** `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
+- **Scratchpad:** `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\4c8d0d1a-70a7-4e4c-a22e-95b16220332c\scratchpad\` holds:
   - `pick_hunks.py`
   - the `skills_*.diff` files
   - `wt_full_test.txt`
@@ -91,8 +91,8 @@ Paths are relative to `projects/meridius/source/godot` unless marked.
 ## Other notes
 - Session bwc-games-godot-c6 broadcasts about the footman 3D rig. Ignore them and don't touch `art/footman_3d/` or `prototypes/footman_anim/`.
 - Older scratchpads:
-  - `C:\Users\calle\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\7891c9ab-6aeb-4e1f-b744-74b89d60f6b9\scratchpad\` (icon sheet, Howl drafts)
-  - `C:\Users\calle\AppData\Local\Temp\claude\D--ProjektM-BWC-GAMES-godot\d379d718-21fd-4cfc-b9d9-cf230a9e35de\scratchpad\` (balance tools)
+  - `%USERPROFILE%\AppData\Local\Temp\claude\E--ProjektM-BWC-GAMES-godot\7891c9ab-6aeb-4e1f-b744-74b89d60f6b9\scratchpad\` (icon sheet, Howl drafts)
+  - `%USERPROFILE%\AppData\Local\Temp\claude\D--ProjektM-BWC-GAMES-godot\d379d718-21fd-4cfc-b9d9-cf230a9e35de\scratchpad\` (balance tools)
 
 ---
 From the Claude Code chat continuing "Meridius - Add combat skills" in E:\ProjektM\BWC_GAMES-godot, 2026-10-24.

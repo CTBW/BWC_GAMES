@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Unit roster · Hillsvain Host</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .roster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .unit { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 16px; padding: 14px; margin: 0;
+            border: 1px solid var(--mak-border); --tint: color-mix(in srgb, var(--mak-text) 7%, transparent); }
+    .unit-art { margin: 0; height: 148px; display: flex; align-items: flex-end; justify-content: center;
+                padding: 8px; border-radius: 9px; background: var(--tint); }
+    .unit-art img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
+    html[data-mak-report] .unit h3 { margin: 0 0 2px; font-size: 16px; line-height: 1.4; }
+    .unit .role { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+                  color: var(--mak-accent); margin: 0 0 6px; }
+    .unit p { margin: 0 0 8px; font-size: 13px; line-height: 1.6; }
+    .unit .facts { color: var(--mak-muted); font-size: 12px; margin-bottom: 8px; }
+    .unit .skills { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+    .unit .skills span { font-size: 11px; line-height: 1.5; padding: 2px 8px; border-radius: 999px;
+                         background: var(--tint); border: 1px solid var(--mak-border); cursor: help; }
+    .unit .skills .promo { border-style: dashed; }
+    .roster-foot { margin-top: 40px; font-size: 12px; color: var(--mak-muted); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <p class="eyebrow">Meridius · Unit roster</p>
+    <h1>Hillsvain Host</h1>
+    <p class="lead">The 12 enemy units of the Hillsvain Host. Goblins make up the bulk of every wave, orcs and trolls break the line, and two crude war engines appear in their own encounter.</p>
+    <p class="meta">Images are the in-game battle frames (front idle, first soldier of the squad). Descriptions and
+      numbers come from the game data as of 24 October 2026. Stats are per soldier at level 1; hover an ability for its rules.</p>
+    <h2>Goblins</h2>
+    <div class="roster-grid">
+      <article class="card unit" id="goblin_rabble">
+        <figure class="unit-art"><img src="unit-roster/img/goblin_rabble.png" alt="Lean goblin in a loincloth with a knife and a battered wooden shield" width="160" height="193" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Rabble</h3>
+          <span class="role">Swarm</span>
+          <p>Nine half-starved goblins with knives and hatchets, driven ahead of the host. Weak alone, deadly in a pack: they pour into every gap and swarm round the flanks.</p>
+          <p class="facts">Squad of 9 · 9 HP each · Move 5 · Armour 0 · Melee 3–5</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="goblin_spear">
+        <figure class="unit-art"><img src="unit-roster/img/goblin_spear.png" alt="Green goblin in a spiked helmet and leather straps holding a spear" width="161" height="185" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Spearman</h3>
+          <span class="role">Skirmisher</span>
+          <p>Quick, cruel and cowardly. Dangerous in packs, quick to break when the pack thins.</p>
+          <p class="facts">Squad of 6 · 15 HP each · Move 5 · Armour 0 · Melee 4–7</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="goblin_archer">
+        <figure class="unit-art"><img src="unit-roster/img/goblin_archer.png" alt="Hooded goblin archer with a longbow and a quiver" width="132" height="201" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Archer</h3>
+          <span class="role">Archer</span>
+          <p>Hooded archers who loose from the treeline and scatter when pressed.</p>
+          <p class="facts">Squad of 6 · 13 HP each · Move 5 · Armour 0 · Shot 4–7 at 2–7 tiles</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="wolf_rider">
+        <figure class="unit-art"><img src="unit-roster/img/wolf_rider.png" alt="Hooded goblin with a spear riding a snarling grey wolf" width="199" height="206" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Wolf Rider</h3>
+          <span class="role">Raider</span>
+          <p>Goblins on great grey wolves, faster than any soldier on foot. They circle a line to fall on crossbowmen and exposed flanks, and wheel away before a blow can answer. Set spears stop them.</p>
+          <p class="facts">Squad of 4 · 24 HP each · Move 7 · Armour 1 · Melee 6–9</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="goblin_horn">
+        <figure class="unit-art"><img src="unit-roster/img/goblin_horn.png" alt="Goblin blowing a long curved war horn, with a red banner on its back" width="161" height="208" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Horn-bearer</h3>
+          <span class="role">Herald</span>
+          <p>A goblin with a great war horn and a few spears to guard it. If he lives long enough to sound it, more of the horde will answer. Kill him first.</p>
+          <p class="facts">Squad of 4 with escort · 13 HP each · Move 5 · Armour 0 · Melee 3–6</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="goblin_shaman">
+        <figure class="unit-art"><img src="unit-roster/img/goblin_shaman.png" alt="Goblin shaman wearing antlers, holding a staff topped with a horned skull" width="149" height="200" loading="lazy"></figure>
+        <div>
+          <h3>Goblin Shaman</h3>
+          <span class="role">Hexer</span>
+          <p>Bone-hung witch-doctors of the host, three to a fire. They hurl fireballs into packed ranks, careless of their own, whip the horde into a killing frenzy and tear at a squad&#x27;s insides with the gutripper hex.</p>
+          <p class="facts">Squad of 3 · 16 HP each · Move 5 · Armour 0 · Shot 3–5 at 2–5 tiles</p>
+          
+          <p class="skills"><span title="A ball of fire hurled at a tile within 6 tiles: 7–10 per shaman to the squad there and half to every squad beside it, friend or foe. A miss bursts one tile astray.">Fireball</span><span title="Drive a friendly squad within 4 tiles into a killing frenzy until the end of its next turn: +10 to hit and +3 damage per soldier in melee, morale losses halved, but −8 defense.">Bloodlust</span><span title="A hex that tears at the insides of an enemy squad within 5 tiles: 5–7 per shaman, ignoring armour, and the squad bleeds for 40% of that again at the start of each of its next two turns.">Gutripper</span></p>
+        </div>
+      </article>
+    </div>
+    <h2>Orcs and trolls</h2>
+    <div class="roster-grid">
+      <article class="card unit" id="orc_warrior">
+        <figure class="unit-art"><img src="unit-roster/img/orc_warrior.png" alt="Orc warrior in a crested helmet with a cleaver and a round red shield" width="157" height="202" loading="lazy"></figure>
+        <div>
+          <h3>Orc Warrior</h3>
+          <span class="role">Brute</span>
+          <p>Iron-shod and fearless. Charges straight at the line and cleaves through it.</p>
+          <p class="facts">Squad of 6 · 38 HP each · Move 4 · Armour 3 · Melee 8–12</p>
+          
+          <p class="skills"><span title="Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.">Brutal Charge</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="orc_brute">
+        <figure class="unit-art"><img src="unit-roster/img/orc_brute.png" alt="Orc with a red crest, spiked pauldrons and a spiked club" width="166" height="209" loading="lazy"></figure>
+        <div>
+          <h3>Orc Brute</h3>
+          <span class="role">Shock troops</span>
+          <p>Savage orcs with spiked war-clubs and no shields. Every blow that lands smashes a squad back out of the line, and the brutes force their way into the gap.</p>
+          <p class="facts">Squad of 6 · 40 HP each · Move 4 · Armour 2 · Melee 9–14</p>
+          
+          <p class="skills"><span title="Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.">Brutal Charge</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="orc_warlord">
+        <figure class="unit-art"><img src="unit-roster/img/orc_warlord.png" alt="Orc warlord in red armour with a horned helm, a great axe and twin banners" width="163" height="217" loading="lazy"></figure>
+        <div>
+          <h3>Orc Warlord</h3>
+          <span class="role">Warband leader</span>
+          <p>The will behind the raids. His war cry steadies the goblins; his fall shatters them.</p>
+          <p class="facts">Squad of 6 with escort · 46 HP each · Move 4 · Armour 3 · Melee 8–12</p>
+          
+          <p class="skills"><span title="Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.">Brutal Charge</span><span title="Allies within 4 tiles gain 20 morale; enemies within 4 tiles lose 8.">War Cry</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="troll">
+        <figure class="unit-art"><img src="unit-roster/img/troll.png" alt="Hunched pale troll with a mossy log over one shoulder and green swirling markings" width="223" height="302" loading="lazy"></figure>
+        <div>
+          <h3>Moss Troll</h3>
+          <span class="role">Monster</span>
+          <p>Ancient trolls grown over with moss and fungus, swinging uprooted logs. Their wounds close as you watch, but a fallen troll does not get up again.</p>
+          <p class="facts">Squad of 3 · 66 HP each · Move 4 · Armour 2 · Melee 14–20</p>
+          
+          
+        </div>
+      </article>
+    </div>
+    <h2>War engines</h2>
+    <div class="roster-grid">
+      <article class="card unit" id="rock_lobber">
+        <figure class="unit-art"><img src="unit-roster/img/rock_lobber.png" alt="Crude timber catapult hung with skulls, with a sack of stones and a red flag" width="214" height="188" loading="lazy"></figure>
+        <div>
+          <h3>Rock Lobber</h3>
+          <span class="role">War machine</span>
+          <p>A crooked goblin catapult lashed together from stolen timber. It lobs boulders into the enemy ranks and anyone near them, its own kind included, and as often as not lands them a tile off. It cannot loose in a turn it has moved.</p>
+          <p class="facts">1 machine, crew of 3 · 15 HP each · Move 3 · Armour 1</p>
+          
+          <p class="skills"><span title="Lob a boulder at a tile 3–8 tiles away: 11–16 per crewman there and half beside it, friend or foe. Often lands a tile astray. Not in a turn it has moved.">Lob Rock</span></p>
+        </div>
+      </article>
+      <article class="card unit" id="war_wagon">
+        <figure class="unit-art"><img src="unit-roster/img/war_wagon.png" alt="Wooden cart bristling with iron spikes and skulls, flying red flags" width="198" height="201" loading="lazy"></figure>
+        <div>
+          <h3>Spiked War Wagon</h3>
+          <span class="role">War machine</span>
+          <p>A heavy cart bristling with iron spikes, shoved at a run by its goblin crew. It rams into the line, smashes a squad back out of it and rolls into the gap. Set spears still hurt it.</p>
+          <p class="facts">1 machine, crew of 3 · 38 HP each · Move 5 · Armour 5 · Melee 12–17</p>
+          
+          <p class="skills"><span title="Passive. After moving 2+ tiles, melee attacks deal +3 damage and cost the target 8 more morale.">Brutal Charge</span></p>
+        </div>
+      </article>
+    </div>
+    <p class="roster-foot">Source: <code>projects/meridius/source/godot/data/units.json</code>, <code>abilities.json</code> and
+      <code>assets/sprites/anim/</code>. The succubus and wolf scout rigs under Character rigs are prototypes without a
+      unit entry, so they are not listed. Rebuild with <code>python workspace/2026-10-20_meridius/unit-roster/build.py</code>.</p>
+  </main>
+</body>
+</html>

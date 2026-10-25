@@ -12,14 +12,18 @@ the rig for the game's facings turns the spear too. Three ways of holding it:
          so the fist's grip axis stands upright (leaning a little forward and out) and the
          spear runs along it, the butt above knee height so the striding thigh never meets
          it; the right arm's keys in the clip are replaced;
-  shoulder  the sidestep into lane (the clip turns his body ~70 degrees right): the shaft rests
-         against the front of his right shoulder, leaning back from his chest, the fist just
-         below at his collarbone and the elbow back by his ribs; the wrist bends a little
-         (11-15 degrees) so the shaft keeps its lean; his head looks straight ahead throughout;
+  shoulder  the sidestep into lane (the clip turns his hips and chest ~70 degrees right): the
+         spine turns his chest back by SPINE_UNTWIST of that, and the neck and the head's joint
+         share the rest, so his head looks straight ahead throughout; the shaft rests against
+         the front of his right shoulder, leaning back mostly from the way he walks (the hips;
+         "travel"), the fist just below at his collarbone and the elbow back by his ribs; the
+         wrist bends a little (up to ~11 degrees) so the shaft keeps its lean;
   turn   the turn: both hands on the shaft as in the guard (the arms take the guard's pose
          on the turning body), the spear lowered a little (TURN_LOWER, eased in and out) with
          the front arm re-solved so its fist stays on the shaft;
-  rigid  fixed in the right fist as it is held in the idle's first frame (hit);
+  rigid  fixed in the right fist as it is held in the idle's first frame (hit); where the
+         flinch would swing the shaft through him, his wrist bends it clear (wrist_clear:
+         edits the right hand's keys in place, so retarget the clip again before a re-run);
   drop   deaths: rigid until his hips start to sink, then he lets go and the spear falls
          flat onto the ground (accelerating, like a dropped rod), landing below his hands.
 """
@@ -30,6 +34,7 @@ import sys
 
 import bpy
 from mathutils import Matrix, Quaternion, Vector
+from mathutils.bvhtree import BVHTree
 
 GRIP = 0.14            # m from the butt to the rear fist in two-handed holds: at the butt cap, for reach
                        # (at full lunge the right arm lies along the shaft's line, so more shaft behind
@@ -43,9 +48,18 @@ CARRY_CFG.update(json.loads(os.environ.get("SPEAR_CARRY", "{}")))
 # Sidestep into lane: the spear leans back onto the right shoulder ("fwd" negative = back).
 # "contact": where the shaft touches the front of the shoulder (rest pose), "len": metres down
 # the shaft from there to the fist, "pole": which way the elbow points (rest pose).
+# "travel": how much "back" is measured from his hips (the way he walks) rather than his chest.
+# With the spine untwisted his chest faces ~35 degrees further left than his hips; leaning
+# back from the chest alone stood the spear upright in the SE view, against the owner's
+# 2026-10-23 arrows (tip to the right); 0.75 keeps that lean, and 1.0 ran the shaft over his face.
 SHOULDER_CFG = {"contact": [-0.20, -0.11, 1.55], "len": 0.16, "fwd": -22.0, "out": 3.0, "butt_z": 0.85,
-                "pole": [-0.3, 0.6, -1.0]}
+                "pole": [-0.3, 0.6, -1.0], "travel": 0.75}
 SHOULDER_CFG.update(json.loads(os.environ.get("SPEAR_SHOULDER", "{}")))
+# Share of the chest's turn the spine turns back in the sidestep, spread over its three bones
+# (twisting each about its own length). With the head held straight ahead, the source clip's
+# untwisted spine left the whole 64-79 degrees to the neck.
+SPINE_UNTWIST = float(os.environ.get("SPINE_UNTWIST", "0.5"))
+SPINE_SHARES = (("Spine", 0.3), ("Spine1", 0.35), ("Spine2", 0.35))
 CARRY_POLE = Vector((-0.5, 1.0, -0.25))  # rest-pose world direction: the elbow points back, out and a little down
 TURN_LOWER = 16.0      # degrees the spear dips during the turn
 TURN_EASE = 6          # frames to ease the dip in and out
@@ -54,6 +68,19 @@ MODES = {"idle": "two", "attack": "two",
          "hit": os.environ.get("SPEAR_HIT_MODE", "rigid"), "death": "drop", "death_2": "drop", "death_3": "drop", "turn_90": "turn"}
 SHAFT_R = 0.02
 DROP_FRAMES = 14       # 0.47 s from letting go to lying on the ground
+# Hit: the rigid spear swung through his belly and his left forearm in 10 of 61 frames as he
+# flinched. The wrist bends it clear instead, about one axis in the hand's X-Z plane per
+# stretch of such frames (12 directions tried), so that in every frame neither the shaft's
+# axis nor four lines CLEAR_R off it cross the body outside the fists. The bend per frame is
+# the cheapest path in 2-degree steps (least bend, least change from frame to frame, at most
+# CLEAR_STEP per frame) from a straight wrist CLEAR_PAD frames before the stretch back to a
+# straight wrist CLEAR_PAD frames after it. One fixed bend for the whole stretch pushed the
+# shaft into his left arm in frames that were clear before.
+CLEAR_R = SHAFT_R + 0.005
+CLEAR_MAX = 30         # degrees the wrist may bend for it
+CLEAR_STEP = 6         # degrees per frame at most
+CLEAR_PAD = 8          # frames
+SPEAR_L, STEP = 2.40, 0.04   # the walk along the shaft, as in spear_clearance.py
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 only = argv[0].split(",") if argv and argv[0] else None
@@ -106,15 +133,29 @@ def two_handed():
     return M
 
 
+def clear_unkeyed(pb):
+    """No clip keys scale, nor location below the hips. Assigning pb.matrix leaves float noise
+    there (scale up to 1.0001 on the right arm), saved in the file and shared by every clip; the
+    cape sim amplified it into different bakes from the same keys."""
+    pb.scale = (1, 1, 1)
+    if pb.name != "mixamorig:Hips":
+        pb.location = (0, 0, 0)
+
+
+def set_matrix(pb, M):
+    pb.matrix = M
+    clear_unkeyed(pb)
+    bpy.context.view_layer.update()
+
+
 def set_bone_dir(pb, target_dir):
     """Turn a pose bone (armature space) so its Y axis points along target_dir, with the least twist."""
     M = pb.matrix.copy()
     cur = (M.to_3x3() @ Vector((0, 1, 0))).normalized()
     q = cur.rotation_difference(target_dir.normalized())
-    R = (q.to_matrix() @ M.to_3x3()).to_4x4()
+    R = (q.to_matrix() @ M.to_3x3().normalized()).to_4x4()
     R.translation = M.translation
-    pb.matrix = R
-    bpy.context.view_layer.update()
+    set_matrix(pb, R)
 
 
 def solve_arm(side, T, pole, grip=None, palm=None, bend=False):
@@ -152,8 +193,7 @@ def solve_arm(side, T, pole, grip=None, palm=None, bend=False):
         z = x.cross(y)
         Mh = Matrix((x, y, z)).transposed().to_4x4()
         Mh.translation = hand.matrix.translation
-        hand.matrix = Mh
-        bpy.context.view_layer.update()
+        set_matrix(hand, Mh)
     for pb in (arm, fore, hand):
         pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
 
@@ -178,8 +218,11 @@ def shoulder_ik(cfg):
     the elbow back by his ribs; the wrist bends a little so the shaft keeps its lean, and the
     fist's middle lies towards his chest (thumb up)."""
     chest = PB["mixamorig:Spine2"].matrix
-    fwd = chest.to_3x3() @ Vector((0, 0, 1))      # back from his chest: the sidestep turns him ~70 degrees right
+    fwd = chest.to_3x3() @ Vector((0, 0, 1))      # back from his chest ...
     fwd.z = 0
+    hips = PB["mixamorig:Hips"].matrix.to_3x3() @ Vector((0, 0, 1))
+    hips.z = 0
+    fwd = fwd.normalized().lerp(hips.normalized(), cfg["travel"])   # ... or from his hips, the way he walks
     g = lean_dir(cfg, fwd.normalized())
     P = chest @ (B["mixamorig:Spine2"].matrix_local.inverted() @ Vector(cfg["contact"]))
     F = P - g * cfg["len"]
@@ -194,8 +237,40 @@ def shoulder_ik(cfg):
     return math.degrees(fy.angle(hy))                 # how far the wrist bends sideways
 
 
+def ground_yaw(name):
+    """How far a bone's forward (its Z axis) is turned on the ground from its rest, in radians,
+    + = to his left."""
+    cur = PB[name].matrix.to_3x3() @ Vector((0, 0, 1))
+    rest = B[name].matrix_local.to_3x3() @ Vector((0, 0, 1))
+    a = math.atan2(cur.y, cur.x) - math.atan2(rest.y, rest.x)
+    return (a + math.pi) % (2 * math.pi) - math.pi
+
+
+def twist_to(bones, target):
+    """Twist bones about their own length (Y runs up the spine), each by its share, until the
+    last one's ground yaw is target (radians); the twist about a leaning bone turns it a
+    little more or less on the ground, hence the few rounds."""
+    last = "mixamorig:" + bones[-1][0]
+    for _ in range(3):
+        d = target - ground_yaw(last)
+        for name, w in bones:
+            pb = PB["mixamorig:" + name]
+            pb.rotation_quaternion = pb.rotation_quaternion @ Quaternion((0, 1, 0), d * w)
+        bpy.context.view_layer.update()
+    for name, _ in bones:
+        PB["mixamorig:" + name].keyframe_insert("rotation_quaternion", frame=sc.frame_current)
+
+
+def untwist_spine(share):
+    """Turn his chest back towards his facing by share of its turn, over the spine bones."""
+    twist_to(SPINE_SHARES, (1 - share) * ground_yaw("mixamorig:Spine2"))
+    return math.degrees(ground_yaw("mixamorig:Spine2"))
+
+
 def head_forward():
-    """Neck halfway and head fully back to their rest orientation: looking straight ahead, level."""
+    """Head fully back to its rest orientation: looking straight ahead, level. The neck goes
+    halfway there, then turns to halfway between his chest and his head, so the two joints
+    share the twist."""
     for name, k in (("Neck", 0.5), ("Head", 1.0)):
         pb = PB["mixamorig:" + name]
         cur = pb.matrix.to_quaternion()
@@ -203,9 +278,11 @@ def head_forward():
         rest.make_compatible(cur)
         M = cur.slerp(rest, k).to_matrix().to_4x4()
         M.translation = pb.matrix.translation
-        pb.matrix = M
-        bpy.context.view_layer.update()
-        pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
+        set_matrix(pb, M)
+        if name == "Neck":
+            twist_to((("Neck", 1.0),), 0.5 * ground_yaw("mixamorig:Spine2"))
+        else:
+            pb.keyframe_insert("rotation_quaternion", frame=sc.frame_current)
 
 
 ARM_BONES = [f"mixamorig:{s}{b}" for s in ("Left", "Right") for b in ("Shoulder", "Arm", "ForeArm", "Hand")]
@@ -255,6 +332,100 @@ def frames_of(act):
     return list(range(f0, f1 + 1))
 
 
+def body_bvh():
+    ev = bpy.data.objects["Spearman"].evaluated_get(bpy.context.evaluated_depsgraph_get())
+    me = ev.to_mesh()
+    bvh = BVHTree.FromPolygons([v.co.copy() for v in me.vertices], [tuple(p.vertices) for p in me.polygons])
+    ev.to_mesh_clear()
+    return bvh
+
+
+def crosses(bvh, M, fists):
+    """Does the spear at M cross the body anywhere more than 10 cm from the fists? Walks its
+    axis and four lines CLEAR_R off it in STEP pieces, ray-casting each piece."""
+    for ox, oy in ((0, 0), (CLEAR_R, 0), (-CLEAR_R, 0), (0, CLEAR_R), (0, -CLEAR_R)):
+        p0 = M @ Vector((ox, oy, 0.0))
+        for i in range(1, int(round(SPEAR_L / STEP)) + 1):
+            p1 = M @ Vector((ox, oy, i * STEP))
+            d = p1 - p0
+            loc = bvh.ray_cast(p0, d.normalized(), d.length)[0]
+            if loc is not None and min((loc - h).length for h in fists) > 0.10:
+                return True
+            p0 = p1
+    return False
+
+
+def wrist_clear(act, frames):
+    """Bend the right wrist where the rigid spear would cross his body (see CLEAR_R). Returns
+    [(first frame, last frame, direction degrees, largest bend degrees)] per stretch, the
+    direction None where no bend up to CLEAR_MAX clears it (left straight)."""
+    assert "wrist_clear" not in act, f"{act.name}: wrist already bent; run retarget_clips.py on it first"
+    hand = PB["mixamorig:RightHand"]
+    dirs = [Vector((math.cos(a), 0, math.sin(a))) for a in (math.radians(30 * k) for k in range(12))]
+    angles = list(range(0, CLEAR_MAX + 1, 2))
+    step = CLEAR_STEP // 2
+
+    def tester(f):
+        sc.frame_set(f)
+        bvh, H, left = body_bvh(), hand.matrix.copy(), fist("Left")
+        return lambda R: not crosses(bvh, H @ R @ REL, [H @ R @ fist_off["Right"], left])
+
+    bad = [f for f in frames if not tester(f)(Matrix.Identity(4))]
+    groups = []
+    for f in bad:
+        if groups and f - groups[-1][-1] <= 2 * CLEAR_PAD:
+            groups[-1].append(f)
+        else:
+            groups.append([f])
+    # States: the straight wrist, and each bend angle in each direction, as a 2D bend vector.
+    states = [(0, 0)] + [(k, a) for k in range(len(dirs)) for a in angles[1:]]
+    vec = [Vector((math.cos(math.radians(30 * k)), math.sin(math.radians(30 * k)))) * a for k, a in states]
+    near = [[(j, (vec[i] - vec[j]).length_squared) for j in range(len(states))
+             if (vec[i] - vec[j]).length <= CLEAR_STEP + 1e-6] for i in range(len(states))]
+    rot = [Matrix.Rotation(math.radians(a), 4, dirs[k]) for k, a in states]
+    out = []
+    for g in groups:
+        span = [f for f in frames if g[0] - CLEAR_PAD <= f <= g[-1] + CLEAR_PAD]
+        ok = {}
+        for f in span:
+            clear = tester(f)
+            ok[f] = [clear(R) for R in rot]
+        cost = [0.0] + [math.inf] * (len(states) - 1)           # straight wrist before the span
+        back = []
+        for f in span:
+            cur, arg = [math.inf] * len(states), [0] * len(states)
+            for i in range(len(states)):
+                if ok[f][i]:
+                    for j, d2 in near[i]:
+                        c = cost[j] + d2 + 0.2 * vec[i].length_squared
+                        if c < cur[i]:
+                            cur[i], arg[i] = c, j
+            back.append(arg)
+            cost = cur
+        end = min((i for i in range(len(states)) if vec[i].length <= CLEAR_STEP + 1e-6),
+                  key=lambda i: cost[i] + vec[i].length_squared)  # and straight again after it
+        if cost[end] == math.inf:
+            out.append((g[0], g[-1], [f for f in span if not any(ok[f])]))
+            continue
+        path, i = [], end
+        for arg in reversed(back):
+            path.append(i)
+            i = arg[i]
+        path.reverse()
+        for f, i in zip(span, path):
+            if i:
+                sc.frame_set(f)
+                k, a = states[i]
+                hand.rotation_quaternion = hand.rotation_quaternion @ Quaternion(dirs[k], math.radians(a))
+                hand.keyframe_insert("rotation_quaternion", frame=f)
+        out.append((g[0], g[-1], max(states[i][1] for i in path)))
+    act["wrist_clear"] = [str(o) for o in out]
+    return out
+
+
+for pb in PB:          # rigs saved before set_matrix kept that noise
+    clear_unkeyed(pb)
+
 # The rigid hold: the spear in the right fist as in the idle's first frame.
 rig.animation_data_create()
 rig.animation_data.action = bpy.data.actions["idle"]
@@ -275,12 +446,13 @@ for clip in clips:
     spear.animation_data_create()
     spear.animation_data.action = sact
     frames = frames_of(act)
-    fist_z, bend = [], []
+    fist_z, bend, chest_yaw = [], [], []
     if mode in ("carry", "shoulder"):
         cfg = CARRY_CFG if mode == "carry" else SHOULDER_CFG
         for f in frames:
             sc.frame_set(f)
             if mode == "shoulder":
+                chest_yaw.append(untwist_spine(SPINE_UNTWIST))
                 head_forward()
                 bend.append(shoulder_ik(cfg))
             else:
@@ -289,6 +461,7 @@ for clip in clips:
         grip_c = sum(fist_z) / len(fist_z) - cfg["butt_z"]
     if mode == "turn":
         turn_two_handed(act, frames)
+    wrist = wrist_clear(act, frames) if mode == "rigid" else None
     release = None
     if mode == "drop":
         sc.frame_set(frames[0])
@@ -381,9 +554,12 @@ for clip in clips:
     sact["mode"] = mode
     if release:
         sact["release_frame"] = release
-    print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "")
+    print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "",
+          "chest turned %.0f to %.0f deg" % (min(chest_yaw), max(chest_yaw)) if chest_yaw else "",
+          "wrist bent clear (first, last crossing frame, largest bend deg): %s" % wrist if wrist is not None else "")
 rig.animation_data.action = bpy.data.actions["idle"]
 spear.animation_data.action = bpy.data.actions["idle__spear"]
 sc.frame_set(1)
+assert all(tuple(pb.scale) == (1, 1, 1) and (pb.name == "mixamorig:Hips" or not any(pb.location)) for pb in PB)
 bpy.ops.wm.save_mainfile(compress=True)
 print("SPEAR_SAVED", bpy.data.filepath)

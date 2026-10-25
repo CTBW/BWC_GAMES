@@ -1,0 +1,61 @@
+{
+ "source": "art/squads/rock_lobber (Higgsfield sheet), built by tools/anim/squadgen.py",
+ "file": "res://assets/sprites/anim/rock_lobber.png",
+ "scale": 0.58711,
+ "soldiers": 1,
+ "facings": [
+  "f",
+  "b"
+ ],
+ "engine": true,
+ "frames": {
+  "idle_f": [
+   {
+    "region": [
+     177,
+     3,
+     214,
+     188
+    ],
+    "ax": 63.5,
+    "ay": 187.0
+   }
+  ],
+  "atk_f": [
+   {
+    "region": [
+     608,
+     3,
+     174,
+     156
+    ],
+    "ax": 52.0,
+    "ay": 155.0
+   }
+  ],
+  "idle_b": [
+   {
+    "region": [
+     394,
+     3,
+     211,
+     179
+    ],
+    "ax": 75.8,
+    "ay": 178.0
+   }
+  ],
+  "atk_b": [
+   {
+    "region": [
+     3,
+     3,
+     171,
+     211
+    ],
+    "ax": 56.9,
+    "ay": 210.0
+   }
+  ]
+ }
+}

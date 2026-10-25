@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Unit roster · Allies and crews</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .roster-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .unit { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 16px; padding: 14px; margin: 0;
+            border: 1px solid var(--mak-border); --tint: color-mix(in srgb, var(--mak-text) 7%, transparent); }
+    .unit-art { margin: 0; height: 148px; display: flex; align-items: flex-end; justify-content: center;
+                padding: 8px; border-radius: 9px; background: var(--tint); }
+    .unit-art img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
+    html[data-mak-report] .unit h3 { margin: 0 0 2px; font-size: 16px; line-height: 1.4; }
+    .unit .role { display: inline-block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+                  color: var(--mak-accent); margin: 0 0 6px; }
+    .unit p { margin: 0 0 8px; font-size: 13px; line-height: 1.6; }
+    .unit .facts { color: var(--mak-muted); font-size: 12px; margin-bottom: 8px; }
+    .unit .skills { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+    .unit .skills span { font-size: 11px; line-height: 1.5; padding: 2px 8px; border-radius: 999px;
+                         background: var(--tint); border: 1px solid var(--mak-border); cursor: help; }
+    .unit .skills .promo { border-style: dashed; }
+    .roster-foot { margin-top: 40px; font-size: 12px; color: var(--mak-muted); }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <p class="eyebrow">Meridius · Unit roster</p>
+    <h1>Allies and crews</h1>
+    <p class="lead">The 3 friendly figures that fight on the garrison&#x27;s side without being recruited: the local militia in two encounters, the engineers who crew the war machines and the Margrave&#x27;s riders who end the last stand at dawn.</p>
+    <p class="meta">Images are the in-game battle frames (front idle, first soldier of the squad). Descriptions and
+      numbers come from the game data as of 24 October 2026. Stats are per soldier at level 1; hover an ability for its rules.</p>
+    <div class="roster-grid">
+      <article class="card unit" id="militia">
+        <figure class="unit-art"><img src="unit-roster/img/militia.png" alt="Bald farmer in a brown tunic holding a pitchfork" width="135" height="197" loading="lazy"></figure>
+        <div>
+          <h3>Militiaman</h3>
+          <span class="role">Local levy</span>
+          <p>Farmers and woodcutters with spears and pitchforks, defending their own homes. Brave, untrained, and quick to break if the line around them gives.</p>
+          <p class="facts">Squad of 6 · 18 HP each · Move 4 · Armour 1 · Melee 5–8</p>
+          <p class="facts">Fights beside you in Cover the refugees and The last stand at Brannsted</p>
+          
+        </div>
+      </article>
+      <article class="card unit" id="engineer">
+        <figure class="unit-art"><img src="unit-roster/img/engineer.png" alt="Bearded engineer in a leather apron carrying a large mallet" width="149" height="193" loading="lazy"></figure>
+        <div>
+          <h3>Engineer</h3>
+          <span class="role">War machine crew</span>
+          <p>Garrison craftsmen in leather aprons who wheel, wind and loose the ballista and the mangonel. They come with the machine, three to a crew, and are no fighters.</p>
+          <p class="facts">Crew of the Ballista and Mangonel · Uses the machine&#x27;s stats</p>
+          
+          
+        </div>
+      </article>
+      <article class="card unit" id="margrave_rider">
+        <figure class="unit-art"><img src="unit-roster/img/margrave_rider.png" alt="Lancer in a steel helmet on a horse with a blue star caparison, lance raised with a pennant" width="174" height="228" loading="lazy"></figure>
+        <div>
+          <h3>Margrave&#x27;s Rider</h3>
+          <span class="role">Dawn relief</span>
+          <p>The Margrave&#x27;s lancers. If the last stand at Brannsted holds through the night, they crest the hill at sunrise and charge into the host. The player never commands them.</p>
+          <p class="facts">Rides in at dawn · Drawn only: no stats or rules</p>
+          
+          
+        </div>
+      </article>
+    </div>
+    <p class="roster-foot">Source: <code>projects/meridius/source/godot/data/units.json</code>, <code>abilities.json</code> and
+      <code>assets/sprites/anim/</code>. The succubus and wolf scout rigs under Character rigs are prototypes without a
+      unit entry, so they are not listed. Rebuild with <code>python workspace/2026-10-20_meridius/unit-roster/build.py</code>.</p>
+  </main>
+</body>
+</html>

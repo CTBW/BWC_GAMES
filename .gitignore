@@ -32,7 +32,30 @@ inbox/*
 **/jobs.json
 **/result.json
 **/upload.json
+**/receipts/
 **/*.blend1
+
+# Local-only material: licensed sounds, raw downloads, third-party references
+# and review captures stay off the public remote ("Where things live" in AGENTS.md)
+/local/*
+!/local/README.md
+projects/meridius/Animations/
+**/animation-sources/
+projects/meridius/references/style/*.png
+projects/meridius/review/**/*.png
+projects/meridius/review/**/*.jpg
+projects/meridius/review/**/*.jpeg
+projects/meridius/review/**/*.webp
+projects/meridius/review/**/*.gif
+projects/meridius/review/**/*.mp4
+# Approved paid generations go public as WebP copies; the full-size PNG
+# originals they were made from stay local.
+projects/meridius/references/characters/goblin_*/*.png
+!projects/meridius/references/characters/goblin_archer/source_crop.png
+!projects/meridius/references/characters/goblin_spear/source_crop.png
+!projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
+# Tripo downloads in the owner's Chrome save folder; tripo/<unit>/ holds the copies.
+projects/meridius/references/characters/FBX/
 
 # Editor and operating-system files
 .vscode/

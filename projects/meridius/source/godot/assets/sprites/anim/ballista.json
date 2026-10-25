@@ -1,0 +1,61 @@
+{
+ "source": "art/squads/ballista (Higgsfield sheet), built by tools/anim/squadgen.py",
+ "file": "res://assets/sprites/anim/ballista.png",
+ "scale": 0.53985,
+ "soldiers": 1,
+ "facings": [
+  "f",
+  "b"
+ ],
+ "engine": true,
+ "frames": {
+  "idle_f": [
+   {
+    "region": [
+     699,
+     3,
+     230,
+     152
+    ],
+    "ax": 156.1,
+    "ay": 151.0
+   }
+  ],
+  "atk_f": [
+   {
+    "region": [
+     451,
+     3,
+     245,
+     154
+    ],
+    "ax": 173.0,
+    "ay": 153.0
+   }
+  ],
+  "idle_b": [
+   {
+    "region": [
+     3,
+     3,
+     219,
+     220
+    ],
+    "ax": 92.3,
+    "ay": 219.0
+   }
+  ],
+  "atk_b": [
+   {
+    "region": [
+     225,
+     3,
+     223,
+     205
+    ],
+    "ax": 92.9,
+    "ay": 204.0
+   }
+  ]
+ }
+}

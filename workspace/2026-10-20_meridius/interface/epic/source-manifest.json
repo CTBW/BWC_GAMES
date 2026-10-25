@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-23",
+  "branch": "godot-migration",
+  "state": "uncommitted working tree; existing unrelated work retained",
+  "referenceRole": "Higgsfield gallery and local Meridius battlefield/Footmen style references",
+  "generation": "Three built-in ImageGen outputs; no Higgsfield submissions; original RGBA PNGs preserved",
+  "runtime": "Fixed-size corner slices; live Godot text and controls; compact procedural fallback",
+  "files": [
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/styles/painted_frames.gd",
+      "bytes": 2184,
+      "sha256": "01f4ff9d8ff18812b7c08898afe114e8a9f72c5219f74b2c37860aebcf9d2dfb"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/styles/forged_style.gd",
+      "bytes": 4834,
+      "sha256": "27f45104fc0059a8c98276bd8e3b6b6dbe99f1381a181bcbedebdbd105004466"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/theme_builder.gd",
+      "bytes": 33535,
+      "sha256": "d91ca97f47a541bef850fbf09cab978be255ff38d2ddee15ee6653f706d62776"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/ui.gd",
+      "bytes": 13776,
+      "sha256": "26a7966ab9439577d218c49c7021045640817f43a88fd0697e2adada05c9f63c"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/widgets/title_regalia.gd",
+      "bytes": 1192,
+      "sha256": "36cbc15fdbeccd8edd6f9ab2adacfa79ea1863bba0b29aa15669c1ba8cfeb548"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/screens/title_screen.gd",
+      "bytes": 5185,
+      "sha256": "2d17b8048cef790d51ebcc47895e5c0d035d5a43c62b30681a335a2455d78f3c"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/screens/prep_screen.gd",
+      "bytes": 17171,
+      "sha256": "cc457c95e8bd52e1c10fd0c8466ee246932d0ee80b164df2696f7922b76ebc52"
+    },
+    {
+      "path": "projects/meridius/source/godot/scripts/ui/battle_hud.gd",
+      "bytes": 27693,
+      "sha256": "1ca50e6ddc354d9a04d77ac58cccbe08fd18f070f50a8ae93bae6768a4fea34e"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/theme.tres",
+      "bytes": 191872,
+      "sha256": "0b8e3cb7c5e45d7f6f676a3e80cbe4d5ec4ca65688ef82bbdcdbb5b46e956a18"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/theme_dark.tres",
+      "bytes": 20192,
+      "sha256": "a9ee133cef59a24f47bd55fc2e0a17a6dadcfca269d3154de23de442d6761c38"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/council-frame.png",
+      "bytes": 1718845,
+      "sha256": "542096645a93a1f6f71e3345ec036264690c44b38b5f7702bbc2dbdf99099c65"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/company-banner.png",
+      "bytes": 1428306,
+      "sha256": "ef013869e7f482cd4bd260712019c9a7edb9ad5b183f5cd43fe41601afc0a87a"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/command-panel.png",
+      "bytes": 2340071,
+      "sha256": "5c1d139aeda132c11aedef58949aa27dbe9e3edd82c5efc4165c7a0b4d9fe6fb"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/council-frame.png.import",
+      "bytes": 958,
+      "sha256": "8794f6a28af1131e2cca9ef34006b4cb135f6ce2af6b1893ae82f13c826fb6cd"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/company-banner.png.import",
+      "bytes": 961,
+      "sha256": "3b2f7995af8b3ecef0055003cc1ddc152b20db02b05ea98fa4b796734524f5a0"
+    },
+    {
+      "path": "projects/meridius/source/godot/assets/ui/epic/command-panel.png.import",
+      "bytes": 957,
+      "sha256": "2abb320225a189545956bcc2dfa188989336ebe2d36eeee549ea3a2f07628b18"
+    },
+    {
+      "path": "projects/meridius/source/godot/tests/visual/ui_art_review.gd",
+      "bytes": 3270,
+      "sha256": "96e625832ebd0a30ecf4212c0201b09573d4fe8a74da46b66297da3d9456e3fd"
+    },
+    {
+      "path": "projects/meridius/source/godot/tests/visual/playthrough.gd",
+      "bytes": 66674,
+      "sha256": "4d19a4f8aa58686da1c4c4943e9c365fcd33f64e818c978557c4b5cf66029d98"
+    }
+  ]
+}

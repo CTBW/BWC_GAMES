@@ -115,6 +115,11 @@ claude mcp remove higgsfield -s local
   fails with `stdin isn't a terminal`.
 - A chat loads its MCP servers when it starts. A server added during a chat
   appears only in chats started afterwards, launched from this folder.
+- Local scope is keyed by the checkout's path. After the repository moved from
+  `D:\ProjektM\BWC_GAMES-godot` to `E:\` (24 October 2026) the server was
+  missing until it was added again from the new root with the same command;
+  the earlier sign-in still applied (`claude mcp get higgsfield` showed
+  Connected at once).
 - About 150 tools, including `balance`, `models_explore`, `generate_image`,
   `generate_3d`, `jobs_wait`, `animation_actions`, `remove_background` and
   `cancel_trial_auto_renewal`. Read-only calls verified: `balance` (Plus, 110
@@ -238,3 +243,25 @@ re-rolls); jobs under `anim_keyframes` in the receipt. What we learned:
 - Map frames to the idle palette with `anim.py palette`, which repeats
   `assemble`'s median cut, and PIL `quantize(palette=…)`. Nearest-colour
   matching against the delivered colours alone gave 17% wrong pixels.
+
+## Seedance image-to-video through MCP (24 October 2026)
+
+An 8 s clip of a Meridius terrain concept; receipt with job ID, prompt and
+cost in `projects/meridius/review/terrain/receipts/seedance_concept_a.json`.
+
+- Upload a local image with `media_upload`, then `curl -X PUT` to the
+  returned `upload_url`, then `media_confirm` (type `image`). The URL is
+  signed with `if-none-match`, so the PUT must send `If-None-Match: *` as
+  well as `Content-Type`. With both headers it returned 200 at the first try.
+- `seedance_2_5` takes the image as `medias: [{value: <media_id>, role: "start_image"}]`.
+  With a reference and no `mode`, the server switches `t2v` to `omni_reference`
+  and reports it under `adjustments`. Frame 0 still matched the image exactly.
+- `get_cost: true` preflights without submitting: 128 credits for 8 s,
+  1080p, 16:9, `generate_audio: false`, the same as the website's quote. The
+  balance fell by exactly that.
+- The job finished within about five minutes (`jobs_wait` with 15 s polls). The MP4 is
+  **HEVC** (1920×1080, 24 fps), which many browsers cannot play. Make an H.264
+  copy for Workspace pages:
+  `ffmpeg -i in.mp4 -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -movflags +faststart -an out.mp4`.
+- No media agreement was asked for on the MCP route (the website asks for one
+  before it accepts an upload).

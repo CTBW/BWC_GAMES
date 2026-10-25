@@ -1,0 +1,223 @@
+{
+ "fps": 30.0,
+ "source": "art/succubus_3d/succubus_anim.blend",
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "variants": {
+  "idle": {
+   "clips": [
+    "idle_flourish"
+   ],
+   "every_s": [
+    9.0,
+    22.0
+   ]
+  }
+ },
+ "height_m": 1.95,
+ "objects": [
+  "Succubus",
+  "Tail",
+  "Whip",
+  "WhipLash",
+  "WingLeft",
+  "WingRight"
+ ],
+ "clips": {
+  "attack": {
+   "length": 3.5,
+   "loop": false,
+   "frames": 106,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "hips_drift": [
+    -0.0,
+    -0.0,
+    -0.0
+   ],
+   "events": {
+    "lash_out": 0.7,
+    "strikes": [
+     0.8667,
+     1.7
+    ],
+    "lash_in": 2.0333
+   }
+  },
+  "death": {
+   "length": 3.5,
+   "loop": false,
+   "frames": 106,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "hips_drift": [
+    -1.304,
+    -0.7188,
+    0.2146
+   ],
+   "events": {
+    "settled": 2.8667
+   }
+  },
+  "hit": {
+   "length": 3.4333,
+   "loop": false,
+   "frames": 104,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "hips_drift": [
+    -0.0004,
+    0.001,
+    -0.0006
+   ],
+   "events": {}
+  },
+  "idle": {
+   "length": 16.6333,
+   "loop": true,
+   "frames": 500,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0
+  },
+  "idle_flourish": {
+   "length": 7.8,
+   "loop": false,
+   "frames": 235,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "hips_drift": [
+    0.0,
+    0.0006,
+    0.0
+   ],
+   "events": {}
+  },
+  "walk": {
+   "length": 1.1667,
+   "loop": true,
+   "frames": 36,
+   "root_vel": [
+    -0.0,
+    0.0,
+    0.9933
+   ],
+   "root_motion": false,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.3,
+      "Left"
+     ],
+     [
+      0.9,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 1.67
+  },
+  "walk_start": {
+   "length": 1.8667,
+   "loop": false,
+   "frames": 57,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "hips_drift": [
+    0.0107,
+    -0.0255,
+    1.6332
+   ],
+   "events": {
+    "steps": [
+     [
+      0.9333,
+      "Right"
+     ],
+     [
+      1.4,
+      "Left"
+     ],
+     [
+      1.5333,
+      "Left"
+     ]
+    ]
+   }
+  },
+  "walk_stop": {
+   "length": 1.5333,
+   "loop": false,
+   "frames": 47,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "hips_drift": [
+    -0.0275,
+    0.0203,
+    1.42
+   ],
+   "events": {
+    "steps": [
+     [
+      0.0667,
+      "Right"
+     ],
+     [
+      0.6667,
+      "Left"
+     ],
+     [
+      0.8667,
+      "Left"
+     ],
+     [
+      1.3,
+      "Right"
+     ]
+    ]
+   }
+  }
+ }
+}

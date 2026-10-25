@@ -1,0 +1,9 @@
+{
+ "sheet": "rocks_sheet_1.png",
+ "sha256": "565b58c0498c715497ef0f0641ef09b2868076c2b951e6b028b02d65508f459f",
+ "cells": "2 rows x 4: rock_small 0-3, rock_large 0-3",
+ "texture": {
+  "file": "assets/terrain/rock.webp",
+  "sha256": "9a7db095bb02d5c37f7556cd08b95005ddff7899168ef0398d63f2c3d3ecba01"
+ }
+}

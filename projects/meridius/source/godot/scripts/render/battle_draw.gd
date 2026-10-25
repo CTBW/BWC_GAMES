@@ -18,6 +18,7 @@ const Formation = preload("res://scripts/render/formation.gd")
 const SquadView = preload("res://scripts/render/squad_view.gd")
 const BattleDeps = preload("res://scripts/render/battle_deps.gd")
 const Fx = preload("res://scripts/render/fx.gd")
+const Icon = preload("res://scripts/ui/widgets/icon.gd")
 const SortedShader = preload("res://scenes/battle/battle_sorted.gdshader")
 const DashShader = preload("res://scenes/battle/battle_dash.gdshader")
 const FONT_PATH := "res://assets/fonts/cinzel-latin-700-normal.woff2"
@@ -696,6 +697,36 @@ func _prop_list() -> Array:
 		var bx0: float = px - (s.w - s.ax) * k if flip else px - s.ax * k
 		_props.append({"x": t.x, "y": t.y, "px": px, "py": py, "s": s, "flip": flip, "d": float(t.x + t.y), "tree": String(prop).begins_with("tree"),
 			"bx0": bx0, "bx1": bx0 + s.w * k, "by0": py - s.ay * k, "k": k})
+	# Ferns, fallen wood and small stones, for show only: no path, cover or line
+	# of sight changes. Each stands off its tile's centre, on the ground beneath it.
+	var decor := func(t: Dictionary, key: String, n: int, dx: float, dy: float) -> void:
+		var s := Assets.sprite(key, n)
+		if s.is_empty():
+			return
+		var x: float = t.x + dx
+		var y: float = t.y + dy
+		var px := Iso.iso_x(x, y)
+		# Without a relief surface (only the terrain lab's view has one), sample
+		# the tile itself: _tile_h truncates.
+		var py := Iso.iso_y(x, y, v._tile_h(x, y) if v.get("terrain_surface") != null else float(t.h))
+		var k: float = s.scale
+		_props.append({"x": x, "y": y, "px": px, "py": py, "s": s, "flip": false, "d": x + y, "tree": false, "under": true, "decor": key,
+			"bx0": px - s.ax * k, "bx1": px + (s.w - s.ax) * k, "by0": py - s.ay * k, "k": k})
+	for t in v.b.map.tiles:
+		var prop = t.get("prop")
+		# Ferns under the trees on about two forest tiles in three.
+		if t.terrain == "forest" and Rng.hash2(t.x, t.y, 817) <= 0.65:
+			decor.call(t, "fern", int(Rng.hash2(t.x, t.y, 820) * 3),
+				(Rng.hash2(t.x, t.y, 818) - 0.5) * 0.65, (Rng.hash2(t.x, t.y, 819) - 0.5) * 0.65)
+		# Fallen wood at the foot of about one tree in four, on the near side of its trunk.
+		if prop != null and String(prop).begins_with("tree") and Rng.hash2(t.x, t.y, 821) < 0.25:
+			var f := 0.14 + Rng.hash2(t.x, t.y, 822) * 0.1
+			var side := (Rng.hash2(t.x, t.y, 823) - 0.5) * 0.24
+			decor.call(t, "deadwood", int(Rng.hash2(t.x, t.y, 824) * 1000), f + side, f - side)
+		# Small stones on about one open tile in twelve.
+		elif prop == null and (t.terrain == "grass" or t.terrain == "dirt") and Rng.hash2(t.x, t.y, 825) < 0.08:
+			decor.call(t, "stones", int(Rng.hash2(t.x, t.y, 826) * 1000),
+				(Rng.hash2(t.x, t.y, 827) - 0.5) * 0.6, (Rng.hash2(t.x, t.y, 828) - 0.5) * 0.6)
 	if _props.is_empty():
 		_props.append(null) # marks the list as built
 	return _props
@@ -1294,6 +1325,23 @@ const FAN9 := [0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8]
 
 # ---------------------------------------------------------------- overlays (screen)
 
+## A stance or condition badge beside a squad's bar: the icon's size in px.
+const BADGE := 22
+## A condition shows the icon of the skill that lays it.
+const STATUS_ICON := {"chilled": "frost", "bloodlust": "blood", "bleeding": "gut", "cowed": "growl"}
+static var _stance_icons := {}
+
+
+## The ability-bar icon of the skill that takes `stance` ("" if none).
+static func stance_icon(stance: String) -> String:
+	if _stance_icons.is_empty():
+		for id in DB.ABILITIES:
+			var ab: Dictionary = DB.ABILITIES[id]
+			if ab.get("kind") == "stance" and ab.get("stance") != null and ab.get("icon") != null:
+				_stance_icons[str(ab.stance)] = str(ab.icon)
+	return _stance_icons.get(stance, "")
+
+
 func draw_overlays(ci: CanvasItem) -> void:
 	var b = v.b
 	var w: float = v._w
@@ -1339,23 +1387,31 @@ func draw_overlays(ci: CanvasItem) -> void:
 		var mw := JS.rnd(bw * mf)
 		if mw > 0:
 			ci.draw_rect(Rect2(x, y + 6, mw, 2), v.MORALE_COLORS[ms])
-		# Icons.
+		# Icons: a stance or a condition shows the icon of the skill behind it
+		# (as on the ability bar), on a badge rimmed in its colour; the rest are words.
 		var ix := [x + bw + 6]
 		var icon := func(txt: String, col: Color) -> void:
 			var tw := font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
-			labels.append([ix[0], y, txt, col, tw])
+			labels.append([ix[0], y, txt, col, tw, null])
 			ix[0] += tw + 7
+		var badge := func(name: String, col: Color) -> void:
+			labels.append([ix[0], y, "", col, BADGE, Icon.painted(name)])
+			ix[0] += BADGE + 7
 		var stance = uv.stance
 		if uv.routing:
 			icon.call("FLEEING", Color.html("#f2efe4"))
-		elif stance == "shieldwall":
-			icon.call("WALL", Color.html("#e9d58f"))
-		elif stance == "spearwall":
-			icon.call("SPEARS", Color.html("#e9d58f"))
-		elif stance == "overwatch":
-			icon.call("WATCH", Color.html("#e9d58f"))
+		elif stance != null:
+			var si := stance_icon(str(stance))
+			if si != "":
+				badge.call(si, Color.html("#e9d58f"))
+			else:
+				icon.call(String(stance).to_upper(), Color.html("#e9d58f"))
 		for st in uv.statuses:
-			icon.call(v.STATUS_LABEL[st], v.STATUS_COLOR[st])
+			var col: Color = v.STATUS_COLOR.get(st, Color.WHITE)
+			if STATUS_ICON.has(st):
+				badge.call(STATUS_ICON[st], col)
+			else:
+				icon.call(v.STATUS_LABEL.get(st, String(st).to_upper()), col)
 		if u.leader:
 			icon.call("★", Color.html("#ffcf5a"))
 		if u.tags.has("warchief"):
@@ -1367,6 +1423,14 @@ func draw_overlays(ci: CanvasItem) -> void:
 		if player and b.phase == "player" and u.done:
 			ci.draw_rect(Rect2(x - 2, y - 2, bw + 4, 12), rgba(15, 10, 6, 0.6))
 	for l in labels:
+		if l[5] != null:
+			# Centred on the bar's middle (y + 4), a little taller than the words.
+			var top: float = l[1] + 4 - BADGE / 2.0
+			var r := Rect2(l[0] - 2, top - 2, BADGE + 4, BADGE + 4)
+			ci.draw_rect(r, rgba(15, 10, 6, 0.8))
+			ci.draw_rect(r.grow(-0.5), Color(l[3], 0.85), false, 1.0)
+			ci.draw_texture_rect(l[5], Rect2(l[0], top, BADGE, BADGE), false)
+			continue
 		ci.draw_rect(Rect2(l[0] - 2, l[1] - 3, l[4] + 4, 14), rgba(15, 10, 6, 0.8))
 		ci.draw_string(font, Vector2(l[0], l[1] + 8), l[2], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, l[3])
 	# The chosen arrival facing once more over everything, bars included: in a

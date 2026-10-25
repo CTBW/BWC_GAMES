@@ -1,0 +1,79 @@
+[
+ {
+  "file": "Fight Idle.fbx",
+  "slug": "fight_idle",
+  "fps": 30.0,
+  "frames": 72,
+  "missing": []
+ },
+ {
+  "file": "Stabbing - Footman.fbx",
+  "slug": "stabbing_footman",
+  "fps": 30.0,
+  "frames": 72,
+  "missing": []
+ },
+ {
+  "file": "Stable Sword Outward Slash - Footman.fbx",
+  "slug": "stable_sword_outward_slash_footman",
+  "fps": 30.0,
+  "frames": 62,
+  "missing": []
+ },
+ {
+  "file": "Standing Block Idle.fbx",
+  "slug": "standing_block_idle",
+  "fps": 30.0,
+  "frames": 56,
+  "missing": []
+ },
+ {
+  "file": "Standing Idle.fbx",
+  "slug": "standing_idle",
+  "fps": 30.0,
+  "frames": 56,
+  "missing": []
+ },
+ {
+  "file": "Standing Walk Forward.fbx",
+  "slug": "standing_walk_forward",
+  "fps": 30.0,
+  "frames": 41,
+  "missing": []
+ },
+ {
+  "file": "Standing Walk Right.fbx",
+  "slug": "standing_walk_right",
+  "fps": 30.0,
+  "frames": 39,
+  "missing": []
+ },
+ {
+  "file": "Sword And Shield Death.fbx",
+  "slug": "sword_and_shield_death",
+  "fps": 30.0,
+  "frames": 118,
+  "missing": []
+ },
+ {
+  "file": "Sword And Shield Idle.fbx",
+  "slug": "sword_and_shield_idle",
+  "fps": 30.0,
+  "frames": 227,
+  "missing": []
+ },
+ {
+  "file": "Sword And Shield Impact defend.fbx",
+  "slug": "sword_and_shield_impact_defend",
+  "fps": 30.0,
+  "frames": 30,
+  "missing": []
+ },
+ {
+  "file": "Sword And Shield Slash.fbx",
+  "slug": "sword_and_shield_slash",
+  "fps": 30.0,
+  "frames": 46,
+  "missing": []
+ }
+]

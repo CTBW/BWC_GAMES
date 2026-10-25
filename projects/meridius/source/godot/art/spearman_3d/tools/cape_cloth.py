@@ -316,6 +316,12 @@ def sim(cache_dir, clips):
     for m in capeo.modifiers:
         m.show_viewport = m.type != "SOLIDIFY"
     bones = list(rig.pose.bones)
+    for pb in bones:
+        # No clip keys these (spear_motion.py clear_unkeyed). Float noise left on them, which
+        # the chaotic cloth turns into a different cape, once made bakes depend on the file.
+        pb.scale = (1, 1, 1)
+        if pb.name != "mixamorig:Hips":
+            pb.location = (0, 0, 0)
     for clip in clips:
         act = bpy.data.actions[clip]
         n = int(act["frames"])

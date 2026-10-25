@@ -24,9 +24,10 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
 
 - Export is free: FBX, preset Blender, texture resolution up to 4K. Textured
   exports arrive as a zip (FBX plus a `.fbm` folder with the texture).
-- The browser can reuse the last save folder, including `E:\Ability Icons`.
-  Select the model destination explicitly; never treat that shared folder as
-  the final model library. New exports belong in
+- The browser can reuse the last save folder, such as the ability paintings
+  (`E:\Ability Icons` until 2026-10-24, now `local/ability-icons/`). Select the
+  model destination explicitly; never treat that folder as the final model
+  library. New exports belong in
   `projects/meridius/references/characters/tripo/<character>/`; boss exports
   belong in `projects/meridius/references/characters/bosses/tripo/<boss>/`.
 - Use `scripts/asset-delivery/collect-tripo.ps1` with the exact observed source,
@@ -65,6 +66,20 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
   body's back surface, came back clean.
 - Texturing ends Edit Mesh, so finish retries first. Receipts:
   `projects/meridius/references/characters/spearman_idle/jobs.json`.
+
+## Goblin rabble, 24 October 2026
+
+- Smart Mesh still charged 100 per single-variant run; texture 20.
+- The left-sidebar **Texture** panel shows settings before charging: image
+  reference (the model's own input image), texture style, Remove Lighting,
+  and 2K / 4K / 8K (one trial). The bottom-toolbar Texture button skips it.
+  Several texture jobs can run at once; each took about one minute.
+- The Assets panel mixes older models with new ones, such as a textured knife
+  from 01:01. Check the task ID in the URL before charging.
+- With Chrome's "Ask where to save" on, every export waits for the user to
+  click Save. Find the file by its exact name, not by recency.
+- Exported models are normalised to 1 unit on their longest side.
+- Receipts: `projects/meridius/references/characters/goblin_rabble/jobs.json`.
 
 ## Blender in the background
 

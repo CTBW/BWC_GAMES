@@ -35,6 +35,26 @@ working. Ask for missing personal preferences; do not invent a biography.
 - Before committing or publishing, review the selected files for personal data,
   credentials, unintended media and unrelated changes.
 
+## Where things live
+
+- Work only in `E:\ProjektM\BWC_GAMES-godot` (branch `godot-migration`, merged to
+  `main` by pull request). Do not create project folders elsewhere on the disk;
+  keep temporary files in the session scratchpad.
+- The GitHub remote is public. Commit code, docs, Workspace cards with their
+  media (convert large PNGs to WebP or JPG) and the runtime assets a fresh clone
+  needs. Keep the following local; `.gitignore` covers the first four:
+  - `local/`: licensed and private sources (sound library, ability paintings).
+  - `projects/meridius/Animations/`: raw Mixamo downloads, not redistributable.
+  - captures in `projects/meridius/review/`; its scripts and notes are committed.
+  - third-party images in `projects/meridius/references/style/`.
+  - paid generations until the owner approves them for the public repository.
+- A fresh clone needs Git LFS (`git lfs install`; the battle animation sheets
+  use it) and, on Windows, `git config core.longpaths true`: some Tripo
+  texture paths pass 260 characters below a deep folder.
+- Several agents share this working tree. Stage your own files by explicit path
+  (never `git add -A`, `git add .` or `commit -a`), stage only your own hunks in
+  shared files, and leave other agents' changes alone.
+
 ## First setup
 
 Follow `docs/getting-started.md`. Check the machine and the user's chosen route
@@ -51,3 +71,4 @@ read the sample cards.
 `knowledge/`: lessons.
 `context/`: the owner's optional preferences and goals.
 `inbox/`: incoming references.
+`local/`: local-only material, ignored by Git (see `local/README.md`).

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Panels, banners and borders</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<style>
+.review-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+figure{margin:0;padding:12px;border:1px solid var(--mak-border);background:var(--mak-surface);border-radius:10px}
+figure img{display:block;width:100%;height:auto;border-radius:5px}
+figcaption{font-size:13px;color:var(--mak-muted);padding:10px 2px 2px}
+.hero{margin:24px 0}.review-gallery h3{margin:0 0 10px}
+.asset{background:#17212a}.asset img{object-fit:contain;max-height:370px}.asset-light{background:#d7cbae}
+.source-note{font-size:13px;color:var(--mak-muted)}.asset-stack{display:grid;gap:22px}.asset-stack figure img{max-height:175px}
+.verification{padding:16px 20px;border-left:3px solid var(--mak-border);background:var(--mak-surface)}
+</style>
+</head>
+<body><main class="container">
+<p class="eyebrow">MERIDIUS / THE AMBERFELD COMPANY / 23 OCTOBER 2026</p>
+<h1>Iron, cloth and the weight of a kingdom.</h1>
+<p class="lead">Sculpted iron borders. Carved brass corners. Deep blue campaign banners. A new painted interface set, implemented throughout the Godot game.</p>
+<p>The frontier artwork in the Higgsfield gallery and the supplied battlefield and Footmen references guide the materials and colour. The bright forest sunrise remains. Decoration is abstract: no heraldic symbol has been added.</p>
+<div class="verification" id="continuation-review">
+<p><strong>24 October continuation check.</strong> The painted assets, slice renderer and saved themes still match this delivery. The screenshots below are the 23 October captures; later title-menu, battle HUD and playthrough changes have not been recaptured here.</p>
+<p>The focused audio check currently reports <strong>16 passed, 2 failed</strong>: the known battlefield outline compiler error and a volume-preferences test with JSON read errors. The second failure is not yet diagnosed. Shader ownership is being checked before any edit. <a href="interface/epic/continuation-2026-10-24.json">Current audit and failure details</a>.</p>
+</div>
+<figure class="hero"><img src="interface/epic/prep.webp" alt="Native Godot expedition screen with blue cloth banner, carved brass corners and iron-bound vellum" width="1920" height="1080"><figcaption>Plan the Expedition — the banner and council frame in the actual game. Text, army selection, costs and supply controls remain live Godot UI. Click any image to enlarge or download it.</figcaption></figure>
+<h2>Three original masters, one visual language</h2>
+<p>Dark iron, aged brass, charred oak, lapis-blue cloth and warm vellum. Generous carved corners distinguish major panels; compact controls retain thin, readable edges.</p>
+<div class="review-gallery">
+<figure><h3>Council border</h3><div class="asset asset-light"><img loading="lazy" src="interface/epic/council-frame.webp" alt="Transparent council frame with iron rails, chased brass corners and small blue enamel insets" width="1536" height="1024"></div><figcaption>1536 × 1024 RGBA. Transparent outside and inside. Major panels, the title menu and the screen perimeter.</figcaption></figure>
+<div class="asset-stack">
+<figure><h3>Company banner</h3><div class="asset"><img loading="lazy" src="interface/epic/company-banner.webp" alt="Blue cloth banner with stitched edges, folded swallowtail ends and carved metal clasps" width="2172" height="724"></div><figcaption>2172 × 724 RGBA. Blank woven cloth for runtime headings and company announcements.</figcaption></figure>
+<figure><h3>Command panel</h3><div class="asset"><img loading="lazy" src="interface/epic/command-panel.webp" alt="Dark leather command panel with iron rails and restrained brass corner ornament" width="2172" height="724"></div><figcaption>2172 × 724 RGBA. Dark surface for the selected-squad panel and pause menu; its binding also frames large actions.</figcaption></figure>
+</div></div>
+<p class="source-note">Created with ImageGen using the local style references and the first frame as the common material reference. Higgsfield was consulted visually; no Higgsfield generation was submitted. The original PNGs are preserved byte-for-byte. <a href="interface/epic/asset-notes.md">Art direction, generation briefs and slice map</a>.</p>
+<h2>In the game</h2>
+<div class="review-gallery">
+<figure><h3>Tent Lines</h3><img loading="lazy" src="interface/epic/barracks.webp" alt="Recruitment panel with painted border, blue cloth heading and clear gold Hire buttons" width="1920" height="1080"><figcaption>The large panel carries the ornament. Recruitment buttons and status indicators stay compact.</figcaption></figure>
+<figure><h3>The company roster</h3><img loading="lazy" src="interface/epic/roster.webp" alt="Company roster in a carved frame with a blue banner and six squad cards" width="1920" height="1080"><figcaption>Fixed-size corners retain their shape as the frame changes proportions.</figcaption></figure>
+<figure><h3>Deployment banner</h3><img loading="lazy" src="interface/epic/battle.webp" alt="Deploy Your Company cloth banner over the native battlefield" width="1920" height="1080"><figcaption>The ceremonial treatment carries into battle announcements. Enemy announcements retain a red surface.</figcaption></figure>
+<figure><h3>Pause and settings</h3><img loading="lazy" src="interface/epic/menu.webp" alt="Pause menu with dark command panel, blue cloth heading and sound sliders" width="1920" height="1080"><figcaption>One material family across camp, menus and combat.</figcaption></figure>
+</div>
+<figure class="hero"><img loading="lazy" src="interface/epic/title.webp" alt="Forest sunrise title with an ornate painted perimeter and matching menu border" width="1920" height="1080"><figcaption>The original bright sunrise within the painted border. The landscape has no full-screen dark overlay.</figcaption></figure>
+<figure class="hero"><img loading="lazy" src="interface/epic/battle_live.webp" alt="Live battle with compact squad cards and a painted command panel at the bottom" width="1920" height="1080"><figcaption>After deployment, the banner clears and the battlefield stays open. Small tactical controls keep simple rims.</figcaption></figure>
+<h2>Before this refinement</h2>
+<div class="review-gallery">
+<figure><img loading="lazy" src="interface/barracks.webp" alt="Previous recruitment panel with the thin procedural metal frame" width="1920" height="1080"><figcaption>Previous recruitment panel, before the painted asset pass.</figcaption></figure>
+<figure><img loading="lazy" src="interface/prep.webp" alt="Previous expedition screen with the earlier blue heading band and thin border" width="1920" height="1080"><figcaption>Previous preparation screen. The new treatment adds depth while retaining its information and actions.</figcaption></figure>
+</div>
+<p><a href="interface-first-pass.html">Preserved first-pass report</a>. Comparisons use the same seed and scenarios; animated world details can differ.</p>
+<h2>Desktop proportions</h2>
+<div class="review-gallery">
+<figure><img loading="lazy" src="interface/epic/prep-1440x900.webp" alt="Expedition preparation at 1440 by 900 with all three columns and March Out visible" width="1440" height="900"><figcaption>1440 × 900. Headings, supply controls and the main action remain inside the panel.</figcaption></figure>
+<figure><img loading="lazy" src="interface/epic/battle_live-2560x1080.webp" alt="Live battle at 2560 by 1080 with the command panel centered" width="2560" height="1080"><figcaption>2560 × 1080. Corners keep their proportions; the tactical view stays clear.</figcaption></figure>
+</div>
+<h2>23 October verification and editable sources</h2>
+<div class="verification">
+<p><strong>31 native captures; 0 rendering/runtime errors.</strong> Twenty-three scenarios at 1920 × 1080, plus title, roster, preparation and live battle at 1440 × 900 and 2560 × 1080. <a href="interface/epic/review.txt">Capture log</a>.</p>
+<p><strong>235 input checks passed; 0 failures, errors or warnings.</strong> Recruitment, settings, army and supplies, campaign navigation, deployment, movement, attacks, abilities, undo, end turn, one complete battle, retreat, report and minimap. The expedition took 126 seconds. <a href="interface/epic/playthrough.txt">Playthrough log</a>.</p>
+<p id="regression-result"><strong>Quick suite: 363 passed, 1 failed, 10 skipped.</strong> All UI tests passed. The failure is a shader-compiler error while the audio test loads the battlefield; a focused rerun reproduced it (17 passed, 1 failed). The battlefield outline shader was being changed separately and was left intact. <a href="interface/epic/quick-test-tail.txt">Recorded final test output</a>.</p>
+<p id="report-result">Report reviewed at 1440 and 1024 pixels wide in light and dark themes, with no horizontal overflow. Image preview, 100% zoom and close were checked. Local image and source links were validated. The download click was attempted, but browser automation timed out before its saved-file receipt could be confirmed.</p>
+</div>
+<p><a href="interface/epic/source-manifest.json">Source checksums and runtime mapping</a> · <a href="interface/epic/asset-notes.md">Editable asset notes</a> · <a href="interface/epic/council-frame.webp" download>Border PNG</a> · <a href="interface/epic/company-banner.webp" download>Banner PNG</a> · <a href="interface/epic/command-panel.webp" download>Panel PNG</a></p>
+<p class="source-note">Game screenshots are native Godot framebuffer captures. Generated artwork is separate from live labels and game state. Reviewed on the uncommitted godot-migration working tree; unrelated terrain, audio, squad and ability work is preserved. Input timing is recorded, but this is not a controlled performance comparison. No Windows export was produced. Final aesthetic acceptance remains with the user.</p>
+</main></body></html>

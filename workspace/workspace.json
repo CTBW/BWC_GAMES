@@ -89,6 +89,12 @@
           "subgroup": "Shared"
         },
         {
+          "name": "Facial features",
+          "path": "facial-features.html",
+          "group": "Character rigs",
+          "subgroup": "Shared"
+        },
+        {
           "name": "Garrison units",
           "path": "unit-roster-garrison.html",
           "group": "Unit roster",

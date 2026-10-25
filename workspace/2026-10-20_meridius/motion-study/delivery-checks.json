@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-23",
+  "source": "godot-migration uncommitted working tree",
+  "asset_links_checked": 25,
+  "missing": [],
+  "registry_entries": 1,
+  "files": [
+    {
+      "path": "projects/meridius/source/godot/tools/motion_study/motion.gd",
+      "sha256": "e5680b3c0c2c5ea09caa9953764f1dae412d933e5a13c639983dd9d12a1c42f4"
+    },
+    {
+      "path": "projects/meridius/source/godot/tools/motion_study/proxy.gd",
+      "sha256": "176a90e4d3aef3d00774ffb40e6c964b4496c4dbbc43a3af69254ea3e03681ea"
+    },
+    {
+      "path": "projects/meridius/source/godot/tools/motion_study/render.ps1",
+      "sha256": "586f3c37748be01d8615d021c02cd3f2a00ec5673341feed3ead78ce8537f2cc"
+    },
+    {
+      "path": "projects/meridius/source/godot/tests/visual/footman_motion_study.gd",
+      "sha256": "b7fddc2c78b4311419781f6a71a9e47d14c27f02b36e6b447f1612c1541e3b5f"
+    },
+    {
+      "path": "projects/meridius/source/godot/tests/unit/test_footman_motion_study.gd",
+      "sha256": "85ccdeb1204a9fc678a457cf39905083171a01612ab7c91a21414aa01306b6ec"
+    }
+  ],
+  "videos": [
+    {
+      "name": "move",
+      "bytes": 579455,
+      "sha256": "c770cdddcdb84d05954c41c20119a2c98eea31788cf7638c35845dd9c9a2d8a0"
+    },
+    {
+      "name": "attack",
+      "bytes": 402125,
+      "sha256": "be0b26134b1889d7240e19eba3f4de3c9fbf265adfccad2689e3b230018c2bad"
+    },
+    {
+      "name": "shield_bash",
+      "bytes": 398274,
+      "sha256": "f4cdf037dbffe72abfc0a5ea0e5a17df31495e509bd7dbd3064c5e4d096b709f"
+    },
+    {
+      "name": "charge",
+      "bytes": 551805,
+      "sha256": "eea0bca2293291475dfec193432983e9e878572f498fb5a94d7a729712c8c908"
+    }
+  ]
+}

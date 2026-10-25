@@ -1,0 +1,61 @@
+{
+  "revision": "Mixamo attacks v02",
+  "source_url": "https://www.mixamo.com/",
+  "fps": 30,
+  "units": "metres",
+  "blender_forward": "-Y",
+  "blender_up": "+Z",
+  "runtime": "Godot study only; production sprites unchanged",
+  "clips": [
+    {
+      "id": "stab",
+      "source_file": "Stabbing - Footman.fbx",
+      "source_sha256": "ce737f42d3fdda8dde57c55e884641115e2f207360e0287a715f47c36a32cc67",
+      "frames": [
+        1,
+        72
+      ],
+      "samples": 72,
+      "duration": 2.3666666666666667,
+      "contact_frame": 25,
+      "contact_seconds": 0.8,
+      "loop": false,
+      "mirrored": true,
+      "source_attack_hand": "LeftHand",
+      "edits": [
+        "offhand IK shield guard",
+        "right-handed mirror",
+        "rigid sword with grip calibrated at proposed contact",
+        "simple study costume"
+      ],
+      "bone_count": 65,
+      "source_action": "SOURCE_stab",
+      "preview_action": "FOOTMAN_stab"
+    },
+    {
+      "id": "slash",
+      "source_file": "Stable Sword Outward Slash - Footman.fbx",
+      "source_sha256": "eff6af35956cd308c325df199fbfa142fa4dd8e410006a7af022f9c2c26c866f",
+      "frames": [
+        1,
+        62
+      ],
+      "samples": 62,
+      "duration": 2.033333333333333,
+      "contact_frame": 27,
+      "contact_seconds": 0.8666666666666667,
+      "loop": false,
+      "mirrored": false,
+      "source_attack_hand": "RightHand",
+      "edits": [
+        "offhand IK shield guard",
+        "original handedness",
+        "rigid sword with grip calibrated at proposed contact",
+        "simple study costume"
+      ],
+      "bone_count": 65,
+      "source_action": "SOURCE_slash",
+      "preview_action": "FOOTMAN_slash"
+    }
+  ]
+}

@@ -16,6 +16,7 @@ const Iso = preload("res://scripts/render/iso.gd")
 const Assets = preload("res://scripts/render/assets.gd")
 const Formation = preload("res://scripts/render/formation.gd")
 const SquadView = preload("res://scripts/render/squad_view.gd")
+const SoldierAnim = preload("res://scripts/render/soldier_anim.gd")
 const BattleDeps = preload("res://scripts/render/battle_deps.gd")
 const Fx = preload("res://scripts/render/fx.gd")
 const Icon = preload("res://scripts/ui/widgets/icon.gd")
@@ -30,7 +31,6 @@ var v # the BattleView
 var font: Font
 var _sorted_mat: ShaderMaterial
 var _props: Array = [] # static prop list (positions, sprites, boxes)
-var _host_vp: SubViewport
 var _minimap_key := ""
 
 
@@ -239,7 +239,7 @@ func draw_background(ci: CanvasItem) -> void:
 ## squads, so the forest at the near edges never hides a soldier.
 func draw_outer(ci: CanvasItem) -> void:
 	Assets.draw_base = Transform2D.IDENTITY
-	var outer: Array = v.b.map.outer.duplicate()
+	var outer: Array = v.surroundings.props.duplicate()
 	JS.sort(outer, func(a, q): return a.x + a.y - (q.x + q.y))
 	for o in outer:
 		var s := Assets.sprite(_prop_sprite(o.prop), o.v)
@@ -393,6 +393,8 @@ func _danger_tiles() -> Dictionary:
 	var b = v.b
 	var m: Dictionary = b.map
 	for e in b.active("enemy"):
+		if not v.unit_visible(e):
+			continue
 		# A war machine's stones fall from where it stands now: it cannot move and loose in one turn.
 		var primary = DB.UNIT_TYPES.get(e.typeId, {}).get("primary")
 		var lob = DB.ABILITIES.get(primary) if primary != null else null
@@ -440,6 +442,8 @@ func draw_under(ci: CanvasItem) -> void:
 	g.flush(ci)
 	# Stance zones.
 	for u in b.active("player") + b.active("enemy"):
+		if not v.unit_visible(u):
+			continue
 		if u.get("stance") == "spearwall":
 			var zone: Array = []
 			for dd in Grid.DIRS:
@@ -626,7 +630,7 @@ func _draw_footprints(ci: CanvasItem, g: Geo, time: float) -> void:
 	var base := [Vector2(0, -32 * k), Vector2(64 * k, 0), Vector2(0, 32 * k), Vector2(-64 * k, 0)]
 	var sel_fill := rgba(255, 215, 106, 0.13 + 0.07 * sin(time * 4))
 	for uv in v.views.values():
-		if not uv.visible or uv.alive <= 0 or (uv.status != "active" and uv.status != "routing"):
+		if not v.squad_visible(uv) or uv.alive <= 0 or (uv.status != "active" and uv.status != "routing"):
 			continue
 		var u: Dictionary = v._u(uv.uid)
 		var sel: bool = v.ui.selected == uv.uid
@@ -691,7 +695,7 @@ func _prop_list() -> Array:
 		if s.is_empty():
 			continue
 		var px := Iso.iso_x(t.x, t.y)
-		var py := Iso.iso_y(t.x, t.y, t.h)
+		var py := Iso.iso_y(t.x, t.y, v._tile_h(t.x, t.y))
 		var flip: bool = not s.noShadow and Rng.hash2(t.x, t.y, 9) > 0.5
 		var k: float = s.scale
 		var bx0: float = px - (s.w - s.ax) * k if flip else px - s.ax * k
@@ -756,11 +760,10 @@ func draw_sorted(ci: CanvasItem) -> void:
 	var hh: float = v._h / zoom / 2
 	var cx: float = cam.x
 	var cy: float = cam.y
-	var staged: Dictionary = v.staged()
 	# `marks`: world points that must stay in sight (one is enough to fade a prop).
 	var boxes := {} # column -> [[x, y, d]]
 	for uv in v.views.values():
-		if not (uv.visible or staged.has(uv.uid)) or not _shows(uv):
+		if not v.squad_visible(uv) or uv.reserve or not _shows(uv):
 			continue
 		var p: Vector2 = v._view_pos(uv)
 		if absf(p.x - cx) < hw and p.y - cy > -hh - 60 and p.y - cy < hh + 420:
@@ -813,7 +816,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 				if list == null:
 					continue
 				for ub in list:
-					if ub[2] >= d:
+					if ub[2] > d + 0.2:
 						continue
 					var ux: float = ub[0]
 					var uy: float = ub[1]
@@ -833,12 +836,13 @@ func draw_sorted(ci: CanvasItem) -> void:
 						break
 				if alpha < 1.0:
 					break
+		var fade_dt: float = clampf(time - pr.get("fadeTime", time - 0.016), 0.0, 0.1)
+		alpha = lerpf(pr.get("fade", 1.0), alpha, 1.0 - exp(-fade_dt * 11.0))
+		pr["fade"] = alpha
+		pr["fadeTime"] = time
 		var sway := sin(time * 0.9 + pr.x * 0.7 + pr.y * 0.3) * 0.012 if pr.tree else 0.0
 		push.call(d, [K_PROP, pr, alpha, sway])
 	# The forest ring beyond the field is painted into the ground layer (bakeOuter).
-	var host = v._host
-	if host != null and v._host_alpha > 0.01:
-		push.call(host.d, [K_HOST])
 	# The fallen lie where they dropped, under the living.
 	for c in v.corpses:
 		if absf(c.wx - cx) < hw and c.wy - cy > -hh - 60 and c.wy - cy < hh + 420:
@@ -847,9 +851,8 @@ func draw_sorted(ci: CanvasItem) -> void:
 	if ghost != null:
 		push.call(ghost.at.x + ghost.at.y + 0.04, [K_GHOST, ghost])
 	for uv in v.views.values():
-		# Coming waves mass beyond their edge, darkened, until they march in.
-		var waiting: bool = uv.reserve and staged.has(uv.uid)
-		if not (uv.visible or waiting) or not _shows(uv):
+		# Reinforcements first appear when their spawn animation starts.
+		if not v.squad_visible(uv) or uv.reserve or not _shows(uv):
 			continue
 		var vp: Vector2 = v._view_pos(uv)
 		if not (absf(vp.x - cx) < hw and vp.y - cy > -hh - 60 and vp.y - cy < hh + 420):
@@ -858,7 +861,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 		# Turning on the spot: the squad itself steps aside for its ghost.
 		var self_ghost: bool = ghost != null and ghost.turn and uv.uid == v.ui.selected
 		var hides: bool = self_ghost or (ghost != null and uv.x + uv.y > ghost.at.x + ghost.at.y and body_covers(uv, u, ghost.wx, ghost.wy - 24, 8))
-		push.call(uv.x + uv.y + 0.05, [K_SQUAD, uv, u, 0.4 if hides else 1.0, 0.42 if waiting else 0.0])
+		push.call(uv.x + uv.y + 0.05, [K_SQUAD, uv, u, 0.4 if hides else 1.0, 0.0])
 	if v.relief != null:
 		for q in v.relief.riders:
 			var p: Dictionary = v._rider_at(q, v.relief.t)
@@ -869,7 +872,18 @@ func draw_sorted(ci: CanvasItem) -> void:
 			var wy := Iso.iso_y(p.x, p.y, th)
 			if not (absf(wx - cx) < hw and wy - cy > -hh - 60 and wy - cy < hh + 420):
 				continue
-			var s := Assets.sprite("margrave_rider_%s_%s" % [p.pose, "f" if Formation.faces_camera(q.facing) else "b"], q.variant)
+			var side := "f" if Formation.faces_camera(q.facing) else "b"
+			var s: Dictionary
+			if SoldierAnim.animated("margrave_rider"):
+				# Pixel-art lancers: a full gallop while they ride (each on his own beat), the lance blow when they strike.
+				var name := "idle_%s_0" % side
+				if p.bob > 0:
+					name = "walk_%s_%d" % [side, [0, 1, 2, 1][posmod(floori(time / 0.09 + q.variant * 1.7), 4)]]
+				elif p.pose == "atk":
+					name = "strike_%s_hit" % side
+				s = SoldierAnim.frame("margrave_rider", name, q.variant)
+			else:
+				s = Assets.sprite("margrave_rider_%s_%s" % [p.pose, side], q.variant)
 			push.call(p.x + p.y + 0.05, [K_RIDER, s, wx, wy, p, q])
 	keys.sort()
 	for key in keys:
@@ -879,7 +893,6 @@ func draw_sorted(ci: CanvasItem) -> void:
 
 
 const K_PROP := 0
-const K_HOST := 1
 const K_CORPSE := 2
 const K_GHOST := 3
 const K_SQUAD := 4
@@ -913,14 +926,10 @@ func _draw_item(ci: CanvasItem, it: Array, time: float) -> void:
 		K_PROP:
 			var pr: Dictionary = it[1]
 			Assets.draw_sprite(ci, pr.s, pr.px, pr.py, pr.flip, 1.0, Color(1, 1, 1, it[2]), 1.0, it[3])
-		K_HOST:
-			var host: Dictionary = v._host
-			var tex = host_texture()
-			if tex != null:
-				ci.draw_texture(tex, Vector2(host.x, host.y), Color(1, 1, 16, v._host_alpha))
 		K_CORPSE:
 			var c = it[1]
-			Assets.draw_sprite(ci, Assets.sprite("%s_dead" % c.type, c.variant), c.wx, c.wy, c.flip, c.scale, Color(1, 1, 1, 0.9))
+			var body := SoldierAnim.corpse(c.type, c.variant) if SoldierAnim.animated(c.type) else Assets.sprite("%s_dead" % c.type, c.variant)
+			Assets.draw_sprite(ci, body, c.wx, c.wy, c.flip, c.scale, Color(1, 1, 1, 0.9))
 		K_GHOST:
 			_draw_ghost(ci, it[1])
 		K_SQUAD:
@@ -929,43 +938,6 @@ func _draw_item(ci: CanvasItem, it: Array, time: float) -> void:
 			var p: Dictionary = it[4]
 			var q: Dictionary = it[5]
 			Assets.draw_sprite(ci, it[1], it[2], it[3] - p.bob, q.facing == 0 or q.facing == 2, 0.56, Color(1, 1, 1, p.alpha))
-
-
-# ---------------------------------------------------------------- host
-
-## The massed host painted once into its own texture (the original's host canvas).
-func host_texture() -> Variant:
-	var host = v._host
-	if host == null:
-		return null
-	if _host_vp == null:
-		_host_vp = SubViewport.new()
-		_host_vp.name = "HostPaint"
-		_host_vp.size = Vector2i(maxi(1, host.w), maxi(1, host.h))
-		_host_vp.transparent_bg = true
-		_host_vp.disable_3d = true
-		_host_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
-		BattleDeps.prepare_viewport(_host_vp)
-		var l = load("res://scripts/render/battle_layer.gd").new()
-		l.position = Vector2(-host.x, -host.y)
-		l.draw_fn = _paint_host
-		_host_vp.add_child(l)
-		v.add_child(_host_vp)
-	return _host_vp.get_texture()
-
-
-func _paint_host(ci: CanvasItem) -> void:
-	Assets.draw_base = Transform2D.IDENTITY
-	for f in v._host.figs:
-		if f.banner:
-			Assets.draw_sprite(ci, Assets.sprite("war_banner", f.v), f.wx, f.wy, false, 0.8)
-			continue
-		var s := Assets.sprite(f.key, f.v)
-		var key: String = f.key
-		var sc := 0.5 if key.begins_with("wolf") else (0.46 if key.begins_with("goblin_rabble") else 0.5)
-		Assets.draw_sprite(ci, s, f.wx, f.wy, f.flip, sc)
-		# Distance and dusk: the host reads as a dark mass, not as squads.
-		Assets.draw_silhouette(ci, s, f.wx, f.wy, f.flip, sc, 0.5)
 
 
 # ---------------------------------------------------------------- ghost and squads
@@ -1005,7 +977,8 @@ func _draw_ghost(ci: CanvasItem, g: Dictionary) -> void:
 		var m = o[0]
 		var s: Dictionary = o[1]
 		var pk: Dictionary = v.pose_key(m.type, "idle", g.facing)
-		Assets.draw_sprite(ci, Assets.sprite(pk.key, m.variant), g.wx + s.x, g.wy + s.y, pk.flip, g.scale, Color(1, 1, 1, 0.42))
+		var gs := SoldierAnim.frame(m.type, "idle_%s_0" % SoldierAnim.suffix(g.facing, m.type), m.variant) if SoldierAnim.animated(m.type) else Assets.sprite(pk.key, m.variant)
+		Assets.draw_sprite(ci, gs, g.wx + s.x, g.wy + s.y, pk.flip, g.scale, Color(1, 1, 1, 0.42))
 	# The facing arrow again over the ghost so it reads through the bodies;
 	# clearly when the squad turns where it stands.
 	draw_facing_arrow(ci, g.at, g.facing, 0.9 if g.turn else 0.4, true)
@@ -1014,6 +987,8 @@ func _draw_ghost(ci: CanvasItem, g: Dictionary) -> void:
 ## Sprite for one soldier given the squad's facing, his pose and the squad's order.
 ## Cached on the member until the pose, facing or order change.
 func member_sprite(uv, m) -> Array:
+	if SoldierAnim.animated(m.type):
+		return SoldierAnim.pose(uv, m, v.time).ms
 	var state: int = (1000 if uv.routing else 0) + (100 if m.pose == "atk" else 0) + uv.facing
 	if m.spr_state == state and m.spr_cache != null:
 		return m.spr_cache
@@ -1090,7 +1065,9 @@ func engine_of(uv, u: Dictionary) -> Variant:
 		lx /= n
 		ly /= n
 	var pose := "atk" if (uv.engine_atk > 0 and not uv.routing) else "idle"
-	var s := Assets.sprite("%s_%s_%s" % [u.typeId, pose, "f" if Formation.faces_camera(uv.facing) else "b"], int(u.variant))
+	var side := "f" if Formation.faces_camera(uv.facing) else "b"
+	# Pixel-art machines have a frame table of their own (soldier_anim.gd).
+	var s := SoldierAnim.frame(u.typeId, "%s_%s" % [pose, side], 0) if SoldierAnim.animated(u.typeId) else Assets.sprite("%s_%s_%s" % [u.typeId, pose, side], int(u.variant))
 	var shake: float = sin(v.time * 55) * uv.shake * 3 if uv.shake else 0.0
 	return {"s": s, "flip": uv.facing == 0 or uv.facing == 2, "x": p.x + o.x + lx + shake, "y": p.y + o.y + ly - uv.hop, "oy": o.y}
 
@@ -1098,7 +1075,7 @@ func engine_of(uv, u: Dictionary) -> Variant:
 func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 	var k := SquadView.member_scale(u)
 	var def: Dictionary = DB.UNIT_TYPES[u.typeId]
-	var big := 0.85 if def.has("crew") else (1.5 if (u.size <= 3 and def.get("size") == "large") else (0.8 if def.get("size") == "small" else 1.0))
+	var big := 0.85 if def.has("crew") else ((3.0 if u.typeId == "troll" else 1.5) if (u.size <= 3 and def.get("size") == "large") else (0.8 if def.get("size") == "small" else 1.0))
 	var eng = engine_of(uv, u) if _engine_stands(uv) else null
 	var col := Color(20 / 255.0, 25 / 255.0, 10 / 255.0, 0.3 * uv.alpha)
 	var bx := Iso.iso_x(uv.x, uv.y)
@@ -1109,8 +1086,13 @@ func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 	for m in uv.members:
 		if not m.alive and not m.dying:
 			continue
-		var px: float = bx + m.x + m.lunge.x
-		var py: float = by + m.y + m.lunge.y + 1
+		var px: float = bx + m.x + m.lunge.x + m.drift.x
+		var py: float = by + m.y + m.lunge.y + m.drift.y + 1
+		if m.alive and SoldierAnim.animated(m.type):
+			var gp := SoldierAnim.pose(uv, m, v.time)
+			px += gp.dx
+			py += gp.dy
+		py += v.member_ground_offset(uv, px - bx, py - by - 1)
 		ci.draw_texture_rect(disc, Rect2(px - rx, py - ry, rx * 2, ry * 2), false, col)
 	if eng != null:
 		ci.draw_texture_rect(disc, Rect2(eng.x - 40, eng.y + 2 - 17, 80, 34), false, col)
@@ -1122,7 +1104,15 @@ func _draw_squad_shadow(ci: CanvasItem, uv, u: Dictionary) -> void:
 		if not m.alive:
 			continue
 		var ms := member_sprite(uv, m)
-		Assets.draw_cast_shadow(ci, ms[0], bx + m.x + m.lunge.x, by + m.y + m.lunge.y, ms[1], k, 0.16 * uv.alpha)
+		var gx := 0.0
+		var gy := 0.0
+		if SoldierAnim.animated(m.type):
+			var gp := SoldierAnim.pose(uv, m, v.time)
+			gx = gp.dx
+			gy = gp.dy
+		var foot_x: float = m.x + m.lunge.x + m.drift.x + gx
+		var foot_y: float = m.y + m.lunge.y + m.drift.y + gy
+		Assets.draw_cast_shadow(ci, ms[0], bx + foot_x, by + foot_y + v.member_ground_offset(uv, foot_x, foot_y), ms[1], k, 0.16 * uv.alpha)
 	if eng != null:
 		Assets.draw_cast_shadow(ci, eng.s, eng.x, eng.y, eng.flip, k, 0.18 * uv.alpha)
 
@@ -1138,28 +1128,75 @@ static func _blit(ci: CanvasItem, s: Dictionary, x: float, y: float, flip: bool,
 	ci.draw_texture_rect_region(s.tex, Rect2(-s.ax, -s.ay, s.w, s.h), s.region, mod)
 
 
-## _blit from a member_sprite() cache entry.
-static func _blit_m(ci: CanvasItem, ms: Array, x: float, y: float, scale: float, mod: Color, sy := 1.0, rot := 0.0) -> void:
+## _blit from a member_sprite() cache entry; `fp`, a SoldierAnim.pose() with
+## its rig on, draws the figure walking its own legs (_blit_rig).
+static func _blit_m(ci: CanvasItem, ms: Array, x: float, y: float, scale: float, mod: Color, sy := 1.0, rot := 0.0, sx := 1.0, fp := {}) -> void:
 	var tex = ms[2]
 	if tex == null:
 		return
 	var sc: float = ms[5] * scale
-	ci.draw_set_transform_matrix(Transform2D(rot, Vector2(-sc if ms[1] else sc, sc * sy), 0.0, Vector2(x, y)))
+	var kx: float = (-sc if ms[1] else sc) * sx
+	var ky: float = sc * sy
+	ci.draw_set_transform_matrix(Transform2D(rot, Vector2(kx, ky), 0.0, Vector2(x, y)))
+	if not fp.is_empty() and fp.rig and ms.size() > 7 and ms[7] != null:
+		_blit_rig(ci, ms, kx, ky, mod, fp.legs, fp.lift)
+		return
 	ci.draw_texture_rect_region(tex, ms[3], ms[4], mod)
+
+
+## A man walking away from the camera: the standing frame as the mesh
+## SoldierAnim._rig_mesh built for it, the body above the hips raised `lift`
+## (world px) and each side below them carried with its foot (`legs`: the
+## left and right foot's world px offsets, xy and zw). `kx`, `ky` are the
+## transform's scale already set, which turn world px into the frame's own.
+static func _blit_rig(ci: CanvasItem, ms: Array, kx: float, ky: float, mod: Color, legs: Vector4, lift: float) -> void:
+	var mesh: Array = ms[7]
+	var xs: PackedFloat32Array = mesh[0]
+	var ys: PackedFloat32Array = mesh[1]
+	var wl: PackedFloat32Array = mesh[2]
+	var wr: PackedFloat32Array = mesh[3]
+	var fr: PackedFloat32Array = mesh[4]
+	var lx := legs.x / kx
+	var ly := legs.y / ky
+	var rx := legs.z / kx
+	var ry := legs.w / ky
+	var up := -lift / ky
+	var pts := PackedVector2Array()
+	pts.resize(xs.size() * ys.size())
+	var i := 0
+	for r in ys.size():
+		var f: float = fr[r]
+		var y0: float = ys[r] + (1.0 - f) * up
+		for c in xs.size():
+			var a: float = f * wl[c]
+			var b: float = f * wr[c]
+			pts[i] = Vector2(xs[c] + a * lx + b * rx, y0 + a * ly + b * ry)
+			i += 1
+	RenderingServer.canvas_item_add_triangle_array(ci.get_canvas_item(), mesh[6], pts, PackedColorArray([mod]), mesh[5],
+		PackedInt32Array(), PackedFloat32Array(), ms[2].get_rid())
 
 
 ## Frost on a chilled squad, the red of a frenzy: a tinted copy of the figure
 ## over it (tintOf; the sorted pass's material draws Assets.TINT colours).
-static func _draw_tints(ci: CanvasItem, uv, s: Dictionary, x: float, y: float, flip: bool, scale: float, alpha: float, sy: float, rot: float, time: float, phase: float) -> void:
+static func _draw_tints(ci: CanvasItem, uv, s: Dictionary, x: float, y: float, flip: bool, scale: float, alpha: float, sy: float, rot: float, time: float, phase: float, ms := [], sx := 1.0, fp := {}) -> void:
+	# A man walking his own legs is tinted through the same mesh (_blit_rig).
+	var rig: bool = not fp.is_empty() and fp.rig
 	for st in uv.statuses:
-		if st == "bleeding":
+		if st == "bleeding" or st == "cowed":
 			continue
 		var chill: bool = st == "chilled"
 		var a := 0.42 if chill else 0.22 + 0.09 * sin(time * 6 + phase)
-		_blit(ci, s, x, y, flip, scale, Assets.tint_modulate(TINT_CHILL if chill else TINT_FRENZY, alpha * a), sy, rot)
+		var tint := Assets.tint_modulate(TINT_CHILL if chill else TINT_FRENZY, alpha * a)
+		if rig:
+			_blit_m(ci, ms, x, y, scale, tint, sy, rot, sx, fp)
+		else:
+			_blit(ci, s, x, y, flip, scale, tint, sy, rot)
 		# Rime on the chilled: a faint frosty sheen over the blue.
 		if chill:
-			_blit(ci, s, x, y, flip, scale, Assets.tint_modulate(Color.WHITE, alpha * 0.12), sy, rot)
+			if rig:
+				_blit_m(ci, ms, x, y, scale, Assets.tint_modulate(Color.WHITE, alpha * 0.12), sy, rot, sx, fp)
+			else:
+				_blit(ci, s, x, y, flip, scale, Assets.tint_modulate(Color.WHITE, alpha * 0.12), sy, rot)
 
 
 const TINT_CHILL := Color(0x7c / 255.0, 0xc4 / 255.0, 1.0)
@@ -1216,18 +1253,42 @@ func _draw_squad(ci: CanvasItem, uv, u: Dictionary, time: float, fade := 1.0, di
 		if not engine_drawn and m.y + m.lunge.y > eng.oy:
 			engine_drawn = true
 			_draw_engine(ci, uv, eng, base_scale, alpha, dim, time)
-		var ms := member_sprite(uv, m)
-		var s: Dictionary = ms[0]
-		var flip: bool = ms[1]
+		var framed := SoldierAnim.animated(m.type)
+		var fp: Dictionary = SoldierAnim.pose(uv, m, time) if framed and not m.dying else {}
+		var ms: Array = fp.ms if not fp.is_empty() else ([] if framed else member_sprite(uv, m))
+		var s: Dictionary = ms[0] if not ms.is_empty() else {}
+		var flip: bool = ms[1] if not ms.is_empty() else false
 		var phase: float = m.phase
 		# Marching: one shared cadence with a little personal slack, so the
 		# squad keeps step without moving like a single cut-out.
 		var bob := marching * absf(sin((walk + phase * 0.05) * PI)) * 3.4
 		var shake_x: float = sin(time * 60 + m.id) * m.shake * 2.5 if m.shake else 0.0
-		var qx: float = bx + m.x + m.lunge.x + idle * sin(time * 0.43 + phase * 2.3) * 0.8 + shake_x + vshake
-		var qy: float = by + m.y + m.lunge.y - bob - hop
+		var qx: float = bx + m.x + m.lunge.x + m.drift.x + shake_x + vshake
+		var qy: float = by + m.y + m.lunge.y + m.drift.y - hop
+		var ground_x: float = m.x + m.lunge.x + m.drift.x + fp.get("dx", 0.0)
+		var ground_y: float = m.y + m.lunge.y + m.drift.y + fp.get("dy", 0.0)
+		qy += v.member_ground_offset(uv, ground_x, ground_y)
+		if framed and not fp.is_empty():
+			# The stride's surge and the weight shifting move him on the ground; the bounce lifts him.
+			qx += fp.dx
+			qy += fp.dy - fp.bob
+		else:
+			qx += idle * sin(time * 0.43 + phase * 2.3) * 0.8
+			qy -= bob
 		# The champion stands a head taller than his guard.
 		var scale := base_scale * 1.18 if m.id == champ else base_scale
+		if framed and m.dying:
+			# Falls frame by frame (recoil, kneel, down); from behind the
+			# slump settles into the body left on the field.
+			var fl := SoldierAnim.fall(uv, m)
+			var fa: float = alpha * (1.0 - 0.1 * Iso.clamp((m.death_t - 0.8) / 0.2, 0, 1))
+			var sink: float = Iso.clamp((m.death_t - SoldierAnim.KNEEL) / 0.2, 0, 1) * 1.5
+			_blit_m(ci, fl.ms, qx, qy + sink, scale, Color(1, 1, 1, fa * (1.0 - fl.mix)))
+			if fl.next != null:
+				_blit_m(ci, fl.next, qx, qy + sink, scale, Color(1, 1, 1, fa * fl.mix))
+			if m.flash > 0:
+				_blit_m(ci, fl.ms, qx, qy + sink, scale, Color(Assets.FLASH, Assets.FLASH, Assets.FLASH, m.flash * 0.7 * (1.0 - fl.mix)))
+			continue
 		if m.dying:
 			# Falls: tips over, then settles into the body left on the field.
 			var k := Iso.ease_out_cubic(m.death_t)
@@ -1242,13 +1303,24 @@ func _draw_squad(ci: CanvasItem, uv, u: Dictionary, time: float, fade := 1.0, di
 			continue
 		var breathe := 1 + sin(time * 2.2 + phase) * 0.016 * idle
 		var rot := sin(time * 1.1 + phase) * 0.014 * idle + side * 0.05 * marching
-		_blit_m(ci, ms, qx, qy, scale, white, breathe, rot)
+		var sx := 1.0
+		var body := white
+		if framed:
+			# Squash and stretch about the feet, the waddle and lean as a tilt.
+			breathe = fp.sy
+			sx = fp.sx
+			rot = fp.lean
+			# Breathing through the sorted pass's shader (feet pinned); not under a
+			# flash, tint or dimming, whose overlays are drawn undeformed.
+			if fp.breath != 0.0 and m.flash <= 0.0 and dim <= 0.0 and not tinted and ms.size() > 6:
+				body = Color(-4.0 - ms[6], fp.breath, fp.bend * (-1.0 if flip else 1.0), alpha)
+		_blit_m(ci, ms, qx, qy, scale, body, breathe, rot, sx, fp)
 		if dim > 0:
-			_blit_m(ci, ms, qx, qy, scale, Color(0, 0, 0, alpha * dim), breathe, rot)
+			_blit_m(ci, ms, qx, qy, scale, Color(0, 0, 0, alpha * dim), breathe, rot, sx, fp)
 		if tinted:
-			_draw_tints(ci, uv, s, qx, qy, flip, scale, alpha, breathe, rot, time, phase)
+			_draw_tints(ci, uv, s, qx, qy, flip, scale, alpha, breathe, rot, time, phase, ms, sx, fp)
 		if m.flash > 0:
-			_blit_m(ci, ms, qx, qy, scale, Color(Assets.FLASH, Assets.FLASH, Assets.FLASH, m.flash * 0.8), breathe, rot)
+			_blit_m(ci, ms, qx, qy, scale, Color(Assets.FLASH, Assets.FLASH, Assets.FLASH, m.flash * 0.8), breathe, rot, sx, fp)
 		if m == bearer and (fighting or uv.reserve):
 			ci.draw_set_transform_matrix(Assets.draw_base)
 			_draw_standard(ci, u, qx, qy, flip, time, alpha)
@@ -1352,7 +1424,7 @@ func draw_overlays(ci: CanvasItem) -> void:
 	# after every bar, so a crowded line never hides one under its neighbour's bar.
 	var labels: Array = []
 	for uv in v.views.values():
-		if not uv.visible or uv.reserve or uv.status == "dead" or uv.status == "downed" or uv.status == "fled" or uv.alive <= 0:
+		if not v.squad_visible(uv) or uv.reserve or uv.status == "dead" or uv.status == "downed" or uv.status == "fled" or uv.alive <= 0:
 			continue
 		var u: Dictionary = v._u(uv.uid)
 		var head: Vector2 = v._head_pos(uv)
@@ -1544,7 +1616,9 @@ func draw_minimap_base(ci: CanvasItem) -> void:
 	# One triangle array for the whole field (a polygon per tile is a draw call each).
 	var geo := Geo.new()
 	for g in m.get("outerGround", []):
-		_mini_dia(geo, r, g.x, g.y, _terrain_color(g.terrain))
+		# Decorative ground lies outside the explored tile mask.
+		if v.fog == null or not v.fog.enabled():
+			_mini_dia(geo, r, g.x, g.y, _terrain_color(g.terrain))
 	for t in m.tiles:
 		_mini_dia(geo, r, t.x, t.y, _mini_col(t))
 	geo.flush(ci)
@@ -1598,19 +1672,24 @@ func draw_minimap(ci: CanvasItem) -> void:
 	for p in v.b.map.get("zone", []):
 		var q: Vector2 = at.call(p.x, p.y)
 		ci.draw_rect(Rect2(q.x - 1.5, q.y - 1, 3, 2), zc)
-	# Squads: the company blue, the horde red, coming waves dark red beyond the edge.
-	var staged: Dictionary = v.staged()
+	if v.fog != null and v.fog.enabled():
+		for tile in v.b.map.tiles:
+			var state: int = v.fog.tile_state(tile.x, tile.y)
+			if state == 2:
+				continue
+			var p: Vector2 = at.call(tile.x, tile.y)
+			var dx: float = 64.0 * r.k
+			var dy: float = 32.0 * r.k
+			ci.draw_colored_polygon(PackedVector2Array([p + Vector2(-dx, 0), p + Vector2(0, -dy), p + Vector2(dx, 0), p + Vector2(0, dy)]), Color(0.06, 0.08, 0.1, 0.94 if state == 0 else 0.56))
+	# Squads currently on the field or marching in.
 	for uv in v.views.values():
-		var waiting: bool = uv.reserve and staged.has(uv.uid)
-		if not (uv.visible or waiting) or uv.status == "dead" or uv.status == "downed" or uv.status == "fled":
+		if not v.squad_visible(uv) or uv.reserve or uv.status == "dead" or uv.status == "downed" or uv.status == "fled":
 			continue
 		var u: Dictionary = v._u(uv.uid)
 		var q: Vector2 = at.call(uv.x, uv.y)
 		var player: bool = u.faction == "player"
 		var col: Color
-		if waiting:
-			col = rgba(150, 30, 20, 0.6 + 0.3 * sin(time * 4))
-		elif player:
+		if player:
 			col = Color.html("#ffd76a") if v.ui.selected == uv.uid else Color.html("#7fb4ff")
 		else:
 			col = Color.html("#d9b0a0") if uv.routing else Color.html("#ff4a36")

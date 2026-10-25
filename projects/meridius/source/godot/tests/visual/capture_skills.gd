@@ -9,7 +9,7 @@
 ## Writes tests/visual/out/skills_<name>.png and skills_<name>_bar.png (the
 ## bottom of the screen). Names (default: all): bar_footman, bar_spearman,
 ## bar_crossbowman, bar_collie_guard, tip_square, tip_defend, tip_lick, charge_forecast,
-## charge_square, use_growl, stances, badges, tip_howl, use_howl.
+## charge_square, charge_close, use_growl, stances, badges, tip_howl, use_howl.
 extends SceneTree
 
 const OUT := "res://tests/visual/out/"
@@ -147,12 +147,14 @@ func _run() -> void:
 			bd = d
 			best = e
 	# Set it down three tiles off in the open, so the hounds have a run at it.
+	var run_dir: Variant = null
 	if best != null:
 		for d in Grid.DIRS:
 			var path := [1, 2, 3].map(func(k): return {"x": int(c.x) + d.x * k, "y": int(c.y) + d.y * k})
 			if path.all(func(p): return Grid.tile_passable(b.map, p.x, p.y) and Grid.unit_at(b.units, p.x, p.y) == null):
 				best.x = path[2].x
 				best.y = path[2].y
+				run_dir = d
 				bv._sync_views()
 				await _frames(10)
 				break
@@ -170,6 +172,18 @@ func _run() -> void:
 		await _frames(10)
 		await _shot("charge_square")
 		best.stance = null
+	# Two tiles off, the cursor on the side facing the hounds (a run of one):
+	# the charge comes round to the nearest side that gives it two.
+	if run_dir != null and _want("charge_close"):
+		best.x = int(c.x) + run_dir.x * 2
+		best.y = int(c.y) + run_dir.y * 2
+		bv._sync_views()
+		await _frames(10)
+		var at := _ground_point(bv, best.x, best.y)
+		var near := _ground_point(bv, int(c.x) + run_dir.x, int(c.y) + run_dir.y)
+		bv.pointer_move(at.lerp(near, 0.35))
+		await _frames(10)
+		await _shot("charge_close")
 	bv.set_ability(null)
 
 	# The skills used: Growl (the shout and the cowed), Square and Defend (stance tags).
@@ -279,6 +293,11 @@ func _of_type(b, t: String) -> Dictionary:
 
 
 ## A screen point over a squad that picks it (as capture_magic.gd).
+## The screen point at the middle of tile (x, y) on the ground.
+func _ground_point(bv, x: int, y: int) -> Vector2:
+	return bv.cam.world_to_screen(Iso.iso_x(x, y), Iso.iso_y(x, y, bv._tile_h(x, y)), bv._w, bv._h)
+
+
 func _unit_point(bv, uid: String) -> Variant:
 	var v = bv.views.get(uid)
 	if v == null:

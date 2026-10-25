@@ -162,19 +162,14 @@ func _night_color() -> Color:
 func _collect_lights(dawn) -> void:
 	_lights.clear()
 	var lit: bool = not v.b.setup.get("darkness", false)
-	var staged: Dictionary = v.staged()
 	for uv in v.views.values():
-		var waiting: bool = uv.reserve and staged.has(uv.uid)
-		if not (uv.visible or waiting) or uv.status == "dead" or uv.status == "fled":
+		if not v.squad_visible(uv) or uv.reserve or uv.status == "dead" or uv.status == "fled":
 			continue
 		var u: Dictionary = v._u(uv.uid)
 		var p: Vector2 = v._view_pos(uv)
 		# The horde comes by torchlight: every warband carries fire.
 		var r := (230.0 if lit else 120.0) if u.faction == "player" else (125.0 if dawn else 70.0)
 		_lights.append(Vector3(p.x, p.y - 40, r))
-	if dawn and v._host_alpha > 0.05:
-		for t in v._host_torches:
-			_lights.append(Vector3(t.x, t.y, 70))
 	for c in _campfires:
 		_lights.append(Vector3(c.x, c.y, 320))
 
@@ -232,10 +227,8 @@ func _draw_flames(ci: CanvasItem) -> void:
 		var f := 1 + sin(time * 13 + k) * 0.18 + sin(time * 7.3 + k * 3) * 0.1
 		var r: float = 27 * v.cam.zoom * f
 		ci.draw_texture_rect(fl, Rect2(s.x - r, s.y - r, r * 2, r * 2), false, col)
-	var staged: Dictionary = v.staged()
 	for uv in v.views.values():
-		var waiting: bool = uv.reserve and staged.has(uv.uid)
-		if not (uv.visible or waiting) or uv.status == "dead" or uv.status == "fled" or uv.routing:
+		if not v.squad_visible(uv) or uv.reserve or uv.status == "dead" or uv.status == "fled" or uv.routing:
 			continue
 		var u: Dictionary = v._u(uv.uid)
 		if u.faction != "enemy":
@@ -246,10 +239,6 @@ func _draw_flames(ci: CanvasItem) -> void:
 			var p: Vector2 = v._member_pos(uv, live[i])
 			flame.call(p.x + 8, p.y - SquadView.member_height(u.typeId) - 10, Rng.hash2(i, uv.uid.length()) * 40 + i)
 			i += 3
-	if v._host_alpha > 0.05:
-		for i in v._host_torches.size():
-			var t: Vector2 = v._host_torches[i]
-			flame.call(t.x, t.y - 8, i * 1.7)
 
 
 func _draw_dawn(ci: CanvasItem) -> void:

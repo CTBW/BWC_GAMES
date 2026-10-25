@@ -4,7 +4,7 @@
 [ext_resource type="FontFile" path="res://assets/fonts/cinzel-latin-ext-700-normal.woff2" id="2_5oaxu"]
 [ext_resource type="Script" path="res://scripts/ui/styles/paper_style.gd" id="3_levwr"]
 
-[sub_resource type="FontVariation" id="FontVariation_vlrnd"]
+[sub_resource type="FontVariation" id="FontVariation_h3f68"]
 fallbacks = Array[Font]([ExtResource("2_5oaxu")])
 base_font = ExtResource("1_g0vrx")
 spacing_glyph = 1
@@ -17,15 +17,13 @@ content_margin_top = 12.0
 content_margin_right = 26.0
 content_margin_bottom = 12.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.13254529, 0.113133535, 0.099015884, 0.055999998)
-corner_radius = 5.0
-border_color = Color(0.6781327, 0.66577977, 0.6357798, 0.24499999)
+bg_color = Color(0.06799871, 0.07858694, 0.08741047, 0.175)
+corner_radius = 1.0
+border_color = Color(0.5008936, 0.4841289, 0.44530538, 0.315)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwt6s"]
 draw_center = false
@@ -34,10 +32,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 0.84313726, 0.41568628, 0.7)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
@@ -51,15 +49,13 @@ content_margin_top = 12.0
 content_margin_right = 26.0
 content_margin_bottom = 12.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBox" id="StyleBox_u5inc"]
 resource_local_to_scene = false
@@ -69,15 +65,13 @@ content_margin_top = 13.0
 content_margin_right = 26.0
 content_margin_bottom = 11.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 offset = Vector2(0, 1)
 
 [sub_resource type="StyleBox" id="StyleBox_we82d"]
@@ -88,17 +82,15 @@ content_margin_top = 12.0
 content_margin_right = 26.0
 content_margin_bottom = 12.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.22745098, 0.14117648, 0.078431375, 0.08)
-corner_radius = 5.0
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.35)
+bg_color = Color(0.0627451, 0.10980392, 0.14901961, 0.25)
+corner_radius = 1.0
+border_color = Color(0.7176471, 0.6431373, 0.47058824, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
-[sub_resource type="FontVariation" id="FontVariation_iy48a"]
+[sub_resource type="FontVariation" id="FontVariation_ix1fq"]
 fallbacks = Array[Font]([ExtResource("2_5oaxu")])
 base_font = ExtResource("1_g0vrx")
 
@@ -110,15 +102,13 @@ content_margin_top = 8.0
 content_margin_right = 14.0
 content_margin_bottom = 8.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.13254529, 0.113133535, 0.099015884, 0.055999998)
-corner_radius = 5.0
-border_color = Color(0.6781327, 0.66577977, 0.6357798, 0.24499999)
+bg_color = Color(0.06799871, 0.07858694, 0.08741047, 0.175)
+corner_radius = 1.0
+border_color = Color(0.5008936, 0.4841289, 0.44530538, 0.315)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o3x0u"]
 draw_center = false
@@ -127,10 +117,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 0.84313726, 0.41568628, 0.7)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
@@ -144,15 +134,13 @@ content_margin_top = 8.0
 content_margin_right = 14.0
 content_margin_bottom = 8.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBox" id="StyleBox_bsc00"]
 resource_local_to_scene = false
@@ -162,15 +150,13 @@ content_margin_top = 9.0
 content_margin_right = 14.0
 content_margin_bottom = 7.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 offset = Vector2(0, 1)
 
 [sub_resource type="StyleBox" id="StyleBox_bpp1j"]
@@ -181,15 +167,13 @@ content_margin_top = 8.0
 content_margin_right = 14.0
 content_margin_bottom = 8.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.22745098, 0.14117648, 0.078431375, 0.08)
-corner_radius = 5.0
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.35)
+bg_color = Color(0.0627451, 0.10980392, 0.14901961, 0.25)
+corner_radius = 1.0
+border_color = Color(0.7176471, 0.6431373, 0.47058824, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBox" id="StyleBox_n7uwv"]
 resource_local_to_scene = false
@@ -199,15 +183,13 @@ content_margin_top = 4.0
 content_margin_right = 9.0
 content_margin_bottom = 4.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.13254529, 0.113133535, 0.099015884, 0.055999998)
-corner_radius = 5.0
-border_color = Color(0.6781327, 0.66577977, 0.6357798, 0.24499999)
+bg_color = Color(0.06799871, 0.07858694, 0.08741047, 0.175)
+corner_radius = 1.0
+border_color = Color(0.5008936, 0.4841289, 0.44530538, 0.315)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_og38k"]
 draw_center = false
@@ -216,10 +198,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 0.84313726, 0.41568628, 0.7)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
@@ -233,15 +215,13 @@ content_margin_top = 4.0
 content_margin_right = 9.0
 content_margin_bottom = 4.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBox" id="StyleBox_shjy8"]
 resource_local_to_scene = false
@@ -251,15 +231,13 @@ content_margin_top = 5.0
 content_margin_right = 9.0
 content_margin_bottom = 3.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.26156864, 0.16235295, 0.09019608, 0.08)
-corner_radius = 5.0
-border_color = Color(1, 1, 0.8658824, 0.35)
+bg_color = Color(0.07215687, 0.12627451, 0.17137256, 0.25)
+corner_radius = 1.0
+border_color = Color(0.82529414, 0.7396079, 0.5411765, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 offset = Vector2(0, 1)
 
 [sub_resource type="StyleBox" id="StyleBox_bp86h"]
@@ -270,15 +248,13 @@ content_margin_top = 4.0
 content_margin_right = 9.0
 content_margin_bottom = 4.0
 script = ExtResource("3_levwr")
-bg_color = Color(0.22745098, 0.14117648, 0.078431375, 0.08)
-corner_radius = 5.0
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.35)
+bg_color = Color(0.0627451, 0.10980392, 0.14901961, 0.25)
+corner_radius = 1.0
+border_color = Color(0.7176471, 0.6431373, 0.47058824, 0.45)
 border_left = 1.0
 border_top = 1.0
 border_right = 1.0
 border_bottom = 1.0
-shadow_offset = Vector2(0, 2)
-shadow_blur = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6x3m"]
 content_margin_left = 6.0
@@ -291,74 +267,74 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trj1g"]
 content_margin_left = 6.0
 content_margin_top = 1.0
 content_margin_right = 6.0
 content_margin_bottom = 1.0
-bg_color = Color(0.9411765, 0.8862745, 0.7529412, 0.08)
+bg_color = Color(0.29803923, 0.49803922, 0.6509804, 0.28)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+border_color = Color(0.5294118, 0.72156864, 0.83137256, 0.62)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_usu5x"]
 content_margin_left = 6.0
 content_margin_top = 1.0
 content_margin_right = 6.0
 content_margin_bottom = 1.0
-bg_color = Color(0.9411765, 0.8862745, 0.7529412, 0.08)
+bg_color = Color(0.7764706, 0.627451, 0.35686275, 0.22)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+border_color = Color(0.8666667, 0.7411765, 0.4745098, 0.62)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i1n7f"]
 content_margin_left = 6.0
 content_margin_top = 1.0
 content_margin_right = 6.0
 content_margin_bottom = 1.0
-bg_color = Color(0.9411765, 0.8862745, 0.7529412, 0.08)
+bg_color = Color(0.32156864, 0.47843137, 0.2901961, 0.25)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+border_color = Color(0.62352943, 0.7411765, 0.50980395, 0.62)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pli68"]
 content_margin_left = 6.0
 content_margin_top = 1.0
 content_margin_right = 6.0
 content_margin_bottom = 1.0
-bg_color = Color(0.9411765, 0.8862745, 0.7529412, 0.08)
+bg_color = Color(0.627451, 0.2901961, 0.2509804, 0.26)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.9411765, 0.8862745, 0.7529412, 0.3)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+border_color = Color(0.83137256, 0.57254905, 0.4745098, 0.62)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_yks0j"]
 color = Color(0.7882353, 0.6039216, 0.23529412, 0.35)
@@ -397,7 +373,7 @@ GhostBigButton/constants/h_separation = 6
 GhostBigButton/constants/icon_max_width = 18
 GhostBigButton/constants/outline_size = 0
 GhostBigButton/font_sizes/font_size = 19
-GhostBigButton/fonts/font = SubResource("FontVariation_vlrnd")
+GhostBigButton/fonts/font = SubResource("FontVariation_h3f68")
 GhostBigButton/styles/disabled = SubResource("StyleBox_m422p")
 GhostBigButton/styles/focus = SubResource("StyleBoxFlat_hwt6s")
 GhostBigButton/styles/hover = SubResource("StyleBox_2avum")
@@ -421,7 +397,7 @@ GhostButton/constants/h_separation = 6
 GhostButton/constants/icon_max_width = 18
 GhostButton/constants/outline_size = 0
 GhostButton/font_sizes/font_size = 14
-GhostButton/fonts/font = SubResource("FontVariation_iy48a")
+GhostButton/fonts/font = SubResource("FontVariation_ix1fq")
 GhostButton/styles/disabled = SubResource("StyleBox_8yqa3")
 GhostButton/styles/focus = SubResource("StyleBoxFlat_o3x0u")
 GhostButton/styles/hover = SubResource("StyleBox_dl8fa")
@@ -445,7 +421,7 @@ GhostSmallButton/constants/h_separation = 6
 GhostSmallButton/constants/icon_max_width = 18
 GhostSmallButton/constants/outline_size = 0
 GhostSmallButton/font_sizes/font_size = 12
-GhostSmallButton/fonts/font = SubResource("FontVariation_iy48a")
+GhostSmallButton/fonts/font = SubResource("FontVariation_ix1fq")
 GhostSmallButton/styles/disabled = SubResource("StyleBox_n7uwv")
 GhostSmallButton/styles/focus = SubResource("StyleBoxFlat_og38k")
 GhostSmallButton/styles/hover = SubResource("StyleBox_faixe")

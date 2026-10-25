@@ -68,7 +68,9 @@ static func make(id: String, viewport_h := 1080.0) -> PanelContainer:
 	ll.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	right.add_child(ll)
 	head.add_child(right)
-	col.add_child(head)
+	var head_band := UI.panel("BannerPanel", [12, 18])
+	head_band.add_child(head)
+	col.add_child(head_band)
 	col.add_child(Flourish.make())
 	var body := body_for(id, g, viewport_h)
 	var scroll := ScrollBox.make(body, viewport_h * 0.54, 4)

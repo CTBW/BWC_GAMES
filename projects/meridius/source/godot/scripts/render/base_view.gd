@@ -211,6 +211,34 @@ func _notify() -> void:
 	changed.emit()
 
 
+# ---------------------------------------------------------------- sound
+
+## On screen the camp is heard: its ambience, the fire crackling where it burns
+## (placed by this view's camera), and its camera places other sounds.
+func _enter_tree() -> void:
+	var s := _audio()
+	if s == null or not s.has_method("set_ambience"):
+		return
+	s.set_listener(self)
+	s.set_ambience("camp")
+	s.set_anchor("campfire", Vector2(Iso.iso_x(8, 8.6), Iso.iso_y(8, 8.6)))
+
+
+func _exit_tree() -> void:
+	var s := _audio()
+	if s == null or not s.has_method("set_ambience"):
+		return
+	s.clear_listener(self)
+	s.clear_anchor("campfire")
+	s.release_ambience("camp")
+
+
+## The Sfx autoload, or null (tools and tests run the view without it).
+func _audio() -> Node:
+	var ml := Engine.get_main_loop() as SceneTree
+	return ml.root.get_node_or_null("Sfx") if ml != null else null
+
+
 func spawn_walkers(g: Dictionary) -> void:
 	walkers = []
 	var roster: Array = g.get("roster", [])

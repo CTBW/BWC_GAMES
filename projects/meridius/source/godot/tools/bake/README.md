@@ -5,6 +5,10 @@ baked once from the original code (`../game/src`, never modified). The bake runs
 that code in Microsoft Edge through `playwright-core`, served by the original's
 own vite install (`../game/node_modules`) on port 5181.
 
+Recorded sound does not go through the bake: put it in `assets/audio/bank/`
+and list it in `assets/audio/bank/bank.json` (ARCHITECTURE.md, *Audio*). A
+re-bake rewrites `assets/audio/*.wav` and `sfx.json` only.
+
 ## Run
 
 From `projects/meridius/source/godot`:
@@ -29,6 +33,7 @@ so unchanged assets are not re-imported. Override the browser with
 | (not baked) `assets/sprites/painted/*.webp` | The painted stones and boulders that replaced the Blender rocks (`tools/props/rock_cutout.py`, MIGRATION.md *Painted rocks*) and the painted trees and bush that replaced the Blender woodland (`tools/props/woodland_cutout.py`, MIGRATION.md *Painted woodland*), with the stumps, logs, deadwood, ferns, seasonal trees and small stones of the second terrain kit (MIGRATION.md *Terrain kit 2*). A sprite re-bake rebuilds `sprites.json` from the original: it writes the Blender or baked variants back for `rock_small`, `rock_large`, `tree_pine`, `tree_oak`, `bush`, `stump` and `log`, and drops the keys the original never had (`fern`, `deadwood`, `stones`, `tree_oak_autumn`, `tree_oak_spring`). After one, re-run both cutouts with `--manifest assets/sprites.json` (the rocks with `--texture assets/terrain/rock.webp` and `--stones` with the kit's stone sheet; see the scripts' headers) |
 | `assets/sprites.json` | `key → [{file, region?: [x, y, w, h], ax, ay, scale, w, h, noShadow, art?}]`, one entry per variant, exactly what the original's `sprite(key, v)` returns |
 | `assets/audio/<name>_<i>.wav`, `sfx.json` | Every `sfx(name)` recipe rendered with `OfflineAudioContext` (44.1 kHz mono 16-bit, master gain 0.55 included); four takes for recipes that use `Math.random`, one otherwise. The browser's rendering jitters a few samples by one LSB between runs; a take within ±1 of its existing file keeps that file |
+| (not baked) `assets/audio/bank/**` | The sound bank: `bank.json` and the recorded takes, ambience and music it lists. Edited by hand; the bake never reads or writes it. The baked WAVs above stay the fallback for every event without recorded takes (`scripts/audio/bank.gd`) |
 | `tests/fixtures/assets/variant_counts.json` | The original's `variantCount()` per key, `hasArt()` keys, and the key groups |
 | `tests/fixtures/assets/hit_masks.json` | The original's `opaqueAt()` on a grid for a few sprites |
 | `tests/fixtures/assets/sfx_names.json` | Sound names, takes, master gain and gaps from `sfx.ts` |

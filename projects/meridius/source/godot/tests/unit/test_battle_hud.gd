@@ -164,7 +164,7 @@ func test_deployment() -> void:
 	var t := _text_of(top)
 	assert_true(t.contains("Test battle"), "battle title")
 	assert_true(t.contains("Deployment · %s" % b.map.name), "deployment line: " + t)
-	assert_true(t.contains("Enemy squads: %d on the field" % b.active("enemy").size()), "enemy count: " + t)
+	assert_true(t.contains("Enemies in sight: %d" % hud.enemy_counts().x), "enemy count: " + t)
 	assert_not_null(_button("Begin"), "Begin Battle")
 	assert_null(_button("Retreat"), "no Retreat while deploying")
 	assert_null(_button("EndTurn"), "no End Turn while deploying")

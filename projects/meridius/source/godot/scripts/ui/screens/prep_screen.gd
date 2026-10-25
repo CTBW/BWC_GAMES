@@ -151,11 +151,11 @@ func _build() -> void:
 	if _panel != null:
 		_panel.queue_free()
 	var vp := get_viewport_rect().size if is_inside_tree() else Vector2(1920, 1080)
-	var p := UI.panel("ParchmentPanel", [16, 20])
+	var p := UI.panel("ParchmentPanel", [26, 32])
 	_panel = p
 	p.name = "PrepPanel"
 	var w := minf(1460.0, vp.x * 0.96)
-	var h := minf(860.0, vp.y * 0.92)
+	var h := minf(780.0, vp.y * 0.92)
 	p.custom_minimum_size = Vector2(w, h)
 	p.size = Vector2(w, h)
 	p.position = ((vp - Vector2(w, h)) * 0.5).round()
@@ -176,7 +176,9 @@ func _build() -> void:
 	back.name = "BackToCamp"
 	hr.add_child(back)
 	head.add_child(hr)
-	col.add_child(head)
+	var heading_band := UI.panel("BannerPanel", [10, 18])
+	heading_band.add_child(head)
+	col.add_child(heading_band)
 	col.add_child(Flourish.make())
 	var cols := UI.hbox(16)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL

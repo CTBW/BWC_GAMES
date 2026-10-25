@@ -215,6 +215,100 @@ only version developed.
       `Meridius.console.exe -- --smoke`: SMOKE OK 13/13. Play-through
       (default): 213 checks, 0 failed, 0 errors, exit code 0.
 
+## Footman animation (22 Oct 2026, Godot only)
+The footmen are the first frame-animated figures: the Higgsfield pixel-art
+keyframes in `../game/art/sprites/footman_anim` (read only) replace the baked
+procedural footman in battle. Every other figure is unchanged.
+- [x] Frames: `tools/anim/build_footman.py` (art venv: Pillow, numpy, scipy)
+      writes `assets/sprites/anim/footman.png` (4096×2048 atlas, mipmaps) and
+      `footman.json` (36 frames × 6 soldiers; scale 0.47981, so a footman
+      stands as tall as the figure he replaces). The generated walk keys led
+      with the same leg in both steps (a limp) and changed the upper body
+      between keys; `tools/anim/legs.py` builds every walk key on one upper
+      body and swaps only the legs: contact, passing (idle legs), other foot
+      forward (the legs mirrored). `--aseprite <exe>` also writes editable
+      `art/footman/footman_<f|fs|b|bs>.aseprite` (a layer per soldier, tags
+      idle/walk/strike/death, the game's timing; `art/` has a `.gdignore`).
+- [x] Playback: `scripts/render/soldier_anim.gd`. Each man has his own
+      breath tempo and stride phase (from `phase`), joins and leaves a march a
+      moment apart, rises on the passing step, leans into the march (more when
+      routing) and rocks back when struck, and trails the moving anchor at his
+      own pace (`Member.drift`, at most 14 px). Falls are frame by frame
+      (recoil, kneel, down) over 0.95 s instead of the 0.5 s tip-over; from the
+      front the last frame is the body left on the field, from behind the
+      slump settles into it. Melee (`battle_view._play_drilled_melee`): every
+      man winds up, cuts, holds and recovers on his own beat, front rank first;
+      the squad's damage still shows once, at the first blow, and the slain drop
+      as later blows land. Rules, damage and timing of other squads unchanged.
+- [x] Shared code touched only through new, inert defaults: `Member.key`,
+      `drift`, `death_dur` (0.5 for every other type), `UnitView.anchor_prev`.
+      `test_formation::test_fall_and_reform_sequence_matches_the_original`
+      stages a footman squad, so it now pins the original's 0.5 s fall
+      explicitly and asserts the footman's 0.95 s; the golden still holds.
+- [x] Visual check: `tests/visual/footman_lab.gd` (facings, march, melee,
+      deaths), contact sheets reviewed. Base and campaign screens still show
+      the procedural footman (`footman_idle_f`…), which `test_assets` pins to
+      the original's bake.
+- [ ] Better art, if wanted (paid): real opposite-leg walk keys and push-off
+      frames (the mirrored legs are clean at game zoom, rough at native size),
+      a hit/flinch frame, a raised-shield frame for the shield wall, a re-cut
+      of the NE thrust (cape and blade tips clipped by the original cut).
+
+## Every squad in pixel art (22 Oct 2026, Godot only)
+All 20 battle figure types and the four war machines are now Higgsfield pixel
+art (`nano_banana_pro`, 2K sheets), animated by `soldier_anim.gd` like the
+footmen. The baked procedural figures remain only for garrison, campaign,
+portraits and icons (`assets/sprites.json`, pinned by `test_assets`).
+- [x] Pipeline (`tools/anim/`, art venv): `units.py` (what each figure looks
+      like and holds, per facing), `prompts.py` (front sheet from the footman
+      style sheet plus the game's figures; back view; hand swap for the
+      mirrored facings of shield units; one edit per action: walk step,
+      wind-up, blow, kneel, fall), `squadgen.py` (references, cutting by grid
+      slot with feet registered to the standing sheet, stray-speck removal,
+      falls re-laid with room, build to `assets/sprites/anim/<type>.png/.json`
+      with its own `.import`), `hfgen.py` (the Higgsfield CLI's `hf.exe`
+      directly, since the npm shim cuts prompts at the first line break; job
+      ids in `art/raw/<type>/jobs.json`; `auto` runs a type stage by stage,
+      `edit` changes a finished sheet). Second walk step: the first step's
+      legs mirrored (`legs.walk_keys_any`), the generator always leads with
+      the same leg. Raw sheets in `art/raw/` (ignored), cut frames in
+      `art/squads/`.
+- [x] Heights: each figure keeps the in-game height of the figure it
+      replaces, except goblins (spearmen, archers, rabble, horn-bearers,
+      shamans): two thirds of an orc warrior (`rel` in `units.py`). The
+      approved goblin designs (realistic proportions, small heads and eyes)
+      come from the goblin chat's sheets in `../../review/goblins-v2/`; the
+      rabble carries improvised shields and is drawn in four facings.
+- [x] Back views must face away: a strict orientation paragraph in the back
+      prompt (back of the head to the viewer, weapon and mount pointing to the
+      upper right); crossbowmen, orc brutes, trolls, wolf riders, lancers,
+      mages, engineers, orc warriors and the goblins were redrawn for it.
+- [x] Turning to the target (`SoldierAnim.turn_to/turn_back`, `Member.face`):
+      the rules keep a squad's facing when it strikes or shoots off its front
+      (flanks and rear stay where they were), but its men turn to the enemy
+      one by one, front rank first, and turn back one by one afterwards;
+      casters turn to the spell's target. War machines keep their line.
+      `tests/visual/footman_lab.gd -- unit=<type> turn` films it.
+- [x] Machines: one sheet each (ready and loosing, front and back) drawn
+      through `battle_draw.engine_of`; the relief lancers gallop with frames.
+- [x] The upper-right view (facing 3, the company's usual march toward the
+      horde): on this camera a step up-right is two pixels right for one up,
+      so the men must be turned well to the right, back and whole right side
+      showing. The generator draws rear views nearly straight from behind (they
+      read as walking up-left), but it reliably draws the turn toward the upper
+      left: frame `base_t` (`prompts.base_back_turned`, angle references
+      `art/raw/_refs/angle_n.png` and `angle_w.png` from the footman
+      turnaround) asks for that, with the hands mirrored, and `hfgen.py` mirrors
+      each grid cell. The company's squads were redrawn this way; the footmen
+      moved into `squadgen.py` (their approved SW and SE drawings are the
+      starting sheets; `build_footman.py` is superseded).
+- [x] Trolls twice as big (`units.py` `rel=("troll", 2.0)`,
+      `SquadView.member_height` 132, a wider triangle `Formation.TROLL_SPREAD`
+      inside the tile, contact shadows doubled). The troll cases of the
+      formation goldens (`formation.json` members, `formation_engines.json`
+      slots and members) are retired, `test_formation::test_trolls_doubled`
+      checks the new triangle; every other case still compares as recorded.
+
 ## Squad skills (22 Oct 2026, Godot only)
 Every company squad gets its own kit (`../../docs/squad-skills.md`): footmen
 Charge and Defend (beside Shield Wall, Shield Bash on promotion), spearmen
@@ -319,12 +413,347 @@ to Howl; no rebalancing):
       The badges show the painted icons (`Icon.painted`,
       `assets/icons/painted/`, keyed from the magenta-ground paintings by
       `tools/ui_key_icons.py`), the SVG where none is painted (Howl).
+- [x] Charge aiming (25 Oct 2026, owner's OK): when the side under the cursor
+      is too close for a charge's run (`minRun`), `battle_view._preview_against`
+      takes the nearest side to the cursor whose forecast is legal, and the
+      cursor's side only when none is (its reason stays, a hidden target's
+      fog reason too). Other attacks still take the side under the cursor.
+      Spec updated (`../../docs/squad-skills.md`, Charge). Test
+      `test_battle_view::test_a_charge_aimed_too_close_runs_in_from_the_nearest_side_with_a_full_run`;
+      checked in a window (`capture_skills.gd -- charge_close`).
+
+## Audio engine, phase 1 (22 Oct 2026, Godot only)
+
+Plan: `../../docs/plan-audio.md`. The engine that recorded sounds, ambience and
+music will play; nothing recorded is added yet, so the game still sounds like
+the original (the baked synth takes), now placed on screen and mixed on buses.
+Details in ARCHITECTURE.md, *Audio*.
+
+- [x] Buses (`default_bus_layout.tres`, loaded by Godot by default): Master
+      with a hard limiter; Music, Ambience, UI, SFX, Voice. Music and Ambience
+      are ducked by compressors keyed from SFX and from Voice. Godot's
+      compressor doubles the overshoot (a ratio 2.5 first dipped the bed
+      12 dB under a -6 dBFS key); the shipped settings were measured with a
+      steady key on the Ambience bus: -12.5 dBFS → -1.9 dB, -9 dBFS → -4.6 dB,
+      nothing below -15 dBFS. Steps (-37 dBFS) never duck.
+- [x] Sound bank `assets/audio/bank/bank.json` (`scripts/audio/bank.gd`):
+      event → takes and bus, level, pitch, jitter, voice limit, gap,
+      positional, fallback. Shipped with routing only: the UI names (click,
+      select, deny, page, coin, build, turn) on the UI bus, the battle's on
+      SFX and placed, horns/drums/banners flat; `step_small/medium/large` and
+      `step_troll`, `step_wolf_rider`, `step_collie_guard` fall back to `step`
+      (pitched for size). The original's gaps (step 70 ms, else 25 ms) are
+      kept. Ambience presets and music tracks name the planned files; missing
+      files are skipped silently (20 listed, none added). Takes never repeat
+      back to back. `Sfx.play(name)` is unchanged for its callers.
+- [x] Placed sound: `Sfx.play_at(name, world_pt)` through the listening view's
+      camera (battle and garrison views register on entering the tree).
+      AudioStreamPlayer2D voices in Sfx's own space with a current
+      AudioListener2D, Godot's distance attenuation off; pan and level from
+      `placement.gd` (why: ARCHITECTURE.md). Godot 4.7.2's 2D pan law was
+      measured with an AudioEffectCapture (right gain 0.5 + 0.25·x/width,
+      centre 6.02 dB under a flat player) and is compensated. All battle
+      sounds of a squad or an impact point use it: blows, swings, hits,
+      blocks, misses, volleys, bolts, deaths, routs, stances, shouts, spells,
+      explosions, engines, the relief's hooves, deploy steps.
+- [x] Voice limits: 16 flat + 24 placed voices (was 24 flat); over an event's
+      `max_voices` its oldest voice makes way; a full pool gives up its
+      oldest. Far off-screen sounds (below -36 dB) take no voice.
+- [x] Footsteps: from planted feet. `SoldierAnim.footfalls()` counts the
+      contacts of `pose()`'s stride per man; `battle_view` plays one tread per
+      squad at most every 0.19 s, from the squad, ±dB by how many men are
+      left, as `step_<type>` → `step_<size>` → `step`. Before: one `step` per
+      tile per squad (about 3.8 a second while marching); now about 5 a
+      second, starting with the first man to move and ending with the last to
+      halt. Figures without frames keep the per-tile step (none today).
+      Measured: six footmen marching 2 s set down ~50 feet, 10 treads heard.
+- [x] Ambience player (`ambience.gd`): presets camp / battle_day /
+      battle_night with crossfaded beds, positional loops (the camp's fire)
+      and random one-shots; garrison view → camp, battle view → day or night
+      (dawn crossfades over 6 s); views release their preset on leaving.
+- [x] Music player: `Sfx.set_music(id)`, 3 s crossfade on the Music bus;
+      `App` asks for the track of each screen. No tracks yet: nothing plays.
+- [x] Pause: Sfx now always processes. Before, the Sfx autoload paused with
+      the tree, so the menu's own "page" sound froze when the menu opened and
+      played on closing. Now UI sounds play while paused, world sounds hold and
+      resume, the ambience dips 8 dB and its one-shots stop, the music dips 4 dB.
+- [x] Mute: also mutes the Master bus (ambience and music keep their place
+      and resume on unmute); remembered as before.
+- [x] Volume sliders in the pause menu (master, music, ambience, effects,
+      voices; prefs `volMaster`…`volVoice`, 0..1, dB = 40·log10(v)), applied
+      at start. Theme: HSlider styles in `theme_builder.gd` (the bars' track
+      and gold fill, a brass knob); `assets/ui/theme.tres` not regenerated
+      (the game builds its theme at run time).
+- [x] Tests: `test_sfx.gd` changed deliberately: `names()` may now be longer
+      than the original's 42 (bank events), the baked takes are checked
+      through `bank.synth`, and `variant_count` equals the baked count only
+      while a name has no recorded takes. New `test_audio.gd` (18): buses,
+      bank resolution and fallback, no-repeat picking, voice limits,
+      placement, pause, mute, volume prefs, ambience crossfade / missing
+      files / one-shots / positional loop, music, the camp hooks, footfalls
+      and per-squad treads. Full `tools/test.sh`: 375 passed, 0 failed,
+      0 skipped (355 s).
+- [x] Checked in a window (WASAPI, 48 kHz): camp → battle (day) with two AI
+      turns → pause menu → night battle → camp, listener, ambience and music
+      following each scene, steps by kind (step_medium, step_small,
+      step_troll), no error or warning logged. Pause menu captured
+      (`tests/visual/ui_capture.gd -- title base menu`). Technical checks only:
+      nothing was listened to for the mix.
+- [x] Phase 2 started below (recorded takes).
+
+## Audio, phase 2: recorded sound in the game (22 Oct 2026, Godot only)
+
+Recorded takes replace the synth ones for 34 of the original's 42 sounds plus
+34 kind events (step, death, swing, stance, shout, mend and lick by type) (still synth: deny, turn, relief, defeat, hooves
+and the generic roar, which no unit uses now; victory and the player's rout are voices since 24 Oct); chosen by Claude from the audio library's descriptions and
+measurements, not yet by ear (the owner swaps takes on
+`local/audio-library/audition.html`, where they are marked "in game").
+
+- [x] Library kept out of Git (`local/audio-library` at the repository
+      root, gitignored; `E:/ProjektM/audio-library` until 24 Oct, when it
+      moved into the repository's `local/`; 625 candidates then): Sonniss GDC 2015–2020 and 2026 bundles, Freesound CC0
+      previews, OpenGameArt CC0, Kenney, and Higgsfield (Eleven v4) orc war
+      cries pitched down 5 semitones. Licences per source in its LICENSES.md.
+- [x] `tools/audio/build_bank.py` + `recipe.json` (ARCHITECTURE.md, *Audio*):
+      59 groups → 252 files (44.5 MB): cuts, slices of multi-take recordings,
+      layered takes (e.g. a death = voice + armour falling 0.3 s later; a
+      squad's tread = two or three boots and a little mail), seamless loops,
+      levelled; `provenance.json` records every source, cut and gain.
+      115 files have a Sonniss source and live in the gitignored
+      `assets/audio/bank/local/` (the licence forbids redistribution and the
+      repository is public); 137 (CC0, Kenney, Higgsfield) are in Git.
+- [x] Kinds: `battle_view._kind_sfx_at` (hooks agreed with the animation
+      session, sound calls only): deaths, routs, stances (`stance_<id>`
+      first), the growl, the war cry, swings and the wagon's smash resolve
+      `<base>_<typeId>` → `<base>_<faction>` → `<base>`. New: the horde's
+      wave roar is `roar_wave` (was the hounds' growl), Lick Wounds plays
+      `lick`, and a heal event plays `mend_<type>` (trolls only). Bank
+      aliases share takes (`death_goblin_*`, `step_orc_*` with their own pitch).
+- [x] Mix: `recipe.json` `levels` sets each event's volume_db. A captured
+      play-through (`--write-movie`, game audio measured per second) first
+      ran at -15 LUFS with the master limiter working in 74 of 104 s;
+      rebalanced (steps -16 dB, hits -7, swings -10, spells -4…-10, voices
+      and horns -3…-4, UI -8): -19.4 LUFS, limiter in 1 of 102 s, peaks
+      typically -4…-6 dBFS. Video: `local/audio-library/captures/`.
+- [x] Leak at quit: Vorbis beds and loops still playing at exit left their
+      playbacks in the AudioServer ("20 ObjectDB instances leaked", "5
+      resources still in use"); `Sfx._exit_tree` now stops the music, the
+      ambience decks, its one-shots and every voice. Verified with
+      `--verbose`: none.
+- [x] Tests: `test_audio` changed deliberately: recorded takes may play
+      (only files under `bank/local/` may be missing, every take has a
+      provenance entry, aliases resolve), ambience plays the files a preset
+      has, placement reads the event's level, and the footfall count uses
+      `SoldierAnim.gait_phase` (per-type stride since the animation's gait
+      change).
+- [x] The owner's picks by ear (24 Oct; `../../docs/audio-picks.md`): liked
+      takes replace the unrated ones of their sound, rejected ones are out
+      (every sword clash: too high and loud; the goblin voices), saved ones
+      wait for their feature (throwing dagger, dragon, storms, caves, falling
+      trees, crows at arrival and after battle, other monsters). Edits: the
+      Shield Wall is Knox's "Shield wall!" (cut at 1.49 s) with shields
+      locking; the warlord's war cry stops before "KRAGH! KRAGH!" (cut at
+      5.1 s); troll steps from troll_stomp_01 pitched down 3–5 st, low-passed
+      at 800 Hz, +8 dB at 70 Hz; the troll's death vocal at 0.8× speed and
+      pitch; soldiers' treads from boot_step_grass_04. New: orcs' attack
+      grunt (`swing_orc_*`), a camp murmur bed; the camp's three forest beds
+      are one bed picked per visit; day battles lost their random crows.
+      build_bank.py: `af` filters per take or layer, `slice` layers, finds a
+      moved library, drops the files of removed groups. 215 files.
+      Quick suite: 390 passed, 1 failed: test_a_marching_squad_is_one_tread
+      on a logged shader error from the new unit outline
+      (`scenes/battle/battle_sorted.gdshader:34` passes TEXTURE to a
+      function; not audio, owner notified); its own assertions pass.
+- [x] Voices, round 2 (24 Oct): `tools/audio/hfvoice.py` + `voices.json`
+      made 53 Higgsfield takes (14.06 credits): Knox (the voice the owner
+      liked) giving every stance, charge, aim, select, move, attack, retreat
+      and victory call, five men cheering "Hurrah! Amberfeld!", and goblins
+      made three new ways (a described voice and a voice from the goblin
+      picture in Seed Audio, ElevenLabs Sterling pitched up with a smaller
+      throat). In the library under `voices/higgsfield/round2/`, each take in
+      `candidates.json`; nothing of round 2 reviewed by ear yet. In the game,
+      without new hooks: Spearwall, Square, Defend (`stance_footman`) and
+      Overwatch (a cocking crossbow under the call) are Knox's calls with
+      their gear; the player's rout is "Fall back!"/"Run!" with men running;
+      `victory` is Knox's "Amberfeld!" answered by five men's "Hurrah!
+      Amberfeld!" (after a won battle and on "Return to Amberfeld"). The
+      hound's stance and rout are aliases of its roar and death. 235 files.
+      `make_audition.py` and its template moved into `tools/audio/`: voices
+      grouped per round and per purpose, what was reviewed on 24 Oct hidden.
+      build_bank.py reads Suno music (`suno/<track>/<file>.wav`, a loop cut
+      to whole bars from a bpm, or a one-shot); none downloaded yet. Tests
+      (deliberate): the new voice events come from the bank on the Voice
+      bus. Quick suite: 394 passed, 1 failed (the same shader error). Seen
+      once: `test_last_stand_with_waves_and_relief_plays_to_the_end` failed
+      on a null texture in `assets.gd` hover picking and passed alone; and
+      `test_mute` / `test_ambience_crossfades_between_scenes` fail with
+      "Parse JSON failed" while other Godot sessions write the same
+      `user://prefs.json` (not a regression; tests share the user's prefs).
+      Vorbis loops change checksum on every build (random stream serial).
+- [x] The squads answer orders (24 Oct; hooks in `battle_view.gd` with the
+      owner's go-ahead, sound calls only): `_say` where the order is given,
+      once per order (a move-then-attack click says only the attack):
+      `order_select` ("Orders?", "Ready.") when the player picks a squad that
+      can act in the player's turn, `order_move`, `order_attack` with
+      `order_<ability>` first (`order_shield_charge`, `order_aimed_shot`:
+      only the "Loose!" of "Steady... loose!", so it comes with the bolt).
+      Flat on the Voice bus at -14 dB (the owner found -8 too loud), one
+      at a time (none while the last still speaks); quiet when the
+      selection moves on by itself
+      (`select(uid, false)` from the idle poll; `select_next(say)`); the
+      hounds (`QUIET_TYPES`) obey without a word. 253 files. New test
+      `test_audio::test_the_squads_answer_orders`. Quick suite: 395 passed,
+      1 failed (the same shader error); test_audio, test_battle_view,
+      test_battle_hud and test_sfx after the last change: 51 passed, the
+      same 1 failed.
+- [x] The owner's second listen (24 Oct; `docs/audio-picks.md`, *Night and
+      the UI*): the night owl is `owl_tawny_02`'s four calls cut apart
+      (high-passed at 300 Hz against the clip's rumble), every 10–45 s;
+      page turns `ui_page_turn_01`, `_02` and, now and then, `_10`; clicks,
+      select and build lose the rejected takes; gold (`coin`) is four new
+      takes of coins clinking (`Ting Coins` from Sonniss GDC 2026, added to
+      the library as `ui_coins_s26_01`, and single counted coins of
+      `ui_coins_02` layered two or three at a time). New: a take's `weight`
+      (`bank.gd` `pick_take`, recipe.json take `weight`), still never the
+      take played last. The library's `integrated_in` and `state` follow
+      provenance.json again. New test
+      `test_audio::test_a_weighted_take_comes_up_now_and_then`. Quick
+      suite: 400 passed, 1 failed (the same shader error), 10 skipped.
+- [x] Day into night, slowly (24 Oct, the owner's ask): the sounds of the
+      last part of the day ebb out while the other's come in. The camp has
+      a night preset, `camp_night`: the pine wind made deeper and quieter
+      for the night (the owner's word: `camp_night_wind`, the same cut
+      pitched down about 3.9 semitones, so its gusts are slower too,
+      low-passed at 1.2 kHz, at -15.7 dB: half the day's wind as heard,
+      the owner's level after trying -16.5 and 70% at -12.8), the
+      night crickets at -8 dB, the tawny owl as in night battles and the
+      fire; no songbirds, distant calls or murmur. The camp's Day/Night
+      buttons switch it over 6 s (`woodland_camp.gd` `set_night`, a
+      sound call only; the light still turns in 2.4 s). `ambience.gd` now
+      also crossfades the one-shots: the leaving preset's calls go on,
+      ever quieter, until the fade ends, the new ones rise from silence,
+      and a shared loop burns on instead of restarting; a bed still
+      fading out when its preset comes back turns and fades back in from
+      where it was (`loop_deck.gd` `revive`). The battle's dawn
+      (night into day, 6 s) gets the same. New tests
+      `test_audio::test_ambience_calls_ebb_away_as_the_next_scene_comes_in`
+      and `test_the_camp_hands_day_and_night_over_slowly`; `camp_night`
+      joins `test_ambience_plays_the_files_it_has`. Quick suite, with
+      the night wind at 50%: 403 passed, 0 failed, 10 skipped (the
+      shader error went with another session's discarded outline draft).
+- [x] The voices stay local (25 Oct, the owner's word): `build_bank.py` no
+      longer counts Higgsfield output as free, so the 45 voice files (Knox's
+      orders, stances, rout and victory, the warlord's war cry) render into
+      the gitignored `assets/audio/bank/local/sfx/voices/`: the same files,
+      only their paths changed in bank.json and provenance.json. 91 files
+      are in Git, 155 local. A clone without the library plays the synth
+      stance, rout, war cry and victory, and the squads obey without a word.
+      Tests (deliberate): `test_shipped_bank_routes_the_original_names`
+      lets a voice's local takes be missing and checks that nothing outside
+      `local/` has a Sonniss or Higgsfield source.
+- [ ] By ear: the owner's remaining picks and round 2's voices, then levels
+      (the order answers: whether -14 dB is right and whether every
+      select should answer; the day battle's wind and the camp's wind,
+      lowered to -10.5 dB, 30% of their level, on the owner's word),
+      ducking thresholds (tuned for the
+      synth) and jitter;
+      campaign-map ambience; music (Suno, waiting for the owner's
+      downloads); a war wagon's rumble. Thin in the library: ballista,
+      catapult, wolf paws, cuckoo calls (skipped: nothing to slice).
+
+## Interface art pass — 23 October 2026
+
+- Warm vellum, blue header bands, dark iron and brass fittings now unify camp
+  panels, menus, portraits, buttons and the campaign/battle HUD. The reusable
+  `forged_style.gd` draws fixed-pixel corners and rims; small controls use less
+  ornament. Existing gameplay and status meanings are retained.
+- The title uses original generated forest-sunrise artwork, revised from a dusk
+  study at the user's request. No full-screen dimming and no new heraldic symbol.
+- Fixed custom padding being lost when decorating an unattached UI panel;
+  `test_unparented_panel_preserves_explicit_padding` covers the case.
+- `tools/review_ui.sh` rebuilds both themes, captures 31 desktop scenarios and
+  runs the input playthrough. The capture pass logged zero rendering/runtime
+  errors. The final playthrough passed 184 checks with zero failures, errors or
+  warnings, including a complete battle, report, minimap and return to title.
+- Final `tools/test.sh --quick`: 364 passed, 0 failed, 10 skipped (201.6 s),
+  after the concurrent terrain and campaign-test changes settled.
+- The playthrough now tracks physical window enter/exit separately from its
+  synthetic pointer and reasserts hover before checking a target. This keeps
+  physical pointer movement from invalidating scripted button checks while
+  preserving normal GUI hit-testing. A diagnostic indentation error introduced
+  during simultaneous terrain/test edits was also corrected.
+- Artwork, source map, screenshots and verification:
+  [interface art direction](../../docs/interface-art-direction.md) and
+  `workspace/2026-10-20_meridius/interface.html` from the repository root.
+  Report images/downloads checked at 1440 and 1024 px in light and dark themes.
+  No Windows export or commit was performed for this pass.
+
+## Painted panels, banners and borders — 23 October 2026
+
+- Three original RGBA masters in `art/ui/epic/`, with byte-identical runtime
+  copies in `assets/ui/epic/`: council frame, blue company banner and dark command
+  panel. ImageGen created these from the supplied Meridius material references;
+  the Higgsfield gallery was consulted visually. No heraldic symbols were added.
+- `painted_frames.gd` draws fixed corner slices through `forged_style.gd`.
+  Large panels, title borders, banners and major actions share the painted
+  materials; compact controls retain simple rims. Banner and preparation padding
+  reserve space for ornament. Both saved themes were rebuilt.
+- `tools/review_ui.sh`: 31 captures, zero rendering/runtime errors; 235 input
+  checks passed, zero failures/errors/warnings, including one complete battle.
+- `tools/test.sh --quick`: 363 passed, 1 failed, 10 skipped. All UI tests passed.
+  The audio test that loads a battlefield hits a shader-compiler custom-sampler
+  error in separately modified outline work. Focused audio rerun: 17/1.
+  That shader was left intact; this pass does not claim a green full quick suite.
+- The current review is `workspace/2026-10-20_meridius/interface.html` from
+  the repository root; masters, native captures and source checksums are under
+  `interface/epic/`. The earlier report remains `interface-first-pass.html`.
+  Report layouts checked at 1440/1024 in light/dark, plus preview/zoom/close.
+  Download click was attempted but its browser receipt could not be confirmed.
+  No application restart, Windows export or commit was performed.
 
 ## Resume here
+
+23 October visual update: removed the decorative battlefield host, distant
+smoke, waiting reserve figures and campaign horde/fire/scorched overlays.
+`battle_surroundings.gd` continues grass through clear entry approaches with
+worn tracks. The campaign starts on the company. Wave rules, map generation
+and parity fixtures are unchanged; obsolete horde-render expectations were
+retired. Native `capture_edges.gd -- edges` plus day/night captures: zero
+render/runtime errors. Final `tools/test.sh --quick`: 364 passed, 0 failed,
+10 slow tests skipped. Evidence: `workspace/2026-10-20_meridius/terrain/`
+`map-edge-review.md` (repository root). No active application was restarted.
+
 1. `tools/test.sh` (full) — green with magic, war machines and the
    shared-tile fix (340/0), not yet committed.
 2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
 3. Commit on branch `godot-migration`.
+
+## 2026-10-23 — Unit playground
+
+Added a title-menu inspection field and `--playground` launch argument. The
+screen hosts a separate BattleView subclass with a flat grass map, every current
+unit type, appearance variants, single/squad views, a comparison unit, all four
+facings, pause/frame step, 0.25–2× playback, extended camera zoom, grid and night.
+Movement, turning, attacks and falls use the production presentation scheduler.
+
+The invulnerable straw dummy is an editable SVG drawn in the same sorted pass
+as the units. Clicking it or Attack dummy routes the subject around occupied
+tiles into melee or firing range, then repeats its ordinary attack. No campaign
+rules, save files or battle-speed preferences are changed by practice.
+
+Validation: the four new regression cases cover all 20 types and five clips,
+repeated attacks from four facings, pause/step/speed, interruption, path occupancy,
+comparison and retained engine crews. Native input review checks title entry,
+field/dummy clicks, UI exclusion, facings, transport, lighting, exit/reentry and
+unchanged save bytes. Captures at 1920×1080 and 1280×720 and a fixed 30 fps clip
+are linked from the Meridius Workspace Unit playground tab.
+
+`tools/test.sh --quick`: 372 passed, 1 failed, 10 skipped. All playground tests
+pass; the failure is the shared renderer's headless shader compile error
+(`custom_samplers`, reported by `test_audio::test_a_marching_squad_is_one_tread`).
+The native GL review runs the same playground cases without that compiler error.
+No golden traces were changed. The full slow suite and Windows export were not run.
+
 
 ### 2026-10-23 - Fog of war and traversable woodland
 
@@ -359,6 +788,26 @@ save fixtures are unchanged. Two of the seven driven runs differ (run 3, step 3:
 loot silver 63 → 53; run 4, step 38: 45 → 53), and so do all five autoplay
 campaigns (first differences, all in cycle 0: retreat → success twice, success
 → retreat once, silver 170 → 169, deaths 1 → 2).
+
+### 2026-10-23 - Small woodland camp remodel
+
+The production base scene now uses the selected `camp_small_woodland` day take02
+and matching night take01 as an interactive painted isometric stage. All six
+existing building services map to authored image-space polygons and numbered
+HUD actions. The camera is bounded to the source image; lighting preview, forest
+mist and roster figures on open-ground paths are presentation only. Building
+upgrade names/effects remain live, while the first-pass architecture stays painted.
+The old renderer and its original geometry fixture checks remain explicitly
+available; eight new tests cover the production scene. Rules and golden traces
+were not changed for this task.
+
+Native camp review:78 checks, zero failures/runtime errors, clean shutdown,
+unchanged player save and restored preferences. Focused tests:34 passed. Final
+quick suite:387 passed,1 failed,10 skipped; the remaining marching-audio case
+reports the previously documented headless battlefield `custom_samplers` error.
+The Workspace camp report includes native stills, a five-second motion study,
+source hashes and checked previews/downloads at1440/1000px in both themes.
+No full slow-suite run, export or commit was made.
 
 ### 2026-10-24 - Painted rocks
 

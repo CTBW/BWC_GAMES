@@ -1,0 +1,1122 @@
+{
+ "about": "Sound bank (scripts/audio/bank.gd; ARCHITECTURE.md, Audio). events: name -> takes (res paths, or {file, volume_db}) and options; an event without recorded takes that exist plays the baked synth takes of assets/audio/sfx.json, else its fallback. Ambience and music files listed here that do not exist yet are skipped.",
+ "version": 1,
+ "defaults": {
+  "bus": "SFX",
+  "volume_db": 0,
+  "pitch": 0,
+  "pitch_jitter": 0,
+  "volume_jitter_db": 0,
+  "max_voices": 4,
+  "min_gap_ms": 25,
+  "positional": false
+ },
+ "events": {
+  "click": {
+   "takes": [
+    "res://assets/audio/bank/ui/click_01.wav",
+    "res://assets/audio/bank/ui/click_02.wav"
+   ],
+   "bus": "UI",
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "select": {
+   "takes": [
+    "res://assets/audio/bank/ui/select_01.wav",
+    "res://assets/audio/bank/ui/select_02.wav"
+   ],
+   "bus": "UI",
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "deny": {
+   "takes": [],
+   "bus": "UI",
+   "max_voices": 2
+  },
+  "page": {
+   "takes": [
+    "res://assets/audio/bank/local/ui/page_01.wav",
+    "res://assets/audio/bank/local/ui/page_02.wav",
+    {
+     "file": "res://assets/audio/bank/ui/page_03.wav",
+     "weight": 0.25
+    }
+   ],
+   "bus": "UI",
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "coin": {
+   "takes": [
+    "res://assets/audio/bank/local/ui/coin_01.wav",
+    "res://assets/audio/bank/local/ui/coin_02.wav",
+    "res://assets/audio/bank/local/ui/coin_03.wav",
+    "res://assets/audio/bank/local/ui/coin_04.wav"
+   ],
+   "bus": "UI",
+   "max_voices": 2,
+   "volume_db": -8.0,
+   "pitch_jitter": 0.3
+  },
+  "build": {
+   "takes": [
+    "res://assets/audio/bank/local/ui/build_01.wav"
+   ],
+   "bus": "UI",
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "turn": {
+   "takes": [],
+   "bus": "UI",
+   "max_voices": 2
+  },
+  "step": {
+   "takes": [
+    "res://assets/audio/bank/sfx/steps/step_01.wav",
+    "res://assets/audio/bank/sfx/steps/step_02.wav",
+    "res://assets/audio/bank/sfx/steps/step_03.wav",
+    "res://assets/audio/bank/sfx/steps/step_04.wav",
+    "res://assets/audio/bank/sfx/steps/step_05.wav",
+    "res://assets/audio/bank/sfx/steps/step_06.wav"
+   ],
+   "positional": true,
+   "max_voices": 6,
+   "min_gap_ms": 70,
+   "pitch_jitter": 0.6,
+   "volume_jitter_db": 1.5,
+   "volume_db": -16.0
+  },
+  "step_small": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/steps/step_small_01.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_02.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_03.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_04.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_05.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_06.wav",
+    "res://assets/audio/bank/sfx/steps/step_small_07.wav"
+   ],
+   "fallback": "step",
+   "pitch": 0,
+   "volume_db": -18.0
+  },
+  "step_medium": {
+   "takes": [
+    "res://assets/audio/bank/sfx/steps/step_01.wav",
+    "res://assets/audio/bank/sfx/steps/step_02.wav",
+    "res://assets/audio/bank/sfx/steps/step_03.wav",
+    "res://assets/audio/bank/sfx/steps/step_04.wav",
+    "res://assets/audio/bank/sfx/steps/step_05.wav",
+    "res://assets/audio/bank/sfx/steps/step_06.wav"
+   ],
+   "fallback": "step",
+   "volume_db": -16.0
+  },
+  "step_large": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/steps/step_large_01.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_large_02.wav"
+   ],
+   "fallback": "step",
+   "pitch": -1,
+   "volume_db": -12.0
+  },
+  "step_troll": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/steps/step_troll_01.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_troll_02.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_troll_03.wav"
+   ],
+   "fallback": "step_large",
+   "pitch": 0,
+   "volume_db": -10.0,
+   "pitch_jitter": 0.3
+  },
+  "step_wolf_rider": {
+   "takes": [
+    "res://assets/audio/bank/sfx/steps/step_wolf_01.wav",
+    "res://assets/audio/bank/sfx/steps/step_wolf_02.wav",
+    "res://assets/audio/bank/sfx/steps/step_wolf_03.wav",
+    "res://assets/audio/bank/sfx/steps/step_wolf_04.wav"
+   ],
+   "fallback": "step_large",
+   "pitch": -1,
+   "volume_db": -14.0
+  },
+  "step_collie_guard": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/steps/step_hound_01.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_hound_02.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_hound_03.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_hound_04.wav",
+    "res://assets/audio/bank/local/sfx/steps/step_hound_05.wav"
+   ],
+   "fallback": "step_medium",
+   "volume_db": -16.0
+  },
+  "swing": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/swing_01.wav",
+    "res://assets/audio/bank/local/sfx/melee/swing_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.5,
+   "volume_db": -10.0
+  },
+  "hit_metal": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/hit_metal_01.wav",
+    "res://assets/audio/bank/local/sfx/melee/hit_metal_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.4,
+   "volume_db": -7.0
+  },
+  "hit_flesh": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/hit_flesh_01.wav",
+    "res://assets/audio/bank/local/sfx/melee/hit_flesh_02.wav",
+    "res://assets/audio/bank/local/sfx/melee/hit_flesh_03.wav",
+    "res://assets/audio/bank/local/sfx/melee/hit_flesh_04.wav",
+    "res://assets/audio/bank/local/sfx/melee/hit_flesh_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.4,
+   "volume_db": -7.0
+  },
+  "block": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/block_01.wav",
+    "res://assets/audio/bank/sfx/melee/block_02.wav",
+    "res://assets/audio/bank/sfx/melee/block_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.4,
+   "volume_db": -7.0
+  },
+  "miss": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/miss_01.wav",
+    "res://assets/audio/bank/local/sfx/melee/miss_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.4,
+   "volume_db": -10.0
+  },
+  "bolt_hit": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/ranged/bolt_hit_01.wav",
+    "res://assets/audio/bank/sfx/ranged/bolt_hit_02.wav",
+    "res://assets/audio/bank/sfx/ranged/bolt_hit_03.wav",
+    "res://assets/audio/bank/sfx/ranged/bolt_hit_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 4,
+   "pitch_jitter": 0.4,
+   "volume_db": -8.0
+  },
+  "crossbow": {
+   "takes": [
+    "res://assets/audio/bank/sfx/ranged/crossbow_01.wav",
+    "res://assets/audio/bank/sfx/ranged/crossbow_02.wav",
+    "res://assets/audio/bank/sfx/ranged/crossbow_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch_jitter": 0.4,
+   "pitch": -2,
+   "volume_db": -9.0
+  },
+  "bow": {
+   "takes": [
+    "res://assets/audio/bank/sfx/ranged/bow_01.wav",
+    "res://assets/audio/bank/sfx/ranged/bow_02.wav",
+    "res://assets/audio/bank/sfx/ranged/bow_03.wav",
+    "res://assets/audio/bank/local/sfx/ranged/bow_04.wav",
+    "res://assets/audio/bank/sfx/ranged/bow_05.wav",
+    "res://assets/audio/bank/sfx/ranged/bow_06.wav",
+    "res://assets/audio/bank/sfx/ranged/bow_07.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch_jitter": 0.4,
+   "volume_db": -9.0
+  },
+  "death": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/death_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "death_player": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/death_player_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_player_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_player_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_player_04.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_player_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "rout": {
+   "takes": [],
+   "positional": true,
+   "max_voices": 2
+  },
+  "stance": {
+   "takes": [
+    "res://assets/audio/bank/sfx/melee/stance_01.wav",
+    "res://assets/audio/bank/sfx/melee/stance_02.wav",
+    "res://assets/audio/bank/sfx/melee/stance_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "warcry": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/warcry_orc_01.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "bus": "Voice",
+   "volume_db": -3.0
+  },
+  "roar": {
+   "takes": [],
+   "positional": true,
+   "max_voices": 2
+  },
+  "smash": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/engines/smash_01.wav",
+    "res://assets/audio/bank/sfx/engines/smash_02.wav",
+    "res://assets/audio/bank/sfx/engines/smash_03.wav",
+    "res://assets/audio/bank/local/sfx/engines/smash_04.wav",
+    "res://assets/audio/bank/local/sfx/engines/smash_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "volume_db": -6.0
+  },
+  "cast": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/cast_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/cast_02.wav",
+    "res://assets/audio/bank/local/sfx/magic/cast_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -10.0
+  },
+  "lightning": {
+   "takes": [
+    "res://assets/audio/bank/sfx/magic/lightning_01.wav",
+    "res://assets/audio/bank/sfx/magic/lightning_02.wav",
+    "res://assets/audio/bank/sfx/magic/lightning_03.wav",
+    "res://assets/audio/bank/local/sfx/magic/lightning_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -4.0
+  },
+  "frost": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/frost_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/frost_02.wav",
+    "res://assets/audio/bank/local/sfx/magic/frost_03.wav",
+    "res://assets/audio/bank/local/sfx/magic/frost_04.wav",
+    "res://assets/audio/bank/local/sfx/magic/frost_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -7.0
+  },
+  "heal": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/heal_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/heal_02.wav",
+    "res://assets/audio/bank/sfx/magic/heal_03.wav",
+    "res://assets/audio/bank/sfx/magic/heal_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -9.0
+  },
+  "fireball": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/fireball_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/fireball_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "explosion": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/explosion_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/explosion_02.wav",
+    "res://assets/audio/bank/local/sfx/magic/explosion_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -4.0
+  },
+  "bloodlust": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/bloodlust_01.wav",
+    "res://assets/audio/bank/local/sfx/magic/bloodlust_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "hex": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/magic/hex_01.wav",
+    "res://assets/audio/bank/sfx/magic/hex_02.wav",
+    "res://assets/audio/bank/local/sfx/magic/hex_03.wav",
+    "res://assets/audio/bank/sfx/magic/hex_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -7.0
+  },
+  "catapult": {
+   "takes": [
+    "res://assets/audio/bank/sfx/engines/catapult_01.wav",
+    "res://assets/audio/bank/sfx/engines/catapult_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "crash": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/engines/crash_01.wav",
+    "res://assets/audio/bank/local/sfx/engines/crash_02.wav",
+    "res://assets/audio/bank/local/sfx/engines/crash_03.wav",
+    "res://assets/audio/bank/local/sfx/engines/crash_04.wav",
+    "res://assets/audio/bank/local/sfx/engines/crash_05.wav",
+    "res://assets/audio/bank/local/sfx/engines/crash_06.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "volume_db": -6.0
+  },
+  "ballista": {
+   "takes": [
+    "res://assets/audio/bank/sfx/engines/ballista_01.wav",
+    "res://assets/audio/bank/sfx/engines/ballista_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch": -4,
+   "volume_db": -6.0
+  },
+  "hooves": {
+   "takes": [],
+   "positional": true,
+   "max_voices": 3
+  },
+  "horn": {
+   "takes": [
+    "res://assets/audio/bank/sfx/horns/horn_01.wav",
+    "res://assets/audio/bank/sfx/horns/horn_02.wav",
+    "res://assets/audio/bank/sfx/horns/horn_03.wav"
+   ],
+   "max_voices": 2,
+   "volume_db": -4.0
+  },
+  "warhorn": {
+   "takes": [
+    "res://assets/audio/bank/sfx/horns/warhorn_01.wav",
+    "res://assets/audio/bank/sfx/horns/warhorn_02.wav",
+    "res://assets/audio/bank/sfx/horns/warhorn_03.wav",
+    "res://assets/audio/bank/sfx/horns/warhorn_04.wav"
+   ],
+   "max_voices": 2,
+   "volume_db": -4.0
+  },
+  "drum": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/horns/drum_01.wav",
+    "res://assets/audio/bank/sfx/horns/drum_02.wav",
+    "res://assets/audio/bank/sfx/horns/drum_03.wav"
+   ],
+   "max_voices": 2,
+   "volume_db": -5.0
+  },
+  "relief": {
+   "takes": [],
+   "max_voices": 2
+  },
+  "victory": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/victory_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/victory_02.wav"
+   ],
+   "max_voices": 1,
+   "positional": false,
+   "bus": "Voice",
+   "volume_db": -4.0
+  },
+  "defeat": {
+   "takes": [],
+   "max_voices": 2
+  },
+  "march": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/steps/march_01.wav"
+   ],
+   "max_voices": 2,
+   "volume_db": -8.0
+  },
+  "swing_troll": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/melee/swing_heavy_01.wav",
+    "res://assets/audio/bank/local/sfx/melee/swing_heavy_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch": -5,
+   "pitch_jitter": 0.6,
+   "volume_db": -8.0
+  },
+  "swing_orc_brute": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch": -1.5,
+   "pitch_jitter": 0.6,
+   "volume_db": -9.0
+  },
+  "swing_collie_guard": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/swing_hound_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/swing_hound_02.wav",
+    "res://assets/audio/bank/local/sfx/creatures/swing_hound_03.wav",
+    "res://assets/audio/bank/local/sfx/creatures/swing_hound_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch_jitter": 0.5,
+   "volume_db": -8.0
+  },
+  "swing_wolf_rider": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/swing_wolf_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/swing_wolf_02.wav",
+    "res://assets/audio/bank/local/sfx/creatures/swing_wolf_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch_jitter": 0.5,
+   "volume_db": -8.0
+  },
+  "death_goblin": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/death_goblin_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_goblin_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_goblin_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/death_goblin_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch_jitter": 0.8,
+   "volume_db": -7.0
+  },
+  "death_troll": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/death_troll_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/death_troll_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch": 0,
+   "pitch_jitter": 0.4,
+   "volume_db": -4.0
+  },
+  "death_wolf_rider": {
+   "takes": [
+    "res://assets/audio/bank/sfx/creatures/death_wolf_01.wav",
+    "res://assets/audio/bank/sfx/creatures/death_wolf_02.wav",
+    "res://assets/audio/bank/sfx/creatures/death_wolf_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch": -2,
+   "pitch_jitter": 0.6,
+   "volume_db": -6.0
+  },
+  "death_collie_guard": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/death_hound_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/death_hound_02.wav",
+    "res://assets/audio/bank/local/sfx/creatures/death_hound_03.wav",
+    "res://assets/audio/bank/sfx/creatures/death_hound_04.wav",
+    "res://assets/audio/bank/sfx/creatures/death_hound_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch_jitter": 0.4,
+   "volume_db": -7.0
+  },
+  "rout_enemy": {
+   "takes": [
+    "res://assets/audio/bank/sfx/voices/rout_enemy_01.wav",
+    "res://assets/audio/bank/sfx/voices/rout_enemy_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/rout_enemy_03.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch_jitter": 0.8,
+   "volume_db": -8.0
+  },
+  "stance_shieldwall": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/stance_shieldwall_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_shieldwall_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "volume_db": -5.0,
+   "bus": "Voice"
+  },
+  "stance_spearwall": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_04.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_05.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_spearwall_06.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "volume_db": -5.0,
+   "bus": "Voice"
+  },
+  "stance_square": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/stance_square_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_square_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_square_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_square_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "volume_db": -5.0,
+   "bus": "Voice"
+  },
+  "stance_overwatch": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/stance_overwatch_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_overwatch_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_overwatch_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_overwatch_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "volume_db": -6.0,
+   "bus": "Voice"
+  },
+  "roar_collie_guard": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/growl_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/growl_02.wav",
+    "res://assets/audio/bank/sfx/creatures/growl_03.wav",
+    "res://assets/audio/bank/sfx/creatures/growl_04.wav",
+    "res://assets/audio/bank/sfx/creatures/growl_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch": -1.5,
+   "pitch_jitter": 0.4,
+   "volume_db": -5.0
+  },
+  "roar_wave": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/roar_wave_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/roar_wave_02.wav"
+   ],
+   "max_voices": 1,
+   "volume_db": -3.0
+  },
+  "warcry_orc_warlord": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/warcry_orc_01.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -3.0
+  },
+  "lick": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/lick_01.wav",
+    "res://assets/audio/bank/sfx/creatures/lick_02.wav",
+    "res://assets/audio/bank/sfx/creatures/lick_03.wav",
+    "res://assets/audio/bank/sfx/creatures/lick_04.wav",
+    "res://assets/audio/bank/sfx/creatures/lick_05.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "volume_db": -8.0
+  },
+  "mend_troll": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/creatures/mend_troll_01.wav",
+    "res://assets/audio/bank/local/sfx/creatures/mend_troll_02.wav",
+    "res://assets/audio/bank/local/sfx/creatures/mend_troll_03.wav",
+    "res://assets/audio/bank/local/sfx/creatures/mend_troll_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "pitch": -2,
+   "volume_db": -8.0
+  },
+  "death_goblin_spear": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_goblin_archer": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_goblin_rabble": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_goblin_horn": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_goblin_shaman": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_war_wagon": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "death_rock_lobber": {
+   "takes": [],
+   "fallback": "death_goblin"
+  },
+  "step_orc_warrior": {
+   "takes": [],
+   "fallback": "step_large",
+   "pitch": 2.5,
+   "volume_db": -15.0
+  },
+  "step_orc_brute": {
+   "takes": [],
+   "fallback": "step_large",
+   "pitch": 1.5,
+   "volume_db": -14.0
+  },
+  "step_orc_warlord": {
+   "takes": [],
+   "fallback": "step_large",
+   "pitch": 0.5,
+   "volume_db": -13.0
+  },
+  "swing_orc_warrior": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 3,
+   "pitch_jitter": 0.6,
+   "volume_db": -9.0
+  },
+  "swing_orc_warlord": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/swing_orc_02.wav"
+   ],
+   "positional": true,
+   "max_voices": 2,
+   "pitch": -1,
+   "pitch_jitter": 0.4,
+   "volume_db": -9.0
+  },
+  "stance_footman": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/stance_footman_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_footman_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_footman_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/stance_footman_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -5.0
+  },
+  "stance_collie_guard": {
+   "takes": [],
+   "fallback": "roar_collie_guard",
+   "pitch": -1,
+   "volume_db": -9.0
+  },
+  "rout_player": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/rout_player_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/rout_player_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/rout_player_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/rout_player_04.wav"
+   ],
+   "positional": true,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -5.0
+  },
+  "rout_collie_guard": {
+   "takes": [],
+   "fallback": "death_collie_guard",
+   "pitch": 1,
+   "volume_db": -10.0
+  },
+  "order_select": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/order_select_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_select_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_select_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_select_04.wav"
+   ],
+   "positional": false,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -14.0
+  },
+  "order_move": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/order_move_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_move_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_move_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_move_04.wav"
+   ],
+   "positional": false,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -14.0
+  },
+  "order_attack": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/order_attack_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_attack_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_attack_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_attack_04.wav"
+   ],
+   "positional": false,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -14.0
+  },
+  "order_shield_charge": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/order_shield_charge_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_shield_charge_02.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_shield_charge_03.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_shield_charge_04.wav"
+   ],
+   "positional": false,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -14.0
+  },
+  "order_aimed_shot": {
+   "takes": [
+    "res://assets/audio/bank/local/sfx/voices/order_aimed_shot_01.wav",
+    "res://assets/audio/bank/local/sfx/voices/order_aimed_shot_02.wav"
+   ],
+   "positional": false,
+   "max_voices": 1,
+   "bus": "Voice",
+   "volume_db": -14.0
+  }
+ },
+ "ambience": {
+  "fade": 2.5,
+  "pause_db": -8,
+  "presets": {
+   "camp": {
+    "beds": [
+     {
+      "id": "wind",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/camp_forest_01.ogg"
+      ],
+      "volume_db": -10.5
+     },
+     {
+      "id": "murmur",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/camp_murmur_01.ogg"
+      ],
+      "volume_db": -6,
+      "cycle": {
+       "hold": [
+        8,
+        16
+       ],
+       "quiet": [
+        20,
+        40
+       ],
+       "fade": 8
+      }
+     }
+    ],
+    "loops": [
+     {
+      "id": "campfire",
+      "takes": [
+       "res://assets/audio/bank/ambience/campfire_01.ogg"
+      ],
+      "volume_db": 0
+     }
+    ],
+    "oneshots": [
+     {
+      "id": "songbird",
+      "takes": [
+       "res://assets/audio/bank/ambience/camp_songbird_01.wav",
+       "res://assets/audio/bank/ambience/camp_songbird_02.wav",
+       "res://assets/audio/bank/ambience/camp_songbird_03.wav",
+       "res://assets/audio/bank/ambience/camp_songbird_04.wav",
+       "res://assets/audio/bank/ambience/camp_songbird_05.wav"
+      ],
+      "every": [
+       10,
+       25
+      ],
+      "pan": [
+       -0.9,
+       0.9
+      ],
+      "volume_db": [
+       -12,
+       -4
+      ],
+      "pitch_jitter": 0.3,
+      "initial_every": [
+       10,
+       25
+      ]
+     },
+     {
+      "id": "distant",
+      "takes": [
+       "res://assets/audio/bank/ambience/camp_distant_01.wav",
+       "res://assets/audio/bank/local/ambience/camp_distant_02.wav",
+       "res://assets/audio/bank/local/ambience/camp_distant_03.wav",
+       "res://assets/audio/bank/ambience/camp_distant_04.wav",
+       "res://assets/audio/bank/ambience/camp_distant_05.wav",
+       "res://assets/audio/bank/ambience/camp_distant_06.wav"
+      ],
+      "every": [
+       12,
+       35
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "volume_db": [
+       -16,
+       -8
+      ],
+      "pitch_jitter": 0.2
+     }
+    ]
+   },
+   "battle_day": {
+    "beds": [
+     {
+      "id": "wind",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/field_wind_01.ogg"
+      ],
+      "volume_db": -10.5
+     }
+    ],
+    "loops": [],
+    "oneshots": []
+   },
+   "battle_night": {
+    "beds": [
+     {
+      "id": "wind",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/night_wind_01.ogg"
+      ],
+      "volume_db": 0
+     },
+     {
+      "id": "crickets",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/night_crickets_01.ogg"
+      ],
+      "volume_db": 0
+     }
+    ],
+    "loops": [],
+    "oneshots": [
+     {
+      "id": "owl",
+      "takes": [
+       "res://assets/audio/bank/ambience/night_owl_01.wav",
+       "res://assets/audio/bank/ambience/night_owl_02.wav",
+       "res://assets/audio/bank/ambience/night_owl_03.wav",
+       "res://assets/audio/bank/ambience/night_owl_04.wav"
+      ],
+      "every": [
+       10,
+       45
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "volume_db": [
+       -14,
+       -6
+      ],
+      "pitch_jitter": 0.1
+     },
+     {
+      "id": "wolf",
+      "takes": [
+       "res://assets/audio/bank/ambience/night_wolf_01.wav",
+       "res://assets/audio/bank/ambience/night_wolf_02.wav",
+       "res://assets/audio/bank/ambience/night_wolf_03.wav"
+      ],
+      "every": [
+       40,
+       90
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "volume_db": [
+       -14,
+       -8
+      ],
+      "pitch_jitter": 0.3
+     }
+    ]
+   },
+   "camp_night": {
+    "beds": [
+     {
+      "id": "wind",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/camp_night_wind_01.ogg"
+      ],
+      "volume_db": -15.7
+     },
+     {
+      "id": "crickets",
+      "takes": [
+       "res://assets/audio/bank/local/ambience/night_crickets_01.ogg"
+      ],
+      "volume_db": -8
+     }
+    ],
+    "loops": [
+     {
+      "id": "campfire",
+      "takes": [
+       "res://assets/audio/bank/ambience/campfire_01.ogg"
+      ],
+      "volume_db": 0
+     }
+    ],
+    "oneshots": [
+     {
+      "id": "owl",
+      "takes": [
+       "res://assets/audio/bank/ambience/night_owl_01.wav",
+       "res://assets/audio/bank/ambience/night_owl_02.wav",
+       "res://assets/audio/bank/ambience/night_owl_03.wav",
+       "res://assets/audio/bank/ambience/night_owl_04.wav"
+      ],
+      "every": [
+       10,
+       45
+      ],
+      "volume_db": [
+       -14,
+       -6
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "pitch_jitter": 0.1
+     }
+    ]
+   }
+  }
+ },
+ "music": {
+  "fade": 3,
+  "pause_db": -4,
+  "tracks": {
+   "menu": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "camp": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "campaign": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "battle": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "battle_combat": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "final_wave": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "victory": {
+    "takes": [],
+    "volume_db": -6
+   },
+   "defeat": {
+    "takes": [],
+    "volume_db": -6
+   }
+  }
+ }
+}

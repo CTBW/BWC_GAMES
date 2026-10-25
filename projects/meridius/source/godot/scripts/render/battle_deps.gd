@@ -4,6 +4,7 @@
 ## like the original's battleScene.ts.
 extends RefCounted
 
+const Surroundings = preload("res://scripts/render/battle_surroundings.gd")
 const Terrain = preload("res://scripts/render/terrain.gd")
 const Fx = preload("res://scripts/render/fx.gd")
 const Atmosphere = preload("res://scripts/render/atmosphere.gd")
@@ -90,15 +91,19 @@ static func player_auto() -> Callable:
 # ---------------------------------------------------------------- ground
 
 static func build_ground(view, m: Dictionary) -> Node2D:
-	var tiles: Array = m.tiles.duplicate()
-	# The open approaches beyond the edges are painted as ground too.
-	for g in m.get("outerGround", []):
-		tiles.append({"x": g.x, "y": g.y, "h": 0, "terrain": g.terrain})
+	if m.get("terrainLab", false) and m.get("smoothTerrain", true):
+		var ground = load("res://scripts/render/relief_terrain.gd").create({
+			"w": m.w, "h": m.h, "border": m.border,
+			"tiles": m.tiles + m.outerGround, "seed": m.seed,
+			"palette": "summer", "decals": false,
+		})
+		view.terrain_surface = ground.surface
+		return ground
 	return Terrain.build_terrain({
 		"w": m.w,
 		"h": m.h,
 		"border": m.border,
-		"tiles": tiles,
+		"tiles": m.tiles + view.surroundings.tiles,
 		"seed": m.seed,
 		"palette": "camp" if m.get("biome") == "camp" else "summer",
 	})

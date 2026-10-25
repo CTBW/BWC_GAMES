@@ -64,6 +64,18 @@ func test_bar() -> void:
 	z.free()
 
 
+## A decorated control often receives its padding before entering the scene.
+## Reading the style for a later decoration must retain that local override.
+func test_unparented_panel_preserves_explicit_padding() -> void:
+	var panel := UI.panel("DarkPanel", [28, 40])
+	var style: StyleBox = UI.theme_stylebox(panel).duplicate()
+	assert_eq(style.content_margin_top, 28.0)
+	assert_eq(style.content_margin_left, 40.0)
+	panel.add_theme_stylebox_override("panel", style)
+	assert_eq(UI.theme_stylebox(panel).content_margin_bottom, 28.0)
+	panel.free()
+
+
 func test_squad_bar() -> void:
 	var b := SquadBar.make(100, 32, 6, 4, 9)
 	host.add_child(b)

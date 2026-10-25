@@ -177,7 +177,7 @@ func test_last_stand_with_waves_and_relief_plays_to_the_end() -> void:
 	setup.objective.turns = 2
 	var v = _view_for(setup, true)
 	assert_eq(v.b.map.get("scale"), "large")
-	assert_true(v._host != null, "the host masses beyond the approach")
+	assert_false(v.surroundings.props.is_empty(), "terrain surrounds the entry openings")
 	assert_true(v.night_level > 0.9 if v.b.objective.get("dawn") else true, "a dawn battle opens at night")
 	v.begin()
 	assert_true(_idle(v, 300), "begin")
@@ -577,6 +577,44 @@ func test_the_danger_overlay_counts_a_lobbers_stones() -> void:
 		{"tag": "f", "type": "footman", "x": 5, "y": 11, "facing": 3},
 		{"tag": "r", "type": "rock_lobber", "x": 5, "y": 1, "facing": 1},
 	])
+	v.b.setup["fogOfWar"] = false # This test isolates the lobber range, not visibility.
 	var d: Dictionary = v._draw._danger_tiles()
 	assert_true(d.has(Grid.key(5, 9)), "eight tiles away, beyond its march, a stone can fall")
 	assert_false(d.has(Grid.key(5, 11)), "ten tiles away it cannot")
+
+
+func test_a_charge_aimed_too_close_runs_in_from_the_nearest_side_with_a_full_run() -> void:
+	# ../../docs/squad-skills.md: the cursor on the side facing the hounds is
+	# one tile off, too short a run, so the charge comes in from the closest
+	# side that gives it two; a plain attack still takes the side under the cursor.
+	var v = _lab([
+		{"tag": "h", "type": "collie_guard", "x": 5, "y": 9, "facing": 3},
+		{"tag": "g", "type": "goblin_spear", "x": 5, "y": 7, "facing": 1},
+	])
+	var h := _unit(v, "h")
+	var g := _unit(v, "g")
+	var near: Vector2 = _screen_of(v, 5, 7).lerp(_screen_of(v, 5, 8), 0.35)
+	v.select(h.uid)
+	v.pointer_move(near)
+	var plain = v.ui.hover.preview
+	assert_not_null(plain, "a forecast with the cursor on the goblins")
+	if plain == null:
+		return
+	assert_eq([plain.moveFirst, plain.from], [true, {"x": 5, "y": 8}], "a plain attack steps to the side under the cursor")
+	v.set_ability("hound_charge")
+	v.pointer_move(near)
+	var pv = v.ui.hover.preview
+	assert_true(pv.legal, "charges: %s" % pv.get("reason"))
+	assert_ne(pv.from, {"x": 5, "y": 8}, "not from the side one tile off")
+	assert_eq(Grid.manhattan(pv.from, g), 1, "from beside the goblins")
+	var path = v.b.path_to(h, pv.from.x, pv.from.y)
+	assert_true(path != null and path.size() - 1 >= 2, "with a run of two tiles or more")
+	assert_true(pv.mods.map(func(m): return m[0]).has("Charge"), "the charge's bonus in the forecast")
+	# Out of sight in the woods, three tiles off: no side helps, the reason stays.
+	g.y = 6
+	Grid.tile_at(v.b.map, 5, 6).terrain = "forest"
+	v.b.refresh_sight(true)
+	assert_false(v.b.visible_to("player", g), "hidden in the woods")
+	var hidden = v._preview_against(h, g)
+	assert_false(hidden.legal, "no charge at a squad out of sight")
+	assert_eq(hidden.get("reason"), "Target is hidden by fog of war")

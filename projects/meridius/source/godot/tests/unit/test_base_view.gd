@@ -1,6 +1,8 @@
 ## Garrison view (src/render/baseScene.ts) against the original's scene data
 ## (tests/fixtures/render/base_new.json): ground, palisade, forest and decor
 ## layout, walkers, camera framing, picking, hover/dim rules and the click signal.
+## Legacy geometry baseline only: production now uses woodland_camp.gd through
+## base_view.tscn. Keep the original fixture attached to the original renderer.
 extends "res://tests/test_case.gd"
 
 const BaseView = preload("res://scripts/render/base_view.gd")
@@ -18,7 +20,7 @@ func before_all() -> void:
 
 
 func _view(game: Dictionary) -> Node2D:
-	var v: Node2D = load("res://scenes/base/base_view.tscn").instantiate()
+	var v: Node2D = BaseView.new()
 	v.setup(func() -> Variant: return game)
 	(Engine.get_main_loop() as SceneTree).root.add_child(v)
 	v._w = 1920.0

@@ -51,8 +51,8 @@
 ##   ended(result: String)    the end has played ("victory" | "defeat" | "retreat")
 ## Methods (BattleScene in snake_case):
 ##   setup(battle) -> void, notify() -> void, busy() -> bool (getter `busy` in TS),
-##   select(uid = null), set_ability(id = null), cycle_facing(dir: int ±1),
-##   redo(uid = null), end_unit(), select_next(), begin(), end_turn(), retreat(),
+##   select(uid = null, say = true), set_ability(id = null), cycle_facing(dir: int ±1),
+##   redo(uid = null), end_unit(), select_next(say = true), begin(), end_turn(), retreat(),
 ##   selected_unit() -> Dictionary|null, pump(), staged() -> Dictionary uid->dueIn,
 ##   next_wave_info() -> Dictionary|null {label, count, edge, dueIn, index, total},
 ##   minimap_rect() -> Dictionary {x, y, w, h, k, ox, oy},
@@ -90,9 +90,11 @@ const Iso = preload("res://scripts/render/iso.gd")
 const Camera = preload("res://scripts/render/camera.gd")
 const Formation = preload("res://scripts/render/formation.gd")
 const SquadView = preload("res://scripts/render/squad_view.gd")
+const SoldierAnim = preload("res://scripts/render/soldier_anim.gd")
 const BattleDraw = preload("res://scripts/render/battle_draw.gd")
 const BattleDeps = preload("res://scripts/render/battle_deps.gd")
 const BattleLayer = preload("res://scripts/render/battle_layer.gd")
+const BattleFog = preload("res://scripts/render/battle_fog.gd")
 const BattleNight = preload("res://scripts/render/battle_night.gd")
 const FxShader = preload("res://scenes/battle/battle_fx.gdshader")
 
@@ -109,9 +111,14 @@ const QUIET_MORALE := {"Steadied": true, "Surrounded": true, "The battle is turn
 ## Most animations running at once (an enemy turn plays its squads side by side).
 const MAX_ANIMS := 14
 
+## A squad's steps are heard at most this often (s of battle time): about one
+## man's step (SoldierAnim.STRIDE / 2), so a full squad is one tread, not twelve.
+const STEP_BEAT := 0.19
+
 ## Labels and tints of lasting conditions.
-const STATUS_COLOR := {"chilled": Color(0xbf / 255.0, 0xe6 / 255.0, 1.0), "bloodlust": Color(1.0, 0x6a / 255.0, 0x50 / 255.0), "bleeding": Color(1.0, 0x8a / 255.0, 0x7a / 255.0)}
-const STATUS_LABEL := {"chilled": "CHILLED", "bloodlust": "FRENZY", "bleeding": "BLEEDING"}
+const STATUS_COLOR := {"chilled": Color(0xbf / 255.0, 0xe6 / 255.0, 1.0), "bloodlust": Color(1.0, 0x6a / 255.0, 0x50 / 255.0), "bleeding": Color(1.0, 0x8a / 255.0, 0x7a / 255.0), "cowed": Color(0xd9 / 255.0, 0xb8 / 255.0, 1.0)}
+const STATUS_LABEL := {"chilled": "CHILLED", "bloodlust": "FRENZY", "bleeding": "BLEEDING", "cowed": "COWED"}
+const STANCE_NAME := {"shieldwall": "Shield Wall", "spearwall": "Spearwall", "overwatch": "Overwatch", "defend": "Defend", "square": "Square"}
 
 ## Colour of the damage numbers a spell throws up.
 const SPELL_TEXT := {"lightning": "#d8ecff", "frost": "#cfeeff", "fire": "#ffc060", "gut": "#ff8a7a", "stone": "#ffffff", "rock": "#ffffff"}
@@ -134,6 +141,8 @@ const EDGE_NAME := {"n": "northern", "e": "eastern", "s": "southern", "w": "west
 ## Figures whose mirrored poses lead with the shield (figures.ts hasShieldPoses:
 ## a kite or round shield). Checked against the sprite registry when it has the key.
 const SHIELD_TYPES := {"footman": true, "collie_guard": true, "orc_warrior": true}
+## Squads that take the player's orders without a word (_say): the hounds.
+const QUIET_TYPES := {"collie_guard": true}
 
 
 ## What the screen shows of a squad: one anchor on the grid (moved, turned and
@@ -171,6 +180,14 @@ class UnitView extends RefCounted:
 	var statuses: Array = []
 	## A war machine shows its loosing pose for this many seconds.
 	var engine_atk := 0.0
+	## Frame-animated soldiers: where the anchor was last frame (world px), so
+	## the men can trail it (SoldierAnim.step_drift).
+	var anchor_prev := Vector2.INF
+	## The anchor's screen velocity last frame and the march's screen direction.
+	var anchor_vel := Vector2.ZERO
+	var heading := Vector2(1, 0.5).normalized()
+	## Seconds since the squad's last step was heard (footfalls).
+	var step_t := 0.0
 
 
 ## A fallen soldier left on the field.
@@ -257,16 +274,11 @@ var _h := 1080.0
 var _banner_id := 0
 ## World rectangle the camera centre may roam, and the painted ground (the view never shows past it).
 var _bounds := {"x0": 0.0, "y0": 0.0, "x1": 0.0, "y1": 0.0}
+## Presentation-only border terrain and props; the battle map stays unchanged.
+var surroundings := {}
 var _ground := {"x0": 0.0, "y0": 0.0, "x1": 0.0, "y1": 0.0}
 ## The held ground is being overrun (shown until the company retakes it).
 var _overrun_warn := false
-## The rest of the host, massed beyond the far edge: figures painted once, faded out when it has all come or fled.
-var _host = null
-var _host_alpha := 1.0
-## Columns of smoke from burning steadings on the horizon.
-var _smoke: Array = []
-## Torches carried in the host beyond the edge (world points), lit at night.
-var _host_torches: Array = []
 var _ended := false
 ## The whole host is breaking (relief or warchief slain): one banner says it, not a float per squad.
 var _horde_broken := false
@@ -283,16 +295,27 @@ var _is_setup := false
 var _ucache := {}
 var _ucache_b = null
 var _sfx_node: Node = null
+## Step event per unit type (step_<type> → step_<size> → step, the first the bank can play).
+var _step_events := {}
+## Sound per list of candidate names (_first_sound), "" when none can play.
+var _sound_names := {}
+## The last order answered (_say): no new answer while it still speaks.
+var _said := ""
+## Ambience preset this view asked for ("" until it is on screen).
+var _ambience := ""
 var _held := {}
 
 # Layers (children), built in setup().
 var _world: Node2D
 var _layers := {}
 var _draw: RefCounted
+var fog: Node2D
 var _night: Node2D
 var _water: Node2D
 var _minimap_key := ""
 var _zone_red := false
+## Opt-in test-field surface; production maps retain their original renderer.
+var terrain_surface = null
 
 
 # ---------------------------------------------------------------- construction
@@ -303,6 +326,7 @@ func setup(battle) -> void:
 	_draw = BattleDraw.new(self)
 	_w = _view_size().x
 	_h = _view_size().y
+	surroundings = BattleDeps.Surroundings.build(m)
 	terrain = BattleDeps.build_ground(self, m)
 	# Open a little closer than the whole map, leaning toward the company,
 	# so the squads read as soldiers rather than specks. A last stand opens
@@ -322,8 +346,6 @@ func setup(battle) -> void:
 	_compute_bounds()
 	if large:
 		_frame_stand()
-	_build_host()
-	_build_smoke()
 	fx = BattleDeps.make_fx()
 	atmo = BattleDeps.make_atmosphere(m.seed)
 	atmo.night = b.setup.get("darkness") == true
@@ -347,7 +369,19 @@ func _ready() -> void:
 		_build_layers()
 
 
+func _enter_tree() -> void:
+	# The battle's camera places its sounds (Sfx.play_at).
+	var s := _audio()
+	if s != null and s.has_method("set_listener"):
+		s.set_listener(self)
+
+
 func _exit_tree() -> void:
+	var s := _audio()
+	if s != null and s.has_method("clear_listener"):
+		s.clear_listener(self)
+		s.release_ambience(_ambience)
+	_ambience = ""
 	# A rules task must finish before the battle it works on goes away.
 	if _task_id >= 0:
 		WorkerThreadPool.wait_for_task_completion(_task_id)
@@ -381,17 +415,14 @@ func _warm_sprites() -> void:
 			types[crew] = true
 	if relief_possible():
 		types["margrave_rider"] = true
-	if _host != null:
-		for k in ["goblin_rabble", "goblin_spear", "goblin_archer", "orc_warrior", "orc_brute", "wolf_rider"]:
-			types[k] = true
-		keys["war_banner"] = true
 	for t in types:
+		SoldierAnim.warm(t)
 		for pose in ["idle_f", "idle_b", "atk_f", "atk_b", "idle_fs", "idle_bs", "atk_fs", "atk_bs", "dead", "flee_b", "run_f", "run_b"]:
 			keys["%s_%s" % [t, pose]] = true
 	for t in b.map.tiles:
 		if t.get("prop") != null:
 			keys[BattleDraw._prop_sprite(t.prop)] = true
-	for o in b.map.outer:
+	for o in surroundings.props:
 		keys[BattleDraw._prop_sprite(o.prop)] = true
 	BattleDeps.warm(keys.keys())
 
@@ -439,6 +470,9 @@ func _build_layers() -> void:
 	_night.name = "Night"
 	add_child(_night)
 	_night.setup(self)
+	fog = BattleFog.new()
+	add_child(fog)
+	fog.setup(self)
 	_add_layer(self, "Overlays", _draw.draw_overlays)
 	_add_layer(self, "MinimapBase", _draw.draw_minimap_base, true)
 	_add_layer(self, "Minimap", _draw.draw_minimap)
@@ -523,86 +557,6 @@ func _frame_stand() -> void:
 	cam.ty = cam.y
 	cam.zoom = z
 	cam.tzoom = z
-
-
-## The host behind the band you are fighting: rank on rank of dark figures,
-## spears and standards beyond the main approach, too far off to fight yet.
-## Small battles show a glimpse of it; a last stand shows a sea of it.
-func _build_host() -> void:
-	var m: Dictionary = b.map
-	var apps: Array = m.get("approaches", [])
-	var edge = apps[0] if apps.size() > 0 else null
-	var lanes = m.get("entries", {}).get(edge) if edge != null else null
-	if edge == null or lanes == null or lanes.is_empty():
-		return
-	var stand: bool = b.setup.get("kind") == "stand"
-	var large: bool = m.get("scale") == "large"
-	var count := 170 if stand else (90 if large else 46)
-	var rng := Rng.new(JS.to_u32(m.seed) ^ 0x51ab)
-	var ns: bool = edge == "n" or edge == "s"
-	var lo := INF
-	var hi := -INF
-	for p in lanes:
-		var a: float = p.x if ns else p.y
-		lo = minf(lo, a)
-		hi = maxf(hi, a)
-	lo -= 1
-	hi += 1
-	var out: Dictionary = Mapgen.OUTWARD[edge]
-	var inward: int = INWARD_DIR[edge]
-	var kinds := [["goblin_rabble", 34], ["goblin_spear", 28], ["goblin_archer", 14], ["orc_warrior", 10], ["orc_brute", 5], ["wolf_rider", 6 if stand else 3]]
-	var total := 0.0
-	for k in kinds:
-		total += k[1]
-	var figs: Array = []
-	var near := 6.0 if large else 4.2
-	for i in count:
-		var a := rng.frange(lo, hi)
-		var depth := rng.frange(near, m.border - 0.4)
-		var gx: float = a + out.x * depth if ns else (-1.0 if edge == "w" else float(m.w)) + out.x * (depth - 1)
-		var gy: float = ((-1.0 if edge == "n" else float(m.h)) + out.y * (depth - 1)) if ns else a + out.y * depth
-		var r := rng.frange(0, total)
-		var type: String = kinds[0][0]
-		for k in kinds:
-			r -= k[1]
-			if r <= 0:
-				type = k[0]
-				break
-		var pk := pose_key(type, "idle", inward)
-		var wx := Iso.iso_x(gx, gy) + rng.frange(-12, 12)
-		var wy := Iso.iso_y(gx, gy) + rng.frange(-6, 6)
-		figs.append({"wx": wx, "wy": wy, "key": pk.key, "v": rng.rint(0, 5), "flip": pk.flip, "banner": rng.chance(0.07)})
-	JS.sort(figs, func(p, q): return p.wy - q.wy)
-	var x0 := INF
-	var y0 := INF
-	var xm := -INF
-	var ym := -INF
-	for f in figs:
-		x0 = minf(x0, f.wx)
-		y0 = minf(y0, f.wy)
-		xm = maxf(xm, f.wx)
-		ym = maxf(ym, f.wy)
-	for i in figs.size():
-		var f: Dictionary = figs[i]
-		if f.banner:
-			continue
-		if i % 4 == 0:
-			_host_torches.append(Vector2(f.wx, f.wy - 46))
-	# Draw order: behind the field for the far edges, in front of nothing on the field.
-	var deepest := y0 / 32.0
-	_host = {"figs": figs, "x": x0 - 120, "y": y0 - 200, "w": ceili(xm + 120 - (x0 - 120)), "h": ceili(ym + 40 - (y0 - 200)), "d": -1e3 if (edge == "n" or edge == "w") else deepest, "tex": null}
-
-
-## Smoke rising from steadings burning on the horizon, beyond the far corners.
-func _build_smoke() -> void:
-	var m: Dictionary = b.map
-	var rng := Rng.new(JS.to_u32(m.seed) ^ 0x2f1)
-	var kind = b.setup.get("kind")
-	var n := 3 if (kind == "stand" or kind == "raid") else 2
-	for i in n:
-		var gx := rng.frange(-m.border + 1, m.w * 0.7)
-		var gy := rng.frange(-m.border + 1, m.h * 0.5) if gx < 0 else rng.frange(-m.border + 1, -3)
-		_smoke.append({"x": Iso.iso_x(gx, gy), "y": Iso.iso_y(gx, gy), "t": rng.frange(0, 1), "rate": rng.frange(0.18, 0.3)})
 
 
 ## Keep the camera over the field: its centre stays over the field and its
@@ -710,7 +664,12 @@ func _reform_view(v: UnitView, opts: Dictionary = {}) -> void:
 ## World position of one soldier (anchor + slot + lunge).
 func _member_pos(v: UnitView, m) -> Vector2:
 	var p := _view_pos(v)
-	return Vector2(p.x + m.x + m.lunge.x, p.y + m.y + m.lunge.y)
+	var q := Vector2(p.x + m.x + m.lunge.x + m.drift.x, p.y + m.y + m.lunge.y + m.drift.y)
+	if m.alive and SoldierAnim.animated(m.type):
+		var gp := SoldierAnim.pose(v, m, time)
+		q += Vector2(gp.dx, gp.dy)
+	q.y += member_ground_offset(v, q.x - p.x, q.y - p.y)
+	return q
 
 
 ## A soldier's body comes to rest: it stays on the field where he fell.
@@ -723,7 +682,8 @@ func _add_corpse(v: UnitView, m) -> void:
 	c.d = JS.rnd(v.x) + JS.rnd(v.y) - 0.3
 	c.type = m.type
 	c.variant = m.variant
-	c.flip = m.fall_flip
+	# A frame-animated man lies the way he fell, toward his squad's facing.
+	c.flip = SoldierAnim.corpse_flip(SoldierAnim.facing_of(v, m)) if SoldierAnim.animated(m.type) else m.fall_flip
 	c.scale = SquadView.member_scale(u)
 	corpses.append(c)
 	if corpses.size() > 160:
@@ -750,7 +710,10 @@ func busy() -> bool:
 	return _anims.size() > 0 or _queue.size() > 0 or BattleDeps.fx_busy(fx) or _task_id >= 0
 
 
-func select(uid = null) -> void:
+## `say`: a squad that can still act answers ("Orders?"); not when the
+## selection moves on by itself after an action.
+func select(uid = null, say := true) -> void:
+	var picked: bool = uid != null and uid != ui.selected
 	if uid != null:
 		var u: Dictionary = _u(uid)
 		if u.faction != "player" or u.status != "active":
@@ -763,6 +726,8 @@ func select(uid = null) -> void:
 	_states_cache = null
 	_facing_pick = null
 	_sfx("select")
+	if picked and say and b.phase == "player" and not _u(uid).done:
+		_say("select", uid)
 	notify()
 
 
@@ -841,7 +806,7 @@ func end_unit() -> void:
 	select_next()
 
 
-func select_next() -> void:
+func select_next(say := true) -> void:
 	var list: Array = b.active("player").filter(func(x): return not x.done)
 	if list.is_empty():
 		select(null)
@@ -851,7 +816,7 @@ func select_next() -> void:
 		if list[i].uid == ui.selected:
 			cur = i
 			break
-	select(list[(cur + 1) % list.size()].uid)
+	select(list[(cur + 1) % list.size()].uid, say)
 
 
 func begin() -> void:
@@ -962,7 +927,9 @@ static func _snapshot(live) -> Variant:
 
 func pump() -> void:
 	for e in b.drain():
-		_queue.append({"e": e, "uids": _involved(e)})
+		var involved := _involved(e)
+		e["witnesses"] = involved
+		_queue.append({"e": e, "uids": involved})
 	_reach_cache = null
 	_states_cache = null
 	_danger_cache = null
@@ -1105,7 +1072,18 @@ func _new_anim(dur: float, step: Callable = Callable(), done: Callable = Callabl
 
 
 func _play(e: Dictionary) -> void:
+	if fog != null and fog.enabled():
+		fog.refresh(0)
+		if e.t == "log" and not e.get("witnesses", []).is_empty() and not e.witnesses.any(func(id): return squad_visible(views.get(id))):
+			return
+		if e.has("uid") and not squad_visible(views.get(e.uid)) and e.t not in ["move", "face", "spawn", "reveal", "horn", "broken"]:
+			_play_unseen(e)
+			return
 	match e.t:
+		"reveal":
+			fog.reveal(e.uid)
+		"sight_reset":
+			fog.reset_side(e.faction)
 		"log":
 			ui.log.push_front({"text": e.text, "tone": e.get("tone")})
 			if ui.log.size() > 60:
@@ -1138,6 +1116,8 @@ func _play(e: Dictionary) -> void:
 			fx.text(hp.x, hp.y - 4, "+%s" % JS.num_str(e.amount), "#9ff08a", {"size": 22})
 			fx.text(hp.x, hp.y - 30, e.reason, "#c8f0b0", {"size": 14, "bold": false, "delay": 0.1})
 			fx.ring(p.x, p.y, 60, "rgba(150,240,120,0.8)", 0.6)
+			# A troll's wounds closing, a hound licking its own (none for the others).
+			_kind_sfx_at("mend", e.uid, p)
 			for m in SquadView.standing(v.members):
 				var q := _member_pos(v, m)
 				fx.burst(q.x, q.y - 30, 0, 3, {"shape": "puff", "color": "rgba(150,230,110,1)", "speed": 20, "vz": 40, "gravity": -20, "size": 4, "max": 0.9})
@@ -1152,8 +1132,8 @@ func _play(e: Dictionary) -> void:
 				if not v.statuses.has(e.status):
 					v.statuses.append(e.status)
 				var hp := _head_pos(v)
-				var label := "Chilled" if e.status == "chilled" else ("Bloodlust!" if e.status == "bloodlust" else "Bleeding")
-				fx.text(hp.x, hp.y - 36, label, STATUS_COLOR[e.status], {"size": 16, "delay": 0.05})
+				var label: String = {"chilled": "Chilled", "bloodlust": "Bloodlust!", "bleeding": "Bleeding", "cowed": "Cowed"}.get(e.status, String(e.status).capitalize())
+				fx.text(hp.x, hp.y - 36, label, STATUS_COLOR.get(e.status, Color.WHITE), {"size": 16, "delay": 0.05})
 			else:
 				v.statuses.erase(e.status)
 		"dot":
@@ -1167,7 +1147,7 @@ func _play(e: Dictionary) -> void:
 				m.flash = maxf(m.flash, 0.3)
 				m.shake = 0.6
 				fx.burst(q.x, q.y - 24, 0, 5, {"shape": "spark", "colors": ["#b8291c", "#7d1a12", "#e05040"], "speed": 60, "vz": 30, "gravity": 240, "size": 2.6, "max": 0.5})
-			_sfx("hit_flesh")
+			_sfx_at("hit_flesh", _view_pos(v))
 			_show_casualties(v, e.aliveBefore - e.aliveAfter, {"x": 0.0, "y": 1.0})
 			_anim = _new_anim(0.55)
 		"push":
@@ -1217,10 +1197,10 @@ func _play(e: Dictionary) -> void:
 				corpses.append(c)
 				fx.burst(ep.x, ep.y - 10, 4, 14, {"shape": "spark", "colors": ["#7a5532", "#5a3a22", "#c9ced4"], "speed": 130, "vz": 90, "gravity": 260, "size": 3, "max": 0.8})
 				fx.burst(ep.x, ep.y, 6, 8, {"shape": "puff", "color": "rgba(170,150,110,1)", "speed": 50, "vz": 30, "gravity": 10, "size": 9, "max": 1.1})
-				_sfx("crash")
+				_sfx_at("crash", ep)
 			var label := "Slain" if u.leader else ("Wiped out" if e.dead else "Broken")
 			fx.text(hp.x, hp.y - 14, label, "#ff8a7a" if e.dead else "#ffd27a", {"size": 22})
-			_sfx("death_player" if u.faction == "player" else "death")
+			_kind_sfx_at("death", e.uid, _view_pos(v))
 			var p := _view_pos(v)
 			fx.ring(p.x, p.y, 70, "rgba(120,170,255,0.7)" if u.faction == "player" else "rgba(235,80,60,0.7)", 0.6)
 			_anim = _new_anim(0.55)
@@ -1236,7 +1216,7 @@ func _play(e: Dictionary) -> void:
 			var hp := _head_pos(v)
 			if not _horde_broken:
 				fx.text(hp.x, hp.y - 18, "Routed!", "#f2efe4", {"size": 22})
-				_sfx("rout")
+				_kind_sfx_at("rout", e.uid, _view_pos(v))
 			_anim = _new_anim(0.45, func(f): v.shake = (1 - f) * 0.6)
 		"rally":
 			var v: UnitView = views[e.uid]
@@ -1253,15 +1233,16 @@ func _play(e: Dictionary) -> void:
 			var v: UnitView = views[e.uid]
 			var st = e.get("stance")
 			v.stance = st
-			var tight := 0.84 if st == "shieldwall" else (0.92 if st == "spearwall" else 1.0)
+			# A square packs its men tighter still, spears out on every side.
+			var tight := 0.84 if st == "shieldwall" else (0.92 if st == "spearwall" else (0.8 if st == "square" else 1.0))
 			if tight != v.tight:
 				v.tight = tight
 				_reform_view(v, {"dur": 0.3, "stagger": 0.03})
 			if st != null:
 				var hp := _head_pos(v)
-				var nm := "Shield Wall" if st == "shieldwall" else ("Spearwall" if st == "spearwall" else "Overwatch")
+				var nm: String = STANCE_NAME.get(st, String(st).capitalize())
 				fx.text(hp.x, hp.y - 10, nm, "#e9d58f", {"size": 18})
-				_sfx("stance")
+				_kind_sfx_at("stance", e.uid, _view_pos(v), ["stance_" + str(st)])
 				var p := _view_pos(v)
 				fx.ring(p.x, p.y, 70, "rgba(240,220,150,0.9)", 0.5)
 				_anim = _new_anim(0.35)
@@ -1269,13 +1250,30 @@ func _play(e: Dictionary) -> void:
 			var v: UnitView = views[e.uid]
 			var p := _view_pos(v)
 			var ab: Dictionary = DB.ABILITIES[e.ability]
-			fx.ring(p.x, p.y, 260, "rgba(230,70,50,0.9)", 0.9)
-			fx.ring(p.x, p.y, 180, "rgba(255,190,120,0.8)", 0.7)
-			fx.text(p.x, p.y - 160, "%s!" % ab.name, "#ff9a7a", {"size": 26})
-			cam.shake = 0.5
-			_sfx("warcry")
-			_focus_on(v.x, v.y, true)
-			_anim = _new_anim(0.9, func(f): v.hop = sin(f * PI) * 10)
+			if e.ability == "lick_wounds":
+				# Quiet: the hounds tend their wounds (the heal event that follows shows the healing).
+				fx.text(p.x, p.y - 110, ab.name, "#c8f0b0", {"size": 20})
+				_kind_sfx_at("lick", e.uid, p)
+				_anim = _new_anim(0.5)
+			elif e.ability == "growl" or e.ability == "howl":
+				# Two tiles of menace, not four: a low purple shock wave and a roar.
+				# Growl's rings are sized for its 2 tiles; Howl reaches 3.
+				var k: float = float(ab.get("radius", 2)) / 2.0
+				fx.ring(p.x, p.y, 150 * k, "rgba(170,110,230,0.9)", 0.8)
+				fx.ring(p.x, p.y, 105 * k, "rgba(60,30,80,0.8)", 0.6)
+				fx.text(p.x, p.y - 140, "%s!" % ab.name, "#d9b8ff", {"size": 26})
+				cam.shake = 0.3
+				_kind_sfx_at("roar", e.uid, p)
+				_focus_on(v.x, v.y, true)
+				_anim = _new_anim(0.8, func(f): v.hop = sin(f * PI) * 4)
+			else:
+				fx.ring(p.x, p.y, 260, "rgba(230,70,50,0.9)", 0.9)
+				fx.ring(p.x, p.y, 180, "rgba(255,190,120,0.8)", 0.7)
+				fx.text(p.x, p.y - 160, "%s!" % ab.name, "#ff9a7a", {"size": 26})
+				cam.shake = 0.5
+				_kind_sfx_at("warcry", e.uid, p)
+				_focus_on(v.x, v.y, true)
+				_anim = _new_anim(0.9, func(f): v.hop = sin(f * PI) * 10)
 		"halt":
 			var v: UnitView = views[e.uid]
 			var hp := _head_pos(v)
@@ -1287,7 +1285,8 @@ func _play(e: Dictionary) -> void:
 		"wave":
 			_banner("The warchief comes!" if e.final else e.label, "%d more squads march onto the field from the %s edge" % [e.count, EDGE_NAME[e.edge]], "enemy")
 			_sfx("warhorn")
-			_sfx("roar")
+			# The horde's roar, not a hound's growl (roar_<type> is the shout of one squad).
+			_sfx(_first_sound(["roar_wave", "roar"]))
 			cam.shake = maxf(cam.shake, 0.6 if e.final else 0.3)
 			var ent = b.map.get("entries", {}).get(e.edge)
 			if ent != null and ent.size() > 0:
@@ -1323,7 +1322,7 @@ func _play(e: Dictionary) -> void:
 			if e.sounded:
 				_banner("The war horn sounds!", "More of the horde will answer it next turn", "enemy")
 				_sfx("warhorn")
-				if p != null:
+				if p != null and squad_visible(v):
 					fx.ring(p.x, p.y - 30, 200, "rgba(230,70,50,0.8)", 1.0)
 					fx.ring(p.x, p.y - 30, 120, "rgba(255,190,120,0.7)", 0.8)
 			else:
@@ -1343,7 +1342,7 @@ func _play(e: Dictionary) -> void:
 			_banner("The horde breaks!", "%s is slain" % Squad.squad_name(u), "player")
 			_sfx("relief")
 			cam.shake = 0.7
-			if v != null:
+			if squad_visible(v):
 				var p := _view_pos(v)
 				fx.ring(p.x, p.y, 320, "rgba(255,215,106,0.9)", 1.2)
 				fx.ring(p.x, p.y, 200, "rgba(255,255,255,0.8)", 0.9)
@@ -1370,41 +1369,106 @@ func _play(e: Dictionary) -> void:
 
 ## One path for the squad: the anchor walks it and every soldier keeps
 ## his place in the ranks, turning with the squad at each corner.
+func _play_unseen(e: Dictionary) -> void:
+	var uv = views.get(e.get("uid", ""))
+	if uv == null:
+		return
+	match e.t:
+		"heal", "dot":
+			uv.hp = e.hp
+			if e.has("aliveAfter"):
+				_quiet_casualties(uv, e.aliveAfter)
+		"status":
+			if e.on and not uv.statuses.has(e.status):
+				uv.statuses.append(e.status)
+			elif not e.on:
+				uv.statuses.erase(e.status)
+		"morale":
+			uv.morale = e.value
+		"down":
+			uv.status = "dead" if e.dead else "downed"
+			uv.hp = 0
+			uv.stance = null
+			uv.statuses = []
+			_quiet_casualties(uv, 0)
+		"rout", "rally":
+			uv.routing = e.t == "rout"
+			uv.status = "routing" if uv.routing else "active"
+			uv.stance = null
+		"fled":
+			uv.status = "fled"
+			uv.visible = false
+		"stance":
+			uv.stance = e.get("stance")
+		"push":
+			_play_push(e)
+
+
+func _quiet_casualties(uv, remaining: int) -> void:
+	var count := 0
+	for member in uv.members:
+		if member.alive:
+			count += 1
+			if count > remaining:
+				member.alive = false
+	uv.alive = remaining
+
+
 func _play_move(e: Dictionary) -> void:
 	var v: UnitView = views[e.uid]
 	var path: Array = e.path
 	var steps := path.size() - 1
 	var u: Dictionary = _u(e.uid)
-	var per := 0.15 if v.routing else (0.24 if u.faction == "enemy" else 0.26)
+	# Each kind keeps its own pace (soldier_anim.gd gait: heavy armour slower, goblins quicker).
+	var ga := SoldierAnim.gait(_type_of(e.uid))
+	var per: float = (0.15 if v.routing else (0.24 if u.faction == "enemy" else 0.26)) * ga.pace * ga.march
+	var total: float = per * steps
 	var st := {"last": -1}
 	var last_pt: Dictionary = path[path.size() - 1]
 	# A squad falling back off an ally's tile backs away, still facing its way.
 	var backward: bool = e.get("backward", false)
-	_anim = _new_anim(per * steps,
+	# Framed figures are heard by their planted feet (_footfalls); the rest by the tile.
+	var tile_steps: bool = v.members.is_empty() or not SoldierAnim.animated(v.members[0].type)
+	# The anchor sets off and halts over a moment (the men's spring does the rest:
+	# they lag at the start and skid a little past the stop), and rounds its corners.
+	var ease_in := minf(0.16, total * 0.25)
+	var ease_out := minf(0.22, total * 0.3)
+	var cruise: float = steps / maxf(0.001, total - 0.5 * ease_in - 0.5 * ease_out)
+	var along := func(t: float) -> float:
+		if t <= ease_in:
+			return 0.5 * cruise * t * t / maxf(ease_in, 1e-6)
+		if t >= total - ease_out:
+			var r := total - t
+			return steps - 0.5 * cruise * r * r / maxf(ease_out, 1e-6)
+		return cruise * (t - 0.5 * ease_in)
+	_anim = _new_anim(total,
 		func(f):
-			var pos: float = f * steps
+			var pos: float = clampf(along.call(f * total), 0.0, steps)
 			var i := mini(steps - 1, floori(pos))
 			var k := pos - i
 			var a: Dictionary = path[i]
 			var bb: Dictionary = path[i + 1]
 			var ha := _tile_h(a.x, a.y)
 			var hb := _tile_h(bb.x, bb.y)
-			v.x = Iso.lerp(a.x, bb.x, k)
-			v.y = Iso.lerp(a.y, bb.y, k)
+			var at := _path_point(path, pos)
+			v.x = at.x
+			v.y = at.y
 			v.h = Iso.lerp(ha, hb, Iso.ease_in_out_quad(k)) + maxf(0.0, hb - ha) * sin(k * PI) * 0.4
 			var dir := dir_of(a, bb)
 			if dir != v.facing and not backward:
+				_turn_ranks(v, dir, per)
 				v.facing = dir
 				_reform_view(v, {"dur": per * 0.8, "stagger": 0.02})
 			if i != st.last:
 				st.last = i
-				# Dust under every pair of boots, not one cloud for the squad.
-				for m in SquadView.standing(v.members):
-					if randf() < 0.5:
-						continue
-					var p := _member_pos(v, m)
-					fx.burst(p.x, p.y, 1, 1, {"shape": "puff", "color": "rgba(190,165,120,1)", "speed": 18, "vz": 14, "gravity": 10, "size": 4, "max": 0.5})
-				_sfx("step"),
+				if tile_steps and squad_visible(v):
+					# Dust under every pair of boots, not one cloud for the squad.
+					for m in SquadView.standing(v.members):
+						if randf() < 0.5:
+							continue
+						var p := _member_pos(v, m)
+						fx.burst(p.x, p.y, 1, 1, {"shape": "puff", "color": "rgba(190,165,120,1)", "speed": 18, "vz": 14, "gravity": 10, "size": 4, "max": 0.5})
+					_sfx_at(_step_event(v.uid), _view_pos(v)),
 		func():
 			v.x = last_pt.x
 			v.y = last_pt.y
@@ -1414,8 +1478,54 @@ func _play_move(e: Dictionary) -> void:
 			_reform_view(v, {"dur": 0.3, "stagger": 0.03}),
 		func():
 			v.marching = true
+			for m in v.members:
+				m.face = -1
+				m.face_wait = 0.0
+				m.face_t = 0.0
 			if u.faction == "player":
 				_focus_on(last_pt.x, last_pt.y, false))
+
+
+## A point `pos` tiles along a path, its corners rounded (a quarter tile either
+## side of each turn), so a squad wheels round a corner instead of snapping.
+static func _path_point(path: Array, pos: float) -> Vector2:
+	var steps := path.size() - 1
+	var lin := func(q: float) -> Vector2:
+		var j := clampi(floori(q), 0, steps - 1)
+		var t := q - j
+		var a: Dictionary = path[j]
+		var b: Dictionary = path[j + 1]
+		return Vector2(lerpf(a.x, b.x, t), lerpf(a.y, b.y, t))
+	var c := roundi(pos)
+	const R := 0.28
+	if c > 0 and c < steps and absf(pos - c) < R:
+		var p0: Dictionary = path[c - 1]
+		var p1: Dictionary = path[c]
+		var p2: Dictionary = path[c + 1]
+		if (p1.x - p0.x) != (p2.x - p1.x) or (p1.y - p0.y) != (p2.y - p1.y):
+			var s0: Vector2 = lin.call(c - R)
+			var s1 := Vector2(p1.x, p1.y)
+			var s2: Vector2 = lin.call(c + R)
+			var t := (pos - (c - R)) / (2.0 * R)
+			return s0.lerp(s1, t).lerp(s1.lerp(s2, t), t)
+	return lin.call(pos)
+
+
+## At a corner the men turn one by one, those nearest the new heading first,
+## each on his own beat, instead of the whole squad flipping at once.
+func _turn_ranks(v: UnitView, dir: int, per: float) -> void:
+	var d: Dictionary = Grid.DIRS[dir]
+	var hx := float(d.x - d.y) * 64.0
+	var hy := float(d.x + d.y) * 32.0
+	var order := SquadView.standing(v.members)
+	JS.sort(order, func(p, q): return (q.x * hx + q.y * hy) - (p.x * hx + p.y * hy))
+	for i in order.size():
+		var m = order[i]
+		if m.pose == "atk":
+			continue
+		m.face = v.facing
+		m.face_wait = 0.0
+		m.face_t = per * (0.08 + 0.09 * i) + fposmod(m.phase * 0.41, per * 0.12)
 
 
 func _play_push(e: Dictionary) -> void:
@@ -1509,7 +1619,7 @@ func _play_through(e: Dictionary) -> void:
 			for m in SquadView.standing(tv.members):
 				m.flash = maxf(m.flash, 0.42)
 				m.shake = 1.0
-			_sfx("bolt_hit")
+			_sfx_at("bolt_hit", bp)
 			for m in victims:
 				_drop_victim(tv, m, from)
 			_after_casualties(tv, victims.size()),
@@ -1532,7 +1642,14 @@ func _play_attack(e: Dictionary) -> void:
 		var label := "Free attack" if reaction == "zoc" else ("Spearwall!" if reaction == "spearwall" else ("Overwatch!" if reaction == "overwatch" else "First strike!"))
 		var hp := _head_pos(av)
 		fx.text(hp.x, hp.y - 6, label, "#e9d58f", {"size": 16})
-	# Squads strike from where they stand without turning: only marching turns a squad.
+	# A guard (Defend) steps in and takes the blow meant for its ward.
+	var ward = e.get("ward")
+	if ward != null and views.has(ward):
+		var wp := _view_pos(views[ward])
+		var gh := _head_pos(tv)
+		fx.text(gh.x, gh.y - 20, "Guarded!", "#e9d58f", {"size": 18})
+		fx.ring(wp.x, wp.y, 60, "rgba(240,220,150,0.9)", 0.5)
+		_sfx_at("block", wp)
 	var dbt := _dir_between(av, tv)
 	var nx: float = dbt.nx
 	var ny: float = dbt.ny
@@ -1553,7 +1670,7 @@ func _play_attack(e: Dictionary) -> void:
 			if e.arc != "front":
 				fx.text(head.x, head.y - 34, "Rear!" if e.arc == "rear" else "Flank!", "#ffb347", {"size": 15, "delay": 0.05})
 			cam.shake = maxf(cam.shake, 0.4 if killed >= 2 else (0.28 if e.damage >= 30 else 0.16))
-			_sfx("bolt_hit" if e.ranged else ("hit_metal" if armored else "hit_flesh"))
+			_sfx_at("bolt_hit" if e.ranged else ("hit_metal" if armored else "hit_flesh"), tp)
 			# The whole squad flinches.
 			for m in SquadView.standing(tv.members):
 				m.flash = maxf(m.flash, 0.42)
@@ -1564,9 +1681,9 @@ func _play_attack(e: Dictionary) -> void:
 			fx.text(head.x, head.y - 4, "Blocked" if blocked else "Miss", "#c8c8c8", {"size": 20})
 			if blocked:
 				fx.burst(tp.x - nx * 30, tp.y - 26 - ny * 16, 0, 10, {"shape": "spark", "colors": ["#ffffff", "#ffe9a8"], "speed": 150, "vz": 40, "size": 2.5, "max": 0.35})
-				_sfx("block")
+				_sfx_at("block", tp)
 			else:
-				_sfx("miss")
+				_sfx_at("miss", tp)
 			# Sidestep.
 			for m in SquadView.standing(tv.members):
 				m.lunge = Vector2(-ny * 6 * (1 if m.id % 2 else -1), nx * 3)
@@ -1574,8 +1691,15 @@ func _play_attack(e: Dictionary) -> void:
 	# Front rank first: the soldiers nearest the enemy act first and reach furthest.
 	var order := strikers.duplicate()
 	JS.sort(order, func(p, q): return q.x * nx + q.y * ny - (p.x * nx + p.y * ny))
+	# The rules keep the squad's facing (its flanks and rear stay where they were),
+	# but the men turn to face the enemy they strike or shoot at, and turn back after.
+	if not DB.is_engine(attacker.typeId):
+		SoldierAnim.turn_to(av, order, dir_of({"x": av.x, "y": av.y}, {"x": tv.x, "y": tv.y}))
 	if e.ranged:
 		_play_volley(e, av, tv, order, killed, show_hit, nx, ny, len)
+		return
+	if not order.is_empty() and SoldierAnim.animated(order[0].type):
+		_play_drilled_melee(e, av, tv, order, killed, show_hit, nx, ny, armored)
 		return
 	# Melee: a ripple of blows from front to back. Each soldier winds up,
 	# lunges and recovers on his own beat; the squad's damage lands once.
@@ -1592,11 +1716,11 @@ func _play_attack(e: Dictionary) -> void:
 	var from := {"x": -nx, "y": -ny}
 	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
 	var st := {"next": 0, "swung2": false}
-	_sfx("swing")
+	_kind_sfx_at("swing", e.uid, _view_pos(av))
 	# A war wagon lurches into its ram as the crew shove.
 	if DB.is_engine(attacker.typeId):
 		av.engine_atk = total
-		_sfx("smash")
+		_kind_sfx_at("smash", e.uid, _view_pos(av))
 	_anim = _new_anim(total,
 		func(f):
 			var t: float = f * total
@@ -1633,7 +1757,7 @@ func _play_attack(e: Dictionary) -> void:
 					st.next += 1
 			if not st.swung2 and order.size() > 3 and t >= impact_at + beat * 2:
 				st.swung2 = true
-				_sfx("swing")
+				_kind_sfx_at("swing", e.uid, _view_pos(av))
 			for m in SquadView.standing(tv.members):
 				m.lunge *= 0.88,
 		func():
@@ -1645,6 +1769,95 @@ func _play_attack(e: Dictionary) -> void:
 			for m in order:
 				m.pose = "idle"
 				m.lunge = Vector2.ZERO
+			SoldierAnim.turn_back(order)
+			for m in SquadView.standing(tv.members):
+				m.lunge = Vector2.ZERO)
+
+
+## Frame-animated swordsmen (SoldierAnim: the footmen). Every man winds up,
+## cuts, holds the blow and recovers on his own beat, the front rank first and
+## a little ragged; he steps back into the wind-up and forward into the cut.
+## The squad's damage still lands once, with the first blow, and the fallen
+## drop one by one as later blows land.
+func _play_drilled_melee(e: Dictionary, av: UnitView, tv: UnitView, order: Array, killed: int, show_hit: Callable, nx: float, ny: float, armored: bool) -> void:
+	var front := ceili(order.size() / 2.0)
+	var beats: Array = []
+	var lands: Array = []
+	var total := 0.0
+	# Bigger figures step further into the blow.
+	var size_k := SquadView.member_height(order[0].type) / 49.0
+	for i in order.size():
+		var bt := SoldierAnim.melee_beat(i, front, order[i])
+		bt.reach = (22.0 if i < front else 13.0) * size_k
+		beats.append(bt)
+		lands.append(bt.start + bt.wind + bt.cut)
+		total = maxf(total, bt.start + bt.wind + bt.cut + bt.hold + bt.back)
+	lands.sort()
+	var impact_at: float = lands[0]
+	var from := {"x": -nx, "y": -ny}
+	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
+	var st := {"next": 0, "swung": 0, "hit": false}
+	_anim = _new_anim(total,
+		func(f):
+			var t: float = f * total
+			for i in order.size():
+				var m = order[i]
+				var bt: Dictionary = beats[i]
+				var lt: float = t - bt.start
+				if lt < 0:
+					continue
+				var L: float = bt.reach
+				var back := Vector2(-nx * 6, -ny * 3.5)
+				var fwd := Vector2(nx * L, ny * L * 0.55)
+				if lt < bt.wind:
+					m.pose = "atk"
+					m.key = "wind"
+					m.lunge = back * Iso.ease_in_out_quad(lt / bt.wind)
+				elif lt < bt.wind + bt.cut:
+					if m.key != "hit":
+						m.key = "hit"
+						# The first cut and one in the second rank are heard.
+						if st.swung == 0 or (st.swung == 1 and i >= front):
+							st.swung += 1
+							_kind_sfx_at("swing", e.uid, _view_pos(av))
+					m.lunge = back.lerp(fwd, Iso.ease_out_cubic((lt - bt.wind) / bt.cut))
+				elif lt < bt.wind + bt.cut + bt.hold:
+					m.key = "hit"
+					m.lunge = fwd * (1.0 - 0.12 * (lt - bt.wind - bt.cut) / bt.hold)
+				else:
+					var k := minf(1.0, (lt - bt.wind - bt.cut - bt.hold) / bt.back)
+					m.lunge = fwd * 0.88 * (1.0 - Iso.ease_out_cubic(k))
+					if k > 0.3:
+						m.pose = "idle"
+						m.key = ""
+			if t >= impact_at:
+				if not st.hit:
+					st.hit = true
+					show_hit.call()
+					if e.hit:
+						var tp := _view_pos(tv)
+						if armored:
+							fx.burst(tp.x - nx * 24, tp.y - 26 - ny * 12, 0, 16, {"shape": "spark", "colors": ["#fff6c8", "#ffd27a", "#ffffff"], "speed": 180, "vz": 60, "gravity": 200, "size": 3, "max": 0.45})
+						else:
+							fx.burst(tp.x - nx * 24, tp.y - 26 - ny * 12, 0, 10, {"shape": "spark", "colors": ["#d64a3a", "#a3261c", "#f2c0a0"], "speed": 180, "vz": 60, "gravity": 200, "size": 3, "max": 0.45})
+				# One victim per landing blow; more than there are blows fall
+				# just after the last.
+				while st.next < victims.size() and t >= (lands[st.next] if st.next < lands.size() else lands[lands.size() - 1] + (st.next - lands.size() + 1) * 0.06):
+					_drop_victim(tv, victims[st.next], from)
+					st.next += 1
+			for m in SquadView.standing(tv.members):
+				m.lunge *= 0.88,
+		func():
+			show_hit.call()
+			while st.next < victims.size():
+				_drop_victim(tv, victims[st.next], from)
+				st.next += 1
+			_after_casualties(tv, victims.size())
+			for m in order:
+				m.pose = "idle"
+				m.key = ""
+				m.lunge = Vector2.ZERO
+			SoldierAnim.turn_back(order)
 			for m in SquadView.standing(tv.members):
 				m.lunge = Vector2.ZERO)
 
@@ -1712,7 +1925,7 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 	var victims := _pick_victims(tv, killed, from) if killed > 0 else []
 	var targets := SquadView.standing(tv.members)
 	var total := aim + (shooters.size() - 1) * beat + flight + 0.3
-	_sfx("cast" if caster else ("crossbow" if bolt else "bow"))
+	_sfx_at("cast" if caster else ("crossbow" if bolt else "bow"), _view_pos(av))
 	var st := {"volley_sound": false}
 	_anim = _new_anim(total,
 		func(f):
@@ -1723,11 +1936,14 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 				if t < s.at:
 					# Raise and draw.
 					m.pose = "atk"
+					m.key = "wind"
 					var k := minf(1.0, t / aim)
 					m.lunge = Vector2(-nx * 3 * k, -ny * 2 * k)
 					continue
 				if not s.fired:
 					s.fired = true
+					# Frame-animated archers show the loose, then lower the bow.
+					m.key = "hit"
 					m.lunge = Vector2(-nx * 5, -ny * 3)
 					var fp := _member_pos(av, m)
 					# Hits fly at the soldiers who will fall first, then at the rest.
@@ -1765,9 +1981,12 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 						fx.burst(fp.x + nx * 8, fp.y - 40, 0, 5, {"shape": "glow", "color": glow, "speed": 40, "vz": 0, "gravity": 0, "size": 3, "max": 0.3})
 					if not st.volley_sound and i == shooters.size() / 2 and shooters.size() > 2:
 						st.volley_sound = true
-						_sfx("crossbow" if bolt else "bow")
+						_sfx_at("crossbow" if bolt else "bow", _view_pos(av))
 				else:
 					m.lunge *= 0.86
+					if t > s.at + 0.3 and SoldierAnim.animated(m.type):
+						m.pose = "idle"
+						m.key = ""
 			for m in SquadView.standing(tv.members):
 				m.lunge *= 0.9,
 		func():
@@ -1778,7 +1997,9 @@ func _play_volley(e: Dictionary, av: UnitView, tv: UnitView, order: Array, kille
 			_after_casualties(tv, victims.size())
 			for s in shooters:
 				s.m.pose = "idle"
+				s.m.key = ""
 				s.m.lunge = Vector2.ZERO
+			SoldierAnim.turn_back(order)
 			for m in SquadView.standing(tv.members):
 				m.lunge = Vector2.ZERO)
 
@@ -1797,6 +2018,7 @@ func _play_engine_shot(e: Dictionary, av: UnitView, tv: UnitView, crew: Array, k
 			var t: float = f * total
 			for m in crew:
 				m.pose = "atk" if t < aim + 0.12 else "idle"
+				m.key = "wind" if t < aim else ("hit" if t < aim + 0.12 else "")
 			if st.fired or t < aim:
 				return
 			st.fired = true
@@ -1807,7 +2029,7 @@ func _play_engine_shot(e: Dictionary, av: UnitView, tv: UnitView, crew: Array, k
 			var y0: float = p.y + o.y - 24 + ny * 10
 			var tp := _view_pos(tv)
 			var to := Vector2(tp.x, tp.y - 22) if e.hit else Vector2(tp.x + (randf() - 0.5) * 120, tp.y + (randf() - 0.5) * 44)
-			_sfx("ballista")
+			_sfx_at("ballista", p)
 			cam.shake = maxf(cam.shake, 0.12)
 			fx.burst(p.x + o.x, p.y + o.y, 0, 6, {"shape": "puff", "color": "rgba(190,165,120,1)", "speed": 40, "vz": 20, "gravity": 10, "size": 6, "max": 0.6})
 			fx.shoot({
@@ -1870,6 +2092,9 @@ func _play_spell(e: Dictionary) -> void:
 	var casters := SquadView.standing(av.members)
 	var ap := _view_pos(av)
 	var aim_pt := _ground_pt(e.at)
+	# Casters (or a crew's men) turn toward where the spell goes; an engine keeps its line.
+	if not DB.is_engine(caster.typeId) and (e.at.x != av.x or e.at.y != av.y):
+		SoldierAnim.turn_to(av, casters, dir_of({"x": av.x, "y": av.y}, e.at))
 	var imp_pt := _ground_pt(e.get("impact", e.at))
 	var hits: Array = e.hits
 	var hviews: Array = []
@@ -1900,9 +2125,11 @@ func _play_spell(e: Dictionary) -> void:
 	var apply_all := func() -> void:
 		for i in hits.size():
 			apply.call(i)
-	var pose := func(on: bool) -> void:
+	# Frame-animated casters gather power, then cast at the release.
+	var pose := func(on: bool, cast := false) -> void:
 		for m in casters:
 			m.pose = "atk" if on else "idle"
+			m.key = ("hit" if cast else "wind") if on else ""
 	var gather := func(amount: float) -> void:
 		if engine:
 			return
@@ -1915,14 +2142,14 @@ func _play_spell(e: Dictionary) -> void:
 	var step := func(_t: float) -> void:
 		pass
 	if not engine:
-		_sfx("cast")
+		_sfx_at("cast", ap)
 
 	if kind == "lightning":
 		var at := 0.5
 		var gap := 0.16
 		total = at + gap * maxi(1, hits.size()) + 0.45
 		step = func(t: float) -> void:
-			pose.call(t < at + 0.35)
+			pose.call(t < at + 0.35, t >= at)
 			if t < at:
 				gather.call(0.7)
 				return
@@ -1934,7 +2161,7 @@ func _play_spell(e: Dictionary) -> void:
 					fx.lightning(s.x, s.y, miss.x, miss.y, {"width": 2.4})
 				fx.mark(miss.x, miss.y, "scorch", 0.5)
 				flash = {"a": 0.6, "color": Color8(170, 200, 255)}
-				_sfx("lightning")
+				_sfx_at("lightning", miss)
 				var head := _head_pos(_view_at(e.at, av))
 				fx.text(head.x, head.y - 4, "Miss", "#c8c8c8", {"size": 20})
 				return
@@ -1952,7 +2179,7 @@ func _play_spell(e: Dictionary) -> void:
 					flash = {"a": maxf(flash.a, 0.5), "color": Color8(170, 200, 255)}
 				fx.burst(to.x, to.y, 0, 14, {"shape": "glow", "color": "#bcd8ff", "speed": 150, "vz": 0, "gravity": 0, "size": 3, "max": 0.35})
 				fx.mark(to.x, to.y + 24, "scorch", 0.55)
-				_sfx("lightning")
+				_sfx_at("lightning", to)
 				apply.call(st.done)
 				st.done += 1
 	elif kind == "frost":
@@ -1960,7 +2187,7 @@ func _play_spell(e: Dictionary) -> void:
 		var flight := 0.32
 		total = at + flight + 0.55
 		step = func(t: float) -> void:
-			pose.call(t < at + 0.3)
+			pose.call(t < at + 0.3, t >= at)
 			if t < at:
 				gather.call(0.7)
 				return
@@ -1973,7 +2200,7 @@ func _play_spell(e: Dictionary) -> void:
 						fx.shoot({"x0": s.x, "y0": s.y, "x1": aim_pt.x + (randf() - 0.5) * spread, "y1": aim_pt.y - 16 + (randf() - 0.5) * spread * 0.4, "t": 0.0, "dur": flight * (0.85 + randf() * 0.3), "arc": 18.0, "kind": "shard", "scale": 1.0})
 			if not st.landed and t >= at + flight:
 				st.landed = true
-				_sfx("frost")
+				_sfx_at("frost", aim_pt)
 				if not e.hit:
 					var head := _head_pos(_view_at(e.at, av))
 					fx.text(head.x, head.y - 4, "Miss", "#c8c8c8", {"size": 20})
@@ -1990,13 +2217,13 @@ func _play_spell(e: Dictionary) -> void:
 		var at := 0.3 if kind == "circle" else 0.38
 		total = at + 0.12 * hits.size() + 0.6
 		step = func(t: float) -> void:
-			pose.call(t < at + 0.4)
+			pose.call(t < at + 0.4, t >= at)
 			if t < at:
 				gather.call(0.6)
 				return
 			if not st.started:
 				st.started = true
-				_sfx("heal")
+				_sfx_at("heal", ap)
 				if kind == "circle":
 					fx.ring(ap.x, ap.y, TW * 2.2, "rgba(255,225,140,0.9)", 0.9)
 					fx.ring(ap.x, ap.y, TW * 1.4, "rgba(255,245,200,0.7)", 0.7)
@@ -2023,17 +2250,17 @@ func _play_spell(e: Dictionary) -> void:
 			fx.burst(imp_pt.x, imp_pt.y - 10, 0, 16, {"shape": "spark", "colors": ["#ffd27a", "#ff7a2a"], "speed": 230, "vz": 120, "gravity": 300, "size": 2.6, "max": 0.6})
 			fx.burst(imp_pt.x, imp_pt.y - 20, 10, 10, {"shape": "puff", "colors": ["rgba(60,48,40,1)", "rgba(90,80,70,1)"], "speed": 50, "vz": 40, "gravity": -20, "size": 14, "max": 1.6})
 			fx.mark(imp_pt.x, imp_pt.y, "scorch", 1.6, 40)
-			_sfx("explosion")
+			_sfx_at("explosion", imp_pt)
 			apply_all.call()
 		step = func(t: float) -> void:
-			pose.call(t < at + 0.25)
+			pose.call(t < at + 0.25, t >= at)
 			if t < at:
 				gather.call(0.8)
 				return
 			if st.fired:
 				return
 			st.fired = true
-			_sfx("fireball")
+			_sfx_at("fireball", ap)
 			var s: Vector2 = _staff_tip(av, casters[floori(casters.size() / 2.0)]) if casters.size() > 0 else Vector2(ap.x, ap.y - 40)
 			fx.shoot({"x0": s.x, "y0": s.y, "x1": imp_pt.x, "y1": imp_pt.y - 14, "t": 0.0, "dur": flight, "arc": l * 0.22 + 20, "kind": "fireball", "scale": 1.1, "onHit": explode})
 	elif kind == "blood" or kind == "gut":
@@ -2042,13 +2269,13 @@ func _play_spell(e: Dictionary) -> void:
 		total = 1.15
 		var tv: UnitView = hviews[0] if hviews.size() > 0 else _view_at(e.at, av)
 		step = func(t: float) -> void:
-			pose.call(t < strike + 0.2)
+			pose.call(t < strike + 0.2, t >= strike)
 			if t < at:
 				gather.call(0.8)
 				return
 			if not st.lashed:
 				st.lashed = true
-				_sfx("bloodlust" if kind == "blood" else "hex")
+				_sfx_at("bloodlust" if kind == "blood" else "hex", _view_pos(tv))
 				var to: Vector2 = body.call(tv)
 				for m in casters:
 					var s := _staff_tip(av, m)
@@ -2092,16 +2319,17 @@ func _play_spell(e: Dictionary) -> void:
 			# Chunks of the stone bounce away.
 			fx.burst(imp_pt.x, imp_pt.y - 4, 4, 6, {"shape": "dot", "colors": ["#7d7568", "#9a9184"], "speed": 170, "vz": 150, "gravity": 420, "size": 5, "max": 0.9})
 			fx.mark(imp_pt.x, imp_pt.y, "crater", 1.6, 60)
-			_sfx("crash")
+			_sfx_at("crash", imp_pt)
 			apply_all.call()
 		step = func(t: float) -> void:
 			for m in casters:
 				m.pose = "atk" if t < at + 0.1 else "idle"
+				m.key = "wind" if t < at else ("hit" if t < at + 0.1 else "")
 			if st.fired or t < at:
 				return
 			st.fired = true
 			av.engine_atk = 0.8
-			_sfx("catapult")
+			_sfx_at("catapult", ap)
 			var o := Formation.engine_offset(av.facing)
 			var d: Dictionary = Grid.DIRS[av.facing]
 			fx.shoot({
@@ -2122,7 +2350,8 @@ func _play_spell(e: Dictionary) -> void:
 		func(f): run.call(f * total),
 		func():
 			apply_all.call()
-			pose.call(false))
+			pose.call(false)
+			SoldierAnim.turn_back(casters))
 
 
 ## One squad takes what the spell brought it: a wound and its dead, healing, or a frenzy.
@@ -2143,7 +2372,7 @@ func _apply_spell_hit(e: Dictionary, h: Dictionary, from: Dictionary) -> void:
 		for m in SquadView.standing(v.members):
 			m.flash = maxf(m.flash, 0.55)
 			m.shake = 1.0
-		_sfx("hit_metal" if (t.stats.armor >= 2 and ab.get("fx") != "gut") else "hit_flesh")
+		_sfx_at("hit_metal" if (t.stats.armor >= 2 and ab.get("fx") != "gut") else "hit_flesh", _view_pos(v))
 		_show_casualties(v, h.aliveBefore - h.aliveAfter, from, {"reformDelay": 0.55})
 	elif ab.get("power") != null and damage == 0:
 		fx.text(head.x, head.y - 4, "Unhurt", "#c8c8c8", {"size": 18})
@@ -2175,6 +2404,21 @@ func step_frame(dt: float) -> void:
 	update(dt)
 	_apply_camera()
 	_redraw()
+	_sync_ambience()
+
+
+## Day or night ambience; at dawn the night's sounds give way slowly.
+func _sync_ambience() -> void:
+	if not is_inside_tree():
+		return
+	var want := "battle_night" if atmo.night else "battle_day"
+	if want == _ambience:
+		return
+	var first := _ambience == ""
+	_ambience = want
+	var s := _audio()
+	if s != null and s.has_method("set_ambience"):
+		s.set_ambience(want, -1.0 if first else 6.0)
 
 
 ## One frame of the scene's update for tests and automation (no drawing).
@@ -2196,10 +2440,16 @@ func update(dt: float) -> void:
 		v.shake = maxf(0.0, v.shake - dt * 3)
 		v.engine_atk = maxf(0.0, v.engine_atk - dt)
 		SquadView.step_members(v.members, dt, func(m): _add_corpse(v, m))
+		if not v.members.is_empty() and SoldierAnim.animated(v.members[0].type):
+			# The men follow the anchor over the ground: climbing a ledge lifts them with it.
+			SoldierAnim.step_drift(v, dt, Vector2(Iso.iso_x(v.x, v.y), Iso.iso_y(v.x, v.y, 0.0)))
 		v.walking = Iso.clamp(v.walking + (dt * 6 if v.marching else -dt * 4), 0, 1)
+		v.step_t += dt
 		if v.walking > 0:
 			v.walk_t += dt
-		if v.statuses.size() > 0 and v.visible and v.alive > 0:
+			_footfalls(v, dt)
+			_step_dust(v, dt)
+		if v.statuses.size() > 0 and squad_visible(v) and v.alive > 0:
 			_status_motes(v, dt)
 	_focus_hold = maxf(0.0, _focus_hold - dt)
 	var rush := Iso.clamp(1 + _queue.size() / 45.0, 1, 1.9) if ui.side == "enemy" else 1.0
@@ -2211,29 +2461,8 @@ func update(dt: float) -> void:
 		var want := 0.0 if won else Iso.clamp(1 - (float(ui.turn - 1) / o.turns) * 0.85, 0.15, 1)
 		night_level += (want - night_level) * minf(1.0, dt * (1.6 if relief != null else 0.6))
 		atmo.night = night_level > 0.05
-	# The host fades once it has all marched in, or when it breaks and runs.
-	var final_in := false
-	var waves := _waves()
-	for i in waves.size():
-		var w: Dictionary = waves[i]
-		if w.get("final") and b.wave_state[i] != "pending":
-			var any_reserve := false
-			for id in w.uids:
-				var rv: UnitView = views.get(id)
-				if rv != null and rv.reserve:
-					any_reserve = true
-					break
-			if not any_reserve:
-				final_in = true
-	var gone: bool = b.phase == "over" or final_in
-	_host_alpha = Iso.clamp(_host_alpha + (-dt * 0.5 if gone else dt), 0, 1)
 	if relief != null:
 		_step_relief(dt)
-	for s in _smoke:
-		s.t += dt
-		if s.t >= s.rate:
-			s.t = 0.0
-			fx.burst(s.x + (randf() - 0.5) * 20, s.y, 30, 1, {"shape": "puff", "color": "rgba(70,60,52,1)" if randf() < 0.3 else "rgba(110,100,92,1)", "speed": 6, "vz": 26, "gravity": -4, "size": 14, "max": 7, "drag": 0.2})
 	for a: Anim in _anims.duplicate():
 		if a.delay > 0:
 			a.delay -= adt
@@ -2250,7 +2479,12 @@ func update(dt: float) -> void:
 			if a.done.is_valid():
 				a.done.call()
 			_anims.erase(a)
+	if fog != null:
+		fog.refresh(dt)
 	_next()
+	if terrain_surface != null:
+		for unit_view in views.values():
+			unit_view.h = terrain_surface.surface(unit_view.x, unit_view.y)
 	var bz := busy()
 	if bz != ui.busy:
 		ui.busy = bz
@@ -2260,7 +2494,7 @@ func update(dt: float) -> void:
 	if _select_after_idle > 0 and not bz:
 		_select_after_idle = 0
 		if b.phase == "player":
-			select_next()
+			select_next(false)
 
 
 ## Lasting conditions show on the soldiers: frost glitter, the red haze of a frenzy, dripping blood.
@@ -2278,7 +2512,7 @@ func _status_motes(v: UnitView, dt: float) -> void:
 			fx.burst(x, q.y - 8 - randf() * 34, 0, 1, {"shape": "glow", "color": "#e6f6ff", "speed": 6, "vz": 0, "gravity": -6, "size": 2, "max": 1})
 		elif s == "bloodlust":
 			fx.burst(x, q.y - 16 - randf() * 26, 0, 1, {"shape": "glow", "color": "#ff3a20", "speed": 10, "vz": 0, "gravity": -34, "size": 2.6, "max": 0.75})
-		else:
+		elif s == "bleeding":
 			fx.burst(x, q.y - 4, 14 + randf() * 10, 1, {"shape": "dot", "color": "#9a1a12", "speed": 4, "vz": 0, "gravity": 220, "size": 2.2, "max": 0.6})
 
 
@@ -2326,8 +2560,13 @@ func _redraw() -> void:
 
 func _tile_at_screen(sx: float, sy: float) -> Variant:
 	var wpt := cam.screen_to_world(sx, sy, _w, _h)
+	if terrain_surface != null:
+		var g: Vector2 = terrain_surface.unproject(wpt)
+		var gx := roundi(g.x)
+		var gy := roundi(g.y)
+		return {"x": gx, "y": gy} if Grid.in_bounds(b.map, gx, gy) else null
 	# Test from the highest level down so raised tiles win.
-	var lvl := 3
+	var lvl: int = terrain.max_h if b.map.get("terrainLab", false) else 3
 	while lvl >= 0:
 		var gx := (wpt.x / (TW / 2.0) + (wpt.y + lvl * LH) / (TH / 2.0)) / 2
 		var gy := ((wpt.y + lvl * LH) / (TH / 2.0) - wpt.x / (TW / 2.0)) / 2
@@ -2346,12 +2585,20 @@ func pointer_move(p: Vector2) -> void:
 
 
 ## Front-most living unit whose figure (opaque pixels) is under the cursor.
+func squad_visible(uv) -> bool:
+	return uv != null and uv.visible and (fog == null or fog.sees(uv.uid))
+
+
+func unit_visible(u: Dictionary) -> bool:
+	return squad_visible(views.get(u.uid))
+
+
 func _unit_at_screen(sx: float, sy: float) -> Variant:
 	var wp := cam.screen_to_world(sx, sy, _w, _h)
 	var best = null
 	var best_d := -INF
 	for v: UnitView in views.values():
-		if not v.visible or v.status == "dead" or v.status == "downed" or v.status == "fled":
+		if not squad_visible(v) or v.status == "dead" or v.status == "downed" or v.status == "fled":
 			continue
 		var u: Dictionary = _u(v.uid)
 		if not _draw.body_covers(v, u, wp.x, wp.y):
@@ -2366,7 +2613,7 @@ func _unit_at_screen(sx: float, sy: float) -> Variant:
 ## Whether the selected soldier could be moved (or deployed) onto this tile now.
 func _is_move_target(t: Dictionary) -> bool:
 	var sel = selected_unit()
-	if sel == null or Grid.unit_at(b.units, t.x, t.y) != null:
+	if sel == null or b.known_unit_at(sel.faction, t.x, t.y) != null:
 		return false
 	if b.phase == "deploy":
 		for p in b.map.playerDeploy:
@@ -2384,6 +2631,8 @@ func _is_move_target(t: Dictionary) -> bool:
 func resolve_pointer(sx: float, sy: float) -> Dictionary:
 	var ground = _tile_at_screen(sx, sy)
 	var standing_u = Grid.unit_at(b.units, ground.x, ground.y) if ground != null else null
+	if standing_u != null and not unit_visible(standing_u):
+		standing_u = null
 	var body = _unit_at_screen(sx, sy)
 	if body != null and (standing_u == null or body.uid != standing_u.uid):
 		if ground != null and standing_u == null and body.faction == "player" and _is_move_target(ground):
@@ -2568,7 +2817,8 @@ func _preview_against(sel: Dictionary, target: Dictionary) -> Variant:
 			out.from = best.from
 			return out
 		return _pv(here, target.uid, null, false)
-	# Melee: choose the adjacent tile closest to the cursor.
+	# Melee: choose the adjacent tile closest to the cursor. A charge takes the
+	# closest side that gives it its run, and the closest side only when none does.
 	var reach := _reach(sel)
 	var wpt := cam.screen_to_world(_pointer.x, _pointer.y, _w, _h)
 	var reach_opts: Array = []
@@ -2577,22 +2827,33 @@ func _preview_against(sel: Dictionary, target: Dictionary) -> Variant:
 			reach_opts.append({"x": target.x - d.x * 2, "y": target.y - d.y * 2})
 		else:
 			reach_opts.append({"x": target.x + d.x, "y": target.y + d.y})
+	var strike := func(from: Dictionary) -> Dictionary:
+		var path = b.path_to(sel, from.x, from.y)
+		var opts := {"from": from, "movedTiles": path.size() - 1 if path != null else 1}
+		if ability != null:
+			opts.ability = ability
+		return b.preview(sel, target, opts)
+	var run: bool = ab != null and ab.get("minRun") != null
 	var best = null
+	var best_run = null
 	for from in reach_opts:
 		if not reach.has(Grid.key(from.x, from.y)):
 			continue
 		var fxw := Iso.iso_x(from.x, from.y)
 		var fyw := Iso.iso_y(from.x, from.y, _tile_h(from.x, from.y))
 		var d := JS.hypot(fxw - wpt.x, fyw - wpt.y)
+		var side := {"from": from, "d": d, "pv": null}
+		if run and (best_run == null or d < best_run.d):
+			side.pv = strike.call(from)
+			if side.pv.legal:
+				best_run = side
 		if best == null or d < best.d:
-			best = {"from": from, "d": d}
+			best = side
 	if best == null:
 		return _pv(here, target.uid, ability, false)
-	var path = b.path_to(sel, best.from.x, best.from.y)
-	var opts := {"from": best.from, "movedTiles": path.size() - 1 if path != null else 1}
-	if ability != null:
-		opts.ability = ability
-	var pv: Dictionary = b.preview(sel, target, opts)
+	if best_run != null:
+		best = best_run
+	var pv: Dictionary = best.pv if best.pv != null else strike.call(best.from)
 	var out := _pv(pv, target.uid, ability, true)
 	out.from = best.from
 	return out
@@ -2645,14 +2906,14 @@ func pointer_down(p: Vector2, button: int) -> void:
 			if ui.selected != null and ui.selected != u.uid:
 				b.deploy_swap(ui.selected, t.x, t.y)
 				_sync_views()
-				_sfx("step")
+				_sfx_at("step", _ground_pt(t))
 				ui.selected = null
 			else:
 				ui.selected = u.uid
 			notify()
 		elif ui.selected != null and b.deploy_swap(ui.selected, t.x, t.y):
 			_sync_views()
-			_sfx("step")
+			_sfx_at("step", _ground_pt(t))
 			notify()
 		return
 	if b.phase != "player":
@@ -2693,6 +2954,7 @@ func pointer_down(p: Vector2, button: int) -> void:
 		if pv == null or not pv.legal:
 			_sfx("deny")
 			return
+		_say("attack", sel.uid, ["order_" + str(pv.ability)] if pv.get("ability") != null else [])
 		if pv.moveFirst and pv.get("from") != null:
 			var same: bool = hv.get("dest") != null and hv.dest.x == pv.from.x and hv.dest.y == pv.from.y
 			b.move(sel.uid, pv.from.x, pv.from.y, hv.facing if same else null)
@@ -2706,6 +2968,7 @@ func pointer_down(p: Vector2, button: int) -> void:
 		return
 	if not sel.hasMoved and _reach(sel).has(Grid.key(t.x, t.y)) and not (t.x == sel.x and t.y == sel.y):
 		var same: bool = hv.get("dest") != null and hv.dest.x == t.x and hv.dest.y == t.y
+		_say("move", sel.uid)
 		b.move(sel.uid, t.x, t.y, hv.facing if same else null)
 		pump()
 		_after_player_action(sel)
@@ -2896,7 +3159,7 @@ func _start_relief() -> void:
 	ey /= riders.size()
 	cam.tx = Iso.lerp(cam.x, ex, 0.65)
 	cam.ty = Iso.lerp(cam.y, ey - 40, 0.65)
-	_sfx("hooves")
+	_sfx_at("hooves", Vector2(ex, ey))
 
 
 ## Where a relief rider is at time `t`, his stride and how far he has come into view.
@@ -2957,8 +3220,18 @@ func _view_size() -> Vector2:
 
 
 func _tile_h(x, y) -> float:
+	if terrain_surface != null:
+		return terrain_surface.surface(float(x), float(y))
 	var t = Grid.tile_at(b.map, int(x), int(y))
 	return float(t.h) if t != null else 0.0
+
+
+## Each figure's foot and shadow sample the same surface as the terrain.
+func member_ground_offset(uv, ox: float, oy: float) -> float:
+	if terrain_surface == null:
+		return 0.0
+	var d := Iso.from_iso(ox, oy)
+	return (uv.h - terrain_surface.surface(uv.x + d.x, uv.y + d.y)) * LH
 
 
 ## _u(uid) through a uid index (b.unit searches the list; the passes ask
@@ -2988,15 +3261,148 @@ func _type_of(uid: String) -> String:
 	return _u(uid).typeId
 
 
-## Sfx.play through the autoload found at run time (the view also runs in
-## tools and tests that load it before the autoloads exist).
-func _sfx(n: String) -> void:
+## The Sfx autoload found at run time, or null (the view also runs in tools
+## and tests that load it before the autoloads exist).
+func _audio() -> Node:
 	if _sfx_node == null or not is_instance_valid(_sfx_node):
 		var ml := Engine.get_main_loop() as SceneTree
 		_sfx_node = ml.root.get_node_or_null("Sfx") if ml != null else null
-		if _sfx_node == null:
-			return
-	_sfx_node.play(n)
+	return _sfx_node
+
+
+## A flat sound: the UI, turn banners, horns and drums of the whole field.
+func _sfx(n: String) -> void:
+	var s := _audio()
+	if s != null:
+		s.play(n)
+
+
+## A sound of a squad or a point of impact (world px): Sfx pans it by where
+## it is on screen and lowers it off screen and zoomed out.
+func _sfx_at(n: String, at: Vector2, opts: Dictionary = {}) -> void:
+	var s := _audio()
+	if s == null:
+		return
+	if s.has_method("play_at"):
+		s.play_at(n, at, opts)
+	else:
+		s.play(n)
+
+
+## A unit's sound in its own kind: `first` names (e.g. stance_shieldwall), then
+## <base>_<typeId> → <base>_<faction> → <base>, the first the bank can play;
+## silent when none can (a hound's growl, a troll's death, an orc's war cry).
+func _kind_sfx_at(base: String, uid: String, at: Vector2, first: Array = []) -> void:
+	var u: Dictionary = _u(uid)
+	var names: Array = first + [base + "_" + str(u.get("typeId", "")), base + "_" + str(u.get("faction", "")), base]
+	var n := _first_sound(names)
+	if n != "":
+		_sfx_at(n, at)
+
+
+## A squad answering the player's order ("Orders?", "Moving!", "At them!"):
+## `first` names (e.g. order_shield_charge), then order_<line>_<typeId> →
+## order_<line>. One voice answers at a time: none starts while the last
+## still speaks. The hounds (QUIET_TYPES) obey without a word.
+func _say(line: String, uid: String, first: Array = []) -> void:
+	var type := str(_u(uid).get("typeId", ""))
+	if QUIET_TYPES.has(type) or not views.has(uid):
+		return
+	var s := _audio()
+	if s == null or (_said != "" and s.has_method("playing") and s.playing(_said) > 0):
+		return
+	var n := _first_sound(first + ["order_%s_%s" % [line, type], "order_" + line])
+	if n != "":
+		_said = n
+		_sfx_at(n, _view_pos(views[uid]))
+
+
+## The first of `names` the bank can play, or "" (cached per list).
+func _first_sound(names: Array) -> String:
+	var key := "|".join(names)
+	var n: Variant = _sound_names.get(key)
+	if n == null:
+		var s := _audio()
+		n = s.first_event(names) if s != null and s.has_method("first_event") else str(names[-1])
+		_sound_names[key] = n
+	return n
+
+
+## Steps follow the men's planted feet (SoldierAnim.footfalls), gathered per
+## squad: one tread per beat at most, from the squad's place, a little louder
+## for a full squad and softer for a few survivors, in the figure's own kind.
+func _footfalls(v: UnitView, dt: float) -> void:
+	if not squad_visible(v) or v.reserve or v.alive <= 0:
+		return
+	var men := 0
+	var down := 0
+	for m in v.members:
+		if not m.alive or m.dying:
+			continue
+		men += 1
+		if SoldierAnim.animated(m.type):
+			down += SoldierAnim.footfalls(v, m, dt)
+	if down == 0 or v.step_t < STEP_BEAT:
+		return
+	v.step_t = 0.0
+	_sfx_at(_step_event(v.uid), _view_pos(v), {"volume_db": clampf(3.0 * log(men / 6.0) / log(2.0), -6.0, 2.0)})
+
+
+## Footstep dust: a puff under each man's foot as it lands, of the ground he
+## walks on (dust on earth and roads, grit on stone, a splash in shallows, mud
+## clods, bits of leaf in the woods), bigger and more for heavy feet; a troll's
+## stamp shakes the camera. Only for squads in view, and thinned out when the
+## camera is far away.
+const STEP_DUST := {
+	"grass": ["rgba(150,152,96,0.5)", 0.0], "dirt": ["rgba(190,165,120,0.55)", 1.0], "road": ["rgba(196,176,136,0.55)", 1.0],
+	"brush": ["rgba(120,130,70,0.5)", 0.12], "forest": ["rgba(96,112,56,0.5)", 0.12], "mud": ["rgba(92,70,46,0.6)", 1.0],
+	"shallows": ["rgba(205,225,240,0.8)", 1.0], "water": ["rgba(205,225,240,0.8)", 1.0], "stone": ["rgba(160,156,146,0.5)", 0.5],
+	"bridge": ["rgba(150,128,96,0.5)", 0.4], "rubble": ["rgba(150,146,136,0.55)", 0.8],
+}
+
+
+func _step_dust(v: UnitView, dt: float) -> void:
+	if not squad_visible(v) or v.reserve or v.alive <= 0 or cam.zoom < 0.42:
+		return
+	var p := _view_pos(v)
+	if absf(p.x - cam.x) > _w / cam.zoom * 0.6 + 120 or absf(p.y - cam.y) > _h / cam.zoom * 0.6 + 160:
+		return
+	var tile = Grid.tile_at(b.map, roundi(v.x), roundi(v.y))
+	var terrain: String = str(tile.terrain) if tile != null else "grass"
+	var look: Array = STEP_DUST.get(terrain, STEP_DUST.grass)
+	var wet := terrain == "shallows" or terrain == "water"
+	for m in v.members:
+		if not m.alive or m.dying or not SoldierAnim.animated(m.type):
+			continue
+		var n := SoldierAnim.footfalls(v, m, dt)
+		if n <= 0:
+			continue
+		var ga := SoldierAnim.gait(m.type)
+		var heavy: float = ga.stomp
+		if look[1] <= 0.0 or randf() > look[1] * (0.35 + 0.65 * minf(1.0, heavy)):
+			continue
+		var q := _member_pos(v, m)
+		# Low and faint: the puffs are drawn over the men, so they must not climb their legs.
+		if wet:
+			fx.burst(q.x, q.y, 1, 2 + int(heavy * 2), {"shape": "dot", "color": look[0], "speed": 26 + 18 * heavy, "vz": 30, "gravity": 160, "size": 1.2 * ga.dust, "max": 0.3})
+		else:
+			fx.burst(q.x, q.y + 1, 0.5, 1 + int(heavy), {"shape": "puff", "color": look[0], "speed": 8 + 10 * heavy, "vz": 3 + 3 * heavy, "gravity": 6, "size": 1.7 * ga.dust, "max": 0.35 + 0.2 * heavy})
+		if heavy >= 1.0:
+			cam.shake = maxf(cam.shake, 0.06 * (heavy - 0.6))
+
+
+## The step sound of a squad's kind: step_<type>, else step_<size>, else step.
+func _step_event(uid: String) -> String:
+	var t := _type_of(uid)
+	var ev: Variant = _step_events.get(t)
+	if ev == null:
+		var size := str(DB.UNIT_TYPES.get(t, {}).get("size", "medium"))
+		var s := _audio()
+		ev = s.first_event(["step_" + t, "step_" + size, "step"]) if s != null and s.has_method("first_event") else "step"
+		if ev == "":
+			ev = "step"
+		_step_events[t] = ev
+	return ev
 
 
 static func _first(arr: Array) -> Variant:

@@ -116,10 +116,13 @@ var _excl_us := 0
 ## Battle bookkeeping.
 var used := {}
 var battles := 0
+var _pointer_inside := false
 
 
 func _initialize() -> void:
 	OS.add_logger(catcher)
+	root.mouse_entered.connect(func(): _pointer_inside = true)
+	root.mouse_exited.connect(func(): _pointer_inside = false)
 	full = OS.get_cmdline_user_args().has("--full")
 	_run.call_deferred()
 
@@ -206,6 +209,12 @@ func _to_window(p: Vector2) -> Vector2:
 
 func _send(e: InputEvent) -> void:
 	e.device = MARK
+	if e is InputEventMouse and not _pointer_inside:
+		# The physical pointer can leave the window during an automated run.
+		# Its OS enter/exit notifications bypass RealInputFilter. The synthetic
+		# pointer is still inside, so announce that before dispatching it.
+		root.notify_mouse_entered()
+		_pointer_inside = true
 	Input.parse_input_event(e)
 
 
@@ -359,6 +368,14 @@ func _canvas_rect(c: Control) -> Rect2:
 
 func hovered() -> Control:
 	if _hovered_api:
+		# Reassert the test pointer synchronously: a physical motion/exit can
+		# update GUI hover between move_mouse's final frame and this query.
+		# This still runs normal hit testing; overlays can still block a click.
+		var e := InputEventMouseMotion.new()
+		e.position = _to_window(mouse)
+		e.global_position = e.position
+		e.button_mask = _mask
+		_send(e)
 		return root.gui_get_hovered_control()
 	return null
 
@@ -627,8 +644,16 @@ func click_building(id: String) -> bool:
 	for attempt in 2:
 		var wx := Iso.iso_x(b.pos[0], b.pos[1])
 		var wy := Iso.iso_y(b.pos[0], b.pos[1])
+		var y_offsets := [-60, -90, -40, -120, -20]
+		# Painted camp facilities provide their authored interaction anchor;
+		# legacy iso coordinates still support the original renderer.
+		if v.has_method("building_world_position"):
+			var anchor: Vector2 = v.building_world_position(id)
+			wx = anchor.x
+			wy = anchor.y
+			y_offsets = [0, -20, 20, -40, 40]
 		var pick: Variant = null
-		for oy in [-60, -90, -40, -120, -20]:
+		for oy in y_offsets:
 			for ox in [0, -30, 30]:
 				var s: Vector2 = v.cam.world_to_screen(wx + ox, wy + oy, v._w, v._h)
 				var p := local_to_vp(v, s)
@@ -803,7 +828,7 @@ func _node_by_id(id: String) -> Dictionary:
 ## Clicks a node of the campaign map (where the map itself resolves it).
 func click_node(n: Dictionary) -> bool:
 	var v: Node2D = app.campaign_view
-	await until(func(): return not v.marching and v.intro == null, 20.0, "the march ends")
+	await until(func(): return not v.marching, 20.0, "the march ends")
 	await settle(v.cam, 3.0)
 	for attempt in 3:
 		var wx := Iso.iso_x(n.tx, n.ty)
@@ -834,7 +859,7 @@ func click_node(n: Dictionary) -> bool:
 		if not ok:
 			var lp: Vector2 = v.get_global_transform_with_canvas().affine_inverse() * pick
 			var at: Variant = v.node_at(lp.x, lp.y)
-			say("     click at %s: node_at %s, hover %s, marching %s, intro %s, pending %s, can_march %s, hovered control %s" % [pick, at.id if at != null else "none", v.ui.get("hover"), v.marching, v.intro != null, app.game.expedition.get("pending"), Expedition.can_march(app.game, n.id), hovered()])
+			say("     click at %s: node_at %s, hover %s, marching %s, pending %s, can_march %s, hovered control %s" % [pick, at.id if at != null else "none", v.ui.get("hover"), v.marching, app.game.expedition.get("pending"), Expedition.can_march(app.game, n.id), hovered()])
 		return ok
 	return check(false, "map: a clickable point on node %s" % n.id)
 
@@ -918,7 +943,6 @@ func _expedition_one() -> bool:
 	set_phase("campaign")
 	var v: Node2D = app.campaign_view
 	# The first look sweeps from the host back to the company; then the map is the player's.
-	await until(func(): return v.intro == null, 15.0, "the opening sweep of the map ends")
 	await wait(0.3)
 	await shot("campaign")
 	# Keys pan, wheel zooms, Find army.

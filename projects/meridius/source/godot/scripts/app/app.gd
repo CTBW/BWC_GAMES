@@ -21,7 +21,10 @@
 ##   launch(campaign_id, army: Array, supplies: Dictionary, cost: int), go_campaign(),
 ##   click_node(id), dismiss(), go_home("success"|"retreat"), start_battle(), finish_battle(),
 ##   open_menu(bool), toggle_mute(), toggle_fullscreen(), quit_to_title() (save, then title)
+##   set_volume(key, v), volume(key): the sound sliders (master|music|ambience|sfx|voice, 0..1)
 ##   commit() = save() + emit_changed(); emit_changed(); sfx(name)
+## MUSIC  every change asks Sfx for the track of the screen (SCREEN_MUSIC);
+##   a track without recorded files plays nothing.
 ## SAVES  user://meridius_save.json (`save_path`): the GameState as JSON, the shape
 ##   of the original's localStorage save, written by Game.to_save_json and read by
 ##   Game.from_save_json (version must equal Game.SAVE_VERSION; then migrate_save).
@@ -43,6 +46,9 @@ const JS = preload("res://scripts/core/js.gd")
 const Prefs = preload("res://scripts/core/prefs.gd")
 const Rng = preload("res://scripts/core/rng.gd")
 const Deps = preload("res://scripts/ui/deps.gd")
+
+## Music track (bank.json `music.tracks`) for each screen.
+const SCREEN_MUSIC := {"title": "menu", "base": "camp", "prep": "camp", "report": "camp", "campaign": "campaign", "battle": "battle"}
 
 var game: Variant = null
 var screen := "loading"
@@ -82,7 +88,14 @@ func _exit_tree() -> void:
 
 func emit_changed() -> void:
 	version += 1
+	_sync_music()
 	changed.emit()
+
+
+func _sync_music() -> void:
+	var s := _sfx_node()
+	if s != null and s.has_method("set_music"):
+		s.set_music(SCREEN_MUSIC.get(screen, ""))
 
 
 ## Persist and refresh after any change to the game state.
@@ -253,6 +266,25 @@ func go_title() -> void:
 	emit_changed()
 
 
+## A fresh inspection field, available without creating or replacing a save.
+func open_terrain_lab() -> void:
+	if screen != "title":
+		return
+	screen = "terrain_lab"
+	panel = null
+	menu_open = false
+	emit_changed()
+
+
+func open_playground() -> void:
+	if screen != "title":
+		return
+	screen = "playground"
+	panel = null
+	menu_open = false
+	emit_changed()
+
+
 func go_base() -> void:
 	screen = "base"
 	panel = null
@@ -416,6 +448,18 @@ func toggle_mute() -> void:
 func is_muted() -> bool:
 	var s := _sfx_node()
 	return s != null and s.is_muted()
+
+
+## A sound slider moved: applied at once, remembered shortly after (Sfx).
+func set_volume(key: String, v: float) -> void:
+	var s := _sfx_node()
+	if s != null:
+		s.set_volume(key, v, false)
+
+
+func volume(key: String) -> float:
+	var s := _sfx_node()
+	return s.volume(key) if s != null else 1.0
 
 
 func toggle_fullscreen() -> void:

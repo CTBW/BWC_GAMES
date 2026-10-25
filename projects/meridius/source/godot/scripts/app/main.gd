@@ -35,6 +35,8 @@ const UI = preload("res://scripts/ui/ui.gd")
 const SCREENS := {
 	"loading": "res://scripts/ui/screens/loading_screen.gd",
 	"title": "res://scripts/ui/screens/title_screen.gd",
+	"playground": "res://scripts/ui/screens/unit_playground.gd",
+	"terrain_lab": "res://scripts/ui/screens/terrain_lab.gd",
 	"base": "res://scripts/ui/screens/base_screen.gd",
 	"prep": "res://scripts/ui/screens/prep_screen.gd",
 	"report": "res://scripts/ui/screens/report_screen.gd",
@@ -104,7 +106,13 @@ func _boot() -> void:
 	await _warm_battle()
 	App.load_progress = 1.0
 	var args := OS.get_cmdline_user_args()
-	if args.has("--newgame"):
+	if args.has("--terrain-lab"):
+		App.go_title()
+		App.open_terrain_lab()
+	elif args.has("--playground"):
+		App.go_title()
+		App.open_playground()
+	elif args.has("--newgame"):
 		var seed := 1234
 		for a in args:
 			if a.begins_with("--seed="):
@@ -250,6 +258,9 @@ func _escape() -> bool:
 		return true
 	if App.screen == "loading" or App.screen == "title":
 		return false
+	if App.screen in ["playground", "terrain_lab"]:
+		App.go_title()
+		return true
 	if App.soldier != null:
 		if _screen != null and _screen.has_method("close_soldier"):
 			_screen.close_soldier()

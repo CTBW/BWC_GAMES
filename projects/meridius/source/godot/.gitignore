@@ -5,3 +5,7 @@
 /tests/visual/out/
 /tests/out/
 .lock-import/
+/art/raw/
+# Sound takes with Sonniss sources: licensed for the game, not for redistribution
+# (tools/audio/build_bank.py renders them from the local audio library).
+/assets/audio/bank/local/

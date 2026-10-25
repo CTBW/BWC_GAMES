@@ -1,0 +1,3 @@
+Source: user attachment inbox/attachments/2026-10-23/image-185259-b5c8583d.png
+Copied unchanged on 2026-10-23 for the requested fog-of-war prototype.
+Non-repeating variation is applied at runtime by battle_fog.gdshader.

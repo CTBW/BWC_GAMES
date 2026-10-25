@@ -22,6 +22,7 @@ const LEAN := 4.0
 ## Wider spacing for big creatures (trolls), fewer of them per tile.
 const BIG_COL := 27.0
 const BIG_ROW := 10.0
+const TROLL_SPREAD := 1.22
 
 ## Riders on wolves need room: two abreast, two deep.
 const MOUNT_COL := 46.0
@@ -133,7 +134,8 @@ static func formation_slots(n: int, size: int, facing: int, tight: float = 1.0, 
 		return out
 	# Three-strong squads of great beasts (trolls) stand wide; three mages stand like men.
 	var big: bool = size <= 3 and (def.is_empty() or def.get("size") == "large")
-	var col := (BIG_COL if big else COL) * tight
+	# Trolls, drawn at twice the old size, stand a little wider (still inside the tile).
+	var col := (BIG_COL * (TROLL_SPREAD if type_id == "troll" else 1.0) if big else COL) * tight
 	var row := (BIG_ROW if big else ROW) * tight
 	var lean := LEAN * tight
 	var half := col / 2.0

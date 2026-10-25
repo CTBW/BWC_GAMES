@@ -1,6 +1,6 @@
 ## The expedition map: painted land with roads and a river, forests, the
-## nodes as landmarks, the routes, fog of war, the host coming down from the
-## far corner, the company's banner and its march, and labels.
+## nodes as landmarks, the routes, fog of war, the company's banner and
+## its march, and labels.
 ## Port of src/render/campaignScene.ts (class CampaignScene).
 ##
 ## Hosting (UI agent):
@@ -24,15 +24,11 @@ const Fx = preload("res://scripts/render/fx.gd")
 const Assets = preload("res://scripts/render/assets.gd")
 const WD = preload("res://scripts/render/world_draw.gd")
 const WorldCanvas = preload("res://scripts/render/world_canvas.gd")
-const ClipShader = preload("res://assets/shaders/terrain_clip.gdshader")
-const GlowShader = preload("res://assets/shaders/terrain_glow.gdshader")
 const FogShader = preload("res://assets/shaders/atmo_fog.gdshader")
 
 const SIZE := 38
 const TW := Iso.TW
 const TH := Iso.TH
-## The land the host's scorched wash, glows and warbands are clipped to.
-const LAND_E := 8
 
 signal node_clicked(id: String)
 signal changed
@@ -56,11 +52,6 @@ var marching: bool:
 var shown_node := ""
 var march: Variant = null # {path, t, dur}
 var token := {"x": 0.0, "y": 0.0}
-## The host's march across the map (see build_horde).
-var horde: Variant = null
-var horde_fx: RefCounted = Fx.new()
-## First look at a new expedition: the camera starts on the host, holds, then sweeps back.
-var intro: Variant = null
 var _w := 1920.0
 var _h := 1080.0
 var _terrain_input: Dictionary
@@ -292,20 +283,9 @@ func setup(ex: Dictionary, getter: Callable) -> void:
 	var fy0: float = cur.ty + (obj.ty - cur.ty) * 0.22
 	cam = Camera.new(Iso.iso_x(fx0, fy0), Iso.iso_y(fx0, fy0) - 60, 0.6)
 	atmo = Atmosphere.new(ex.seed)
-	build_horde(ex)
-	if int(ex.get("marches", 0)) == 0 and horde != null:
-		var p := horde_at(horde.front - 0.1, 0)
-		intro = {"t": 0.0, "from": {"x": Iso.iso_x(p.x, p.y), "y": Iso.iso_y(p.x, p.y) - 40, "z": 0.5}, "to": {"x": cam.x, "y": cam.y, "z": cam.zoom}}
-		cam.x = intro.from.x
-		cam.tx = cam.x
-		cam.y = intro.from.y
-		cam.ty = cam.y
-		cam.zoom = intro.from.z
-		cam.tzoom = cam.zoom
 	_update_fog(1.0)
 	Assets.warm_async(["tree_pine", "tree_oak", "bush", "rock_small", "rock_large", "war_banner", "footman_idle_b", "spearman_idle_b", "crossbowman_idle_b",
-		"node_start", "node_battle", "node_event", "node_scout", "node_village", "node_camp", "node_ambush", "node_objective",
-		"goblin_rabble_idle_f", "goblin_spear_idle_f", "goblin_archer_idle_f", "orc_warrior_idle_f", "orc_brute_idle_f", "wolf_rider_idle_f"])
+		"node_start", "node_battle", "node_event", "node_scout", "node_village", "node_camp", "node_ambush", "node_objective"])
 	_prop_items = []
 	for p in props:
 		var s := Assets.sprite(p.prop, p.v)
@@ -367,64 +347,6 @@ func _view_rect(margin: float = 0.0) -> Rect2:
 	return Rect2(cam.x - hw, cam.y - hh, hw * 2, hh * 2).grow(margin)
 
 
-## The host coming down on Brannsted from beyond the far corner. Positions
-## are given along the line from the objective (t = 0) toward the start
-## (t = 1); the host lives at negative t and edges closer with every march.
-func build_horde(ex: Dictionary) -> void:
-	var obj: Variant = _node_of_type(ex, "objective")
-	var start: Variant = _node_of_type(ex, "start")
-	if obj == null or start == null:
-		return
-	var dx: float = start.tx - obj.tx
-	var dy: float = start.ty - obj.ty
-	var len := JS.hypot(dx, dy)
-	if len == 0:
-		len = 1.0
-	var rng := Rng.new((int(ex.seed) ^ 0x6a09) & 0xFFFFFFFF)
-	var kinds := ["goblin_rabble", "goblin_rabble", "goblin_spear", "goblin_spear", "goblin_archer", "orc_warrior", "orc_brute", "wolf_rider"]
-	var bands: Array = []
-	for i in 20:
-		# Depth behind the host's front: the whole mass follows the front forward.
-		var t := rng.frange(0.025, 0.24)
-		var s := rng.frange(-11, 11)
-		var figs: Array = []
-		var n := rng.rint(9, 15)
-		var kind: String = rng.pick(kinds)
-		for k in n:
-			# Facing down the road toward Brannsted: front views, some mirrored.
-			var flip := rng.chance(0.5)
-			var a := rng.frange(-0.03, 0.03)
-			var b := rng.frange(-1.3, 1.3)
-			var key := "%s_idle_f" % ("goblin_rabble" if kind == "wolf_rider" and k % 3 != 0 else kind)
-			figs.append({"a": a, "b": b, "key": key, "v": rng.rint(0, 5), "flip": flip, "banner": k == 0})
-		# Draw order inside a band: by depth (x + y); the drift moves every
-		# figure of the band alike, so the order never changes.
-		var ux: float = dx / len
-		var uy: float = dy / len
-		figs = JS.sort(figs, func(p, q): return ((ux + uy) * len * p.a + (ux - uy) * p.b) - ((ux + uy) * len * q.a + (ux - uy) * q.b))
-		bands.append({"t": t, "s": s, "figs": figs})
-	var fires: Array = []
-	for i in 8:
-		var ft := rng.frange(0.0, 0.3)
-		var fs := rng.frange(-11, 11)
-		fires.append({"t": ft, "s": fs, "k": rng.frange(0, 1)})
-	horde = {"ox": float(obj.tx), "oy": float(obj.ty), "ux": dx / len, "uy": dy / len, "len": len, "bands": bands, "fires": fires, "front": front_for(ex)}
-
-
-## How far the host has come: closer to Brannsted with every march, at its walls by the end.
-func front_for(ex: Dictionary) -> float:
-	return minf(-0.03, -0.27 + int(ex.get("marches", 0)) * 0.048)
-
-
-## Grid point at `t` along the host's line and `s` tiles across it.
-func horde_at(t: float, s: float) -> Vector2:
-	return _horde_at(horde, t, s)
-
-
-static func _horde_at(h: Dictionary, t: float, s: float) -> Vector2:
-	return Vector2(h.ox + h.ux * h.len * t - h.uy * s, h.oy + h.uy * h.len * t + h.ux * s)
-
-
 func _ready() -> void:
 	if cam == null:
 		cam = Camera.new()
@@ -455,13 +377,6 @@ func _build_nodes() -> void:
 	_world.add_child(_items_root)
 	_nodes.air = _canvas("Air", func(ci: CanvasItem) -> void: fx.draw_air(ci))
 	_nodes.fog = _make_fog_node()
-	_nodes.wash = _canvas("HordeLand", _draw_horde_land)
-	_nodes.wash.material = _clip_material(ClipShader)
-	_nodes.glow = _canvas("HordeGlow", _draw_horde_glow)
-	_nodes.glow.material = _clip_material(GlowShader)
-	_nodes.bands = _canvas("HordeBands", _draw_horde_bands)
-	_nodes.bands.material = _clip_material(ClipShader)
-	_nodes.horde_air = _canvas("HordeAir", func(ci: CanvasItem) -> void: horde_fx.draw_air(ci))
 	_nodes.labels = _canvas("Labels", _draw_labels)
 	var screen := Node2D.new()
 	screen.name = "Screen"
@@ -474,14 +389,6 @@ func _canvas(node_name: String, fn: Callable) -> Node2D:
 	var n := WorldCanvas.new(fn, node_name)
 	_world.add_child(n)
 	return n
-
-
-func _clip_material(shader: Shader) -> ShaderMaterial:
-	var m := ShaderMaterial.new()
-	m.shader = shader
-	m.set_shader_parameter("lo", -LAND_E)
-	m.set_shader_parameter("hi", SIZE + LAND_E)
-	return m
 
 
 func _ex() -> Variant:
@@ -556,35 +463,9 @@ func update(dt: float) -> void:
 	var ry: float = (SIZE * TH) / 2.0 - _h / (2 * cam.zoom) + 150
 	cam.tx = clampf(cam.tx, cx - maxf(0, rx), cx + maxf(0, rx))
 	cam.ty = clampf(cam.ty, cy - maxf(0, ry), cy + maxf(0, ry))
-	if intro != null:
-		# Hold on the host for a moment, then sweep back to the company.
-		var it: Dictionary = intro
-		it.t += dt
-		var k := clampf((it.t - 2.2) / 2.6, 0.0, 1.0)
-		var e := 2 * k * k if k < 0.5 else 1 - pow(-2 * k + 2, 2) / 2
-		cam.x = it.from.x + (it.to.x - it.from.x) * e
-		cam.tx = cam.x
-		cam.y = it.from.y + (it.to.y - it.from.y) * e
-		cam.ty = cam.y
-		cam.zoom = it.from.z + (it.to.z - it.from.z) * e
-		cam.tzoom = cam.zoom
-		if k >= 1 or march != null:
-			intro = null
-	else:
-		cam.update(dt)
+	cam.update(dt)
 	atmo.update(dt, _w, _h)
 	fx.update(dt)
-	# The host creeps forward as the company marches.
-	if horde != null and ex != null:
-		var want := front_for(ex)
-		horde.front += (want - horde.front) * minf(1.0, dt * 0.8)
-		for f in horde.fires:
-			f.k += dt
-			if f.k > 0.32:
-				f.k = 0.0
-				var p := horde_at(horde.front - f.t, f.s)
-				horde_fx.burst(Iso.iso_x(p.x, p.y) + (randf() - 0.5) * 24, Iso.iso_y(p.x, p.y), 30, 1, {"shape": "puff", "color": "rgba(60,50,46,1)" if randf() < 0.4 else "rgba(96,86,80,1)", "speed": 8, "vz": 40, "gravity": -6, "size": 26, "max": 6, "drag": 0.15})
-	horde_fx.update(dt)
 	_update_fog(minf(1.0, dt * 1.5))
 	if ex != null and ex.current != shown_node and march == null:
 		var road: Variant = roads.get("%s>%s" % [shown_node, ex.current])
@@ -713,12 +594,6 @@ func _refresh_view() -> void:
 	_w = view.x
 	_h = view.y
 	_world.transform = cam.transform(view)
-	var inv: Transform2D = _world.get_global_transform().affine_inverse()
-	for key in ["wash", "glow", "bands"]:
-		var m: ShaderMaterial = _nodes[key].material
-		m.set_shader_parameter("to_world_x", inv.x)
-		m.set_shader_parameter("to_world_y", inv.y)
-		m.set_shader_parameter("to_world_o", inv.origin)
 	_nodes.water.time = time
 	(_nodes.fog.material as ShaderMaterial).set_shader_parameter("time", time)
 	_upload_fog()
@@ -1034,104 +909,6 @@ static func puff() -> Texture2D:
 			data[o + 3] = c.a8
 	_puff = ImageTexture.create_from_image(Image.create_from_data(128, 128, false, Image.FORMAT_RGBA8, data))
 	return _puff
-
-
-## Behind the front the land is scorched and smoking; the host's warbands
-## mass there under their standards, and burning farms send up smoke. Drawn
-## over the fog: the horde is seen from afar even where scouts have not been.
-func _draw_horde_land(ci: CanvasItem) -> void:
-	if horde == null:
-		return
-	for part in horde_land_parts(horde):
-		ci.draw_polygon(part[0], part[1])
-
-
-## The scorched wash of _draw_horde_land as [points, colours] polygons: the
-## quad behind the front cut at the gradient stops so each piece is linear in
-## colour. Slivers the clipping leaves where a cut runs along the quad's edge
-## (no area, they cannot be triangulated) are dropped.
-static func horde_land_parts(h: Dictionary) -> Array:
-	var out: Array = []
-	# Scorched land: a reddish-dark wash deepening away from the front, on the land only.
-	var a := _horde_at(h, h.front, -30)
-	var b := _horde_at(h, h.front, 30)
-	var c := _horde_at(h, h.front - 0.5, 30)
-	var d := _horde_at(h, h.front - 0.5, -30)
-	var p0 := Iso.iso(_horde_at(h, h.front, 0).x, _horde_at(h, h.front, 0).y)
-	var p1 := Iso.iso(_horde_at(h, h.front - 0.3, 0).x, _horde_at(h, h.front - 0.3, 0).y)
-	var quad := PackedVector2Array([Iso.iso(a.x, a.y), Iso.iso(b.x, b.y), Iso.iso(c.x, c.y), Iso.iso(d.x, d.y)])
-	var axis := p1 - p0
-	var len2 := axis.length_squared()
-	if len2 <= 0:
-		return out
-	var stops := [[0.0, Color(60 / 255.0, 20 / 255.0, 10 / 255.0, 0.0)], [0.18, Color(70 / 255.0, 24 / 255.0, 12 / 255.0, 0.38)], [1.0, Color(36 / 255.0, 12 / 255.0, 8 / 255.0, 0.62)]]
-	# Cut the quad at the gradient stops so each piece is linear in colour.
-	var cuts := [-1e6, 0.0, 0.18, 1.0, 1e6]
-	var n := axis / len2
-	var perp := Vector2(-axis.y, axis.x).normalized() * 2e4
-	for i in cuts.size() - 1:
-		var lo_p := p0 + axis * maxf(cuts[i], -50.0)
-		var hi_p := p0 + axis * minf(cuts[i + 1], 50.0)
-		var band := PackedVector2Array([lo_p - perp, lo_p + perp, hi_p + perp, hi_p - perp])
-		for part in Geometry2D.intersect_polygons(quad, band):
-			if part.size() < 3 or Geometry2D.triangulate_polygon(part).is_empty():
-				continue
-			var cols := PackedColorArray()
-			for p in part:
-				var t := clampf((p - p0).dot(n), 0.0, 1.0)
-				cols.append(stops[0][1].lerp(stops[1][1], t / 0.18) if t < 0.18 else stops[1][1].lerp(stops[2][1], (t - 0.18) / 0.82))
-			out.append([part, cols])
-	return out
-
-
-func _draw_horde_glow(ci: CanvasItem) -> void:
-	if horde == null:
-		return
-	var h: Dictionary = horde
-	# Fire-glow along the front ('lighter').
-	for f in h.fires:
-		var p := horde_at(h.front - f.t, f.s)
-		var x := Iso.iso_x(p.x, p.y)
-		var y := Iso.iso_y(p.x, p.y)
-		var r: float = 70 + 18 * sin(time * 3 + f.k * 9)
-		var pts := WD.ellipse(x, y, r, r, 0.0, 40)
-		var uv := PackedVector2Array()
-		for q in pts:
-			uv.append((q - Vector2(x, y)) / r)
-		pts.append(Vector2(x, y))
-		uv.append(Vector2.ZERO)
-		# Fan around the centre (last vertex) so UVs interpolate radially.
-		var idx := PackedInt32Array()
-		for i in 40:
-			idx.append_array([40, i, (i + 1) % 40])
-		var cols := PackedColorArray()
-		cols.resize(41)
-		cols.fill(Color(4.0 / r, 0, 0, 1))
-		RenderingServer.canvas_item_add_triangle_array(ci.get_canvas_item(), idx, pts, cols, uv)
-
-
-func _draw_horde_bands(ci: CanvasItem) -> void:
-	if horde == null:
-		return
-	var h: Dictionary = horde
-	# The warbands, dark against the smoke, drifting toward Brannsted.
-	if not h.has("sorted"):
-		h["sorted"] = JS.sort(h.bands.duplicate(), func(p, q): return q.t - p.t)
-	var vr := _view_rect(260.0)
-	for bd in h.sorted:
-		var drift := sin(time * 0.4 + bd.s) * 0.004
-		for f in bd.figs:
-			var p := horde_at(h.front - bd.t + f.a + drift, bd.s + f.b)
-			var x := Iso.iso_x(p.x, p.y)
-			var y := Iso.iso_y(p.x, p.y) + sin(time * 6 + f.b * 5) * 0.8
-			if not vr.has_point(Vector2(x, y)):
-				continue
-			if f.banner:
-				Assets.draw_sprite(ci, Assets.sprite("war_banner", f.v), x, y, false, 0.55, Color(1, 1, 1, 0.95))
-				continue
-			var s := Assets.sprite(f.key, f.v)
-			Assets.draw_sprite(ci, s, x, y, f.flip, 0.46, Color(1, 1, 1, 0.95))
-			Assets.draw_silhouette(ci, s, x, y, f.flip, 0.46, 0.4)
 
 
 func _draw_labels(ci: CanvasItem) -> void:

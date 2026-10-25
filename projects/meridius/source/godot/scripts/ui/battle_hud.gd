@@ -148,10 +148,12 @@ func enemy_counts() -> Vector2i:
 			continue
 		var v = _v(u.uid)
 		if v != null:
-			if not v.reserve and v.status == "active" and not v.routing:
+			if view.squad_visible(v) and not v.reserve and v.status == "active" and not v.routing:
 				left += 1
 		elif u.status == "active":
 			left += 1
+	if b.fog_enabled():
+		return Vector2i(left, 0)
 	var coming := 0
 	var waves: Array = b.waves
 	for i in waves.size():
@@ -272,7 +274,9 @@ func _build_top(counts: Vector2i, mt: bool, fast: bool) -> void:
 	row.add_child(UI.spacer())
 	var en := UI.label("Enemy squads: %d on the field%s" % [counts.x, " · %d coming" % counts.y if counts.y > 0 else ""], "", 13, Color("#ffb0a0"))
 	en.name = "EnemyCount"
-	en.tooltip_text = "Enemy squads on the field, and squads still coming in waves"
+	if view.b.fog_enabled():
+		en.text = "Enemies in sight: %d" % counts.x
+	en.tooltip_text = "Visible enemy squads. Woodland conceals occupants until approached; fighting reveals their position." if view.b.fog_enabled() else "Enemy squads on the field, and squads still coming in waves"
 	en.mouse_filter = Control.MOUSE_FILTER_PASS
 	en.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(en)
@@ -405,7 +409,7 @@ func objective_lines() -> Array:
 				chief = u
 				break
 		var v = _v(chief.uid) if chief != null else null
-		if chief != null and v != null and not v.reserve and chief.status == "active":
+		if chief != null and view.squad_visible(v) and not v.reserve and v.status == "active":
 			lines.append({"text": "The warchief is on the field: slay %s to break the horde" % str(chief.name).split(",")[0], "tone": "warn"})
 		elif chief != null and chief.status == "reserve":
 			lines.append({"text": "Slay the warchief when he comes to break the horde", "tone": null})
@@ -537,7 +541,7 @@ func _mini_card(u: Dictionary, v, st: String, done: bool, selected: bool) -> Con
 		ring.draw_center = false
 		ring.border_color = UI.GOLD_BRIGHT
 		ring.set_border_width_all(2)
-		ring.set_corner_radius_all(9)
+		ring.set_corner_radius_all(1)
 		ring.anti_aliasing = true
 		p.draw.connect(func(): p.draw_style_box(ring, Rect2(Vector2(-2, -2), p.size + Vector2(4, 4))))
 	var row := UI.hbox(8)
@@ -589,19 +593,27 @@ func _build_banner() -> void:
 	if not (bn is Dictionary):
 		_banner = _swap(_banner, null)
 		return
-	var box := UI.vbox(0)
+	var box := UI.panel("BannerPanel", [16, 36])
 	box.name = "Banner"
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	var banner_style = UI.theme_stylebox(box).duplicate()
+	if bn.get("tone") == "enemy":
+		# Preserve the enemy's red surface under the painted metal binding.
+		banner_style.artwork = 4
+		banner_style.gradient = null
+		banner_style.bg_color = Color("#42282b")
+	box.add_theme_stylebox_override("panel", banner_style)
+	var content := UI.vbox(3)
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_child(content)
 	H.place(box, 0.5, 0.24, 0, 0, 0, 1)
-	box.add_child(_banner_rule())
-	var h1 := UI.label(str(bn.text), "BannerLabel", 0, BANNER_COLOURS.get(bn.get("tone"), BANNER_COLOURS.neutral))
+	var h1 := UI.label(str(bn.text), "BannerLabel", 36, BANNER_COLOURS.get(bn.get("tone"), BANNER_COLOURS.neutral))
 	h1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(h1)
-	box.add_child(_banner_rule())
+	content.add_child(h1)
+	content.add_child(_banner_rule())
 	if bn.get("sub") != null and str(bn.sub) != "":
 		var sub := UI.label(str(bn.sub), "BannerSubLabel")
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		box.add_child(sub)
+		content.add_child(sub)
 	_ignore_all(box)
 	_banner = _swap(_banner, box)
 	# CSS `banner` keyframes over 1.6 s: fade in and settle from 115 %, hold, fade out.

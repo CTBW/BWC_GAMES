@@ -39,6 +39,10 @@
           "path": "terrain-prompts.html"
         },
         {
+          "name": "Terrain tests and fog of war",
+          "path": "terrain-lab.html"
+        },
+        {
           "name": "Terrain relief ground",
           "path": "terrain-relief.html"
         },

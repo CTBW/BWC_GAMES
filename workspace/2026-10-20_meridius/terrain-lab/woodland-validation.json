@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-24T11:57:31.917Z",
+  "sourceRevision": "1f5be462dce0155c38f8df37159cd523d37dc9a0",
+  "dirtyTree": true,
+  "command": "tools/test.sh --quick",
+  "passed": 395,
+  "failed": 1,
+  "skipped": 10,
+  "seconds": 367.9,
+  "failures": [
+    "test_audio::test_a_marching_squad_is_one_tread"
+  ],
+  "failureSummary": "The remaining failure is the previously recorded headless unit-outline shader compiler error.",
+  "native": {
+    "checks": 23,
+    "inSceneErrors": 0,
+    "renderer": "gl_compatibility",
+    "shutdownWarnings": {
+      "leakedObjects": 8,
+      "resourcesInUse": 2
+    },
+    "shutdownWarningsContext": "Observed in earlier runs of this pass. The final 23-check run printed no shutdown warnings; cleanup is not claimed as repaired."
+  },
+  "firstQuickAttempt": {
+    "completed": false,
+    "reason": "Battle-view _say() parse errors outside the woodland edit, cascading failures and a later engine crash. The current file contains _say(); the final rerun above is authoritative."
+  },
+  "campaignPlaythroughs": "deferred",
+  "generationJobs": 0,
+  "sourceAssets": 5,
+  "baselineVideoSamplesSeconds": [
+    0,
+    2,
+    5,
+    8
+  ],
+  "limits": [
+    "Repeated tree silhouettes remain visible.",
+    "Birch and painted fallen timber are not yet supplied.",
+    "The PNGs retain magenta backgrounds and rely on the keyed material.",
+    "Ground artwork and large-map performance need further work."
+  ],
+  "focusedAfterClassicCacheFix": {
+    "command": "tools/test.sh --quick fog_of_war terrain_lab",
+    "passed": 6,
+    "failed": 1,
+    "skipped": 0,
+    "failure": "The same headless unit-outline compiler error, on the first view-instantiating test. Native equivalents passed."
+  }
+}

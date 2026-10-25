@@ -62,6 +62,7 @@ const Rng = preload("res://scripts/core/rng.gd")
 const DB = preload("res://scripts/data/db.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
 const Squad = preload("res://scripts/rules/squad.gd")
+const Visibility = preload("res://scripts/rules/visibility.gd")
 
 ## In a rout battle, the enemy gives up at the end of this turn if no more help is coming.
 const GIVE_UP_TURN := 14
@@ -103,6 +104,10 @@ var horn := "waiting"
 var overrun := 0
 ## Per-turn caches of the AI (ai.gd's fieldCache, kept on the battle).
 var ai_cache: Variant = null
+## Old recorded setups without this field keep their original no-fog rules.
+var explored := {"player": {}, "enemy": {}}
+var _sight_cache := {}
+var _sight_stamp := ""
 
 var objective: Dictionary:
 	get:
@@ -125,6 +130,51 @@ func _init(battle_setup: Dictionary) -> void:
 	wave_state = []
 	for w in waves:
 		wave_state.append("pending")
+	refresh_sight()
+
+
+func fog_enabled() -> bool:
+	return setup.get("fogOfWar", false)
+
+
+func refresh_sight(force := false) -> void:
+	if not fog_enabled():
+		return
+	var key := Visibility.stamp(units) + str(revealed.keys())
+	if not force and key == _sight_stamp:
+		return
+	_sight_stamp = key
+	_sight_cache.clear()
+	for side in ["player", "enemy"]:
+		var eyes := Visibility.observers(units, side)
+		var seen := Visibility.field(map, eyes)
+		for u in units:
+			if revealed.has(u.uid) and Grid.in_bounds(map, u.x, u.y):
+				seen[Grid.key(u.x, u.y)] = true
+		_sight_cache[side] = {"eyes": eyes, "seen": seen}
+		explored[side].merge(seen)
+
+
+func visible_tiles(side: String) -> Dictionary:
+	refresh_sight()
+	return _sight_cache.get(side, {}).get("seen", {})
+
+
+func visible_to(side: String, u: Dictionary) -> bool:
+	if u.faction == side or not fog_enabled():
+		return true
+	if u.status == "reserve":
+		return false
+	if revealed.has(u.uid):
+		return true
+	refresh_sight()
+	var sight: Dictionary = _sight_cache[side]
+	return Visibility.unit_seen(map, sight.eyes, sight.seen, u)
+
+
+func known_unit_at(side: String, x: int, y: int) -> Variant:
+	var u = Grid.unit_at(units, x, y)
+	return u if u != null and visible_to(side, u) else null
 
 
 ## Waves still to come. A horn wave counts while the horn may yet sound.
@@ -185,7 +235,7 @@ func active(faction: String = "") -> Array:
 
 
 func enemies_of(u: Dictionary) -> Array:
-	return active("enemy" if u.faction == "player" else "player")
+	return active("enemy" if u.faction == "player" else "player").filter(func(f): return visible_to(u.faction, f))
 
 
 func allies_of(u: Dictionary) -> Array:
@@ -242,7 +292,7 @@ func is_adjacent_enemy(u: Dictionary, p: Variant = null) -> bool:
 func _enemy_beside(u: Dictionary, at: Dictionary) -> bool:
 	var foe: String = "enemy" if u.faction == "player" else "player"
 	for e in units:
-		if e.status == "active" and e.faction == foe and Grid.manhattan(e, at) == 1:
+		if e.status == "active" and e.faction == foe and Grid.manhattan(e, at) == 1 and visible_to(u.faction, e):
 			return true
 	return false
 
@@ -255,7 +305,7 @@ func reachable(u: Dictionary, budget: Variant = null, states: Variant = null) ->
 	for k in out.keys():
 		if k == start:
 			continue
-		if Grid.unit_at(units, k % 1000, floori(k / 1000.0)) != null:
+		if known_unit_at(u.faction, k % 1000, floori(k / 1000.0)) != null:
 			out.erase(k)
 	return out
 
@@ -283,7 +333,7 @@ func path_from(reach: Dictionary, x: int, y: int) -> Variant:
 
 ## Path to a tile, arriving with the default facing (see `default_facing`), or null.
 func path_to(u: Dictionary, x: int, y: int) -> Variant:
-	if Grid.unit_at(units, x, y) != null and not (x == u.x and y == u.y):
+	if known_unit_at(u.faction, x, y) != null and not (x == u.x and y == u.y):
 		return null
 	var opt: Variant = move_option(u, x, y)
 	return opt.path if opt != null and opt.path.size() > 1 else null
@@ -342,7 +392,7 @@ func reach_states(u: Dictionary, budget: Variant = null) -> Dictionary:
 	var o_z := PackedFloat64Array([0.0])
 	var foe_at := {}
 	for f in units:
-		if f.faction != u.faction and (f.status == "active" or f.status == "routing"):
+		if f.faction != u.faction and (f.status == "active" or f.status == "routing") and visible_to(u.faction, f):
 			foe_at[Grid.key(f.x, f.y)] = true
 	var zt := zoc_tiles(u)
 	var w: int = map.w
@@ -437,7 +487,7 @@ func facing_options(u: Dictionary, x: int, y: int, states: Variant = null) -> Ar
 	if states == null:
 		states = reach_states(u)
 	var home: bool = x == u.x and y == u.y
-	if not home and Grid.unit_at(units, x, y) != null:
+	if not home and known_unit_at(u.faction, x, y) != null:
 		return []
 	var out: Array = []
 	for d in 4:
@@ -521,7 +571,7 @@ func facing_toward_foes(u: Dictionary, at: Variant = null) -> int:
 	var p: Dictionary = u if at == null else at
 	var foes: Array = []
 	for f in units:
-		if f.faction != u.faction and f.status == "active":
+		if f.faction != u.faction and f.status == "active" and visible_to(u.faction, f):
 			foes.append(f)
 	var d := {}
 	for f in foes:
@@ -539,6 +589,8 @@ func facing_toward_foes(u: Dictionary, at: Variant = null) -> int:
 
 
 func can_melee(a: Dictionary, t: Dictionary, from: Variant = null, reach: int = 1) -> bool:
+	if not visible_to(a.faction, t):
+		return false
 	var fp: Dictionary = a if from == null else from
 	var ta := tile(fp)
 	var tt := tile(t)
@@ -582,6 +634,8 @@ func _los(from: Dictionary, t: Dictionary, memo: Array) -> Dictionary:
 
 
 func _can_shoot(a: Dictionary, t: Dictionary, fp: Dictionary, memo: Array) -> Dictionary:
+	if not visible_to(a.faction, t):
+		return {"ok": false, "reason": "Target is hidden by fog of war"}
 	var shot: Variant = a.get("shot")
 	if shot == null:
 		return {"ok": false, "reason": "No ranged weapon"}
@@ -611,6 +665,8 @@ func _would_shoot(a: Dictionary, t: Dictionary, fp: Dictionary, memo: Array) -> 
 
 ## Whether `preview(a, t, opts).legal` would be true (the same checks, without the rest).
 func preview_legal(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> bool:
+	if not visible_to(a.faction, t):
+		return false
 	var from: Variant = opts.get("from")
 	if from == null:
 		from = {"x": a.x, "y": a.y}
@@ -681,6 +737,8 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	var mods: Array = []
 	var legal := true
 	var reason: Variant = null
+	if not visible_to(a.faction, t):
+		return {"legal": false, "reason": "Target is hidden by fog of war", "chance": 0, "min": 0, "max": 0, "arc": "front", "mods": [], "kill": 0, "moraleHit": 0, "soldiers": [0, 0], "strikers": 0}
 
 	if ranged:
 		var s := _can_shoot(a, t, from, memo)
@@ -914,6 +972,16 @@ func _emit(e: Dictionary) -> void:
 	events.append(e)
 
 
+## Fighting gives a squad's position away until its next turn.
+var revealed := {}
+
+
+func reveal_combat(u: Dictionary) -> void:
+	if fog_enabled() and not revealed.has(u.uid):
+		revealed[u.uid] = true
+		_emit({"t": "reveal", "uid": u.uid})
+
+
 func drain() -> Array:
 	var out := events
 	events = []
@@ -1015,6 +1083,8 @@ func _fall(u: Dictionary, killer: Variant = null) -> void:
 
 
 func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
+	reveal_combat(a)
+	reveal_combat(t)
 	var ab_id: Variant = opts.get("ability")
 	var ab: Variant = DB.ABILITIES.get(ab_id) if ab_id else null
 	var pv := preview(a, t, opts)
@@ -1030,6 +1100,7 @@ func _resolve_attack(a: Dictionary, t: Dictionary, opts: Dictionary) -> bool:
 		ward = t
 		t = guard
 		t["guardSpent"] = true
+		reveal_combat(t)
 		_log("%s step in front of %s!" % [Squad.squad_name(t), Squad.squad_name(ward)], "good" if t.faction == "player" else "bad")
 	# One roll for the whole squad, however many soldiers swing or loose.
 	var hit: bool = rng.next() * 100 < pv.chance
@@ -1299,11 +1370,16 @@ func move(uid: String, x: int, y: int, facing: Variant = null, states: Variant =
 	var before := {"x": u.x, "y": u.y, "facing": u.facing, "movedTiles": u.movedTiles}
 	var mark := events.size()
 	var rng_before: int = rng.state
+	refresh_sight()
+	var explored_before: int = explored[u.faction].size()
+	var known_before: Array = enemies_of(u).map(func(e): return e.uid)
 	walk(u, path)
 	u.hasMoved = true
 	# A move can be redone only if nothing reacted to it: no free attack,
 	# spearwall or overwatch shot, and no dice rolled along the way.
 	var clean: bool = rng.state == rng_before
+	if fog_enabled() and (explored[u.faction].size() > explored_before or enemies_of(u).any(func(e): return not known_before.has(e.uid))):
+		clean = false # Scouting cannot be undone to keep newly learned information for free.
 	if clean:
 		for i in range(mark, events.size()):
 			# A walk cut short and fallen back is no clean move either.
@@ -1313,6 +1389,7 @@ func move(uid: String, x: int, y: int, facing: Variant = null, states: Variant =
 	if u.faction == "player":
 		var rec := before.duplicate()
 		rec["path"] = path
+		rec["scouted"] = fog_enabled() and (explored[u.faction].size() > explored_before or enemies_of(u).any(func(e): return not known_before.has(e.uid)))
 		rec["clean"] = clean and u.status == "active"
 		move_records[u.uid] = rec
 	_after_action(u)
@@ -1330,6 +1407,8 @@ func can_redo(uid: String) -> Dictionary:
 		return {"ok": false, "reason": "This soldier has not moved yet."}
 	if u.hasActed:
 		return {"ok": false, "reason": "This soldier has already attacked or acted."}
+	if r.get("scouted", false):
+		return {"ok": false, "reason": "Scouting revealed new ground or enemy positions; this move cannot be taken back."}
 	if not r.clean:
 		return {"ok": false, "reason": "The enemy reacted to this move, so it cannot be taken back."}
 	var blocker: Variant = Grid.unit_at(units, r.x, r.y)
@@ -1406,6 +1485,7 @@ func walk(u: Dictionary, path: Array) -> int:
 			break
 		u.x = b.x
 		u.y = b.y
+		refresh_sight()
 		u.facing = Grid.dir_to(a, b)
 		seg[0].append({"x": b.x, "y": b.y})
 		trail.append({"x": b.x, "y": b.y})
@@ -1436,7 +1516,7 @@ func walk(u: Dictionary, path: Array) -> int:
 				break
 		# Overwatch: moving into a covered tile.
 		if u.status == "active":
-			for o in enemies_of(u):
+			for o in active("enemy" if u.faction == "player" else "player"):
 				if o.get("stance") != "overwatch":
 					continue
 				# Crossbowmen watch their front and flanks, not the ground behind them.
@@ -1673,6 +1753,10 @@ func spell_preview(a: Dictionary, ability_id: String, at: Dictionary, opts: Dict
 	if Grid.tile_at(map, at.x, at.y) == null:
 		return _spell_fail(base, "Off the field")
 	var target: Variant = Grid.unit_at(units, at.x, at.y)
+	if fog_enabled() and not visible_tiles(a.faction).has(Grid.key(at.x, at.y)):
+		return _spell_fail(base, "Target ground is hidden by fog of war")
+	if target != null and not visible_to(a.faction, target) and (ab.target != "tile" or not opts.get("resolve", false)):
+		target = null # A concealed occupant must not change a ground-target preview.
 	var mtv: Variant = opts.get("movedTiles")
 	var moved: bool = (a.movedTiles if mtv == null else mtv) > 0
 	if ab.get("engine") and moved:
@@ -1735,6 +1819,8 @@ func spell_preview(a: Dictionary, ability_id: String, at: Dictionary, opts: Dict
 	var hits: Array = []
 	for r in spell_reach(a, ab, at, from):
 		var u: Dictionary = r.u
+		if not opts.get("resolve", false) and not visible_to(a.faction, u):
+			continue
 		var ally: bool = u.faction == a.faction
 		if ab.has("heal"):
 			var missing = u.alive * u.hpPer - u.hp
@@ -1818,7 +1904,7 @@ func cast(uid: String, ability_id: String, at: Dictionary) -> bool:
 	var a: Dictionary = unit(uid)
 	if not can_cast(a, ability_id).ok:
 		return false
-	var pv := spell_preview(a, ability_id, at)
+	var pv := spell_preview(a, ability_id, at, {"resolve": true})
 	if not pv.legal:
 		return false
 	move_records.erase(uid)
@@ -1836,6 +1922,8 @@ func cast(uid: String, ability_id: String, at: Dictionary) -> bool:
 ## one damage roll (or one healing roll): the casters' power is rolled once
 ## per squad, never per caster.
 func _resolve_spell(a: Dictionary, ab: Dictionary, at: Dictionary, pv: Dictionary) -> void:
+	if ab.has("power"):
+		reveal_combat(a)
 	var hostile: bool = ab.has("power")
 	var hit: bool = not hostile or rng.next() * 100 < pv.chance
 	var impact := {"x": at.x, "y": at.y}
@@ -1879,6 +1967,8 @@ func _resolve_spell(a: Dictionary, ab: Dictionary, at: Dictionary, pv: Dictionar
 		var h := {"uid": t.uid, "role": r.role, "damage": damage, "heal": heal, "hp": t.hp, "aliveBefore": alive_before, "aliveAfter": t.alive}
 		if status != null:
 			h["status"] = status
+		if ab.has("power"):
+			reveal_combat(t)
 		hits.append(h)
 		after.append({"t": t, "role": r.role, "damage": damage, "heal": heal, "lost": alive_before - t.alive})
 	_emit({"t": "spell", "uid": a.uid, "ability": ab.id, "at": {"x": at.x, "y": at.y}, "impact": impact, "hit": hit, "chance": pv.chance, "casters": casters, "hits": hits})
@@ -2202,6 +2292,11 @@ func _after_enemy_turn() -> void:
 
 
 func _start_turn(faction: String) -> void:
+	if fog_enabled():
+		for uid in revealed.keys():
+			if unit(uid).faction == faction:
+				revealed.erase(uid)
+		_emit({"t": "sight_reset", "faction": faction})
 	_emit({"t": "turn", "faction": faction, "turn": turn})
 	if faction == "enemy":
 		var o := objective

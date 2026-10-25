@@ -41,8 +41,10 @@ func test_setups_match() -> void:
 	for c in golden.setups:
 		var army: Array = c.army.duplicate(true)
 		var setup := Setup.build_battle(c.roll.duplicate(true), army, c.opts)
-		var expected: Dictionary = c.setup
-		var got := setup.duplicate()
+		var expected: Dictionary = c.setup.duplicate(true)
+		var got := setup.duplicate(true)
+		assert_true(setup.fogOfWar, "new battles enable fog of war")
+		got.erase("fogOfWar")
 		if not c.fullMap:
 			got.map = _summary(setup.map)
 		var label := "%s on %s (%s company, %s)" % [c.roll.encounterId, c.roll.mapId, c.kind, JSON.stringify(c.opts)]

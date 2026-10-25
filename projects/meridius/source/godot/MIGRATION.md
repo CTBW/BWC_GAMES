@@ -290,7 +290,8 @@ to Howl; no rebalancing):
       (24 Oct 2026: 358 passed, 0 failed, 0 skipped). With fog of war on it
       differs (its entry, "Campaign baseline recording … deferred at the
       user's request"); the owner kept that re-recording on hold (24 Oct
-      2026). The balance figures above predate both changes and fog.
+      2026) until fog of war was committed, and it was re-recorded then (see
+      that entry). The balance figures above predate both changes and fog.
 - [x] View (24 Oct 2026, owner's go-ahead): Howl shares Growl's branch in
       `battle_view.gd`'s `"shout"` case, its rings scaled by the radius (3
       tiles to Growl's 2); checked in a window (`capture_skills.gd --
@@ -324,6 +325,40 @@ to Howl; no rebalancing):
    shared-tile fix (340/0), not yet committed.
 2. `tools/export.sh && build/windows/Meridius.console.exe -- --smoke`.
 3. Commit on branch `godot-migration`.
+
+### 2026-10-23 - Fog of war and traversable woodland
+
+Requested battlefield fog now shares faction sight, retains explored ground,
+conceals distant woodland occupants and filters hidden enemies from targeting
+and AI planning. Fighting reveals participants until their next turn. Scouting
+prevents information-gaining move undo. The new Woodland scouting test field
+uses the production renderer and the supplied black/blue fog grain.
+
+Trees/bushes no longer block movement at squad scale. Forest move cost remains
+2, and rocks/walls remain solid. Map generation and deployment use clear-ground
+placement separately, preserving the existing layouts and setup positions.
+Map golden comparisons remain intact. Setup parity explicitly verifies the new
+fogOfWar flag and compares the remaining original setup fields unchanged.
+
+Re-recorded battle traces only with MERIDIUS_RECORD=1 tools/test.sh
+test_battle_parity: 77 traces across 16 passing groups. Reviewed changes are
+woodland routes, resulting combat sequences and reach-query sets; fixture
+setups and input commands remain unchanged. Campaign baseline recording and
+playthrough testing were deferred at the user's request to focus on the tester
+and sandbox. Native fog: 17 checks passed; focused headless: 29 passed, existing
+unit-outline shader compiler failure in the first HUD test. Native exit reports
+resource cleanup warnings (8 objects / 2 resources), separate from scene checks.
+
+Committed on 25 Oct 2026 in two parts: first the rules (`visibility.gd`,
+battle, AI, grid, mapgen and setup) with both baselines, then the fog renderer,
+the HUD filtering and the Woodland scouting field with the rest of the view
+work. The campaign baseline was re-recorded then, with `MERIDIUS_RECORD=1
+tools/test.sh test_campaign_parity`: traversable woodland changes the routes of
+auto-resolved battles. Inputs, generated expeditions, the V8 sort order and the
+save fixtures are unchanged. Two of the seven driven runs differ (run 3, step 3:
+loot silver 63 → 53; run 4, step 38: 45 → 53), and so do all five autoplay
+campaigns (first differences, all in cycle 0: retreat → success twice, success
+→ retreat once, silver 170 → 169, deaths 1 → 2).
 
 ### 2026-10-24 - Painted rocks
 

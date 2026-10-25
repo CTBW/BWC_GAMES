@@ -84,7 +84,7 @@ static func _edge_tiles(w: int, h: int, edge: String, a: int, b: int) -> Array:
 static func _entry_list(map: Dictionary, edge: String, a: int, b: int) -> Array:
 	var mid := (a + b) / 2.0
 	var along_x := edge == "n" or edge == "s"
-	var list: Array = _edge_tiles(map.w, map.h, edge, a, b).filter(func(p: Dictionary) -> bool: return Grid.tile_passable(map, p.x, p.y))
+	var list: Array = _edge_tiles(map.w, map.h, edge, a, b).filter(func(p: Dictionary) -> bool: return _clear_ground(map, p.x, p.y))
 	return JS.sort(list, func(p: Dictionary, q: Dictionary) -> float:
 		var ip: int = p.x if along_x else p.y
 		var iq: int = q.x if along_x else q.y
@@ -220,7 +220,7 @@ static func generate_map(template_id: String, seed: int, opts: Dictionary = {}) 
 				t.prop = "totem"
 		map.enemyDeploy = map.enemyDeploy.filter(func(p: Dictionary) -> bool: return _no_prop(g.T(p.x, p.y)))
 
-	var usable := func(p: Dictionary) -> bool: return Grid.tile_passable(map, p.x, p.y)
+	var usable := func(p: Dictionary) -> bool: return _clear_ground(map, p.x, p.y)
 	map.playerDeploy = map.playerDeploy.filter(usable)
 	map.enemyDeploy = map.enemyDeploy.filter(usable)
 	_ensure_connected(map, rng)
@@ -409,7 +409,7 @@ static func _generate_authored(tpl: Dictionary, seed: int, opts: Dictionary) -> 
 			for lx in range(r[0], r[2] + 1):
 				out.append({"x": ly, "y": lx} if flip else {"x": lx, "y": ly})
 		return out
-	var open := func(p: Dictionary) -> bool: return Grid.tile_passable(map, p.x, p.y) and _no_prop(T.call(p.x, p.y))
+	var open := func(p: Dictionary) -> bool: return _clear_ground(map, p.x, p.y) and _no_prop(T.call(p.x, p.y))
 	var pd: Array = []
 	for r in L.deploy:
 		pd.append_array(rect.call(r))
@@ -419,7 +419,7 @@ static func _generate_authored(tpl: Dictionary, seed: int, opts: Dictionary) -> 
 		ed.append_array(rect.call(r))
 	map.enemyDeploy = ed.filter(open)
 	if L.get("zone") != null:
-		map.zone = rect.call(L.zone).filter(func(p: Dictionary) -> bool: return Grid.tile_passable(map, p.x, p.y))
+		map.zone = rect.call(L.zone).filter(func(p: Dictionary) -> bool: return _clear_ground(map, p.x, p.y))
 		if L.get("zoneName") != null:
 			map.zoneName = L.zoneName
 	# A few bushes and stumps in the open fields, never on the marked ground.
@@ -488,7 +488,7 @@ static func _ensure_connected(map: Dictionary, rng: RefCounted) -> void:
 	for guard in 40:
 		var start: Variant = null
 		for p in map.playerDeploy:
-			if Grid.tile_passable(map, p.x, p.y):
+			if _clear_ground(map, p.x, p.y):
 				start = p
 				break
 		if start == null:
@@ -502,18 +502,18 @@ static func _ensure_connected(map: Dictionary, rng: RefCounted) -> void:
 			qi += 1
 			for n in Grid.neighbors(map, c):
 				var k: int = Grid.key(n.x, n.y)
-				if seen.has(k) or not Grid.tile_passable(map, n.x, n.y) or not Grid.can_step(map, c, n):
+				if seen.has(k) or not _clear_ground(map, n.x, n.y) or not Grid.can_step(map, c, n):
 					continue
 				seen[k] = true
 				q.append(n)
 		var target: Variant = null
 		for p in map.enemyDeploy:
-			if Grid.tile_passable(map, p.x, p.y) and not seen.has(Grid.key(p.x, p.y)):
+			if _clear_ground(map, p.x, p.y) and not seen.has(Grid.key(p.x, p.y)):
 				target = p
 				break
 		if target == null:
 			for p in map.playerDeploy:
-				if Grid.tile_passable(map, p.x, p.y) and not seen.has(Grid.key(p.x, p.y)):
+				if _clear_ground(map, p.x, p.y) and not seen.has(Grid.key(p.x, p.y)):
 					target = p
 					break
 		if target == null:
@@ -630,3 +630,10 @@ static func _build_outer_ring(map: Dictionary, rng: RefCounted) -> void:
 
 static func prop_blocks(prop: Variant = null) -> bool:
 	return prop != null and prop != "" and DB.PROPS[prop].blocksMove
+
+
+## Authored openings and deployment corridors stay free of trunks. Woodland is
+## traversable in battle, but generation keeps the existing clear-route layout.
+static func _clear_ground(map: Dictionary, x: int, y: int) -> bool:
+	var tile = Grid.tile_at(map, x, y)
+	return tile != null and DB.TERRAIN[tile.terrain].passable and not prop_blocks(tile.get("prop"))

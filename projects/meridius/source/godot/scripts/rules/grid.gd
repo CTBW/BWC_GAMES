@@ -78,9 +78,14 @@ static func tile_passable(map: Dictionary, x: int, y: int) -> bool:
 	if not DB.TERRAIN[t.terrain].passable:
 		return false
 	var p: Variant = t.get("prop")
-	if p and DB.PROPS[p].blocksMove:
+	if p and DB.PROPS[p].blocksMove and not woodland_prop(p):
 		return false
 	return true
+
+
+## Woodland represents a stand of trees at squad scale, with room between trunks.
+static func woodland_prop(prop: String) -> bool:
+	return prop.begins_with("tree_") or prop == "bush"
 
 
 static func move_cost(map: Dictionary, x: int, y: int) -> int:

@@ -134,13 +134,13 @@ static func deploy_player(map: Dictionary, units: Array, ambush: bool) -> void:
 		var narrow := func(q: Dictionary, dx: int, dy: int) -> bool:
 			var open := 0
 			for s in range(-2, 3):
-				if Grid.tile_passable(map, q.x + dy * s, q.y + dx * s):
+				if MapGen._clear_ground(map, q.x + dy * s, q.y + dx * s):
 					open += 1
 			return open <= 2
 		var ways: Array = zone.filter(func(p: Dictionary) -> bool:
 			for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
 				var q := {"x": p.x + d[0], "y": p.y + d[1]}
-				if not inside.has(_pk(q)) and Grid.tile_passable(map, q.x, q.y) and narrow.call(q, d[0], d[1]):
+				if not inside.has(_pk(q)) and MapGen._clear_ground(map, q.x, q.y) and narrow.call(q, d[0], d[1]):
 					return true
 			return false
 		)
@@ -375,6 +375,7 @@ static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dic
 		objective = {"kind": "rout", "title": "Rout the enemy", "brief": "Destroy or drive off every enemy squad."}
 	var setup := {
 		"seed": roll.seed,
+		"fogOfWar": opts.get("fogOfWar", true),
 		"map": map,
 		"units": army + allies + enemies + reserve,
 		"survivalBonus": opts.survivalBonus,

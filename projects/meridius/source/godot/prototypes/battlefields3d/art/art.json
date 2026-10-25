@@ -1,0 +1,1388 @@
+{
+ "w_spruce": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_spruce.webp",
+   "ax": 285.9,
+   "ay": 909.4,
+   "scale": 0.3333,
+   "w": 1327,
+   "h": 1206,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_scots_pine": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_scots_pine.webp",
+   "ax": 301.2,
+   "ay": 954.5,
+   "scale": 0.3333,
+   "w": 1489,
+   "h": 1266,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_fir_young": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_fir_young.webp",
+   "ax": 213.1,
+   "ay": 457.7,
+   "scale": 0.3333,
+   "w": 746,
+   "h": 610,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_oak_bare": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_oak_bare.webp",
+   "ax": 243.2,
+   "ay": 487.7,
+   "scale": 0.3333,
+   "w": 821,
+   "h": 650,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_birch_bare": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_birch_bare.webp",
+   "ax": 380.1,
+   "ay": 765.9,
+   "scale": 0.3333,
+   "w": 1270,
+   "h": 1017,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "house_cottage_stone": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_cottage_stone.webp",
+   "ax": 331.3,
+   "ay": 647.2,
+   "scale": 0.3333,
+   "w": 1176,
+   "h": 860,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     466.4,
+     120.0
+    ]
+   ]
+  }
+ ],
+ "house_longhouse": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_longhouse.webp",
+   "ax": 672.4,
+   "ay": 837.9,
+   "scale": 0.3333,
+   "w": 1636,
+   "h": 1112,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     417.9,
+     247.7
+    ]
+   ]
+  }
+ ],
+ "house_barn": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_barn.webp",
+   "ax": 475.4,
+   "ay": 818.3,
+   "scale": 0.3333,
+   "w": 1625,
+   "h": 1086,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "house_chapel": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_chapel.webp",
+   "ax": 384.2,
+   "ay": 912.4,
+   "scale": 0.3333,
+   "w": 1450,
+   "h": 1210,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "house_windmill": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_windmill.webp",
+   "ax": 380.0,
+   "ay": 1083.2,
+   "scale": 0.3333,
+   "w": 1609,
+   "h": 1436,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "watermill": [
+  {
+   "file": "res://prototypes/battlefields3d/art/watermill.webp",
+   "ax": 499.1,
+   "ay": 866.3,
+   "scale": 0.3333,
+   "w": 1537,
+   "h": 1149,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "market_stall": [
+  {
+   "file": "res://prototypes/battlefields3d/art/market_stall.webp",
+   "ax": 253.7,
+   "ay": 445.5,
+   "scale": 0.3333,
+   "w": 798,
+   "h": 594,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "wagon_wreck": [
+  {
+   "file": "res://prototypes/battlefields3d/art/wagon_wreck.webp",
+   "ax": 339.8,
+   "ay": 413.9,
+   "scale": 0.3333,
+   "w": 835,
+   "h": 552,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "bridge_stone": [
+  {
+   "file": "res://prototypes/battlefields3d/art/bridge_stone.webp",
+   "ax": 479.7,
+   "ay": 655.1,
+   "scale": 0.3333,
+   "w": 2143,
+   "h": 931,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "reeds": [
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds.webp",
+   "ax": 143.8,
+   "ay": 273.2,
+   "scale": 0.3333,
+   "w": 493,
+   "h": 367,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_plume.webp",
+   "ax": 88.4,
+   "ay": 293.3,
+   "scale": 0.3333,
+   "w": 403,
+   "h": 393,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_bulrush.webp",
+   "ax": 81.7,
+   "ay": 271.6,
+   "scale": 0.3333,
+   "w": 359,
+   "h": 364,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_sparse.webp",
+   "ax": 101.7,
+   "ay": 244.2,
+   "scale": 0.3333,
+   "w": 375,
+   "h": 328,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_bulrush_small.webp",
+   "ax": 66.8,
+   "ay": 158.8,
+   "scale": 0.3333,
+   "w": 251,
+   "h": 216,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_bed.webp",
+   "ax": 175.0,
+   "ay": 201.4,
+   "scale": 0.3333,
+   "w": 421,
+   "h": 272,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/reeds_stones.webp",
+   "ax": 109.8,
+   "ay": 179.1,
+   "scale": 0.3333,
+   "w": 338,
+   "h": 242,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_chapel": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_chapel.webp",
+   "ax": 394.1,
+   "ay": 623.3,
+   "scale": 0.3333,
+   "w": 1354,
+   "h": 829,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_colonnade": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_colonnade.webp",
+   "ax": 206.5,
+   "ay": 699.0,
+   "scale": 0.3333,
+   "w": 1441,
+   "h": 929,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_stones": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_stones.webp",
+   "ax": 418.1,
+   "ay": 524.9,
+   "scale": 0.3333,
+   "w": 1220,
+   "h": 699,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_wall_corner": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_wall_corner.webp",
+   "ax": 498.1,
+   "ay": 647.4,
+   "scale": 0.3333,
+   "w": 1161,
+   "h": 861,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_farmhouse": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_farmhouse.webp",
+   "ax": 340.0,
+   "ay": 696.9,
+   "scale": 0.3333,
+   "w": 1230,
+   "h": 926,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "ruin_barn_burnt": [
+  {
+   "file": "res://prototypes/battlefields3d/art/ruin_barn_burnt.webp",
+   "ax": 473.6,
+   "ay": 769.6,
+   "scale": 0.3333,
+   "w": 1570,
+   "h": 1022,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_house_longhouse": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_house_longhouse.webp",
+   "ax": 520.9,
+   "ay": 679.7,
+   "scale": 0.3333,
+   "w": 1518,
+   "h": 903,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     451.6,
+     200.1
+    ]
+   ]
+  }
+ ],
+ "w_house_cottage_stone": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_house_cottage_stone.webp",
+   "ax": 331.2,
+   "ay": 675.9,
+   "scale": 0.3333,
+   "w": 1198,
+   "h": 898,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     437.5,
+     136.2
+    ]
+   ]
+  }
+ ],
+ "w_house_chapel": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_house_chapel.webp",
+   "ax": 383.8,
+   "ay": 905.5,
+   "scale": 0.3333,
+   "w": 1445,
+   "h": 1201,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_ruin_stones": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_ruin_stones.webp",
+   "ax": 418.5,
+   "ay": 532.9,
+   "scale": 0.3333,
+   "w": 1226,
+   "h": 709,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "harvest_stook": [
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_0.webp",
+   "ax": 93.4,
+   "ay": 176.6,
+   "scale": 0.3333,
+   "w": 306,
+   "h": 239,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_1.webp",
+   "ax": 93.2,
+   "ay": 158.6,
+   "scale": 0.3333,
+   "w": 292,
+   "h": 215,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "harvest_sheaves": [
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_2.webp",
+   "ax": 115.4,
+   "ay": 127.1,
+   "scale": 0.3333,
+   "w": 313,
+   "h": 174,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "harvest_pumpkins": [
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_3.webp",
+   "ax": 104.5,
+   "ay": 103.6,
+   "scale": 0.3333,
+   "w": 270,
+   "h": 143,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "harvest_bale": [
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_4.webp",
+   "ax": 95.9,
+   "ay": 115.3,
+   "scale": 0.3333,
+   "w": 266,
+   "h": 158,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "harvest_firewood": [
+  {
+   "file": "res://prototypes/battlefields3d/art/harvest_5.webp",
+   "ax": 108.3,
+   "ay": 124.8,
+   "scale": 0.3333,
+   "w": 298,
+   "h": 171,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_rock_small": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_small_0.webp",
+   "ax": 98.8,
+   "ay": 99.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 140,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_small_1.webp",
+   "ax": 89.2,
+   "ay": 102.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 143,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_small_2.webp",
+   "ax": 93.0,
+   "ay": 122.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 165,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_small_3.webp",
+   "ax": 101.8,
+   "ay": 75.6,
+   "scale": 0.5,
+   "w": 213,
+   "h": 113,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_rock_large": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_large_0.webp",
+   "ax": 145.6,
+   "ay": 208.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 275,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_large_1.webp",
+   "ax": 141.2,
+   "ay": 214.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 282,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_large_2.webp",
+   "ax": 132.0,
+   "ay": 210.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 277,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_rock_large_3.webp",
+   "ax": 161.2,
+   "ay": 243.6,
+   "scale": 0.5,
+   "w": 331,
+   "h": 314,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_stump": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_stump_old.webp",
+   "ax": 159.7,
+   "ay": 207.9,
+   "scale": 0.3333,
+   "w": 464,
+   "h": 280,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_stump_sawn.webp",
+   "ax": 116.7,
+   "ay": 196.4,
+   "scale": 0.3333,
+   "w": 377,
+   "h": 265,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_stump_rotten.webp",
+   "ax": 136.2,
+   "ay": 238.6,
+   "scale": 0.3333,
+   "w": 440,
+   "h": 321,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "w_log": [
+  {
+   "file": "res://prototypes/battlefields3d/art/w_log_fallen.webp",
+   "ax": 226.5,
+   "ay": 251.2,
+   "scale": 0.3333,
+   "w": 485,
+   "h": 436,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_log_hollow.webp",
+   "ax": 200.0,
+   "ay": 235.8,
+   "scale": 0.3333,
+   "w": 399,
+   "h": 403,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_log_mossy.webp",
+   "ax": 148.3,
+   "ay": 145.0,
+   "scale": 0.3333,
+   "w": 311,
+   "h": 268,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/w_log_stack.webp",
+   "ax": 172.1,
+   "ay": 175.0,
+   "scale": 0.3333,
+   "w": 346,
+   "h": 318,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_well": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_well.webp",
+   "ax": 215.5,
+   "ay": 338.9,
+   "scale": 0.3333,
+   "w": 652,
+   "h": 453,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_cart": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_cart.webp",
+   "ax": 305.5,
+   "ay": 310.6,
+   "scale": 0.3333,
+   "w": 743,
+   "h": 416,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_crates": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_crates.webp",
+   "ax": 230.0,
+   "ay": 249.7,
+   "scale": 0.3333,
+   "w": 611,
+   "h": 335,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_rick": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_rick.webp",
+   "ax": 189.0,
+   "ay": 302.3,
+   "scale": 0.3333,
+   "w": 574,
+   "h": 405,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_fence_x": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_fence_x.webp",
+   "ax": 195.7,
+   "ay": 143.3,
+   "scale": 0.3333,
+   "w": 433,
+   "h": 220,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_fence_y": [
+  {
+   "file": "res://prototypes/battlefields3d/art/p_fence_y.webp",
+   "ax": 200.9,
+   "ay": 149.3,
+   "scale": 0.3333,
+   "w": 444,
+   "h": 234,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "house_townhouse": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_townhouse.webp",
+   "ax": 388.9,
+   "ay": 818.5,
+   "scale": 0.3333,
+   "w": 1379,
+   "h": 1086,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     535.7,
+     36.2
+    ]
+   ]
+  }
+ ],
+ "house_inn": [
+  {
+   "file": "res://prototypes/battlefields3d/art/house_inn.webp",
+   "ax": 462.9,
+   "ay": 746.9,
+   "scale": 0.3333,
+   "w": 1387,
+   "h": 992,
+   "noShadow": true,
+   "art": true,
+   "smoke": [
+    [
+     620.4,
+     126.9
+    ]
+   ]
+  }
+ ],
+ "reeds_small": [
+  {
+   "file": "res://prototypes/battlefields3d/art/rush_tuft.webp",
+   "ax": 80.6,
+   "ay": 149.5,
+   "scale": 0.3333,
+   "w": 274,
+   "h": 203,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/rush_tuft_2.webp",
+   "ax": 83.8,
+   "ay": 145.6,
+   "scale": 0.3333,
+   "w": 265,
+   "h": 198,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/cattails.webp",
+   "ax": 38.9,
+   "ay": 197.4,
+   "scale": 0.3333,
+   "w": 219,
+   "h": 267,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "reed_bundles": [
+  {
+   "file": "res://prototypes/battlefields3d/art/reed_bundles.webp",
+   "ax": 76.1,
+   "ay": 179.8,
+   "scale": 0.3333,
+   "w": 266,
+   "h": 243,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "river_stones": [
+  {
+   "file": "res://prototypes/battlefields3d/art/river_stones.webp",
+   "ax": 97.3,
+   "ay": 122.3,
+   "scale": 0.3333,
+   "w": 271,
+   "h": 167,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "rowboat": [
+  {
+   "file": "res://prototypes/battlefields3d/art/rowboat.webp",
+   "ax": 192.1,
+   "ay": 309.4,
+   "scale": 0.3333,
+   "w": 605,
+   "h": 414,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "fish_trap": [
+  {
+   "file": "res://prototypes/battlefields3d/art/fish_trap.webp",
+   "ax": 122.1,
+   "ay": 148.9,
+   "scale": 0.3333,
+   "w": 334,
+   "h": 202,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "horsetail": [
+  {
+   "file": "res://prototypes/battlefields3d/art/horsetail.webp",
+   "ax": 51.8,
+   "ay": 138.1,
+   "scale": 0.3333,
+   "w": 205,
+   "h": 188,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "mooring_post": [
+  {
+   "file": "res://prototypes/battlefields3d/art/mooring_post.webp",
+   "ax": 83.3,
+   "ay": 176.6,
+   "scale": 0.3333,
+   "w": 282,
+   "h": 239,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "driftwood": [
+  {
+   "file": "res://prototypes/battlefields3d/art/driftwood.webp",
+   "ax": 123.6,
+   "ay": 219.0,
+   "scale": 0.3333,
+   "w": 477,
+   "h": 295,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "marigolds": [
+  {
+   "file": "res://prototypes/battlefields3d/art/marigolds.webp",
+   "ax": 63.7,
+   "ay": 102.9,
+   "scale": 0.3333,
+   "w": 202,
+   "h": 142,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "wheelbarrow": [
+  {
+   "file": "res://prototypes/battlefields3d/art/wheelbarrow.webp",
+   "ax": 146.2,
+   "ay": 192.6,
+   "scale": 0.3333,
+   "w": 397,
+   "h": 260,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "signpost": [
+  {
+   "file": "res://prototypes/battlefields3d/art/signpost.webp",
+   "ax": 86.0,
+   "ay": 293.4,
+   "scale": 0.3333,
+   "w": 388,
+   "h": 393,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "barrels": [
+  {
+   "file": "res://prototypes/battlefields3d/art/barrels.webp",
+   "ax": 127.2,
+   "ay": 199.7,
+   "scale": 0.3333,
+   "w": 390,
+   "h": 270,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "beehives": [
+  {
+   "file": "res://prototypes/battlefields3d/art/beehives.webp",
+   "ax": 116.2,
+   "ay": 226.2,
+   "scale": 0.3333,
+   "w": 458,
+   "h": 305,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "sacks": [
+  {
+   "file": "res://prototypes/battlefields3d/art/sacks.webp",
+   "ax": 98.4,
+   "ay": 164.2,
+   "scale": 0.3333,
+   "w": 315,
+   "h": 223,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "lantern_post": [
+  {
+   "file": "res://prototypes/battlefields3d/art/lantern_post.webp",
+   "ax": 101.8,
+   "ay": 336.4,
+   "scale": 0.3333,
+   "w": 420,
+   "h": 450,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "shrine": [
+  {
+   "file": "res://prototypes/battlefields3d/art/shrine.webp",
+   "ax": 74.9,
+   "ay": 259.7,
+   "scale": 0.3333,
+   "w": 338,
+   "h": 349,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "trough": [
+  {
+   "file": "res://prototypes/battlefields3d/art/trough.webp",
+   "ax": 134.8,
+   "ay": 220.7,
+   "scale": 0.3333,
+   "w": 508,
+   "h": 297,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "milk_churns": [
+  {
+   "file": "res://prototypes/battlefields3d/art/milk_churns.webp",
+   "ax": 57.8,
+   "ay": 109.0,
+   "scale": 0.3333,
+   "w": 195,
+   "h": 150,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "scarecrow": [
+  {
+   "file": "res://prototypes/battlefields3d/art/scarecrow.webp",
+   "ax": 117.7,
+   "ay": 324.7,
+   "scale": 0.3333,
+   "w": 490,
+   "h": 434,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "chopping_block": [
+  {
+   "file": "res://prototypes/battlefields3d/art/chopping_block.webp",
+   "ax": 112.1,
+   "ay": 231.9,
+   "scale": 0.3333,
+   "w": 396,
+   "h": 312,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "iris": [
+  {
+   "file": "res://prototypes/battlefields3d/art/iris.webp",
+   "ax": 91.0,
+   "ay": 171.4,
+   "scale": 0.3333,
+   "w": 296,
+   "h": 232,
+   "noShadow": true,
+   "art": true
+  }
+ ],
+ "p_crates_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/crates_barrels_w.webp",
+   "ax": 160.4,
+   "ay": 218.3,
+   "scale": 0.3333,
+   "w": 446,
+   "h": 294,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "barrels_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/barrels_trio_w.webp",
+   "ax": 144.8,
+   "ay": 212.5,
+   "scale": 0.3333,
+   "w": 421,
+   "h": 286,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/barrel_single_w.webp",
+   "ax": 84.7,
+   "ay": 167.5,
+   "scale": 0.3333,
+   "w": 287,
+   "h": 227,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/barrel_water_w.webp",
+   "ax": 87.8,
+   "ay": 180.4,
+   "scale": 0.3333,
+   "w": 306,
+   "h": 244,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/barrels_group_w.webp",
+   "ax": 119.0,
+   "ay": 189.8,
+   "scale": 0.3333,
+   "w": 370,
+   "h": 257,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/barrel_lying_w.webp",
+   "ax": 98.7,
+   "ay": 159.0,
+   "scale": 0.3333,
+   "w": 332,
+   "h": 216,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/barrels_pair_w.webp",
+   "ax": 83.1,
+   "ay": 155.3,
+   "scale": 0.3333,
+   "w": 299,
+   "h": 211,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "chopping_block_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/chopping_block_axe_w.webp",
+   "ax": 130.2,
+   "ay": 198.8,
+   "scale": 0.3333,
+   "w": 386,
+   "h": 268,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/chopping_block_logs_w.webp",
+   "ax": 114.3,
+   "ay": 188.0,
+   "scale": 0.3333,
+   "w": 351,
+   "h": 254,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "signpost_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/signpost_snow_w.webp",
+   "ax": 85.3,
+   "ay": 310.5,
+   "scale": 0.3333,
+   "w": 394,
+   "h": 416,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "p_cart_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/cart_hay_w.webp",
+   "ax": 296.0,
+   "ay": 344.0,
+   "scale": 0.3333,
+   "w": 781,
+   "h": 460,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "harvest_firewood_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/woodpile_w.webp",
+   "ax": 94.1,
+   "ay": 186.6,
+   "scale": 0.3333,
+   "w": 392,
+   "h": 252,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/woodpile_long_w.webp",
+   "ax": 94.6,
+   "ay": 209.2,
+   "scale": 0.3333,
+   "w": 445,
+   "h": 282,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "sledge_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/sledge_logs_w.webp",
+   "ax": 83.4,
+   "ay": 143.1,
+   "scale": 0.3333,
+   "w": 311,
+   "h": 195,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/sledge_bound_w.webp",
+   "ax": 78.4,
+   "ay": 142.1,
+   "scale": 0.3333,
+   "w": 304,
+   "h": 194,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "p_well_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/well_snow_w.webp",
+   "ax": 237.0,
+   "ay": 432.8,
+   "scale": 0.3333,
+   "w": 741,
+   "h": 577,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "stones_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_1.webp",
+   "ax": 84.0,
+   "ay": 113.5,
+   "scale": 0.3333,
+   "w": 247,
+   "h": 156,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_2.webp",
+   "ax": 117.3,
+   "ay": 128.3,
+   "scale": 0.3333,
+   "w": 273,
+   "h": 175,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_3.webp",
+   "ax": 72.9,
+   "ay": 90.4,
+   "scale": 0.3333,
+   "w": 235,
+   "h": 125,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_4.webp",
+   "ax": 95.2,
+   "ay": 80.7,
+   "scale": 0.3333,
+   "w": 207,
+   "h": 112,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_5.webp",
+   "ax": 72.1,
+   "ay": 138.8,
+   "scale": 0.3333,
+   "w": 235,
+   "h": 189,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_6.webp",
+   "ax": 84.7,
+   "ay": 119.3,
+   "scale": 0.3333,
+   "w": 275,
+   "h": 163,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_7.webp",
+   "ax": 77.7,
+   "ay": 118.5,
+   "scale": 0.3333,
+   "w": 250,
+   "h": 162,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_8.webp",
+   "ax": 99.2,
+   "ay": 124.3,
+   "scale": 0.3333,
+   "w": 270,
+   "h": 170,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_9.webp",
+   "ax": 77.3,
+   "ay": 85.4,
+   "scale": 0.3333,
+   "w": 232,
+   "h": 119,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_10.webp",
+   "ax": 76.9,
+   "ay": 84.7,
+   "scale": 0.3333,
+   "w": 210,
+   "h": 118,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_11.webp",
+   "ax": 63.9,
+   "ay": 116.8,
+   "scale": 0.3333,
+   "w": 219,
+   "h": 160,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/stones_snow_12.webp",
+   "ax": 97.6,
+   "ay": 97.3,
+   "scale": 0.3333,
+   "w": 259,
+   "h": 134,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ],
+ "deadwood_w": [
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_1.webp",
+   "ax": 64.2,
+   "ay": 182.6,
+   "scale": 0.3333,
+   "w": 389,
+   "h": 247,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_2.webp",
+   "ax": 58.5,
+   "ay": 127.8,
+   "scale": 0.3333,
+   "w": 324,
+   "h": 175,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_3.webp",
+   "ax": 75.4,
+   "ay": 133.2,
+   "scale": 0.3333,
+   "w": 292,
+   "h": 182,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_4.webp",
+   "ax": 80.6,
+   "ay": 222.5,
+   "scale": 0.3333,
+   "w": 431,
+   "h": 300,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_5.webp",
+   "ax": 69.1,
+   "ay": 159.8,
+   "scale": 0.3333,
+   "w": 348,
+   "h": 217,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  },
+  {
+   "file": "res://prototypes/battlefields3d/art/deadwood_snow_6.webp",
+   "ax": 74.0,
+   "ay": 133.2,
+   "scale": 0.3333,
+   "w": 292,
+   "h": 182,
+   "noShadow": true,
+   "art": true,
+   "snowy": true
+  }
+ ]
+}

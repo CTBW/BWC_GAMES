@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://prototypes/battlefields3d/scripts/battlefields3d.gd" id="1"]
+
+[node name="Battlefields3D" type="Node3D"]
+script = ExtResource("1")

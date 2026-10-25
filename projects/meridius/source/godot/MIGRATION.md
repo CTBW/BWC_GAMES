@@ -927,3 +927,16 @@ battle deploy captures and day and night close-ups of the fallen wood: 0 errors.
   `v % n` keeps it, in battles, on the campaign map and in the garrison.
   `tools/props/woodland_cutout.py` no longer cuts it; `woodland_willow.webp`
   and its entry in `woodland_sources.json` are removed.
+
+### 2026-10-25 - 3D battlefields prototype
+
+- `prototypes/battlefields3d/` (see its README) is the 3D battlefield the
+  relief shader's `season` and `frozen` were made for: Millford (summer
+  town), Ashby farm (autumn), Frosthollow (winter, frozen) and Willowford
+  (spring) under the game's camera, with no units. Its fields are maps in
+  the rules' format, so the fog of war over them is `visibility.gd`'s.
+  Presentation only: battles, rules and saves are unchanged.
+- Its paintings are in `art/`; their originals stay local and
+  `tools/cut_art.py` cuts them again. `test_battlefields3d` checks the
+  fields, the fog, that every painting loads, and that each field draws its
+  pieces and decor without the weeping willow.

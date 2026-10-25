@@ -131,6 +131,15 @@ march them, set them on each other or on the dummies, play any clip.
 `tools/godot.sh --path . res://prototypes/sandbox3d/scenes/sandbox3d.tscn`.
 Controls, captures and checks: `prototypes/sandbox3d/README.md`.
 
+## 3D battlefields
+
+Four places of the frontier in four seasons in the battle's look, without
+units: a summer market town on a river, an autumn farm the war has burnt, a
+winter hamlet by a frozen lake and a spring ford with ruins. Scouts lift the
+fog of war by the battle's sight rules; night and weather on a key.
+`tools/godot.sh --path . res://prototypes/battlefields3d/scenes/battlefields3d.tscn`.
+Controls, art and checks: `prototypes/battlefields3d/README.md`.
+
 ## Controls
 
 Left click selects a squad, moves it (point at a tile edge to choose the facing

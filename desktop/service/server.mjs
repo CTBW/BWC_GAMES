@@ -33,6 +33,7 @@ import { rewindToMessage } from './message-edit.mjs';
 import { LocalReadAloud } from './local-read-aloud.mjs';
 import { Handoffs } from './handoff.mjs';
 import { chatCommands } from './chat-commands.mjs';
+import { AgentChannel } from './agent-channel.mjs';
 
 const listen = server => new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', () => resolve(`http://127.0.0.1:${server.address().port}`)); });
 
@@ -50,6 +51,7 @@ export async function createService({ repo, uiDir, stateDir, token = secret(), n
   const integrations = await new IntegrationManager(stateDir).init();
   const mcp = new McpInventory(repo, mcpOptions);
   const sessions = await new Sessions(repo, stateDir).init();
+  const channel = new AgentChannel({ sessions, stateDir });
   const transcripts = new ConversationTranscripts();
   const conversationMedia = new ConversationMedia();
   const readAloud = mobileOptions?.readAloud || new LocalReadAloud(repo);
@@ -197,6 +199,7 @@ export async function createService({ repo, uiDir, stateDir, token = secret(), n
       // is issued only through an authorized messages request for this chat.
       const media = /^\/media\/([a-f0-9-]{36})\/([a-zA-Z0-9_-]{43})$/.exec(url.pathname);
       if (media && ['GET', 'HEAD'].includes(request.method)) return await conversationMedia.serve(request, response, media[1], media[2], 'desktop', url.searchParams.get('download') === '1');
+      if (url.pathname.startsWith('/agent/')) return await channel.handle(request, response, url);
       if (url.pathname.startsWith('/api/')) {
         authorize(request);
         const method = request.method;
@@ -435,6 +438,7 @@ export async function createService({ repo, uiDir, stateDir, token = secret(), n
   });
   const origin = await listen(server);
   files.uiOrigin = origin;
+  await channel.open(origin);
   mobile = await new MobileGateway({ ...mobileOptions, transcripts, readAloud, dictation, chooseDictation, repo, uiDir, stateDir, sessions, attachments, closeChat, settings: () => settings, changed: state => broadcast('mobile-state', { mobile: state }) }).init();
   const wss = new WebSocketServer({ noServer: true, maxPayload: 128 * 1024 });
   server.on('upgrade', (request, socket, head) => {
@@ -472,11 +476,11 @@ export async function createService({ repo, uiDir, stateDir, token = secret(), n
   try { watcher = watch(path.join(repo, 'workspace', 'workspace.json'), () => broadcast('workspace-changed', {})); watcher.on('error', () => {}); } catch { /* Registry may be created after first setup. */ }
   const restoreTimer = restoreSessions ? setTimeout(() => sessions.restore().catch(error => sessions.emit('service-error', error)), 100) : null;
   return {
-    origin, contentOrigin: files.origin, token, sessions, coordinator, quick, workspace, files, projects, knowledge, integrations, mobile,
+    origin, contentOrigin: files.origin, token, sessions, channel, coordinator, quick, workspace, files, projects, knowledge, integrations, mobile,
     urls: { workspace: `${origin}/?desktop=1&surface=workspace&token=${token}`, chats: `${origin}/?desktop=1&surface=chats&token=${token}` },
       nativeMessage: event => nativeSettings.receive(event),
       async close() {
-        if (closing) return; closing = true; mcp.close(); nativeSettings.close(); await files.writes.catch(() => {});
+        if (closing) return; closing = true; mcp.close(); nativeSettings.close(); await files.writes.catch(() => {}); await channel.close();
       watcher?.close(); clearTimeout(restoreTimer); coordinator.close(); clearTimeout(settingsTimer); await saveSettings(); await transcriptSave; await quick.saves; await workspace.writes;
       dictation.close(); await mobile.close();
       for (const ws of wss.clients) ws.terminate();

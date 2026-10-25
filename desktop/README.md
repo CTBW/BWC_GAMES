@@ -85,6 +85,25 @@ both mouse tracking and the requested SGR encoding, including saved screens,
 so switching tabs or reconnecting does not disable its mouse wheel. Classic
 Claude and Codex continue using local terminal scrollback.
 
+## Messages between agent chats
+
+`agent-channel.mjs` lets an agent list the open agent chats, read one's terminal
+and send it a message. It answers under `/agent/` with its own token, written with
+the service origin to `.mrmak/agent-channel.json`; the window token never leaves
+the service, and requests with an `Origin` header are refused. `chats-mcp.mjs` is
+a stdio MCP server over that channel (`list_chats`, `read_chat`, `send_to_chat`)
+that rereads the file on every call. Register it in a CLI's MCP settings with
+`node desktop/service/chats-mcp.mjs`. Each launched chat receives
+`MRMAK_CHAT_ID`, so its messages are labelled with its tab name and it cannot
+message itself.
+
+A message is pasted and submitted like a Conversation prompt, headed as coming
+from another agent rather than the user. It is delivered only to a running agent
+chat that is idle, shows no menu or permission prompt and has no unsent draft
+(the user typed after the last submit within 15 minutes, with no new turn since).
+Messages are capped at 8,000 characters and 12 per sender in 10 minutes, and each
+is appended to `.mrmak/agent-messages.jsonl`.
+
 ## Local microphone dictation
 
 Desktop chats, the Mak composer and paired mobile chats support free local Whisper

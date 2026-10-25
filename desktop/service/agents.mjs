@@ -148,7 +148,7 @@ export function childEnvironment(repo) {
   }
   // Drop host-agent identity from the parent so every terminal is an independent CLI.
   for (const key of Object.keys(env)) {
-    if (/^(CLAUDECODE|CLAUDE_CODE_ENTRYPOINT|CODEX_THREAD_ID|CODEX_TURN_ID|CODEX_SHELL|ANTIGRAVITY_AGENT|MRMAK_TOKEN|MRMAK_PARENT_PID)$/.test(key) || key.startsWith('MRMAK_OPENCODE_')) delete env[key];
+    if (/^(CLAUDECODE|CLAUDE_CODE_ENTRYPOINT|CODEX_THREAD_ID|CODEX_TURN_ID|CODEX_SHELL|ANTIGRAVITY_AGENT|MRMAK_TOKEN|MRMAK_PARENT_PID|MRMAK_CHAT_ID)$/.test(key) || key.startsWith('MRMAK_OPENCODE_')) delete env[key];
   }
   return env;
 }

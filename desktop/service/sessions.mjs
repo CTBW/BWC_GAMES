@@ -181,6 +181,8 @@ export class Sessions extends EventEmitter {
     if (this.closed || !session.open) throw new Error('The chat was closed before its terminal started.');
     const command = terminalCommand(session.agent, { bypass: session.bypass, resumeId, nativeId: session.nativeId, effort: session.effort, opencodeMajor, antigravityLog, noDaemon, ...first });
     if (session.agent === 'codex') env.CODEX_INTERNAL_ORIGINATOR_OVERRIDE = `mrmak_chat_${session.id}`;
+    // Lets the chat's agent-channel tools say which chat a message comes from.
+    env.MRMAK_CHAT_ID = session.id;
     if (session.terminal) this.resetTerminal(session);
     const proc = pty.spawn(command.file, command.args, ptyOptions({ cwd: session.cwd, env, cols: session.cols, rows: session.rows }));
     session.process = proc;
@@ -286,7 +288,7 @@ export class Sessions extends EventEmitter {
   nativeEvent(session, event) {
     if (event.kind === 'turn-started') {
       if (session.activity === 'working') return;
-      session.activity = 'working'; session.attention = false;
+      session.activity = 'working'; session.attention = false; session.turnStartedAt = new Date().toISOString();
     } else if (event.kind === 'turn-interrupted') {
       session.activity = 'idle';
     } else if (event.kind === 'turn-completed') {
@@ -396,6 +398,7 @@ export class Sessions extends EventEmitter {
     // Cursor-position and terminal-capability replies are not manual typing.
     if (!coordinator && !/^\x1b\[[?>0-9;]*[RcnIO]$/.test(data)) session.lastInputAt = new Date().toISOString();
     if (data.includes('\r') || submit) {
+      session.lastSubmitAt = new Date().toISOString();
       this.beginDiscovery(session);
       // Antigravity's first Enter can be login, theme or workspace-trust setup.
       // Only its native conversation event proves there is history to resume.

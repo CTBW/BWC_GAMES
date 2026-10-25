@@ -140,6 +140,12 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 				attacks += 1
 				var atk: Dictionary = u.attack_info(int(String(a.id).get_slice(":", 1)))
 				assert_false(u.clips[atk.clip].events.is_empty(), "%s %s has its blow timed" % [id, atk.clip])
+				# A missile that says where it leaves (the archer's arrow) leaves from his hands.
+				var from: Vector3 = u.missile_from(int(String(a.id).get_slice(":", 1)))
+				if from != Vector3.INF:
+					assert_between(from.y - u.position.y, 0.6, u.height_m(), "%s %s leaves at hand height" % [id, atk.clip])
+					assert_between(Vector2(from.x - u.position.x, from.z - u.position.z).length(), 0.2, 1.2,
+						"%s %s leaves within arm's reach" % [id, atk.clip])
 		assert_true(attacks > 0, id + " has an attack")
 		u.free()
 

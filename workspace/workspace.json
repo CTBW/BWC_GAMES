@@ -7,7 +7,7 @@
       "type": "group",
       "category": "project",
       "created": "2026-10-20",
-      "updated": "2026-10-25",
+      "updated": "2026-10-26",
       "folder": "2026-10-20_meridius",
       "steps": [
         {
@@ -87,6 +87,12 @@
           "path": "goblin-rabble-3d.html",
           "group": "Character rigs",
           "subgroup": "Goblin Rabble"
+        },
+        {
+          "name": "Goblin Archer 3D rig",
+          "path": "goblin-archer-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Archer"
         },
         {
           "name": "Mixar setup",

@@ -15,6 +15,8 @@ const WOLF := "res://prototypes/wolf_scout_anim/art3d/"
 ## One goblin export per loadout (each weapon has its own grip), from
 ## references/characters/blender/goblin_rabble/tools/export_godot.py.
 const GOBLIN := "res://prototypes/goblin_rabble_anim/art3d/"
+## references/characters/blender/goblin_archer/tools/export_godot.py.
+const ARCHER := "res://prototypes/goblin_archer_anim/art3d/"
 
 const UNITS := [
 	{"id": "footman", "title": "Footman", "faction": "player", "controller": "footman",
@@ -65,6 +67,10 @@ const UNITS := [
 		"model": GOBLIN + "goblin_rabble_cleaver.glb", "meta": GOBLIN + "goblin_rabble_cleaver.json", "reach": 1.0,
 		"home_tile": Vector2i(20, 17), "attack_defaults": {"reach": 1.0, "label": "Cleaver chop"},
 		"blurb": "Horde fodder: a pitted cleaver and a barrel-bottom shield."},
+	{"id": "goblin_archer", "title": "Goblin Archer", "faction": "enemy",
+		"model": ARCHER + "goblin_archer.glb", "meta": ARCHER + "goblin_archer.json", "reach": 10.0,
+		"home_tile": Vector2i(22, 16), "attack_defaults": {"missile": "arrow", "reach": 10.0, "label": "Shot", "hits": ["shot"]},
+		"blurb": "Skirmisher: a horn bow and a quiver of red-fletched arrows. Walks into range and a clear line, draws an arrow over his shoulder and looses. Struck, he raises the bow to block."},
 ]
 
 

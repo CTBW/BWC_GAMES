@@ -3,6 +3,7 @@
 ## meshes, made and freed here; `land` is called when a missile arrives (the
 ## sandbox resolves the blow), with the target it was loosed at.
 ##   bolt       a quarrel on a flat arc
+##   arrow      a red-fletched arrow on a higher arc, slower than the bolt
 ##   fireball   a ball of fire with embers behind, a burst where it lands
 ##   lightning  a jagged bolt flickering from the hand to the target
 ##   frost      a ring of frost swelling from the caster's feet
@@ -101,21 +102,40 @@ func _flat(tex: Texture2D, color: Color, size: float) -> MeshInstance3D:
 func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
 	var h: float = who.height_m() if who.has_method("height_m") else 1.8
 	var from := who.global_position + Vector3(0, h * 0.72, 0) + _facing(who) * 0.45
+	# A unit whose sidecar says where its missile leaves (the archer's arrow, at the bow).
+	var own: Variant = who.call("missile_from") if who.has_method("missile_from") else Vector3.INF
+	if own != Vector3.INF:
+		from = own
 	var to := (target.global_position + Vector3(0, h * 0.55, 0)) if target else from + _facing(who) * 8.0
 	match kind:
-		"bolt":
+		"bolt", "arrow":
+			var arrow := kind == "arrow"
 			var shaft := MeshInstance3D.new()
 			var bm := BoxMesh.new()
-			bm.size = Vector3(0.035, 0.035, 0.62)
+			bm.size = Vector3(0.025, 0.025, 0.62) if arrow else Vector3(0.035, 0.035, 0.62)
 			shaft.mesh = bm
 			var sm := StandardMaterial3D.new()
 			sm.albedo_color = Color(0.24, 0.17, 0.1)
 			sm.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
 			shaft.material_override = sm
 			add_child(shaft)
+			if arrow:
+				# Two crossed red vanes at the back (the shaft flies down -Z).
+				var fm := StandardMaterial3D.new()
+				fm.albedo_color = Color(0.62, 0.12, 0.08)
+				fm.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
+				fm.cull_mode = BaseMaterial3D.CULL_DISABLED
+				for size in [Vector3(0.1, 0.006, 0.13), Vector3(0.006, 0.1, 0.13)]:
+					var vane := MeshInstance3D.new()
+					var vm := BoxMesh.new()
+					vm.size = size
+					vane.mesh = vm
+					vane.material_override = fm
+					vane.position = Vector3(0, 0, 0.24)
+					shaft.add_child(vane)
 			var streak := _card(Color(1.0, 0.92, 0.7, 0.35), 0.35)
-			_live.append({"kind": "bolt", "t": 0.0, "dur": maxf(from.distance_to(to) / 38.0, 0.08), "from": from, "to": to,
-				"arc": from.distance_to(to) * 0.04, "nodes": [shaft, streak], "target": target, "land": land})
+			_live.append({"kind": kind, "t": 0.0, "dur": maxf(from.distance_to(to) / (30.0 if arrow else 38.0), 0.08), "from": from, "to": to,
+				"arc": from.distance_to(to) * (0.05 if arrow else 0.04), "nodes": [shaft, streak], "target": target, "land": land})
 		"fireball":
 			var core := _card(Color(1.0, 0.62, 0.2), 0.9)
 			var halo := _card(Color(1.0, 0.3, 0.05, 0.6), 2.0)
@@ -212,7 +232,7 @@ func _process(dt: float) -> void:
 		e.t += dt
 		var k: float = clampf(e.t / e.dur, 0.0, 1.0)
 		match e.kind:
-			"bolt", "fireball":
+			"bolt", "arrow", "fireball":
 				var target: Node3D = e.target
 				if target and is_instance_valid(target):
 					var h: float = target.height_m() if target.has_method("height_m") else 1.6
@@ -221,7 +241,7 @@ func _process(dt: float) -> void:
 				var ahead: Vector3 = e.from.lerp(e.to, minf(k + 0.02, 1.0)) + Vector3.UP * e.arc * 4.0 * minf(k + 0.02, 1.0) * (1.0 - minf(k + 0.02, 1.0))
 				for n in e.nodes:
 					n.position = p
-				if e.kind == "bolt" and ahead.distance_to(p) > 1e-4:
+				if e.kind != "fireball" and ahead.distance_to(p) > 1e-4:
 					e.nodes[0].look_at(ahead, Vector3.UP)
 				if e.kind == "fireball":
 					e.nodes[0].scale = Vector3.ONE * (0.9 + 0.15 * sin(e.t * 40.0))

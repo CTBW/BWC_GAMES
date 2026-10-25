@@ -20,3 +20,6 @@
 # sidecars are in Git); the roster leaves the goblins out where they are missing.
 /prototypes/goblin_rabble_anim/art3d/*
 !/prototypes/goblin_rabble_anim/art3d/*.json
+# So do the goblin archer's.
+/prototypes/goblin_archer_anim/art3d/*
+!/prototypes/goblin_archer_anim/art3d/*.json

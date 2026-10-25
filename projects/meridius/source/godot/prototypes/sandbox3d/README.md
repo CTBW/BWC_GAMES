@@ -19,9 +19,10 @@ brings an open one to the front).
 The roster: footman (his own controller: start and stop, turns on the planted
 foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
-stealth stance), succubus (whip lash with its slash effects) and the goblin
+stealth stance), succubus (whip lash with its slash effects), the goblin
 rabble in its three loadouts (knife, hatchet, cleaver: one chop each, with the
-barrel-bottom or plank shield). Players are blue, enemies red. Two straw
+barrel-bottom or plank shield) and the goblin archer (horn bow, arrows). Players
+are blue, enemies red. Two straw
 dummies stand in the yard, and a drill line of six in its south faces the
 footman squad.
 
@@ -32,8 +33,17 @@ retargeted from Mixamo and baked per loadout by
 `references/characters/blender/goblin_rabble/tools/export_godot.py`. They
 have no hit clip and flinch procedurally.
 
+The **Goblin Archer** stands behind them, the hooded goblin with the horn bow.
+He walks into range (10 m) and a clear line, draws an arrow over his shoulder,
+nocks it and looses at 1.033 s: the sandbox's `arrow` missile leaves from the
+arrow's middle at that frame (the sidecar's `shot_from`), so it takes the drawn
+arrow's place and flies on a gentle arc. Struck, he raises the bow to block
+(his `block` clip is the hit role); in his death he drops the bow. His run is
+in the clip list. Exported by
+`references/characters/blender/goblin_archer/tools/export_godot.py`.
+
 The footman's model (`footman.glb`), the wolf scout's export and the goblins'
-GLBs (their sidecars are in Git) are not in Git. Where they are missing, the
+GLBs, the archer's too (their sidecars are in Git), are not in Git. Where they are missing, the
 sandbox leaves those units out (and the squad with the footman) and says which
 in the left panel and the console.
 
@@ -126,15 +136,17 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   among its death clips, revive, stances. `scripts/footman_unit.gd` puts the
   footman's own controller (`prototypes/footman_anim/scripts/footman3d.gd`)
   behind the same interface.
-- `scripts/fx3d.gd`: sparks, the bolt, fireball, chain lightning, frost nova
-  and earth fist.
+- `scripts/fx3d.gd`: sparks, the bolt, the arrow, fireball, chain lightning,
+  frost nova and earth fist. A missile leaves from its unit's
+  `missile_from()` where the sidecar gives the attack a `shot_from`.
 - `shaders/`: the ground (relief bake, fog, grid, route marks, hover) and the
   painted cards.
 - `art3d/`: the spearman, crossbowman and battle mage exports with their
   sidecars. The footman and succubus are read from `prototypes/footman_anim/art3d`,
   the wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble
-  from `prototypes/goblin_rabble_anim/art3d` (outside the ignored `art/`, so
-  Godot imports it), the squad's dress from `prototypes/squad_looks/scripts`.
+  from `prototypes/goblin_rabble_anim/art3d` and the archer from
+  `prototypes/goblin_archer_anim/art3d` (outside the ignored `art/`, so
+  Godot imports them), the squad's dress from `prototypes/squad_looks/scripts`.
 
 ## Adding a unit
 
@@ -144,7 +156,8 @@ Export the rigged model (GLB or FBX) and its sidecar JSON (per clip: `length`,
 `model`, `meta`, and what the sidecar does not say: `idle` / `walk` / `hit` /
 `death` clip names if not those, `attacks` (`clip`, `label`, `reach` in metres
 centre to centre, `hits`: the events that land, `missile` for a shot or spell,
-`then`: a clip that follows, such as a reload) and `stances`. A sidecar with
+`then`: a clip that follows, such as a reload) and `stances`. A shot's clip
+can give `shot_from` (where the missile leaves, model axes from the feet). A sidecar with
 `roles` (the spearman's, crossbowman's and goblins' exports) fills the clip
 roles and attacks itself. A profile whose files are missing is left out.
 

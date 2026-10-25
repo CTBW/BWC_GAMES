@@ -292,6 +292,18 @@ func is_ranged(i: int) -> bool:
 	return attack_info(i).has("missile")
 
 
+## Where attack i's missile leaves (the current attack's when i < 0), in the
+## world: the sidecar's `shot_from` for its clip (the middle of the archer's
+## arrow as he looses, in the model's axes), or Vector3.INF where it has none.
+func missile_from(i := -1) -> Vector3:
+	var a: Dictionary = attack_info(i) if i >= 0 else _attack
+	var p: Variant = meta.get("clips", {}).get(a.get("clip", ""), {}).get("shot_from")
+	if not (p is Array and p.size() == 3):
+		return Vector3.INF
+	var local: Vector3 = model.transform * Vector3(p[0], p[1], p[2])
+	return global_transform * local if is_inside_tree() else transform * local
+
+
 # --- Orders ---------------------------------------------------------------------------
 
 func is_dead() -> bool:

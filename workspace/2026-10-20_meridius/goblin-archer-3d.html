@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Goblin Archer 3D rig</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<link rel="stylesheet" href="rig-viewer/viewer.css">
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / GOBLIN ARCHER / 3D RIG / 25 OCT 2026</p>
+<h1>Goblin Archer 3D rig</h1>
+<p>The hooded goblin from the front of the archer concept, built in Tripo as four textured models and rigged in Blender on a Mixamo-compatible skeleton, the same way as the Goblin Rabble. His left hand closes round the horn bow, and the quiver is slung across his back. In the shot his right hand brings an arrow up over his shoulder, nocks it, draws the string to his cheek and looses. Six clips play below from the game's battle camera, in all four facings: idle, walk, run, the shot, the block and his death, in which he drops the bow. In all 437 frames, no bow, quiver or arrow passes through his body. He is exported to the Godot 3D Sandbox, where he walks into range, shoots an arrow from his bow and raises the bow to block when struck.</p>
+</header>
+
+<h2>Pose viewer</h2>
+<p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Screenshot with the readout in view, so the frame is named. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
+<div class="viewer">
+  <div class="vbar" role="group" aria-label="Clip"><span class="vlbl">Clip</span><div class="vchips" id="clipChips"></div></div>
+  <div class="vbar" role="group" aria-label="Facing"><span class="vlbl">Facing</span><div class="vchips" id="faceChips"></div></div>
+  <div class="vbar" role="group" aria-label="Playback">
+    <button id="first" class="vbtn" title="First frame (Home)" aria-label="First frame">⏮</button>
+    <button id="prev" class="vbtn" title="Previous frame (←)" aria-label="Previous frame">◀</button>
+    <button id="play" class="vbtn" title="Play / pause (Space)" aria-label="Play or pause">❚❚</button>
+    <button id="next" class="vbtn" title="Next frame (→)" aria-label="Next frame">▶</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <label class="vsel">Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+    <label class="vsel">Zoom <select id="zoom"><option value="1">1×</option><option value="1.5" selected>1.5×</option><option value="2">2×</option></select></label>
+    <label class="vsel">Ground <select id="ground"><option value="paper">Paper</option><option value="grass">Grass</option><option value="dark">Dark</option></select></label>
+  </div>
+  <div class="readout"><span id="readout" aria-live="polite">Loading frames…</span><button id="copy" class="vcopy">Copy frame reference</button><span id="copied" class="copied" hidden>Copied</span></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="steps">
+  <div><strong>1 · Reference images</strong><p>Nano Banana Pro on Higgsfield redrew the front archer as a 4K T-pose with the rabble's face and nose and no body paint, and drew his quiver and an arrow on their own, flat on white.</p></div>
+  <div><strong>2 · New bow</strong><p>Three bows to replace the rejected one: horn, blackwood blade and bone trophy. The horn bow was then redrawn simpler, without the fang cord, the sinew lashings or the horn stubs at the grip.</p></div>
+  <div><strong>3 · Tripo</strong><p>Four separate models, Smart Mesh in quads, each textured at 4096 px from its own image. The body has 5,720 faces, the props 624–1,767. 480 Tripo credits in all.</p></div>
+  <div><strong>4 · Scaled in Blender</strong><p>He stands 1.49 m tall to the tip of his hood. The bow is 1.10 m, and the quiver and the arrow are 0.62 m each, read off the concept. The cape is kept as Tripo made it.</p></div>
+  <div><strong>5 · Rigged</strong><p>77 bones with Mixamo names, 52 of them deforming, at most four per vertex: three fingers and a thumb on each hand, forearm twist bones, two bones down the cape and two for the front flap.</p></div>
+  <div><strong>6 · Bow and arrow</strong><p>The left hand closes round the bow's grip, no deeper than 0.3 mm, and the right hand curls loosely round the arrow. A <code>String</code> bone draws the middle of the string, and the arrow shows only while the rig's <code>arrow</code> is on.</p></div>
+  <div><strong>7 · Quiver</strong><p>Slung across his back over the cape, its opening above his right shoulder, 6 mm clear of the cape with nothing through it.</p></div>
+  <div><strong>8 · Clips</strong><p>Six clips from <code>projects/meridius/Animations</code>, retargeted onto the rig. The bow arm, the quiver and the cape are corrected frame by frame. The shot is keyed with the arrow and the string, and in the death he drops the bow.</p></div>
+  <div><strong>9 · Godot</strong><p>The clips baked into one GLB for the 3D Sandbox, as for the rabble: the string bound to its bone, the arrow hidden at zero scale outside the shot, and a sidecar with the shot, the nock and the bow drop.</p></div>
+</div>
+
+<h2>From concept to Tripo</h2>
+<figure><img src="goblin-archer-3d/img/chain.webp" width="3030" height="900" loading="lazy" alt="The archer concept with six hooded goblins drawing bows on a patch of ground, the front archer redrawn as a clean T-pose, and Tripo's textured body from four sides">
+<figcaption>The archer concept, the T-pose that went into Tripo, and Tripo's textured body from the front, side, back and three-quarter. The T-pose keeps the front archer's red-striped hood, ragged red cape, fang necklace, chest strap, skull belt with its pouch, rag skirt and strapped boots, with the rabble's shared face and no body paint.</figcaption></figure>
+<figure><img src="goblin-archer-3d/img/equipment.webp" width="762" height="760" style="width:min(100%,520px);margin:0 auto;display:block" loading="lazy" alt="A leather quiver full of red-fletched arrows, a single barbed arrow and the simplified horn bow, each drawn flat on white">
+<figcaption>The three props as drawn for Tripo: the quiver taken off his back, with buckled bands, a knotted red rag and a bundle of red-fletched arrows; one barbed arrow with a ragged fletching; and the simplified horn bow.</figcaption></figure>
+<figure><img src="goblin-archer-3d/img/bows.webp" width="1847" height="1050" loading="lazy" alt="Five bows side by side: the rejected wooden bow, the horn bow, the blackwood blade bow, the bone trophy bow and the simplified horn bow, which is underlined as chosen">
+<figcaption>The rejected bow, the three new designs and the chosen bow. A is two dark horn limbs on a blackened grip, with hooked bone tips. B is a knotted black self bow with rusty blades lashed to the back of its limbs. C is a red-brown stave with a row of bone plates and a horned skull. The user picked A and asked for it simpler. The chosen version keeps its silhouette, bone tips, leather grip and red rag, and drops the fang cord, the lashings and the horn stubs. Each bow is Nano Banana Pro on the Higgsfield website (Unlimited), 2K, in strict side view.</figcaption></figure>
+<figure><img src="goblin-archer-3d/img/props.webp" width="3063" height="820" loading="lazy" alt="Tripo's textured quiver, arrow and bow, each from five sides">
+<figcaption>The quiver, arrow and bow as Tripo made and textured them, each from five sides. The quiver has its rolled rim, both buckled bands, the knotted rag and about ten fletched arrows. The arrow has its barbed head and ragged vanes. The bow keeps its recurve horn limbs, iron bands, leather grip with the rag and hooked bone tips; its string is one thin twisted strand.</figcaption></figure>
+
+<table>
+<thead><tr><th>Model</th><th>Image</th><th>Polycount set</th><th>Faces / vertices</th><th>Length in Blender</th><th>Export</th></tr></thead>
+<tbody>
+<tr><td>Body</td><td><code>archer_tpose_front_v2.png</code></td><td>5,000</td><td>5,720 / 5,532</td><td>1.486 m tall</td><td><code>body__take-01.zip</code></td></tr>
+<tr><td>Quiver</td><td><code>quiver_front.png</code></td><td>1,500</td><td>1,767 / 1,582</td><td>0.62 m</td><td><code>quiver__take-01.zip</code></td></tr>
+<tr><td>Arrow</td><td><code>arrow_side.png</code></td><td>500</td><td>624 / 556</td><td>0.62 m</td><td><code>arrow__take-01.zip</code></td></tr>
+<tr><td>Bow</td><td><code>bow_horn_simple_side.png</code></td><td>1,000</td><td>1,311 / 1,085</td><td>1.10 m</td><td><code>bow__take-01.zip</code></td></tr>
+</tbody></table>
+<p class="meta">His height is the footman's 1.82 m times the battle view's figure heights, 40 px for a small unit against 49 for a man. Each model cost 100 Tripo credits for the mesh and 20 for its texture.</p>
+
+<h2>Standard pose</h2>
+<figure><img src="goblin-archer-3d/img/standard.webp" width="3000" height="600" loading="lazy" alt="The rigged archer from five sides, the bow held low beside his left leg and the quiver diagonal on his back">
+<figcaption>The pose the rig opens in, from the front, three-quarter from his left, his left side, three-quarter from his right and the back. His right arm hangs. His left elbow is bent so the bow is held low beside his left leg with its upper limb raised 35° forward: the most upright bow that keeps off his body and cape (its limbs 4.4 cm off), with the string 6 mm clear of the hip. The skin stays bound to the T-pose, so the Mixamo clips still fit.</figcaption></figure>
+
+<h2>Grips</h2>
+<figure><img src="goblin-archer-3d/img/grips.webp" width="2718" height="900" loading="lazy" alt="Close views of the left hand closed round the bow's leather grip and of the right hand curled loosely round the arrow, six views each">
+<figcaption>Left: the bow hand from six sides. The handle lies across the palm at the tilt (18°) that closes the three fingers best, nothing deeper than 0.3 mm into it, and the thumb closes the other way. Right: the arrow hand, curled loosely round a 2 cm rod so the arrow sits in it. The hand holds its turn on the bow whatever a clip does to the wrist, unless the clip is the archer's own.</figcaption></figure>
+<figure><img src="goblin-archer-3d/img/arrow.webp" width="1200" height="600" style="width:min(100%,760px);margin:0 auto;display:block" loading="lazy" alt="The archer in the standard pose with the arrow shown in his right hand, from the front and three-quarter">
+<figcaption>The rig's <code>arrow</code> property shows the arrow in the right hand. The clips key it: only the shot shows it, from the frame he brings it up to the frame he looses.</figcaption></figure>
+
+<h2>Quiver</h2>
+<figure><img src="goblin-archer-3d/img/quiver.webp" width="1350" height="900" loading="lazy" alt="The quiver on the archer's back from behind, both sides, the back three-quarters and above">
+<figcaption>The quiver rides its own bone on the chest, slung diagonally across his back with its opening above his right shoulder. It leans 7.8° from upright against the cape's 13.8°, so its top stays off the hood, 6 mm clear of the cape. In the clips it tips out from his back where he would come nearer.</figcaption></figure>
+
+<h2>Walk and run</h2>
+<figure><img src="goblin-archer-3d/img/walk.webp" width="2091" height="818" loading="lazy" alt="Six key frames of the walk and six of the run from the south-east, the bow carried in his left hand">
+<figcaption>Top: one stride of the walk from the south-east, at frames 1, 7, 13, 19, 25 and 31. Bottom: the run, at frames 1, 5, 10, 14, 19 and 23. He walks hunched, the bow carried across in front of him. In the run he leans far forward. His left arm is lifted out from the chest, up to 50°, so the bow stays out of his legs, and the quiver tips out from his back.</figcaption></figure>
+
+<h2>The shot</h2>
+<figure><img src="goblin-archer-3d/img/shot.webp" width="2662" height="526" loading="lazy" alt="Seven key frames of the shot from the south-west: ready, the arrow raised over his shoulder, turning toward the bow, nocked, drawing, at full draw, and the string snapped back after the release">
+<figcaption>The shot from the south-west, at frames 1, 13, 16, 19, 25, 32 and 35. At frame 13 the arrow appears in his fist above his shoulder, head up, and turns toward the bow as the fist comes down. Its nock goes onto the string at frame 18. The string then follows the fist to the anchor at his cheek, and the arrow lies on its rest beside the handle, level from the string. He looses at frame 32 (1.03 s). The arrow is gone from the next frame, the string swings back through rest, and he holds the pose for 8 frames.</figcaption></figure>
+
+<h2>Block</h2>
+<figure><img src="goblin-archer-3d/img/block.webp" width="1841" height="364" loading="lazy" alt="Six key frames of the block from the south-east: he crouches and raises the bow across his body, then lowers it">
+<figcaption>The block from the south-east, at frames 1, 8, 14, 28, 46 and 61. He flinches into a crouch, raises the bow across in front of him and lowers it again. Where his right shin swings back into the cape, the cape swings back with it (up to 5° on each of its two bones).</figcaption></figure>
+
+<h2>Death</h2>
+<figure><img src="goblin-archer-3d/img/death.webp" width="2513" height="507" loading="lazy" alt="Seven key frames of the death from the south-west: struck, staggering, sinking and falling face down, the bow falling flat beside him">
+<figcaption>The death from the south-west, at frames 1, 12, 24, 36, 42, 48 and 72. He is struck, staggers, sinks and falls face down. At frame 42 he lets go of the bow, 1.1 cm above the ground. It turns flat about its lowest point and lies on the ground from frame 48, spun 30° and 5 cm from him, clear of him in every later frame. The quiver tips out from his back as he falls.</figcaption></figure>
+
+<h2>In the sandbox</h2>
+<figure><img src="goblin-archer-3d/img/sandbox.webp" width="1750" height="770" loading="lazy" alt="Four frames from the Godot sandbox: the archer drawing his bow at a straw dummy, loosing, the red-fletched arrow in flight and the arrow reaching the dummy">
+<figcaption>The archer shooting a straw dummy 6 m away in the Godot 3D Sandbox, slowed down: drawing, the release, and the arrow in flight to the dummy. At the release the sandbox's arrow takes the drawn arrow's place, at its middle as he looses (<code>shot_from</code> in the sidecar), and flies on a gentle arc at 30 m/s. In the sandbox he walks into range (10 m) and a clear line before he shoots. Struck, he plays the block; killed, he drops the bow.</figcaption></figure>
+
+<h2>Notes</h2>
+<ul class="notes">
+<li><strong>Holding the bow in motion.</strong> The idle, walk, run and death were made for empty hands. In every frame his left hand keeps its standard turn on the bow, and the arm gets the smallest correction that keeps the bow out of his body and off the ground: eased toward the standard pose, then lifted out from the chest. The idle and the walk lift it 10°, the run up to 50° and the death up to 30°. The attack and the block are the archer's own clips, so there the wrist turns as the clip says; the block's arm is eased 40% toward the standard pose, the attack's not at all. Each correction is spread over its neighbouring frames, so it never pops.</li>
+<li><strong>The shot.</strong> The arrow comes into the fist at the frame the fist is highest. Of the ways tried, pointing up over his shoulder is the first that keeps it out of him until it is nocked. Pointing back into the quiver's opening put it through his head. The fist then comes onto the arrow's level over three frames, so the arrow stays level from the string to the rest. The rest is 10.6 cm up the bow beside the handle, as low as clears the bow hand at any draw. At full draw the nock is 0.517 m from the rest, the string drawn 0.368 m, and the arrow points 5.6° above level. To keep the fist, the arrow and the string out of his head and hood, the fist moves out to his right along that level, up to 16 cm, with the elbow kept in the clip's plane.</li>
+<li><strong>Clearance.</strong> Every frame was checked for body triangles that cut through the bow (with its drawn string), the quiver, the arrow while it shows, and the cape below the quiver: none, in all 201 frames of the idle, 36 of the walk, 27 of the run, 40 of the shot, 61 of the block and 72 of the death. The bow hand and the fingers on the arrow and the string are left out of the count. The quiver stays at least 6 mm off his body.</li>
+<li><strong>On the ground.</strong> In the death his hips are lifted wherever his body or a prop would go below the ground, by up to 26 cm, widened and averaged so the lift never pops. In the walk, the run, the shot and the block the hips rise or drop so the lowest point of his soles stays at its rest height. The shot and the block come down 1.5 to 3.6 cm, because his legs are shorter than the clip's and they floated.</li>
+<li><strong>Loop and drift.</strong> The idle stays in place and eases its last 10 frames back into the first. The walk and the run are kept in place and loop seamlessly. The walk covers 1.18 m a stride (1.01 m/s), the run 2.07 m a cycle (2.39 m/s), which the game adds as he moves. The shot, the block and the death play as they come.</li>
+<li><strong>Clips used.</strong> Idle - Goblin, 201 frames (6.67 s). Walk - Goblin, 36 frames (1.17 s). Running - Goblin Archer, 27 frames (0.87 s). Attack - Goblin Archer, 32 frames plus 8 held (1.30 s). Hit - Goblin archer, 61 frames (2.00 s), used as the block. Death - Goblin, 72 frames (2.37 s). All are from <code>projects/meridius/Animations</code> at 30 fps, with the hips' motion scaled by his hip height against the clips' (0.657). Attack - Goblin Rabble is a melee swing, so it is not used. The Mixamo clips stay local, so the retargeted motion is saved in a separate local copy of the rig, not in the rig file.</li>
+<li><strong>Frames.</strong> Rendered in Blender's Workbench, flat-lit with an outline and cavity, from an orthographic camera 30° above the ground, at 254.5 px per metre in a 780 × 680 frame (taller than the rabble's for the raised bow), then packed at 0.75 scale.</li>
+<li><strong>Limits.</strong> The thumb closes against the bow's grip but doesn't fold over the index finger as in a real fist. The arrow appears in his fist above his shoulder: the clip's hand never reaches the quiver's opening, so the arrow isn't shown leaving it. The string runs to the middle of the fist; no finger hooks it on its own. In the run his soles dip up to 1.6 cm below the ground in some frames. The sandbox has no use for the run yet; it is in his clip list.</li>
+<li><strong>Files.</strong> <code>projects/meridius/references/characters/blender/goblin_archer/goblin_archer_rig.blend</code> (rig, props and grips) and <code>goblin_archer_base.blend</code>, built by <code>build_archer.py</code> and <code>rig_goblin_archer.py</code> in its <code>tools/</code>, with <code>render_rig.py</code> for the review renders and measurements. The clips are retargeted by <code>retarget_clips.py</code>, rendered by <code>render_clips.py</code> and packed by <code>pack_sheets.py</code>, and exported for Godot by <code>export_godot.py</code> (checked by <code>check_export.py</code>) to <code>source/godot/prototypes/goblin_archer_anim/art3d/goblin_archer.glb</code> with its sidecar <code>goblin_archer.json</code>; the GLB stays local. Its <code>README.md</code> has the commands. The Tripo exports are in <code>references/characters/tripo/goblin_archer/</code>, the images and prompts in <code>references/characters/goblin_archer/</code>.</li>
+</ul>
+</main>
+<script id="frames-data" type="application/json">{"clips":{"idle":{"sw":{"file":"sheets/idle_sw.webp","frames":201,"cols":18,"w":186,"h":294,"x":218.2,"y":96.0},"se":{"file":"sheets/idle_se.webp","frames":201,"cols":16,"w":228,"h":279,"x":198.0,"y":103.5},"nw":{"file":"sheets/idle_nw.webp","frames":201,"cols":17,"w":228,"h":297,"x":159.0,"y":100.5},"ne":{"file":"sheets/idle_ne.webp","frames":201,"cols":18,"w":187,"h":279,"x":179.2,"y":106.5}},"walk":{"sw":{"file":"sheets/walk_sw.webp","frames":36,"cols":7,"w":234,"h":307,"x":187.5,"y":103.5},"se":{"file":"sheets/walk_se.webp","frames":36,"cols":7,"w":266,"h":303,"x":181.5,"y":102.8},"nw":{"file":"sheets/walk_nw.webp","frames":36,"cols":7,"w":267,"h":305,"x":137.2,"y":102.0},"ne":{"file":"sheets/walk_ne.webp","frames":36,"cols":7,"w":234,"h":311,"x":162.8,"y":98.2}},"run":{"sw":{"file":"sheets/run_sw.webp","frames":27,"cols":5,"w":299,"h":270,"x":163.5,"y":138.0},"se":{"file":"sheets/run_se.webp","frames":27,"cols":6,"w":261,"h":271,"x":156.8,"y":129.0},"nw":{"file":"sheets/run_nw.webp","frames":27,"cols":6,"w":261,"h":306,"x":166.5,"y":106.5},"ne":{"file":"sheets/run_ne.webp","frames":27,"cols":6,"w":299,"h":320,"x":122.2,"y":99.8}},"attack":{"sw":{"file":"sheets/attack_sw.webp","frames":40,"cols":8,"w":309,"h":385,"x":129.0,"y":14.2},"se":{"file":"sheets/attack_se.webp","frames":40,"cols":8,"w":243,"h":333,"x":157.5,"y":57.0},"nw":{"file":"sheets/attack_nw.webp","frames":40,"cols":8,"w":243,"h":379,"x":183.8,"y":21.8},"ne":{"file":"sheets/attack_ne.webp","frames":40,"cols":7,"w":309,"h":345,"x":146.2,"y":72.0}},"block":{"sw":{"file":"sheets/block_sw.webp","frames":61,"cols":8,"w":307,"h":299,"x":136.5,"y":100.5},"se":{"file":"sheets/block_se.webp","frames":61,"cols":9,"w":250,"h":266,"x":166.5,"y":123.0},"nw":{"file":"sheets/block_nw.webp","frames":61,"cols":9,"w":250,"h":311,"x":168.0,"y":105.0},"ne":{"file":"sheets/block_ne.webp","frames":61,"cols":8,"w":307,"h":288,"x":140.2,"y":130.5}},"death":{"sw":{"file":"sheets/death_sw.webp","frames":72,"cols":9,"w":423,"h":398,"x":28.5,"y":77.2},"se":{"file":"sheets/death_se.webp","frames":72,"cols":9,"w":407,"h":392,"x":138.8,"y":92.2},"nw":{"file":"sheets/death_nw.webp","frames":72,"cols":8,"w":407,"h":306,"x":39.0,"y":90.0},"ne":{"file":"sheets/death_ne.webp","frames":72,"cols":8,"w":424,"h":326,"x":132.0,"y":87.8}}},"fps":30,"canvas":[585,510]}</script>
+<script id="viewer-config" type="application/json">{"base": "goblin-archer-3d/", "start": "attack", "key": "goblin-archer-pose-viewer", "clips": [["idle", "Idle"], ["walk", "Walk"], ["run", "Run"], ["attack", "Shot"], ["block", "Block"], ["death", "Death"]]}</script>
+<script src="rig-viewer/viewer.js"></script>
+</body>
+</html>

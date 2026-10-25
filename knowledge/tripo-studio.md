@@ -81,6 +81,19 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
 - Exported models are normalised to 1 unit on their longest side.
 - Receipts: `projects/meridius/references/characters/goblin_rabble/jobs.json`.
 
+## Goblin archer, 25 October 2026
+
+- Several agent sessions share the Tripo account. A Smart Mesh run took the
+  header balance from 440 to 240 because another session's run was charged in
+  the same second. Usage History, which lists each charge to the second, showed
+  two −100 entries. A header drop larger than the button's price needs that
+  check, and a message to the other chats, before anyone assumes a double
+  charge.
+- After the polycount popup opens, an upload can shift the panel, so a value
+  typed straight away may be lost. Zoom in on the field and confirm the number
+  before clicking Generate.
+- Receipts: `projects/meridius/references/characters/goblin_archer/jobs.json`.
+
 ## Blender in the background
 
 - `blender -b --factory-startup` with the normal user profile removes the

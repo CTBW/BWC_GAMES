@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-24",
+  "userReferences": [
+    "inbox/attachments/2026-10-24/image-193322-94ad2d4d.png",
+    "inbox/attachments/2026-10-24/Trolls-193532-52632409.png"
+  ],
+  "speciesReferenceMatchesCanonical": true,
+  "inspected": [
+    "projects/meridius/references/characters/Trolls.png",
+    "projects/meridius/references/characters/Footmen.png",
+    "projects/meridius/references/characters/Orc Warriors.png",
+    "projects/meridius/references/characters/goblin_rabble/concept_b.png",
+    "projects/meridius/references/characters/wolf_scout/master.png",
+    "projects/meridius/references/characters/mage_3d/mage_front_original.png"
+  ],
+  "observations": "The original troll, Footman and Orc Warrior unit sheets share controlled dark contours, grouped painted shading, earthy materials and clear silhouettes. Goblin concept B follows this treatment. Wolf Scout and mage modeling masters simplify shading for extraction; their smoother human/anime faces should not control the troll. Use the original troll sheet for species and the Footman sheet for rendering and human palette.",
+  "references": [
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/ancient-troll-user-reference.png",
+      "role": "PRIMARY SPECIES: the supplied three woodland trolls. Long wedge-like drooping nose, tiny amber eyes, coarse dark hanging hair and beard, lumpy grey anatomy, trinkets and turquoise markings. No visible ears."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/boss_giant_troll__take-04.png",
+      "role": "EDIT BASE: keep full-body standing hulking posture, smaller human-relative scale, club, framing and shoulder ruins. Replace the human-like face and fleshy skin."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/approved-troll-shoulder-ruins.png",
+      "role": "USER-APPROVED FEATURE: preserve these two broken cottage wall clusters, snapped timber, moss and their natural integration across back and shoulders."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/meridius-footmen-style.png",
+      "role": "RENDERING ONLY: game-native painted modelling, controlled dark contours, earthy warm highlights/cool shadows, readable material shapes. Also blue-and-cream human scale figures; never copy human facial anatomy onto the troll."
+    }
+  ],
+  "acceptance": [
+    "No visible ears, ear stumps, holes or earrings.",
+    "Face clearly belongs to supplied troll species rather than a human elder.",
+    "Stone surfaces visible across face, limbs and torso.",
+    "Approved broken house fragments retained across shoulders and back.",
+    "Standing hulking posture and reduced scale remain.",
+    "Game-native contours, painted material planes and restrained earthy colour."
+  ],
+  "currentTake": 7,
+  "currentReferences": [
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/ancient-troll-user-reference.png",
+      "role": "PRIMARY SPECIES: the supplied three woodland trolls. Long wedge-like drooping nose, tiny amber eyes, coarse dark hanging hair and beard, lumpy grey anatomy, trinkets and turquoise markings. No visible ears."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/approved-troll-shoulder-ruins.png",
+      "role": "USER-APPROVED FEATURE: preserve these two broken cottage wall clusters, snapped timber, moss and their natural integration across back and shoulders."
+    }
+  ],
+  "iterationFinding": "Take 5 retained smooth human-like anatomy. Take 6 improved stone but returned a numbered two-view sheet with visible ears. Take 7 uses only the original species and approved ruin crop, referring to their contents instead of numbered images."
+}

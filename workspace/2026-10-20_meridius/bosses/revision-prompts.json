@@ -1,0 +1,30 @@
+[
+  {
+    "id": "giant_troll",
+    "name": "The Giant Troll",
+    "kind": "Giant troll",
+    "hook": "A hunched mountain of muscle with arms long enough to sweep an entire shield line.",
+    "silhouette": "A colossal living troll with a low head pushed forward from mountainous shoulders, extremely long muscular arms, broad five-fingered hands and short thick bowed legs. A broad bulbous nose, heavy brow, small deep-set amber eyes, blunt lower tusks and drooping pointed ears give it a recognisable troll face. Warm grey-green pebbled skin, pale scar tissue, sparse coarse hair and restrained moss along the spine. A crude rope belt and hide apron; one hand grips an uprooted tree-trunk club.",
+    "scale": "Roughly 18 metres tall despite its hunched posture; tiny human formations establish its scale.",
+    "arena": "A broad upland stone clearing with a broken watchtower, low grass and generous open ground.",
+    "references": [],
+    "inputMode": "text-only",
+    "take": 1,
+    "prompt": "MERIDIUS BOSS CONCEPT: THE GIANT TROLL. Create one original colossal living troll, about eighteen metres tall, from this written brief. A low forward-projecting head, mountainous rounded shoulders, extremely long muscular arms ending in huge five-fingered hands, and shorter thick bowed legs. A broad bulbous nose, heavy brow, small amber eyes, blunt lower tusks and drooping pointed ears create a memorable troll face. Warm grey-green pebbled skin, pale scar tissue, sparse coarse dark hair and a little moss on the back. The body is muscular organic flesh, with rounded heavy volumes. A crude rope belt and hide apron; one hand grips a massive uprooted tree-trunk club with roots at its far end. Both feet planted, hunched but standing, weight and balance convincing. Show the entire troll, both hands, feet and complete club with generous background margin. An elevated three-quarter painted encounter view in a broad upland stone clearing, a ruined watchtower and low grass. Exactly six tiny separate blue-and-cream human squad formations provide scale and leave broad movement routes. Match detailed hand-painted fantasy tactics art: crisp broad brush shapes, earthy textured materials, muted warm highlights, cool blue-green shadows, clear upper-left daylight. Landscape 16:9, one continuous composition, one boss. No bell, metal yoke, robot parts, extra monsters, text, UI, grid, collage or watermark. Not photorealistic or glossy 3D."
+  },
+  {
+    "id": "pale_colossus",
+    "name": "The Pale Colossus",
+    "kind": "Standing stone-and-fur colossus",
+    "hook": "An ancient stone warrior towers above the company, its slab sword resting beside enormous armoured feet.",
+    "silhouette": "A standing humanoid colossus based on the supplied reference: small cylindrical stone mask with round amber eyes and short horizontal horn-like projections, broad armoured shoulders, long arms, a narrow fur-covered waist, very long segmented stone legs and broad feet. Layered geometric stone plates sit over a living fur-covered body. One hand carries a gigantic rectangular stone slab sword. Pale beige-grey limestone, warm light grey fur and visible carved details in bright diffuse daylight.",
+    "scale": "Approximately 40 metres tall; the whole standing body and sword fit inside the frame.",
+    "arena": "A sunlit limestone basin with weathered pillars and low pale ruins; no fortress is attached to the body.",
+    "references": [
+      "inbox/attachments/2026-10-24/image-115027-54192328.png"
+    ],
+    "inputMode": "user-reference-redesign",
+    "take": 1,
+    "prompt": "MERIDIUS BOSS REMAKE: THE PALE COLOSSUS. Use the attached image as the primary CHARACTER AND CONSTRUCTION REFERENCE. Create a similar towering STANDING humanoid stone-and-fur colossus: the small cylindrical stone mask with round amber eyes and short lateral horn-like projections, broad layered geometric shoulder armour, long heavy arms, narrow furry waist, long legs with stacked stone armour rings, enormous broad feet, and a huge rectangular STONE SLAB SWORD held in one hand and extending downward beside the body. Retain the reference's recognisable proportions, asymmetry and mixture of stone armour over a living furry body. The requested change is a MUCH LIGHTER BEIGE-GREY palette and bright readable lighting: pale warm limestone and sandstone-grey armour, light warm grey and taupe fur, ivory-grey worn edges, soft cool-grey recesses. Keep detail visible across the whole body; avoid black fur, charcoal armour and dark oppressive lighting. Show the full colossus from head to both feet and the complete sword with generous margin. A three-quarter encounter composition in a bright open limestone basin with low weathered ruins and exactly six tiny separate blue-and-cream human squad formations for immense scale. The giant is upright and mobile, not buried in a hill; no crown, shoulder fortress, hill-body or floating rock parts. Translate the reference into detailed hand-painted fantasy tactics concept art with broad crisp brush shapes, textured natural materials and soft upper-left daylight. One 16:9 landscape scene, one boss. No text, HUD, grid, borders, watermark or reference inset."
+  }
+]

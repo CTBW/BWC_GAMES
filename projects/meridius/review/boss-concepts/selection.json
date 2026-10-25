@@ -1,0 +1,32 @@
+{
+  "updated": "2026-10-24",
+  "source": "inbox/attachments/2026-10-24/image-114841-7b97c70b.png",
+  "active": [
+    "sanguine_delver",
+    "rauk",
+    "veyr",
+    "widow",
+    "giant_troll",
+    "pale_colossus"
+  ],
+  "retained": [
+    "sanguine_delver",
+    "rauk",
+    "veyr",
+    "widow",
+    "pale_colossus"
+  ],
+  "removed": [
+    "edratha",
+    "widow_arachne",
+    "oath_eater",
+    "crown"
+  ],
+  "replacements": [
+    {
+      "old": "crown",
+      "new": "pale_colossus"
+    }
+  ],
+  "note": "Six-design roster unchanged. Troll take 4 shoulder/back ruins are user-approved as a feature. Takes 5 and 6 are saved intermediate stone studies with documented failures. Take 7 is prepared but blocked by Higgsfield Quick check; no new job has been registered. Preserve all originals."
+}

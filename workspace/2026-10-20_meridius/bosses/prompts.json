@@ -1,0 +1,82 @@
+{
+  "provider": "Higgsfield website",
+  "browser": "Brave",
+  "model": "Nano Banana Pro",
+  "unlimitedRequired": true,
+  "inputMode": "per-prompt",
+  "order": [
+    "sanguine_delver",
+    "rauk",
+    "veyr",
+    "widow",
+    "giant_troll",
+    "pale_colossus"
+  ],
+  "prompts": [
+    {
+      "id": "boss_sanguine_delver",
+      "name": "The Sanguine Delver",
+      "file": "boss_sanguine_delver__take-01.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "text-only",
+      "references": [],
+      "prompt": "MERIDIUS BOSS CONCEPT — THE SANGUINE DELVER. Original design from this written brief; no image references.\n\nCREATURE: A long, low rust-red crawler with a broad armoured head, paired hooked mouthparts and many short splayed legs. Overlapping dark-red shell plates rise into a few heavy fungal shelves; blood-filled translucent sacs hang beneath the flanks. Its pale underside contrasts with the red-black shell. It remains recognisably a scuttling animal beneath the fungus.\n\nCOMPOSITION: Design an original colossal blood-crawler. A broad armoured head with hooked mouthparts, elongated segmented rust-red body, many short splayed legs, overlapping red-black carapace plates, heavy fungal shelves and translucent blood sacs beneath the flanks. It is a creature carrying a fungal ecosystem, not a red dragon or a mushroom with legs. Show it traversing a newly invented abandoned terraced quarry: fresh dark blood stains near it, muted crimson fungal fans farther out, and an older terrace visibly hollowed and slumping into a shallow sinkhole. Preserve broad stable stone haulways and one readable escape circuit. Six tiny blue-and-cream company squads establish scale, one bracing near the maw and two separated at a vent. Restrained non-graphic blood and diseased soil; no piles of bodies.\n\nSCALE: About 24 metres long. Exactly six tiny blue-and-cream human squads provide scale; they are separated formations, not six giant individuals. One boss only, no other creatures. Leave broad readable movement routes.\n\nSTYLE: Detailed hand-painted fantasy tactics illustration. Broad crisp brush shapes, textured natural materials, muted warm highlights and cool blue-green shadows. Elevated three-quarter strategy view with near-parallel perspective. Coherent upper-left light. Avoid glossy 3D, photorealism, heavy comic outlines and pixel filters.\n\nOUTPUT: One 16:9 landscape composition. Keep the whole essential silhouette in frame with generous margin; only the Crown’s buried body may remain underground. No text, labels, HUD, grid, border, watermark, collage or reference insets. This is concept artwork, not a final game asset."
+    },
+    {
+      "id": "boss_rauk",
+      "name": "Rauk, the Last Bell",
+      "file": "boss_rauk__take-01.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "text-only",
+      "references": [],
+      "prompt": "MERIDIUS BOSS CONCEPT — RAUK, THE LAST BELL. Original design from this written brief; no image references.\n\nCREATURE: A slab-bodied grey ogre beneath an asymmetrical timber-and-iron bell yoke. An enormous cracked bronze bell hangs beside its chest; one hand grips its rim and the other drags a gatehook. Scarred skin, blunt tusks, chain bites and faded red Host cloth. The bell is almost the size of a cottage.\n\nCOMPOSITION: Show Rauk at the instant before a lateral bell swing, the bell rim larger than a six-soldier shield squad. His full body, yoke, bell, hook and feet fit inside the frame. Place six small blue-and-cream company squads around a newly designed ruined ridge signal court, two bracing separately in front and reserves visibly offset. No literal coloured game overlays. The enormous bronze bell and grey organic body must dominate, with generous readable ground between combatants.\n\nSCALE: About 12 metres tall. Exactly six tiny blue-and-cream human squads provide scale; they are separated formations, not six giant individuals. One boss only, no other creatures. Leave broad readable movement routes.\n\nSTYLE: Detailed hand-painted fantasy tactics illustration. Broad crisp brush shapes, textured natural materials, muted warm highlights and cool blue-green shadows. Elevated three-quarter strategy view with near-parallel perspective. Coherent upper-left light. Avoid glossy 3D, photorealism, heavy comic outlines and pixel filters.\n\nOUTPUT: One 16:9 landscape composition. Keep the whole essential silhouette in frame with generous margin; only the Crown’s buried body may remain underground. No text, labels, HUD, grid, border, watermark, collage or reference insets. This is concept artwork, not a final game asset."
+    },
+    {
+      "id": "boss_veyr",
+      "name": "Veyr, the Cinder-Crowned",
+      "file": "boss_veyr__take-01.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "text-only",
+      "references": [],
+      "prompt": "MERIDIUS BOSS CONCEPT — VEYR, THE CINDER-CROWNED. Original design from this written brief; no image references.\n\nCREATURE: An ancient heavy dragon with a low crocodilian head, a crown of broken backward horns, charcoal slate plates and an ember-lit breast visible between overlapping ribs of armour. Broad ochre wing membranes have old tears, thick forelimbs grip the ground, and a long weighted tail balances the creature. Four legs plus two wings, clearly separate.\n\nCOMPOSITION: Show the entire ancient dragon in a newly designed open volcanic caldera, its enormous breast plates opening around a contained furnace glow. Four legs and two separate broad ochre wings, cracked backward horn crown, charcoal slate scales and a weighted tail. Arrange six small blue-and-cream squads behind distinct basalt heat baffles and on open cool shelves. The dragon should dominate the frame while both flanks and useful ground remain readable. Do not reproduce the cave, magenta backdrop or scenery composition from a style image. Avoid glossy cinematic photorealism, a floating fireball body or an unreadable screen of flames.\n\nSCALE: About 30 metres nose to tail. Exactly six tiny blue-and-cream human squads provide scale; they are separated formations, not six giant individuals. One boss only, no other creatures. Leave broad readable movement routes.\n\nSTYLE: Detailed hand-painted fantasy tactics illustration. Broad crisp brush shapes, textured natural materials, muted warm highlights and cool blue-green shadows. Elevated three-quarter strategy view with near-parallel perspective. Coherent upper-left light. Avoid glossy 3D, photorealism, heavy comic outlines and pixel filters.\n\nOUTPUT: One 16:9 landscape composition. Keep the whole essential silhouette in frame with generous margin; only the Crown’s buried body may remain underground. No text, labels, HUD, grid, border, watermark, collage or reference insets. This is concept artwork, not a final game asset."
+    },
+    {
+      "id": "boss_widow",
+      "name": "The Widow of the King's Road",
+      "file": "boss_widow__take-01.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "text-only",
+      "references": [],
+      "prompt": "MERIDIUS BOSS CONCEPT — THE WIDOW OF THE KING'S ROAD. Original design from this written brief; no image references.\n\nCREATURE: An immense low black-brown spider with eight long articulated legs, a pale split saddle pattern on the abdomen and heavy ivory mouthparts. A hanging fan of coarse silk makes a royal-looking train. Old brass waymarks and snapped axle wood cling to the silk, never forming armour over every joint.\n\nCOMPOSITION: Show the full gigantic eight-legged spider suspended just above newly designed aqueduct terraces, with its ivory mouthparts and swollen saddle-marked abdomen clearly readable. Use broad ribbons of coarse silk under visible tension, not fog or thousands of tiny lines. Six small human company squads occupy separate masonry platforms and tether posts. Keep all eight leg roots and enough leg segments visible to read the anatomy, with clear combat space beneath.\n\nSCALE: About 20 metres across the legs. Exactly six tiny blue-and-cream human squads provide scale; they are separated formations, not six giant individuals. One boss only, no other creatures. Leave broad readable movement routes.\n\nSTYLE: Detailed hand-painted fantasy tactics illustration. Broad crisp brush shapes, textured natural materials, muted warm highlights and cool blue-green shadows. Elevated three-quarter strategy view with near-parallel perspective. Coherent upper-left light. Avoid glossy 3D, photorealism, heavy comic outlines and pixel filters.\n\nOUTPUT: One 16:9 landscape composition. Keep the whole essential silhouette in frame with generous margin; only the Crown’s buried body may remain underground. No text, labels, HUD, grid, border, watermark, collage or reference insets. This is concept artwork, not a final game asset."
+    },
+    {
+      "id": "boss_giant_troll",
+      "name": "The Giant Troll",
+      "file": "boss_giant_troll__take-07.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "targeted-reference-edit",
+      "references": [
+        "projects/meridius/references/characters/bosses/concepts/references/ancient-troll-user-reference.png",
+        "projects/meridius/references/characters/bosses/concepts/references/approved-troll-shoulder-ruins.png"
+      ],
+      "prompt": "Make a SINGLE hero illustration of the CENTRAL STANDING WOODLAND TROLL from the supplied three-troll sheet. Reproduce that particular troll faithfully: its extremely long drooping nose, tiny yellow eyes half hidden by hair, dark shaggy root-like hair and long tangled beard with old pendants, massive lumpy grey arms, turquoise spirals, thick standing legs and huge feet. Keep its creature face and anatomy; do not replace it with a human old man. Age it further with coarse pale granite texture, mineral speckles, weathered stone cracks, chipped knuckles and lichen over all exposed grey surfaces. It is living stone shaped like this exact woodland troll, not armour or a pile of separate boulders.\n\nABSOLUTELY NO VISIBLE EARS. Long dense hair lies flat over the sides of the head from temples to shoulders, with an uninterrupted hair silhouette. No pointed ears, human ears, holes, stumps or earrings anywhere.\n\nAdd the SAME TWO broken cottage wall fragments shown in the separate cropped shoulder reference, matching their shapes, empty windows, cream plaster, exposed stone and snapped timber. They sit naturally across the upper back and shoulders, foundations rooted into the troll's mossy stone, as if built on him during centuries of sleep. Keep them ruined and roofless, with only a few low roots. No complete houses or tall trees.\n\nHe stands upright and hulking like the central reference troll, legs extended, heavy shoulders slightly rounded, holding one rough tree-club low beside him. Full body and club in view. About four to five human heights, with a few blue-and-cream soldiers nearby for scale. Ancient forest clearing, earthy daylight. Match the woodland troll sheet's exact detailed hand-painted Meridius rendering, controlled contours, material shading and palette.\n\nONE TROLL, ONE UNBROKEN SCENE, front three-quarter view, landscape 16:9. No second view, back view, divider, comparison, numbers, captions, letters or other text. No white studio background. The supplied woodland troll's species likeness, no visible ears, stone surfaces and the approved shoulder ruins are essential."
+    },
+    {
+      "id": "boss_pale_colossus",
+      "name": "The Pale Colossus",
+      "file": "boss_pale_colossus__take-04.png",
+      "aspect": "16:9",
+      "quality": "2K",
+      "inputMode": "targeted-reference-edit",
+      "references": [
+        "projects/meridius/references/characters/bosses/concepts/boss_pale_colossus__take-03.png"
+      ],
+      "prompt": "EDIT ONLY THE TWO EYES IN THE ATTACHED APPROVED COLOSSUS IMAGE. Change the two existing black circular eye cavities into GLOWING AQUA EYES: luminous saturated aqua / turquoise-cyan light shining from inside both sockets, with bright aqua centres, a soft restrained halo at the inner edges and a little aqua reflected light on the immediate stone rims. Keep the exact round eye shapes, sizes and positions. The eyes are magical light within the existing cavities, without eyeballs, pupils, lenses, tears or beams. Keep the light local to the eyes and clearly aqua rather than white or dark blue. Preserve the smooth plain black stone mask with absolutely NO NOSE AND NO MOUTH and the short horizontal stone projections. Preserve every other feature of this image: the black and charcoal armour, muted dark-red carvings, dark fur, body proportions, pose, slab sword, soldiers, pale sunlit limestone background, lighting, painted style and full-body framing. Do not recolour the body, brighten the red accents, add glowing cracks, change the mask shape or redesign the character. One continuous 16:9 image, same composition. Only the two eye interiors and their very subtle local glow should change."
+    }
+  ]
+}

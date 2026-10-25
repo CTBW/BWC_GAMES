@@ -1,0 +1,238 @@
+[
+  {
+    "subject": "boss_giant_troll",
+    "take": 6,
+    "status": "needs_single_scene_and_ear_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Weathered stone surfaces, mineral mottling and darker hair are much stronger. However, the result is an unwanted numbered front/back comparison instead of one scene; small human-like ears remain, and the face is still broad and human-like. Preserve this material study, not a final design. Take 7 uses only the original troll species and approved ruin crop, avoiding numbered reference roles and the earlier body references.",
+    "fullSize": "2752 x 1536 original downloaded and inspected; canonical and local original hashes match.",
+    "battleScale": "The stone material reads, but the divided composition and visible ear shapes fail the requested delivery.",
+    "userSelection": "intermediate_correction"
+  },
+  {
+    "subject": "boss_giant_troll",
+    "take": 5,
+    "status": "needs_species_and_stone_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Both protruding ears are removed and the approved two ruined wall clusters stay very close to take 4. The nose becomes longer and more angular. However, the face still resembles the earlier human elder, the beard remains groomed and grey, and most torso and limb surfaces still read as smooth muscle with only light cracks. Preserve as an intermediate ear-removal take. Take 6 removes the full-body base from the input set and instead uses the species sheet, approved ruin crop and Footman rendering reference.",
+    "fullSize": "2752 x 1536 original downloaded and inspected; canonical and local original hashes match.",
+    "battleScale": "The ruins and standing silhouette remain clear, but stone material and species identity need stronger change.",
+    "userSelection": "intermediate_correction"
+  },
+  {
+    "subject": "boss_giant_troll",
+    "take": 4,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The troll now stands on planted feet with higher hips, long visible thighs and shins, substantially straighter legs and a broad upright chest. His rounded shoulders preserve the hulking elder silhouette. Four soldiers beside his feet are much larger relative to him, establishing a smaller giant roughly four to five human heights. The long hooked nose, lined grey face, silver beard, old charms and turquoise markings remain. Two broken wall and timber fragments replace the complete cottages; the tall back trees are gone and roots are reduced. Full feet, hanging hand and shorter log club fit inside the frame. The ruined wall pieces remain substantial but read clearly as abandoned fragments, not complete houses.",
+    "fullSize": "Original downloaded and visually inspected at 2752 x 1536; canonical and local gallery originals have identical SHA-256 hashes. The report uses a 2048-pixel WebP preview.",
+    "battleScale": "Upright stance, broad shoulders, old beard, reduced human-relative scale and broken shoulder ruins remain legible in the reduced preview.",
+    "userSelection": "revision_awaiting_review",
+    "userApprovedFeatures": [
+      "Shoulder and back ruined houses, as if people built on him while he slept."
+    ],
+    "userRequestedRevision": "Stone-like body, closer identity to supplied troll species, no ears, Meridius style consistency. Whole-character approval is not implied."
+  },
+  {
+    "subject": "boss_giant_troll",
+    "take": 3,
+    "status": "needs_posture_and_scale_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Tall back trees are removed and the four roofed houses become two broken wall and timber clusters. The old face, beard and materials remain consistent. However, the low hips, deeply bent legs and tiny soldiers preserve the crouching pose and oversized scale. This take is an intermediate debris correction; take 4 adds the supplied standing troll as a posture reference and rebuilds the composition.",
+    "fullSize": "Original downloaded and visually inspected at 2752 x 1536; canonical and local gallery original hashes match.",
+    "battleScale": "Ruin treatment reads clearly, but the silhouette remains crouched and too large relative to humans.",
+    "userSelection": "intermediate_correction"
+  },
+  {
+    "subject": "boss_giant_troll",
+    "take": 2,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The redesign has an unmistakably old face, a long hooked nose, drooping ears, deep wrinkles and a silver-streaked beard and hair. Four small weathered timber-and-thatch houses sit across the shoulders and broad back, with exposed roof rafters, cracked plaster, stone footings and a chimney matching the terrain cottage. Thick old roots connect the houses and dead trunks to his mossy skin; fungi, charms and turquoise markings echo the supplied troll reference. The face, full body, hands, feet and vertical root-ended club are readable. The uppermost back-tree branches leave the frame, and troops form four groups rather than six; resolve those on a later modeling or encounter sheet if selected.",
+    "fullSize": "Original downloaded and visually inspected at 2752 × 1536. Canonical original and report copy have identical SHA-256 hashes.",
+    "battleScale": "The beard, long nose, cottage silhouettes, roots and towering scale read clearly at the reduced gallery size.",
+    "userSelection": "revision_awaiting_review"
+  },
+  {
+    "subject": "boss_pale_colossus",
+    "take": 4,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "approvedSourceTake": 3,
+    "summary": "Both round eye sockets now shine with saturated aqua/turquoise light and a small local halo. The smooth mask still has no nose or mouth. Its shape, side projections, black and charcoal armour and fur, dark-red carvings, pose, slab sword and sunlit limestone scene remain consistent with the approved third take. Full body and sword fit. Take 3 remains preserved as the user-approved base; this eye-colour revision awaits user review.",
+    "fullSize": "Original downloaded and visually compared with take 3 at 2752 × 1536. Intact PNG; canonical and gallery copies hash-verified.",
+    "battleScale": "The aqua eyes are legible in the reduced preview without washing out the dark mask or overpowering the red details.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_pale_colossus",
+    "take": 3,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": true,
+    "summary": "The focused correction succeeds: a smooth dark stone mask has only two hollow black eye sockets, with no nose, nasal cavity, mouth or tooth-like marks. Short lateral stone projections are restored. Black and charcoal armour and fur, muted dark-red carved details, the slab sword, standing pose and bright limestone setting remain consistent with the palette study. Full body and sword fit in frame. The three soldier groups and soft background remain illustration limitations for a later encounter pass.",
+    "fullSize": "Original downloaded and inspected at 2752 × 1536. PNG integrity and canonical/report SHA-256 hashes verified.",
+    "battleScale": "The plain mask and two empty black eyes remain distinct. The dark figure separates clearly from the pale background; red accents remain restrained.",
+    "userSelection": "retained",
+    "userFeedback": "User likes the new colossus and requests glowing aqua eyes only."
+  },
+  {
+    "subject": "boss_pale_colossus",
+    "take": 2,
+    "status": "needs_face_cleanup",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The black and charcoal materials, near-black fur and muted dark-red carvings succeed, and the body, sword and bright scene remain close to take 1. Both eye cavities are fully black. The head becomes skull-like, retaining a small nasal recess and mouth-like notches; the lateral head projections are also omitted. Preserve this palette study and make a focused head correction.",
+    "fullSize": "Original downloaded and visually inspected at 2752 × 1536; PNG and SHA-256 verified.",
+    "battleScale": "The dark body reads clearly against the pale limestone basin; the black eye sockets remain visible.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_pale_colossus",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The remake follows the supplied standing colossus closely: cylindrical mask, round amber eyes, lateral projections, asymmetric layered stone armour, fur-covered waist and arms, segmented long legs and a slab sword. The requested lighter beige-grey stone and warm light-grey fur are clearly achieved. The entire body, feet and sword fit in frame. Soldiers form three groups rather than six; the softer background and squad staging can be refined in a later encounter pass.",
+    "fullSize": "Original downloaded and compared visually with the supplied reference; intact PNG, 2752 × 1536.",
+    "battleScale": "The head, broad shoulders, narrow waist, long legs and sword stay distinct in the reduced preview. The pale armour is much lighter than the supplied reference.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_giant_troll",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong hunched troll silhouette with enormous shoulders and long arms, a clear broad-nosed tusked face, scarred earthy skin, sparse moss and a tree-trunk club. Both feet and hands are readable. The outer club roots approach the right image edge, and soldiers form about five groups; isolate the complete prop and refine squad staging in a later reference pass.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The head, hunched shoulder mass, grounded fist and club remain readable in the reduced Higgsfield preview."
+  },
+  {
+    "subject": "boss_veyr",
+    "take": 3,
+    "status": "needs_framing_correction_attempt_limit_reached",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The final edit again preserves almost the same composition instead of zooming out. Both upper wings remain cropped, and only three ground feet are clearly visible. This is useful as a character-direction concept, but not a complete modeling reference. Three Veyr takes are preserved; stop this correction loop and resolve full wing framing and four-leg anatomy in a later clean reference-sheet pass after selection.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The dragon's head, furnace chest and tail remain distinct. The cropped wing silhouette remains an unresolved limitation.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_veyr",
+    "take": 2,
+    "status": "needs_framing_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The reference edit preserves the dragon design but does not resolve the main issue: both upper wings still extend outside the canvas. The far hind leg remains unclear. Preserve as an intermediate take; a final framing-focused edit requests a much more distant view.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "Head, chest and tail remain readable. Wing cropping is still visible even at reduced scale.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_rauk",
+    "take": 2,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "The targeted edit resolves the hidden head and missing gatehook: Rauk's tusked face is visible beside the bell, one hand grips its rim, and the free hand holds a large iron hook. The full yoke, body and feet remain in frame. Preferred concept take for selection. The roughly four main squad groups still need later encounter staging.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The face, bell and gatehook now form distinct readable shapes in the reduced preview.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_crown",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong capstone direction: fused stone crown, one lit eye, giant hands, shoulder ruins and an exposed binding-heart. Six small squads read as two groups of three on the shoulder terraces. The buried torso and curved rim communicate a single enormous organism. Later model planning must clarify traversable shoulder ground and the outer connection.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The head, hands, heart and paired squad groups remain distinct in the reduced preview.",
+    "userSelection": "removed"
+  },
+  {
+    "subject": "boss_oath_eater",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Clear wolf-man silhouette, long grasping forearms, cream throat, blue sash and broken eagle shields. The full body reads well. The image adds magical shield bubbles and decorative stone lettering; these are illustration choices, not approved gameplay. Squad staging remains to be refined.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The mane, face, long arms and braced stance stay legible in the reduced preview.",
+    "userSelection": "removed"
+  },
+  {
+    "subject": "boss_widow_arachne",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Readable adult hybrid with two human arms, a large spider abdomen, ivory mouthparts and no human legs. The silhouette and silk gesture work well. Clarify the waist junction and far-side leg roots on the modeling sheet; squad count and platform layout still need an encounter staging pass.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The female upper body, abdomen and silk gesture remain distinct in the reduced preview. The dark waist-to-shell junction needs stronger separation for a model reference.",
+    "userSelection": "removed"
+  },
+  {
+    "subject": "boss_widow",
+    "take": 1,
+    "status": "concept_reviewed_anatomy_cleanup_needed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong pale saddle pattern, ivory mouthparts, coarse silk and aqueduct setting. The leg roots overlap, so the exact eight-leg construction needs a clearer modeling-reference pass. The four main squad platforms also need later staging refinement.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The abdomen, mouthparts and major silk anchors remain distinct in the reduced preview. Leg roots are too crowded to verify the full anatomy at that scale.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_edratha",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Clear wooden matriarch with embedded faces, black sap, wine-red foliage and a small triangular graft. Open root islands read well. The arena is sparse and squads read as four main groups; refine formation placement for a later encounter illustration.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The face, trunk, major arms and root islands remain readable in the reduced preview; smaller chorus faces become secondary texture.",
+    "userSelection": "removed"
+  },
+  {
+    "subject": "boss_veyr",
+    "take": 1,
+    "status": "needs_framing_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong slate armour, low dragon head and contained furnace chest. Needs a wider framing pass: upper wings are cut by the image edge, the far hind leg is obscured, and the squads are not exactly six separated formations. Preserve this creature direction while improving the full silhouette.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "The head, glowing breast and tail remain distinct at reduced display size. Wing tips remain cropped.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_rauk",
+    "take": 1,
+    "status": "needs_correction",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong bell mass and painted material treatment. Needs correction: the bell obscures the head, the gatehook is missing, and the company reads as about four groups rather than six separated squads. Retained as an exploratory take, not an approved model reference.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "Main bell and body remain distinct at reduced display size; head and hook fail silhouette readability.",
+    "userSelection": "retained"
+  },
+  {
+    "subject": "boss_sanguine_delver",
+    "take": 1,
+    "status": "concept_reviewed",
+    "agentReviewed": true,
+    "userApproved": false,
+    "summary": "Strong creature direction: readable armoured crawler, hooked mouthparts, pale underside, sacs and fungal shelves. The quarry shows a collapsed terrace. Further staging work is needed for six clearly separated squads and a wider continuous escape circuit.",
+    "fullSize": "Original downloaded and visually inspected; intact PNG, 2752 × 1536.",
+    "battleScale": "Head, shell, sacs and fungal shelves remain readable in the reduced preview. Combat formations merge in the foreground.",
+    "userSelection": "retained"
+  }
+]

@@ -54,6 +54,22 @@ projects/meridius/references/characters/goblin_*/*.png
 !projects/meridius/references/characters/goblin_archer/source_crop.png
 !projects/meridius/references/characters/goblin_spear/source_crop.png
 !projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
+# Terrain and boss art is public as WebP copies in its Workspace card; the
+# reference library's full-size PNGs stay local.
+projects/meridius/references/backgrounds/terrain/**/*.png
+projects/meridius/references/style/terrain/**/*.png
+projects/meridius/references/characters/bosses/concepts/**/*.png
+# Owner-supplied style guides and boss references, and a Higgsfield site screenshot.
+workspace/2026-10-20_meridius/terrain/references/*.png
+workspace/2026-10-20_meridius/terrain/northern-night-higgsfield.png
+workspace/2026-10-20_meridius/bosses/references/*.png
+# Sovereign Kiss Higgsfield icons and their concept pack are not approved for publishing.
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-fog-b.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-warcraft-a.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-higgsfield-v1.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-fog-concept-pack.zip
+# Mixamo-derived animation exports are not redistributable.
+workspace/2026-10-20_meridius/motion-study/mixamo/*.glb
 # Tripo downloads in the owner's Chrome save folder; tripo/<unit>/ holds the copies.
 projects/meridius/references/characters/FBX/
 

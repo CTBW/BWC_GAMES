@@ -35,6 +35,10 @@
           "path": "loop1.html"
         },
         {
+          "name": "Sovereign Kiss",
+          "path": "sovereign-kiss.html"
+        },
+        {
           "name": "Terrain, towns and map edges",
           "path": "terrain-prompts.html"
         },

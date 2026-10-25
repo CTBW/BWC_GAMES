@@ -1,7 +1,7 @@
 // Pose viewer for the Meridius 3D rig tabs (footman, crossbowman, spearman, succubus, mage).
 // The page supplies #viewer-config ({base, clips, start, key}) and #frames-data
 // (the frames.json of its sheets) as JSON script tags, and the viewer markup.
-// The detail zoom (up to 8x, at the pointer) is added here, so every page loading this file has it.
+// The detail zoom (up to 4x, at the pointer) is added here, so every page loading this file has it.
 // Sheets may be rendered larger than the canvas: frames.json "scale" is sheet pixels per canvas
 // pixel (default 1), and then a frame's x, y, w and h are in sheet pixels. See README.md.
 (() => {
@@ -27,7 +27,7 @@
   let acc = 0, last = 0;
   // Detail zoom: magnification d over the fitted picture and the canvas point (ox, oy) at its top left.
   // Every facing shares it, so "All four" shows the same region of each.
-  const MAX_DETAIL = 8;
+  const MAX_DETAIL = 4;
   const view = { d: 1, ox: 0, oy: 0 };
 
   function chips(el, items, key) {
@@ -134,7 +134,7 @@
     '<span class="vdetail-value" aria-live="polite">1×</span>' +
     '<button class="vbtn" data-detail="in" title="Zoom in (+)" aria-label="Zoom in">+</button>' +
     '<button class="vbtn" data-detail="fit" title="Fit the picture (0)">Fit</button>' +
-    '<span class="vhint">Scroll up on the picture to zoom in where you point, up to 8×. Drag to move, double-click to fit.</span>';
+    '<span class="vhint">Scroll up on the picture to zoom in where you point, up to 4×. Drag to move, double-click to fit.</span>';
   ($("readout").closest(".readout") || $("stage")).before(bar);
   const detailValue = bar.querySelector(".vdetail-value");
   bar.addEventListener("click", (e) => {

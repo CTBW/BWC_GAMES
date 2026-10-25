@@ -22,7 +22,7 @@ copyable frame reference and the detail zoom.
 ## Detail zoom
 
 `viewer.js` adds a Detail bar under the playback controls. You can zoom up to
-8× at the pointer:
+4× at the pointer:
 
 - Scroll up on the picture to zoom in.
 - Drag to move.

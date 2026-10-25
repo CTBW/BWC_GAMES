@@ -69,7 +69,7 @@ model/clip files, bind-basis failures and turn-to-locomotion handoff.
 
 Present clips for review in the Workspace's shared frame viewer when it has one
 (Meridius: `workspace/2026-10-20_meridius/rig-viewer/README.md`), first on the
-page. It steps frames, shows each facing and zooms up to 8x so the user can
+page. It steps frames, shows each facing and zooms up to 4x so the user can
 find flaws.
 
 Deliver editable source, runtime export, source references, review evidence and

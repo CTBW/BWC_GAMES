@@ -31,6 +31,7 @@ var v # the BattleView
 var font: Font
 var _sorted_mat: ShaderMaterial
 var _props: Array = [] # static prop list (positions, sprites, boxes)
+var _ring: Array = [] # the forest ring's near side, as _props entries (draw_outer fills it)
 var _minimap_key := ""
 
 
@@ -235,12 +236,29 @@ func draw_background(ci: CanvasItem) -> void:
 
 ## Paint the decorative forest ring beyond the field into the ground layer,
 ## back to front, once (bakeOuter). It never changes, so a large field does not
-## redraw hundreds of trees every frame, and it is always drawn behind the
-## squads, so the forest at the near edges never hides a soldier.
+## redraw hundreds of trees every frame. The far side (behind the field) is
+## painted whole; on the near side only the shadows are, and the trees go to
+## the sorted pass (`_ring`), so they stand in front of what is behind them on
+## the field and fade over the squads they hide (_ring_fades).
 func draw_outer(ci: CanvasItem) -> void:
 	Assets.draw_base = Transform2D.IDENTITY
+	_ring.clear()
+	for pr in outer_props():
+		Assets.draw_cast_shadow(ci, pr.s, pr.px, pr.py, pr.flip, pr.sc, 0.2 if pr.tree else 0.16)
+		if pr.near:
+			pr["ri"] = _ring.size()
+			_ring.append(pr)
+		else:
+			Assets.draw_sprite(ci, pr.s, pr.px, pr.py, pr.flip, pr.sc)
+
+
+## The forest ring's props where draw_outer puts them, back to front, as
+## _prop_list entries with their scale `sc`; `near`: beyond the field's near
+## edges (x >= w or y >= h), in front of the field's edge tiles.
+func outer_props() -> Array:
 	var outer: Array = v.surroundings.props.duplicate()
 	JS.sort(outer, func(a, q): return a.x + a.y - (q.x + q.y))
+	var list := []
 	for o in outer:
 		var s := Assets.sprite(_prop_sprite(o.prop), o.v)
 		if s.is_empty():
@@ -249,8 +267,12 @@ func draw_outer(ci: CanvasItem) -> void:
 		var py := Iso.iso_y(o.x, o.y, o.h) + (Rng.hash2(o.x, o.y, 6) - 0.5) * 20
 		var flip: bool = not s.noShadow and Rng.hash2(o.x, o.y, 9) > 0.5
 		var sc := 0.9 + Rng.hash2(o.x, o.y, 3) * 0.35
-		Assets.draw_cast_shadow(ci, s, px, py, flip, sc, 0.2 if String(o.prop).begins_with("tree") else 0.16)
-		Assets.draw_sprite(ci, s, px, py, flip, sc)
+		var k: float = s.scale * sc
+		var bx0: float = px - (s.w - s.ax) * k if flip else px - s.ax * k
+		list.append({"x": o.x, "y": o.y, "px": px, "py": py, "s": s, "flip": flip, "d": float(o.x + o.y),
+			"tree": String(o.prop).begins_with("tree"), "near": o.x >= v.b.map.w or o.y >= v.b.map.h,
+			"bx0": bx0, "bx1": bx0 + s.w * k, "by0": py - s.ay * k, "k": k, "sc": sc})
+	return list
 
 
 static func _prop_sprite(prop: String) -> String:
@@ -770,11 +792,12 @@ func draw_sorted(ci: CanvasItem) -> void:
 			var col := floori(p.x / 128.0)
 			if not boxes.has(col):
 				boxes[col] = []
-			boxes[col].append([p.x, p.y, uv.x + uv.y])
+			boxes[col].append([p.x, p.y, uv.x + uv.y, uv])
 	# Where the selected squad is about to go: a ghost formation. Walls and
 	# trees in front of it fade as they would over a squad, so the facing
 	# arrow at a gateway stays in sight.
 	var ghost = move_ghost()
+	var ring_fades := _ring_fades(boxes, ghost)
 	var items := {}
 	var keys := PackedFloat64Array()
 	var n := [0]
@@ -785,7 +808,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 		items[key] = item
 		keys.append(key)
 		n[0] += 1
-	for pr in _prop_list():
+	for pr in _prop_list() + _ring:
 		if pr == null:
 			continue
 		var px: float = pr.px
@@ -801,7 +824,9 @@ func draw_sorted(ci: CanvasItem) -> void:
 		var bx0: float = pr.bx0
 		var bx1: float = pr.bx1
 		var by0: float = pr.by0
-		if ghost != null and ghost.at.x + ghost.at.y < d:
+		if pr.has("ri"):
+			alpha = ring_fades.get(pr.ri, 1.0)
+		elif ghost != null and ghost.at.x + ghost.at.y < d:
 			for mk in ghost.marks:
 				var wx: float = mk.x
 				var wy: float = mk.y
@@ -810,7 +835,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 				if Assets.opaque_at(s, s.ax - (wx - px) / k if flip else s.ax + (wx - px) / k, s.ay + (wy - py) / k):
 					alpha = 0.28
 					break
-		if alpha == 1.0:
+		if alpha == 1.0 and not pr.has("ri"):
 			for col in range(floori((bx0 - 30) / 128.0), floori((bx1 + 30) / 128.0) + 1):
 				var list = boxes.get(col)
 				if list == null:
@@ -842,7 +867,7 @@ func draw_sorted(ci: CanvasItem) -> void:
 		pr["fadeTime"] = time
 		var sway := sin(time * 0.9 + pr.x * 0.7 + pr.y * 0.3) * 0.012 if pr.tree else 0.0
 		push.call(d, [K_PROP, pr, alpha, sway])
-	# The forest ring beyond the field is painted into the ground layer (bakeOuter).
+	# The far side of the forest ring is painted into the ground layer (bakeOuter).
 	# The fallen lie where they dropped, under the living.
 	for c in v.corpses:
 		if absf(c.wx - cx) < hw and c.wy - cy > -hh - 60 and c.wy - cy < hh + 420:
@@ -900,6 +925,62 @@ const K_RIDER := 5
 const OFFS := [Vector2(0, -22), Vector2(0, -44), Vector2(-26, -30), Vector2(26, -30), Vector2(0, -62)]
 
 
+## How far each tree of the forest ring's near side fades this frame, by its
+## index in _ring. A tree fades over a soldier it covers, over the tile under
+## the pointer and over the ghost formation. They stand several deep in front
+## of the field's edge rows, so each fades until all those over the same squad
+## (or tile, or ghost) veil it no more than one field prop does (to 0.28).
+func _ring_fades(boxes: Dictionary, ghost) -> Dictionary:
+	var marks := []
+	var hover = v.ui.hover.get("tile")
+	if hover != null:
+		var at := Vector2(Iso.iso_x(hover.x, hover.y), Iso.iso_y(hover.x, hover.y, v._tile_h(hover.x, hover.y)))
+		marks.append(["hover", at, hover.x + hover.y])
+	if ghost != null:
+		for mk in ghost.marks:
+			marks.append(["ghost", Vector2(mk.x, mk.y), ghost.at.x + ghost.at.y])
+	var hits := {}
+	var count := {}
+	for pr in _ring:
+		var over := {}
+		for m in marks:
+			if m[2] < pr.d and _covers(pr, m[1]):
+				over[m[0]] = true
+		for col in range(floori((pr.bx0 - 64) / 128.0), floori((pr.bx1 + 64) / 128.0) + 1):
+			for ub in boxes.get(col, []):
+				if ub[2] > pr.d + 0.2 or ub[0] + 64 < pr.bx0 or ub[0] - 64 > pr.bx1 or ub[1] < pr.by0 or ub[1] - 70 > pr.py:
+					continue
+				for m in ub[3].members:
+					if m.alive and _covers_body(pr, v._member_pos(ub[3], m) - Vector2(0, ub[3].hop)):
+						over[ub[3].uid] = true
+						break
+		if not over.is_empty():
+			hits[pr.ri] = over.keys()
+			for key in over:
+				count[key] = count.get(key, 0) + 1
+	var fades := {}
+	for i in hits:
+		var n := 1
+		for key in hits[i]:
+			n = maxi(n, count[key])
+		fades[i] = 1.0 - pow(0.72, 1.0 / n)
+	return fades
+
+
+## Whether a prop entry's opaque pixels cover world point `at`.
+func _covers(pr: Dictionary, at: Vector2) -> bool:
+	if at.x < pr.bx0 or at.x > pr.bx1 or at.y < pr.by0 or at.y > pr.py + 4:
+		return false
+	var s: Dictionary = pr.s
+	var k: float = pr.k
+	return Assets.opaque_at(s, s.ax - (at.x - pr.px) / k if pr.flip else s.ax + (at.x - pr.px) / k, s.ay + (at.y - pr.py) / k)
+
+
+## Whether a prop entry covers a soldier standing at `feet`: his feet, waist or head.
+func _covers_body(pr: Dictionary, feet: Vector2) -> bool:
+	return _covers(pr, feet + Vector2(0, -4)) or _covers(pr, feet + Vector2(0, -18)) or _covers(pr, feet + Vector2(0, -32))
+
+
 ## Something of the squad to draw: soldiers standing or falling, or a war machine's engine.
 func _shows(uv) -> bool:
 	return _has_bodies(uv) or (_engine_stands(uv) and DB.is_engine(v._type_of(uv.uid)))
@@ -925,7 +1006,7 @@ func _draw_item(ci: CanvasItem, it: Array, time: float) -> void:
 	match it[0]:
 		K_PROP:
 			var pr: Dictionary = it[1]
-			Assets.draw_sprite(ci, pr.s, pr.px, pr.py, pr.flip, 1.0, Color(1, 1, 1, it[2]), 1.0, it[3])
+			Assets.draw_sprite(ci, pr.s, pr.px, pr.py, pr.flip, pr.get("sc", 1.0), Color(1, 1, 1, it[2]), 1.0, it[3])
 		K_CORPSE:
 			var c = it[1]
 			var body := SoldierAnim.corpse(c.type, c.variant) if SoldierAnim.animated(c.type) else Assets.sprite("%s_dead" % c.type, c.variant)

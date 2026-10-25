@@ -14,7 +14,8 @@ in local/workspace-originals, like the rock sheet; woodland_sources.json
 records their hashes. Each is graded towards the summer battlefield's
 woodland (GRADE): the same olive foliage and grey-brown bark as the pine,
 beech and oak. Trees whose colour belongs to another season get their own keys
-(tree_oak_autumn, tree_oak_spring) and are not placed yet.
+(tree_oak_autumn, tree_oak_spring) and are not placed yet; the copper beech is
+also a rare summer accent among tree_oak's variants.
 
     python tools/props/woodland_cutout.py [--src assets/terrain/woodland]
         [--kit DIR] [--out assets/sprites/painted] [--manifest assets/sprites.json]
@@ -88,17 +89,22 @@ DROP = [(1350, 2255), (1600, 2255), (1600, 2750), (1120, 2750), (1100, 2600), (1
 DENSITY = 3.0
 # Variants per key: tree_oak and tree_pine draw one in len() by the tile's
 # variant number, so the counts weight them. The summer battlefield's trees:
-# beech, oak and birch twice as common as willow and young oak; pine three
-# times as common as Scots pine and young fir, spruce twice.
+# beech, oak and birch twice as common as willow and young oak, each twice
+# over at slightly different sizes, and one copper beech in 17 for a rare dark
+# red accent; pine three times as common as Scots pine and young fir, spruce
+# twice.
 VARIANTS = {
     "tree_pine": [("pine", 1.0), ("pine", 0.9), ("pine", 1.1), ("spruce", 1.0), ("scots_pine", 1.0),
                   ("fir_young", 1.0), ("spruce", 0.9)],
     "tree_oak": [("beech", 1.0), ("oak", 1.0), ("beech", 0.9), ("birch", 1.0), ("willow", 1.0),
-                 ("oak_young", 1.0), ("birch", 0.9), ("oak", 1.1)],
+                 ("oak_young", 1.0), ("birch", 0.9), ("oak", 1.1),
+                 ("beech", 1.05), ("oak", 0.95), ("beech", 0.95), ("birch", 1.05), ("willow", 0.9),
+                 ("oak_young", 1.1), ("birch", 0.95), ("oak", 1.05), ("copper_beech", 1.0)],
     "bush": [("shrub", 1.0), ("shrub", 0.85), ("shrub", 1.15)],
     "fern": [("fern", 1.0), ("fern", 0.85), ("fern", 1.2)],
-    # Other seasons: red and gold leaves, and the copper beech's dark red,
-    # read as autumn on the green ground; blossom is spring.
+    # Other seasons: red and gold leaves read as autumn on the green ground
+    # (the copper beech's dark red also stands in summer, rarely); blossom is
+    # spring.
     "tree_oak_autumn": [("maple_red", 1.0), ("aspen_gold", 1.0), ("copper_beech", 1.0)],
     "tree_oak_spring": [("blossom", 1.0), ("blossom", 0.9)],
 }

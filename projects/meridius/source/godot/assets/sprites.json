@@ -23405,6 +23405,96 @@
    "h": 978,
    "noShadow": true,
    "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_beech.webp",
+   "ax": 275.0,
+   "ay": 849.2,
+   "scale": 0.35,
+   "w": 1261,
+   "h": 1127,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_oak.webp",
+   "ax": 338.4,
+   "ay": 736.6,
+   "scale": 0.3167,
+   "w": 1206,
+   "h": 978,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_beech.webp",
+   "ax": 275.0,
+   "ay": 849.2,
+   "scale": 0.3167,
+   "w": 1261,
+   "h": 1127,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_birch.webp",
+   "ax": 381.1,
+   "ay": 773.9,
+   "scale": 0.35,
+   "w": 1277,
+   "h": 1028,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_willow.webp",
+   "ax": 367.2,
+   "ay": 732.3,
+   "scale": 0.3,
+   "w": 1179,
+   "h": 973,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_oak_young.webp",
+   "ax": 236.2,
+   "ay": 489.7,
+   "scale": 0.3667,
+   "w": 816,
+   "h": 652,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_birch.webp",
+   "ax": 381.1,
+   "ay": 773.9,
+   "scale": 0.3167,
+   "w": 1277,
+   "h": 1028,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_oak.webp",
+   "ax": 338.4,
+   "ay": 736.6,
+   "scale": 0.35,
+   "w": 1206,
+   "h": 978,
+   "noShadow": true,
+   "art": true
+  },
+  {
+   "file": "res://assets/sprites/painted/woodland_copper_beech.webp",
+   "ax": 344.8,
+   "ay": 773.0,
+   "scale": 0.3333,
+   "w": 1254,
+   "h": 1026,
+   "noShadow": true,
+   "art": true
   }
  ],
  "bush": [

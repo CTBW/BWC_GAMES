@@ -899,3 +899,22 @@ log counts; `ADDED` covers the new keys) and checks every new variant is
 painted, keeps its light (`noShadow`) and has its anchor inside the sprite.
 The woodland sprites have mipmaps; the stones, like the rocks, do not. Native
 battle deploy captures and day and night close-ups of the fallen wood: 0 errors.
+
+### 2026-10-25 - Forest edge in front of the field, copper beech, ground seasons
+
+- Battle: the near side of the forest ring is sorted with the field (it stands
+  in front of the edge rows) and fades over squads, the move ghost and the
+  hovered tile behind it. `battle_draw.gd` `draw_outer` now bakes only the far
+  side and the ring's cast shadows; `_ring_fades` gives all the trees over one
+  squad together the veil of one field prop (0.28). The terrain lab draws its
+  own ring and is unchanged. `test_battle_forest_edge` checks the split and the
+  fades; `tests/visual/capture_forest_edge.gd` captures four battles with the
+  fades settled.
+- `tree_oak` has 17 variants: the eight of kit 2 again at slightly different
+  sizes, and one copper beech, a rare dark red accent in summer (it stays in
+  `tree_oak_autumn` too). `test_assets` pins the count.
+- `terrain_relief.gdshader` has a `season` uniform (0 summer, 1 autumn, 2
+  winter, 3 spring) and `frozen` for ice, for a 3D battlefield prototype that
+  is still local. Season 0 is the battle's ground as before.
+- `tools/props/iso_check.py` draws the 2:1 camera guides over a painting for
+  the isometric art check (`processes/isometric-art-check.md`).

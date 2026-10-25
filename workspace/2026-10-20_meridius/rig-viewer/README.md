@@ -1,7 +1,7 @@
 # Pose viewer
 
 The frame viewer on the Meridius rig tabs: Footman, Crossbowman, Spearman,
-Succubus and Mage. Build every new rig or animation review on it instead of a
+Succubus, Mage and Goblin Rabble. Build every new rig or animation review on it instead of a
 page-specific player, so each one keeps frame stepping, the four facings, the
 copyable frame reference and the detail zoom.
 
@@ -47,6 +47,7 @@ instead of smoothed, so render flaws are not blurred away.
 | Spearman | `spearman_3d/tools/render_clips.sh` | `spearman_3d/tools/pack_sheets.py` |
 | Succubus | `succubus_3d/tools/render_viewer_frames.py` | `crossbowman_3d/tools/build_sheets.py` |
 | Mage | `projects/meridius/review/mage-3d/tools/render_browser_frames.py` | The mage delivery tools beside it |
+| Goblin Rabble | `projects/meridius/references/characters/blender/goblin_rabble/tools/render_clips.py` | `pack_sheets.py` beside it |
 
 Rig folders are under `projects/meridius/source/godot/art/` unless the path says
 otherwise.

@@ -54,7 +54,8 @@ ENGINE_POSES = [('idle_f', 'At rest'), ('atk_f', 'Loosing')]
 IDLE_FRAME = 0.42
 
 # The Character rigs subgroups that are rigs of a unit in units.json.
-RIG_UNITS = {'Footman': 'footman', 'Crossbowman': 'crossbowman', 'Spearman': 'spearman', 'Mage': 'battle_mage'}
+RIG_UNITS = {'Footman': 'footman', 'Crossbowman': 'crossbowman', 'Spearman': 'spearman', 'Mage': 'battle_mage',
+             'Goblin Rabble': 'goblin_rabble'}
 
 HERO = 'media/horde-stand-dawn.jpg'
 

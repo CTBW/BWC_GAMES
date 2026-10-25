@@ -83,6 +83,12 @@
           "subgroup": "Succubus"
         },
         {
+          "name": "Goblin Rabble 3D rig",
+          "path": "goblin-rabble-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Rabble"
+        },
+        {
           "name": "Mixar setup",
           "path": "mixar.html",
           "group": "Character rigs",

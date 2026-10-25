@@ -39,6 +39,8 @@ export interface WorkspaceEntity {
   pinned?: boolean
   /** Starter examples remain visible until explicitly archived. */
   sample?: boolean
+  /** Repository scripts this card's reports may start (desktop/service/launchers.mjs). */
+  launchers?: { id: string; name?: string; path: string }[]
 }
 
 export interface WorkspaceState {

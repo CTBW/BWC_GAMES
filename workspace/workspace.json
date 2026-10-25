@@ -101,6 +101,32 @@
       "defaultStep": 0
     },
     {
+      "id": "sandbox",
+      "title": "Sandbox",
+      "description": "Meridius 3D unit sandbox: every rigged 3D unit on one training ground with hills, the woodland, the fog of war and the night. The button opens it in its own window to try walking, idles, attacks, duels and deaths, and to drill a squad of six footmen.",
+      "type": "standalone",
+      "category": "game",
+      "created": "2026-10-24",
+      "updated": "2026-10-25",
+      "folder": "2026-10-24_sandbox",
+      "steps": [
+        {
+          "name": "Sandbox",
+          "path": "index.html"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0,
+      "launchers": [
+        {
+          "id": "sandbox",
+          "name": "3D unit sandbox",
+          "path": "Meridius Sandbox.cmd"
+        }
+      ]
+    },
+    {
       "id": "my-dream-game",
       "title": "My Dream Game",
       "description": "Mr. Mak 64: a small Sky Islands adventure, with character studies, world layouts and a development board.",

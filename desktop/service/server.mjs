@@ -14,6 +14,7 @@ import { ContextLibrary } from './context.mjs';
 import { groupLabel, taskTitle } from './titles.mjs';
 import { taskEffort } from './effort.mjs';
 import { Workspace, localDay, metadataPatch } from './workspace.mjs';
+import { launch } from './launchers.mjs';
 import { QuickActions } from './quick-actions.mjs';
 import { defaultVoiceStyle, voiceSession } from './voice-profile.mjs';
 import { NativeSettings } from './native-settings.mjs';
@@ -382,6 +383,7 @@ export async function createService({ repo, uiDir, stateDir, token = secret(), n
           if (!['chats', 'workspace'].includes(data.window) || !['show', 'hide', 'minimize', 'pin'].includes(data.action)) throw new Error('Unknown window action');
           native({ type: 'window', action: data.action, window: data.window, value: !!data.value }); return json(response, 200, { requested: true });
         }
+        if (method === 'POST' && url.pathname === '/api/launch') return json(response, 200, await launch(repo, await registry(), String(data.entityId || ''), String(data.launcher || '')));
         if (method === 'POST' && url.pathname === '/api/reveal') {
           const file = await realpath(path.resolve(data.path));
           native({ type: 'reveal', path: file }); return json(response, 200, { requested: true });

@@ -12,7 +12,8 @@
 ## south of the yard, with a drill line of six straw dummies to fight. Click a
 ## man to select the squad; it marches, stands and fights together, its front
 ## rank striking while the rear rank stands ready (or, with "Spread to the
-## line", the rear rank stepping up beside it).
+## line", the rear rank stepping up beside it). The squad looks lab
+## (prototypes/squad_looks) dresses its men when it is on disk.
 ## Grown from the footman's sandbox (prototypes/footman_anim), which stays as
 ## his flat-ground bench for its QA scripts; this scene keeps the names they
 ## use (footman, dummy, click, march_to_tile, _set_zoom, ...). Nothing here
@@ -65,6 +66,12 @@ const SQUAD_FACING := PI / 2
 const SQUAD_RATE := Vector2(0.95, 1.05)
 const DRILL := Vector2(16.0, 20.0)
 const DRILL_COUNT := 6
+## The squad looks lab (prototypes/squad_looks) dresses the squad's men, each
+## in his own face, hair, kit and helmet under the company's blue livery, when
+## it is on disk; without it they wear the footman export's own look.
+const LOOKS := "res://prototypes/squad_looks/scripts/"
+const SQUAD_LIVERY := 0
+const SQUAD_KIT := "line"
 ## The camera at the start: the yard with the squad and its drill line in view.
 const START := Vector2(13.3, 17.4)
 const START_ZOOM := 1.1
@@ -276,11 +283,20 @@ func _spawn_squad() -> void:
 	squad = Squad3D.new()
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
+	var dressed: Script = null
+	var looks := []
+	if ResourceLoader.exists(LOOKS + "dressed_footman.gd"):
+		dressed = load(LOOKS + "dressed_footman.gd")
+		var squad_look: Script = load(LOOKS + "squad_look.gd")
+		var livery: Dictionary = squad_look.get_script_constant_map().LIVERIES[SQUAD_LIVERY]
+		looks = squad_look.squad(SQUAD_SIZE, rng.randi(), livery, SQUAD_KIT)
 	var men := []
 	for i in SQUAD_SIZE:
-		var u: Node3D = FootmanUnit.new()
+		var u: Node3D = dressed.new() if dressed else FootmanUnit.new()
 		u.setup(p)
 		u.name = "SquadFootman%d" % (i + 1)
+		if dressed:
+			u.look_spec = looks[i]
 		world.add_child(u)
 		u.tile_m = tile_m
 		var r := rng.randf_range(SQUAD_RATE.x, SQUAD_RATE.y)
@@ -291,6 +307,9 @@ func _spawn_squad() -> void:
 		u.release.connect(_on_release.bind(u))
 		units.append(u)
 		men.append(u)
+	if dressed:
+		# Each man glances at his squadmates and at the roster's units.
+		load(LOOKS + "unit_look.gd").link(men, _roster())
 	var home: Vector3 = field.on_ground(SQUAD_HOME)
 	squad.setup(men, field, self, home, SQUAD_FACING)
 	squad.place(home, SQUAD_FACING)

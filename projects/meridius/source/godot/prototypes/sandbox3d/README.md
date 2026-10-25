@@ -30,7 +30,11 @@ with the footman) and says which in the left panel and the console.
 ## The footman squad
 
 Six footmen in two ranks of three, each on the footman's own controller, who
-march, stand and fight together but never quite in step:
+march, stand and fight together but never quite in step. Where the squad looks
+lab (`prototypes/squad_looks`) is present, it dresses each man as a squad of
+the blue livery and the line kit: his own helmet, face and build, and the
+squad's mark on his shield; a squad spawned again is dressed anew. Without it
+the men are the plain footman.
 
 - **Marching.** Click a man to select the squad, then the ground. The squad
   follows its route in formation, each man at his own place in it (the ranks
@@ -38,7 +42,8 @@ march, stand and fight together but never quite in step:
   sent back the way it came puts its rear rank in front. The file leader sets
   off first and the others a moment after, the rear rank last; each walks at
   his own pace (0.95x to 1.05x) and comes to rest a few centimetres off his
-  exact place, turned a few degrees.
+  exact place, turned a few degrees (up to 30 cm where his whole strides do
+  not fit the way, or where he stood that near and did not move).
 - **Standing.** Each man's idle starts at its own phase, and every so often
   each plays his guard idle at his own moment.
 - **Fighting.** Click a foe or a dummy (or **1** / **Space**). The squad
@@ -117,7 +122,8 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   painted cards.
 - `art3d/`: the spearman, crossbowman and battle mage exports with their
   sidecars. The footman and succubus are read from `prototypes/footman_anim/art3d`,
-  the wolf scout from `prototypes/wolf_scout_anim/art3d`.
+  the wolf scout from `prototypes/wolf_scout_anim/art3d`, the squad's dress
+  from `prototypes/squad_looks/scripts`.
 
 ## Adding a unit
 

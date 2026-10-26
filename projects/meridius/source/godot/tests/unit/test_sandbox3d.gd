@@ -150,6 +150,54 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 		u.free()
 
 
+## The spearman stands at ease. Now and then he takes up his guard for a loop
+## or two and eases back. After a blow or a hit he holds the guard, and
+## READY_HOLD after the last he is at ease again.
+func test_spearman_stands_at_ease_and_holds_his_guard_in_a_fight() -> void:
+	if slow("loads the spearman's model"): return
+	var found: Array = Roster.available().filter(func(q): return q.id == "spearman")
+	if found.is_empty():
+		# His GLB (Mixamo-derived clips) stays local: not in a fresh clone.
+		skip("the spearman's model is not on disk")
+		return
+	var u: Node3D = Unit3D.new()
+	u.setup(found[0].duplicate(true))
+	(Engine.get_main_loop() as SceneTree).root.add_child(u)
+	if not u.is_node_ready():
+		u._ready()
+	var dt := 1.0 / 30.0
+	assert_eq(u.idle_clip(), "idle_rest", "at ease is his idle")
+	assert_eq(u._clip, "idle_rest")
+	# A minute standing: the guard comes every 10 to 20 s and lasts 1.4 to 2.8 s.
+	var spells := []
+	var since := -1.0
+	for i in 60 * 30:
+		var was: String = u._clip
+		u._process(dt)
+		if was == "idle_rest" and u._clip == "idle":
+			since = i * dt
+		elif was == "idle" and u._clip == "idle_rest" and since >= 0.0:
+			spells.append(i * dt - since)
+		assert_true(u._clip in ["idle_rest", "idle"], "only at ease or on guard while standing")
+	assert_between(spells.size(), 2, 6, "the guard now and then")
+	for s in spells:
+		assert_between(s, 1.4 - dt, 2.8 + dt, "the guard held a loop or two")
+	# A blow from at ease: then on guard, without the idle's shifts, until
+	# READY_HOLD is over. (A hit holds it the same way; take_hit needs the
+	# live tree for the blow's direction.)
+	u.strike(null, 0)
+	assert_eq(u.state, "attack")
+	u._on_finished(&"attack")
+	assert_eq(u._clip, "idle", "on guard after the blow")
+	for i in roundi((Unit3D.READY_HOLD - 0.5) * 30):
+		u._process(dt)
+		assert_eq(u._clip, "idle", "still on guard %.1f s after the blow" % (i * dt))
+	for i in 30:
+		u._process(dt)
+	assert_eq(u._clip, "idle_rest", "at ease again after the fight")
+	u.free()
+
+
 ## A stand-in caster for the kiss heart: casting, at her own playback.
 class Caster extends Node3D:
 	var state := "attack"

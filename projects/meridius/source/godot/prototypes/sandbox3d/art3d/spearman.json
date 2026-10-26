@@ -9,7 +9,8 @@
  "height_m": 1.641,
  "height_rest_m": 1.82,
  "roles": {
-  "idle": "idle",
+  "idle": "idle_rest",
+  "ready": "idle",
   "walk": "walk",
   "attack": [
    "attack"
@@ -21,14 +22,30 @@
    "death_3"
   ],
   "extra": [
-   "idle_rest",
+   "idle",
    "step_lane",
    "turn_90"
   ]
  },
+ "variants": {
+  "idle": {
+   "clips": [
+    "idle"
+   ],
+   "every_s": [
+    10.0,
+    20.0
+   ],
+   "hold_s": [
+    1.4,
+    2.8
+   ],
+   "blend_s": 0.6
+  }
+ },
  "notes": [
   "Cape: glTF cannot carry the cloth's PC2 caches, so the baked cloth of every clip is fitted with 24 cape bones (6 columns round his back x 4 rows, Cape_<row>_<col>, row 0 at the hem, children of mixamorig:Spine2; bilinear weights; the pinned rows under the hood keep their spine weights). Their keys reproduce cape_cache/<clip>.pc2 (errors per clip in clips.<clip>.cape_fit; spine_only_mean_cm is the error of the cape skinned to the spine alone). No new cloth bake. Solidify (1 cm, inwards) is applied.",
-  "Spear: the per-clip object actions (<clip>__spear) are baked onto the bone 'SpearBone' (child of mixamorig:RightHand); the spear mesh is skinned to it. In the deaths it leaves the hand at spear_release.",
+  "Spear: the per-clip object actions (<clip>__spear) are baked onto the bones 'SpearGrip' (child of mixamorig:RightHand, at the point of the shaft nearest the right fist's centre) and 'SpearBone' (its child, the butt; it only slides along the shaft), so cross-fades turn the spear about the fist and slide it through; the spear mesh is skinned to SpearBone. In the deaths it leaves the hand at spear_release.",
   "Locomotion is in place. walk and step_lane move the figure by root_vel (m/s, Godot axes); idle, idle_rest and turn_90 stand still (their small source drift was removed by retarget_clips.py). Deaths keep their authored travel on the hips (root_motion true, hips_drift); do not add it again.",
   "turn_90: the turn is moved to the root as in the footman's export: the body stays at idle's heading and root_yaw (degrees per frame from the first frame) turns the figure.",
   "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
@@ -38,7 +55,7 @@
   "Spear",
   "Spearman"
  ],
- "bones": 52,
+ "bones": 53,
  "triangles": 17890,
  "texture_px": 1024,
  "cape_bones": [
@@ -88,10 +105,10 @@
    "events": {},
    "loop_seam_cm": 0.0,
    "cape_fit": {
-    "mean_cm": 0.53,
-    "p95_cm": 1.33,
-    "max_cm": 4.64,
-    "spine_only_mean_cm": 1.91
+    "mean_cm": 0.65,
+    "p95_cm": 1.54,
+    "max_cm": 6.42,
+    "spine_only_mean_cm": 3.41
    }
   },
   "idle_rest": {
@@ -114,10 +131,10 @@
    "events": {},
    "loop_seam_cm": 0.0,
    "cape_fit": {
-    "mean_cm": 0.28,
-    "p95_cm": 0.82,
-    "max_cm": 4.21,
-    "spine_only_mean_cm": 0.77
+    "mean_cm": 0.3,
+    "p95_cm": 0.83,
+    "max_cm": 5.02,
+    "spine_only_mean_cm": 0.91
    }
   },
   "walk": {
@@ -153,10 +170,10 @@
    "speed_footlock_mps": 0.9171,
    "loop_seam_cm": 0.0,
    "cape_fit": {
-    "mean_cm": 0.73,
-    "p95_cm": 1.69,
-    "max_cm": 5.94,
-    "spine_only_mean_cm": 3.54
+    "mean_cm": 0.76,
+    "p95_cm": 1.72,
+    "max_cm": 4.68,
+    "spine_only_mean_cm": 5.19
    }
   },
   "step_lane": {
@@ -191,10 +208,10 @@
    "speed_mps": 0.9929,
    "loop_seam_cm": 0.0,
    "cape_fit": {
-    "mean_cm": 0.62,
-    "p95_cm": 1.45,
-    "max_cm": 4.99,
-    "spine_only_mean_cm": 10.7
+    "mean_cm": 0.76,
+    "p95_cm": 1.74,
+    "max_cm": 7.39,
+    "spine_only_mean_cm": 12.56
    }
   },
   "turn_90": {
@@ -216,10 +233,10 @@
    ],
    "events": {},
    "cape_fit": {
-    "mean_cm": 0.89,
-    "p95_cm": 1.92,
-    "max_cm": 4.91,
-    "spine_only_mean_cm": 4.74
+    "mean_cm": 0.91,
+    "p95_cm": 1.96,
+    "max_cm": 7.34,
+    "spine_only_mean_cm": 6.56
    },
    "root_yaw": [
     0.0,
@@ -280,10 +297,10 @@
    "tip_reach_m": 3.108,
    "lead_m": 1.106,
    "cape_fit": {
-    "mean_cm": 0.69,
-    "p95_cm": 1.72,
-    "max_cm": 6.25,
-    "spine_only_mean_cm": 3.67
+    "mean_cm": 0.75,
+    "p95_cm": 1.75,
+    "max_cm": 8.34,
+    "spine_only_mean_cm": 4.1
    }
   },
   "hit": {
@@ -305,10 +322,10 @@
    ],
    "events": {},
    "cape_fit": {
-    "mean_cm": 0.72,
-    "p95_cm": 1.72,
-    "max_cm": 6.42,
-    "spine_only_mean_cm": 4.31
+    "mean_cm": 0.78,
+    "p95_cm": 1.82,
+    "max_cm": 6.24,
+    "spine_only_mean_cm": 4.96
    }
   },
   "death": {
@@ -333,10 +350,10 @@
     "spear_release": 1.1667
    },
    "cape_fit": {
-    "mean_cm": 0.95,
-    "p95_cm": 2.04,
-    "max_cm": 5.67,
-    "spine_only_mean_cm": 11.68
+    "mean_cm": 1.0,
+    "p95_cm": 2.13,
+    "max_cm": 6.26,
+    "spine_only_mean_cm": 11.06
    }
   },
   "death_2": {
@@ -361,9 +378,9 @@
     "spear_release": 0.8
    },
    "cape_fit": {
-    "mean_cm": 1.13,
-    "p95_cm": 2.36,
-    "max_cm": 7.78,
+    "mean_cm": 1.18,
+    "p95_cm": 2.39,
+    "max_cm": 9.15,
     "spine_only_mean_cm": 19.54
    }
   },
@@ -389,10 +406,10 @@
     "spear_release": 1.5333
    },
    "cape_fit": {
-    "mean_cm": 0.77,
-    "p95_cm": 1.71,
-    "max_cm": 6.09,
-    "spine_only_mean_cm": 8.14
+    "mean_cm": 0.82,
+    "p95_cm": 1.81,
+    "max_cm": 7.41,
+    "spine_only_mean_cm": 7.65
    }
   }
  }

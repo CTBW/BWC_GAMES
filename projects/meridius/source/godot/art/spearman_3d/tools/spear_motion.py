@@ -11,7 +11,9 @@ the rig for the game's facings turns the spear too. Three ways of holding it:
          right hip at elbow height (riding with the hips), the forearm level; the hand rolls
          so the fist's grip axis stands upright (leaning a little forward and out) and the
          spear runs along it, the butt above knee height so the striding thigh never meets
-         it; the right arm's keys in the clip are replaced;
+         it; the right arm's keys in the clip are replaced; at ease (BACK_HAND) the left arm
+         is solved too, its fist at the small of his back under the cape (BACK_HAND_CFG,
+         riding with the hips), and the clip's action is marked "back_hand" for cape_cloth.py;
   shoulder  the sidestep into lane (the clip turns his hips and chest ~70 degrees right): the
          spine turns his chest back by SPINE_UNTWIST of that, and the neck and the head's joint
          share the rest, so his head looks straight ahead throughout; the shaft rests against
@@ -61,6 +63,15 @@ SHOULDER_CFG.update(json.loads(os.environ.get("SPEAR_SHOULDER", "{}")))
 SPINE_UNTWIST = float(os.environ.get("SPINE_UNTWIST", "0.5"))
 SPINE_SHARES = (("Spine", 0.3), ("Spine1", 0.35), ("Spine2", 0.35))
 CARRY_POLE = Vector((-0.5, 1.0, -0.25))  # rest-pose world direction: the elbow points back, out and a little down
+# At ease: his left fist rests at the small of his back, under the cape (the owner's choice,
+# 2026-10-26: the hands are modelled fists, and the crossbowman idle's left fist floated in
+# front of his chest). "fist": its middle (rest pose, riding with the hips); his arms are
+# short, so it sits at mid-back height. "pole": which way the elbow points; "grip": the
+# fist's grip axis; "palm": the side the fist's middle lies on, seen from the wrist (rest pose).
+# The arm's keys in the clip are replaced, and cape_cloth.py gives the hand a collider.
+BACK_HAND_CFG = {"fist": [0.01, 0.16, 1.17], "pole": [1.0, 0.8, -0.4], "grip": [0.0, 0.0, 1.0], "palm": [-1.0, 0.3, 0.0]}
+BACK_HAND_CFG.update(json.loads(os.environ.get("SPEAR_BACK_HAND", "{}")))
+BACK_HAND = {"idle_rest"}
 TURN_LOWER = 16.0      # degrees the spear dips during the turn
 TURN_EASE = 6          # frames to ease the dip in and out
 MODES = {"idle": "two", "attack": "two",
@@ -210,6 +221,18 @@ def carry_ik(cfg, fwd=None):
     T = hips @ (hips_rest_inv @ Vector(cfg["fist"]))
     pole = hips.to_3x3() @ (hips_rest_inv.to_3x3() @ CARRY_POLE)
     solve_arm("Right", T, pole, lean_dir(cfg, fwd if fwd is not None else facing()))
+
+
+def back_hand(cfg):
+    """The left fist's middle at cfg's place behind his back (rest pose, riding with the hips)."""
+    hips = PB["mixamorig:Hips"].matrix
+    R = hips.to_3x3() @ hips_rest_inv.to_3x3()
+    F = hips @ (hips_rest_inv @ Vector(cfg["fist"]))
+    T = F.copy()
+    for _ in range(4):
+        solve_arm("Left", T, R @ Vector(cfg["pole"]), R @ Vector(cfg["grip"]), palm=R @ Vector(cfg["palm"]))
+        T = T + (F - fist("Left"))
+    return (fist("Left") - F).length
 
 
 def shoulder_ik(cfg):
@@ -446,7 +469,7 @@ for clip in clips:
     spear.animation_data_create()
     spear.animation_data.action = sact
     frames = frames_of(act)
-    fist_z, bend, chest_yaw = [], [], []
+    fist_z, bend, chest_yaw, back_miss = [], [], [], []
     if mode in ("carry", "shoulder"):
         cfg = CARRY_CFG if mode == "carry" else SHOULDER_CFG
         for f in frames:
@@ -457,8 +480,12 @@ for clip in clips:
                 bend.append(shoulder_ik(cfg))
             else:
                 carry_ik(cfg)
+            if clip in BACK_HAND:
+                back_miss.append(back_hand(BACK_HAND_CFG))
             fist_z.append(fist("Right").z)
         grip_c = sum(fist_z) / len(fist_z) - cfg["butt_z"]
+    if clip in BACK_HAND:
+        act["back_hand"] = 1               # cape_cloth.py: a collider over the hand
     if mode == "turn":
         turn_two_handed(act, frames)
     wrist = wrist_clear(act, frames) if mode == "rigid" else None
@@ -556,7 +583,8 @@ for clip in clips:
         sact["release_frame"] = release
     print("SPEAR", clip, mode, len(frames), "frames", "wrist bend up to %.0f deg" % max(bend) if bend else "",
           "chest turned %.0f to %.0f deg" % (min(chest_yaw), max(chest_yaw)) if chest_yaw else "",
-          "wrist bent clear (first, last crossing frame, largest bend deg): %s" % wrist if wrist is not None else "")
+          "wrist bent clear (first, last crossing frame, largest bend deg): %s" % wrist if wrist is not None else "",
+          "left fist behind his back, off its place up to %.1f cm" % (100 * max(back_miss)) if back_miss else "")
 rig.animation_data.action = bpy.data.actions["idle"]
 spear.animation_data.action = bpy.data.actions["idle__spear"]
 sc.frame_set(1)

@@ -1,6 +1,50 @@
 # Handoff: Meridius spearman 3D rig
 
 ## Result
+### 2026-10-26: at ease is the idle, the left fist behind his back (uncommitted)
+The user asked for three things:
+- "The 'At ease animation' needs to be the idle animation. The 'Guard' animation should be used from time to time during idle so it looks like he's adjusting his postion."
+- Fix the clipping of the right hand on the spear.
+- Fix the left hand with curled fingers. The user chose "Behind his back": the left fist rests at the small of his back, under the cape.
+
+All three are built and checked by the agent; the user hasn't judged them yet. The user asked to commit once the tests passed. The coordinator is now `bwc-games-godot-b6`: commit by explicit path, don't push, and send b6 the hash, the `tools/test.sh` count and the file list.
+
+**Local only (Mixamo rule).** The user decided that GLBs and clip blends with Mixamo-derived clips leave Git. The coordinator's `5abddc9` untracked and ignored `spearman_rig.blend` and `prototypes/sandbox3d/art3d/spearman.glb` (with `.import`), along with crossbowman.glb and mage.glb. The local copies stay on disk as ignored files:
+- `art/spearman_3d/spearman_rig.blend` (`69787c70b67c`)
+- `prototypes/sandbox3d/art3d/spearman.glb` (`074642d8a2b3`)
+
+A fresh clone has neither. They are backed up in the gitignored `local/spearman_3d/`: `spearman_rig.blend`, plus `godot/spearman.glb` with its `spearman.json`, the same hashes, copied 2026-10-26, as for the succubus in `local/succubus_3d/`. A second copy is in `D:\ProjektM\spearman_3d\` on a separate disk, next to the `audio-library` copy. GitHub has neither. Rebuilding them needs the Mixamo FBX files in `projects/meridius/Animations/` (also local) and the chain under "Rebuilding after a change", then `export_godot.py`.
+
+**In Git:**
+- the three scripts, `unit3d.gd` and the spearman test
+- the export's sidecar `spearman.json`, re-exported for the local GLB
+- `cape_cache/idle_rest.pc2`
+- the card's html, `frames.json` and the four idle_rest sheets
+- this handoff
+
+Without the GLB the roster leaves the spearman out, and `test_spearman_stands_at_ease_and_holds_his_guard_in_a_fight` skips.
+
+- **Idle in the sandbox** (`prototypes/sandbox3d/scripts/unit3d.gd`): a profile `ready` role, filled from the sidecar's `roles.ready` (the guard, `idle`). The idle is `idle_rest`.
+  - Variants come from the sidecar's `variants.idle`: `clips ["idle"]`, `every_s [10,20]`, `hold_s [1.4,2.8]`, `blend_s 0.6`. A looping variant ends after `hold_s`.
+  - `_keep_ready()` holds the guard for `READY_HOLD` 6 s after each blow (`_swing`) and each hit (`take_hit`). An attack from at ease blends in over `READY_BLEND` 0.3 s.
+  - State stays "idle" between blows, as squad-sizes session 0e requires: "attack" runs from `_swing` until the clip ends, `take_hit` sets "hit", and the impact and release signals still fire.
+  - Test: `test_spearman_stands_at_ease_and_holds_his_guard_in_a_fight` in `tests/unit/test_sandbox3d.gd`. 0e has their own uncommitted lines at the end of `test_a_swing_cut_short_by_a_hit_is_given_back` in the same file. Stage only the spearman hunk, with a temporary index.
+- **Right hand on the spear** (`art/spearman_3d/tools/export_godot.py`, untracked, made by the sandbox session for `b4e0e9a`): the spear used to hang from one bone at its butt under the right hand. A cross-fade between the guard (fist at the butt) and the carry (fist half a metre up) swung the shaft out of the fist.
+  - Now `SpearGrip` (child of `mixamorig:RightHand`, non-deforming) sits where the shaft passes the fist's centre (`grip_along()`, from `rig["fist_right"]`). `SpearBone`, its child, only slides along the shaft.
+  - Spear tip error is 0.0 mm in every clip. Godot captures of at ease → guard, guard → at ease and at ease → thrust keep the shaft in the fist.
+- **Left fist behind his back** (`tools/spear_motion.py`): `back_hand()` IK with `BACK_HAND_CFG` (fist `[0.01,0.16,1.17]`, pole `[1.0,0.8,-0.4]`, grip `[0,0,1]`, palm `[-1.0,0.3,0.0]`; env `SPEAR_BACK_HAND` overrides), for `BACK_HAND = {"idle_rest"}`. It marks the action `act["back_hand"]`.
+- **Cape over the arm** (`tools/cape_cloth.py`): `back_hand_colliders()` makes convex hulls of the left forearm (LeftForeArm and LeftForeArmTwist vertices) and the fist (LeftHand), parented to the hips.
+  - They wait inside his body at 0.2 scale through the run-up, then grow to full size over `GROW` 10 frames after the hold. They use `thickness_outer` 0.012 and `cloth_friction` 0.3; the body's friction of 2 held the cape out like a wing.
+  - They are made only when the action has `back_hand`, and removed after the clip.
+  - **Rejected:** ellipsoids. Small ones let the cuff and knuckles through, and ones that enclosed them stood 6 cm proud.
+  - This is the one exception to "arm colliders: rejected" below. That rule is for arms coming down through the cape's sides from the T-pose.
+- **Rebuilt:** `spearman_rig.blend` (idle_rest re-retargeted, then `spear_motion.py`), `cape_cache/idle_rest.pc2` (with `bake_cape.sh`), the four `idle_rest_*.webp` sheets and `frames.json` (other sheets byte-identical), the tab's frames data and notes, and `prototypes/sandbox3d/art3d/spearman.glb` plus `.json`, re-imported with `tools/import.sh`.
+- **Cape fit in the GLB** is a little worse in most clips, because the bind shape (idle_rest's first frame) now drapes over the arm. idle_rest's mean is 0.28 → 0.30 cm; others rise 0.02–0.14 cm (idle 0.53 → 0.65, step_lane 0.62 → 0.76).
+  - Binding on idle instead helped the other clips but doubled idle_rest's error (0.30 → 0.65 cm), so idle_rest stayed the bind clip.
+  - The errors per clip are in the sidecar's `clips.<clip>.cape_fit`.
+- **Army battle:** `--shots=army` gave no "still fight" lines. Two of my runs showed one footman "none after" each. 0e traced it to footmen hit during their step-turn ("turn" state, the blow dropped), a gap in their own `492d8aa`. It is fixed in 0e's uncommitted `squad3d.gd`, and unit3d units aren't affected.
+
+### 2026-10-24 and earlier
 The spearman 3D rig is complete, committed and pushed. All three requests from 2026-10-23 are built:
 - turn 90° with both hands on the shaft;
 - step into lane with the head facing forward and the spear on the right shoulder;
@@ -54,10 +98,11 @@ Changed in `906687a`:
   - `aa82847` handoff update; `906687a` Meridius: spearman hit, wrist bends the rigid spear clear of his body (8 files), pushed by the coordinating session.
   - `2714427` handoff update and the Animations path in the tab.
   - `627c2c1` Meridius: spearman cape bakes no longer depend on leftover pose scale (59 files: the two scripts, the rebuilt rig, all ten caches, 40 sheets, `frames.json`, three figures, the tab and this handoff).
-  - **Pushing:** the coordinating session (`bwc-games-godot-1c`) now pushes and opens PRs for everyone. Commit your own files by explicit path, then send it the hash. The folder and public-Git policy is in the "Where things live" section of `AGENTS.md`.
+  - **Pushing:** the coordinating session (`bwc-games-godot-1c` then; `bwc-games-godot-b6` since 2026-10-26) pushes and opens PRs for everyone. Commit your own files by explicit path, then send it the hash. The folder and public-Git policy is in the "Where things live" section of `AGENTS.md`.
   - `origin/godot-migration` is at `627c2c1`, with another session's `f4f1110` (painted rocks) under it. The user asked to push `627c2c1` and approved `f4f1110`'s Nano Banana Pro rocks for the public repo, since pushing one publishes the other. The coordinator pushed both at the same moment, so my own push was rejected as a duplicate. Other sessions commit and push to this branch too.
 - Report: `workspace/2026-10-20_meridius/spearman-3d.html`, card "Spearman 3D rig" (group Character rigs, subgroup Spearman) in `workspace/workspace.json`.
-- **Not in the game.** The Godot game still draws the spearman from 2D sprites (`art/squads/spearman`, `assets/sprites/anim/spearman.*`), which another session made. No game code was changed for this work. Two earlier items were answered but not built:
+- **The 3D sandbox** (`prototypes/sandbox3d`, the sandbox session's `b4e0e9a`) uses the GLB export of this rig, `art3d/spearman.glb` and `spearman.json`, made by `art/spearman_3d/tools/export_godot.py`. Since `5abddc9` the GLB is local only; the sidecar is in Git.
+- **Not in the battle game.** The Godot battle game still draws the spearman from 2D sprites (`art/squads/spearman`, `assets/sprites/anim/spearman.*`), which another session made. No game code was changed for this work. Two earlier items were answered but not built:
   - per-figure death variant via `Rng.hash2` in `squad_view.gd` and `battle_view.gd:_drop_victim`;
   - troll overkill ragdoll.
 
@@ -66,7 +111,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 
 | File | sha256 (first 12) |
 |---|---|
-| `spearman_rig.blend` | `c1d4854542e3` (`627c2c1`, rebuilt for the scale fix; `94d4d4c23257` in `906687a`, `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
+| `spearman_rig.blend` | `69787c70b67c` (2026-10-26, local only since `5abddc9`, Mixamo rule: idle_rest with the left fist behind his back); `c1d4854542e3` (`627c2c1`, rebuilt for the scale fix; `94d4d4c23257` in `906687a`, `d4e3944f50d6` in `e40ed6a`, `a5613942478b` in `f6c6e32`) |
 | `spearman_base.blend` | `358886dd37fd` |
 | `spear.blend` | `88330b84d248` |
 
@@ -89,7 +134,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   | death_3 | `71c8071b4071` |
   | hit | `13413931b2d1` |
   | idle | `4b8a6313ae5e` |
-  | idle_rest | `3feaf10d105b` |
+  | idle_rest | `91425925d5b2` (re-baked 2026-10-26 with the arm colliders; `3feaf10d105b` in `627c2c1`) |
   | step_lane | `98c087cfa65b` |
   | turn_90 | `f5c17710837d` |
   | walk | `632dd2c21a78` |
@@ -124,6 +169,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 - `workspace/workspace.json` has uncommitted cards from other sessions. Stage only your own lines.
 - Other sessions own `art/footman_3d`, `art/crossbowman_3d`, `art/succubus_3d` and wolf_scout; only read or copy their files. `succubus_3d/tools/rig_succubus.py` and `retarget_clips.py` are adapted copies of the spearman scripts, so changing the spearman scripts doesn't affect them.
 - Before applying anything, re-read the tab and `git log origin/godot-migration`; other sessions commit and push to this branch.
+- `prototypes/sandbox3d/`: `squad3d.gd`, `sandbox3d.gd` and `README.md` belong to the squad-sizes session (`bwc-games-godot-0e`), as do its tests in `tests/unit/test_sandbox3d.gd`. The spearman work changes only `unit3d.gd`, the spearman GLB and sidecar, and its own test. `tests/unit/test_squad_looks.gd` belongs to another session.
 
 ## Verification (agent, 2026-10-24)
 - **Bake.** One background Blender per clip, peak 300–370 MB each. The sim is deterministic, and since the leftover-scale fix it no longer depends on unkeyed values in the file. Lowest cape point per clip (the re-bake for the scale fix; the earlier bake in brackets):
@@ -152,7 +198,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   | Clip | Total | Worst view |
   |---|---|---|
   | idle | 5 (5) | 2 at f17 NW (2) |
-  | idle_rest | 136 over 260 views (144) | 2 (2) |
+  | idle_rest | 247 (2026-10-26 bake, arm behind his back); 136 over 260 views in `627c2c1` (144) | 2 (2) |
   | walk | 43 (43) | 6 at f9 NE, his left hand at the cape's edge (8 at f5 SW) |
   | step_lane | 15 (12) | 2 (2) |
   | attack | 25 (30) | 2 (2) |
@@ -168,7 +214,7 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
 
   | Clips | Frames |
   |---|---|
-  | idle, idle_rest, walk, step_lane, turn_90, hit (since the wrist fix) | 0 |
+  | idle, idle_rest (rechecked 2026-10-26: 0 of 258), walk, step_lane, turn_90, hit (since the wrist fix) | 0 |
   | attack | 1 of 64 |
   | death | 1 of 72 |
   | death_2 | 1 of 69 |
@@ -181,6 +227,11 @@ All paths are under `projects/meridius/source/godot/art/spearman_3d/` unless not
   - Narrow widths were checked in iframes only. The workspace rule is now desktop only (`processes/workspace-authoring.md` step 7), so phone checks aren't needed.
 
 ## To judge (owner acceptance pending)
+0. **2026-10-26 idle work** (the rig and GLB are local only):
+   - Does at ease with the guard every 10–20 s read as "adjusting his position"?
+   - Is the left fist behind his back acceptable? The cape bulges a little over the left elbow and flares slightly at the hem behind the arm.
+   - The feet slide in the cross-fade between the narrow at-ease stance and the wide guard; this comes from blending the two stances.
+   - idle_rest pokes more in total (247 vs 136) at the same worst view (2).
 1. **Step into lane** (fix in `e40ed6a`): is the twist now spread well enough over his spine, neck and head? And is the SE spear acceptable? It now stands nearly upright with the tip a little to the right; before, it leaned further right. `travel` 1.0 gives the old lean but runs the shaft over his face.
 2. **Hit** (wrist fix in `906687a`): does the up-to-10° wrist bend read naturally? It is subtle from the battle camera: the shaft lies a little further from his belly at frames 17–19 and from his left forearm at frames 39–41.
 3. **Death 1:** from above, the cape ends bunched on the upper back and shoulders, because it is flung up as he pitches forward. From the battle camera it reads as lying on his back.
@@ -203,7 +254,7 @@ Items 3–5 have no decided fix. Wait for the user's verdict before changing any
   - `flatten_back()` runs first; it presses `BACK_BOX x ±0.30, z 0.90–1.30` flat behind `y = 0.10`.
   - The ground is a single-sided collider plus a `GROUND_CLEAR = 0.01` clamp.
 - **Rejected; don't retry:**
-  - arm colliders;
+  - arm colliders for arms coming down the cape's sides (the at-ease hulls behind his back, 2026-10-26, are the one exception);
   - a skinned copy of the back as a collider;
   - BVH push-out;
   - longer pre-roll or higher collision quality as a fix;
@@ -282,4 +333,4 @@ The full `tools/test.sh` that started before `627c2c1`, on the shared working tr
 - Commit only when asked. Commits use `-c user.name=CTBW -c user.email=135850159+CTBW@users.noreply.github.com` (no Git identity is configured).
 
 ---
-From the Claude Code chat continuing "Meridius - Rigging on Spearmen animations" in E:\ProjektM\BWC_GAMES-godot, 2026-10-24.
+From the Claude Code chat continuing "Meridius - Rigging on Spearmen animations" in E:\ProjektM\BWC_GAMES-godot, 2026-10-24; updated 2026-10-26.

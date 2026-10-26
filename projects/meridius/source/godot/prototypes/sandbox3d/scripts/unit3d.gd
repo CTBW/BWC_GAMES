@@ -33,6 +33,12 @@ const STEER_RATE := deg_to_rad(300.0)
 const HIT_ARC := 80.0
 ## Events that mark a blow or a shot leaving, whatever a sidecar calls them.
 const HIT_EVENTS := ["contact", "strike", "strikes", "strike_left", "strike_right", "shot", "release", "fire", "impact"]
+## A profile's `ready` clip (the spearman's guard) is his idle while he
+## fights: he holds it after a blow or a hit, and this long after the last
+## eases back into his idle. An attack started from the idle blends in over
+## READY_BLEND (the clip starts in the ready stance).
+const READY_HOLD := 6.0
+const READY_BLEND := 0.3
 
 var profile: Dictionary
 var meta: Dictionary
@@ -63,6 +69,8 @@ var _after_turn := Callable()
 var _prev_t := 0.0
 var _ev_i := 0
 var _variant_in := 0.0
+var _variant_left := 0.0
+var _ready_left := 0.0
 var _rng := RandomNumberGenerator.new()
 var _outline: ShaderMaterial
 var _outline_thin: ShaderMaterial
@@ -90,7 +98,7 @@ func _ready() -> void:
 	# Roles the sidecar names (the spearman's and crossbowman's exports) fill
 	# what the profile leaves open.
 	var roles: Dictionary = meta.get("roles", {})
-	for k in ["idle", "walk", "hit"]:
+	for k in ["idle", "ready", "walk", "hit"]:
 		if not profile.has(k) and roles.has(k):
 			profile[k] = roles[k]
 	if not profile.has("death") and roles.has("death"):
@@ -281,7 +289,24 @@ func title() -> String:
 # --- Clips ----------------------------------------------------------------------------
 
 func idle_clip() -> String:
-	return stance if stance != "" else profile.get("idle", "idle")
+	if stance != "":
+		return stance
+	if _ready_left > 0.0 and clips.has(profile.get("ready", "")):
+		return profile.ready
+	return profile.get("idle", "idle")
+
+
+## The idle's variants from the sidecar: `clips`, `every_s` (the pause
+## between them), `hold_s` (how long a looping one plays) and `blend_s`.
+func _variants() -> Dictionary:
+	return meta.get("variants", {}).get("idle", {})
+
+
+## Holds the ready clip for READY_HOLD (after a blow or a hit).
+func _keep_ready() -> void:
+	if clips.has(profile.get("ready", "")):
+		_ready_left = READY_HOLD
+		_variant_left = 0.0
 
 
 ## Metres a second on the walk clip (a model scaled up strides farther).
@@ -310,7 +335,7 @@ func _play(c: String, blend := BLEND) -> void:
 	if fx:
 		fx.on_play(clips[c].anim)
 	if c == idle_clip() and stance == "":
-		var every: Array = meta.get("variants", {}).get("idle", {}).get("every_s", profile.get("variant_every", [9.0, 22.0]))
+		var every: Array = _variants().get("every_s", profile.get("variant_every", [9.0, 22.0]))
 		_variant_in = _rng.randf_range(every[0], every[1])
 
 
@@ -490,8 +515,10 @@ func _swing(i: int) -> void:
 			_hits.append(e[0])
 	if _hits.is_empty():
 		_hits.append(c.length * float(a.get("hit_at", 0.45)))
+	var from_idle: bool = _clip == profile.get("idle", "idle") and profile.has("ready")
+	_keep_ready()
 	state = "attack"
-	_play(a.clip, 0.12)
+	_play(a.clip, READY_BLEND if from_idle else 0.12)
 
 
 func _strike_now() -> void:
@@ -526,6 +553,7 @@ func take_hit(from: Vector3, lethal := false) -> void:
 	if lethal:
 		die()
 		return
+	_keep_ready()
 	state = "hit"
 	var c: String = profile.get("hit", "hit")
 	if clips.has(c):
@@ -558,6 +586,7 @@ func revive() -> void:
 	state = "idle"
 	path.clear()
 	stance = ""
+	_ready_left = 0.0
 	_play(idle_clip(), 0.5)
 
 
@@ -625,7 +654,7 @@ func _on_finished(_anim: StringName) -> void:
 		"idle":
 			# An idle variant played out: back to the idle.
 			if _clip != idle_clip():
-				_play(idle_clip(), 0.3)
+				_play(idle_clip(), float(_variants().get("blend_s", 0.3)))
 
 
 # --- Frame ------------------------------------------------------------------------------
@@ -636,6 +665,8 @@ func _process(dt: float) -> void:
 	var sdt := dt * playback
 	if state != "walk":
 		speed_now = 0.0
+	if _ready_left > 0.0 and state != "dead":
+		_ready_left -= sdt
 	_events_tick()
 	if not is_nan(_yaw_goal):
 		rotation.y = rotate_toward(rotation.y, _yaw_goal, TURN_RATE * sdt)
@@ -649,15 +680,24 @@ func _process(dt: float) -> void:
 		"walk":
 			_walk(sdt)
 		"idle":
-			if stance == "" and _clip == idle_clip():
+			var cfg := _variants()
+			if stance == "" and _clip == idle_clip() and _ready_left <= 0.0:
 				_variant_in -= sdt
-				var variants: Array = meta.get("variants", {}).get("idle", {}).get("clips", profile.get("idle_variants", []))
+				var variants: Array = cfg.get("clips", profile.get("idle_variants", []))
 				if _variant_in <= 0.0 and not variants.is_empty():
 					var v: String = variants[_rng.randi_range(0, variants.size() - 1)]
 					if clips.has(v):
-						_play(v, 0.3)
+						_play(v, float(cfg.get("blend_s", 0.3)))
+						var hold: Array = cfg.get("hold_s", [clips[v].length, clips[v].length])
+						_variant_left = _rng.randf_range(hold[0], hold[1])
 					else:
 						_variant_in = 30.0
+			elif stance == "" and _clip != idle_clip() and clips.get(_clip, {}).get("loop", false):
+				# A looping variant (the spearman's guard) has played its hold, or
+				# the fight he held his ready stance for is over: back to the idle.
+				_variant_left -= sdt
+				if _variant_left <= 0.0:
+					_play(idle_clip(), float(cfg.get("blend_s", 0.3)))
 
 
 func _events_tick() -> void:

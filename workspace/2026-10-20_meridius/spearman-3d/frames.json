@@ -42,8 +42,8 @@
    "sw": {
     "file": "sheets/idle_rest_sw.webp",
     "frames": 129,
-    "cols": 21,
-    "w": 114,
+    "cols": 20,
+    "w": 124,
     "h": 366,
     "x": 143.2,
     "y": 5.2
@@ -52,16 +52,16 @@
     "file": "sheets/idle_rest_se.webp",
     "frames": 129,
     "cols": 19,
-    "w": 126,
+    "w": 120,
     "h": 328,
-    "x": 136.5,
+    "x": 141.8,
     "y": 28.5
    },
    "nw": {
     "file": "sheets/idle_rest_nw.webp",
     "frames": 129,
-    "cols": 19,
-    "w": 126,
+    "cols": 20,
+    "w": 120,
     "h": 351,
     "x": 126.8,
     "y": 0.0
@@ -69,10 +69,10 @@
    "ne": {
     "file": "sheets/idle_rest_ne.webp",
     "frames": 129,
-    "cols": 20,
-    "w": 114,
+    "cols": 19,
+    "w": 124,
     "h": 345,
-    "x": 132.8,
+    "x": 122.2,
     "y": 12.8
    }
   },

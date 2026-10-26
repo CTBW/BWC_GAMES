@@ -55,6 +55,9 @@ CLIPS = {
     # Keeps its travel: the hips carry him forward as he slows. The source of
     # the stop and start steps (make_transitions.py builds them from it).
     "stop_src": ("Stop Walking - Footmen.fbx", {}),
+    # His standing idle (25 Oct 2026): what he does at rest. The guard idle above
+    # stays the guard every other clip starts and ends on, and plays now and then.
+    "stand_src": ("Standing Idle - Footman.fbx", {"in_place": True}),
 }
 
 argv = sys.argv[sys.argv.index("--") + 1:]

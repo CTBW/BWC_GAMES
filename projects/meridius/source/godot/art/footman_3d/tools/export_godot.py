@@ -8,7 +8,15 @@ Works on the open copy only (the .blend is not saved):
     backwards (it starts and ends in his idle stance; a mirror would not);
   * a sidecar <out>.json with, per clip: length, loop, ground speed (Godot
     axes: the model faces +Z), turn angle, and event times (attack contact,
-    footfalls, death settled).
+    footfalls, death settled);
+  * the game's names for his idles: the standing idle (the .blend's "stand",
+    make_stand.py) goes out as "idle", what he plays at rest, and the guard idle
+    (the .blend's "idle", whose first frame every clip starts and ends on, as
+    the stand's does) as "idle_guard", played now and then from it (the
+    sidecar's variants.idle);
+  * the figure raised onto the ground: his soles' depth under it on the guard
+    (the retarget never grounds them) is the armature's height (the sidecar's
+    ground_lift_m).
 """
 import json
 import math
@@ -22,9 +30,9 @@ from mathutils import Matrix, Vector
 argv = sys.argv[sys.argv.index("--") + 1:]
 OUT = Path(argv[0])
 TEX = int(argv[1]) if len(argv) > 1 else 1024
-KEEP = ["idle", "walk", "attack", "block", "hit", "block_hit", "death", "lane", "turn_90", "turn_180", "stop", "start", "run", "charge_hit", "attack_stab", "charge_stab", "attack_thrust", "charge_thrust"]
+KEEP = ["idle", "stand", "walk", "attack", "block", "hit", "block_hit", "death", "lane", "turn_90", "turn_180", "stop", "start", "run", "charge_hit", "attack_stab", "charge_stab", "attack_thrust", "charge_thrust"]
 KEEP = [n for n in KEEP if n in bpy.data.actions]  # the charge only once it is built
-LOOPS = {"idle", "walk", "block", "run"}
+LOOPS = {"idle", "stand", "walk", "block", "run"}
 FPS = 30.0
 sc = bpy.context.scene
 rig = bpy.data.objects["FootmanRig"]
@@ -222,12 +230,38 @@ for name in ("turn_90", "turn_180", "turn_90_r"):
     clips[name]["root_yaw"] = [round(float(y), 2) for y in ys]
     print("ROOT_YAW", name, round(float(ys[-1]), 1), "hips held at idle's heading within", round(max(abs(((v - IDLE_YAW + 180) % 360) - 180) for v in left), 1))
 
-# 3. Only the sandbox's clips go out.
+# 4. The game's names: at rest he stands ("idle"); the guard idle plays now and
+# then from it, once, each unit after its own random wait.
+variants = {}
+if "stand" in clips:
+    bpy.data.actions["idle"].name = "idle_guard"
+    bpy.data.actions["stand"].name = "idle"
+    clips = {{"idle": "idle_guard", "stand": "idle"}.get(k, k): v for k, v in clips.items()}
+    clips["idle_guard"]["loop"] = False
+    variants = {"idle": {"clips": ["idle_guard"], "every_s": [9.0, 22.0]}}
+
+# 5. Only the sandbox's clips go out.
 for act in list(bpy.data.actions):
     if act.name not in clips:
         bpy.data.actions.remove(act)
 rig.animation_data.action = bpy.data.actions["idle"]
 sc.frame_set(1)
+
+# 6. On the ground: the retarget scales the hips' drop into the guard but never
+# grounds his soles, so on the guard (idle's first frame, every clip's start)
+# they stand some 10 cm under the rig's ground, and as deep in the walk. The
+# whole figure is raised by that depth (the armature's place), so every clip
+# plays on the ground. His height is taken first, on the rig's own ground as
+# before: the sandbox's scale is set by it (sandbox3d.gd SOLDIER_PX).
+height = round(float(max((rig.matrix_world @ b("HeadTop_End").head).z, 1.7)), 3)
+dg = bpy.context.evaluated_depsgraph_get()
+body = bpy.data.objects["Footman"].evaluated_get(dg)
+low = min((body.matrix_world @ v.co).z for v in body.to_mesh().vertices)
+body.to_mesh_clear()
+lift = round(max(0.0, -low), 4)
+rig.location = (0, 0, lift)
+bpy.context.view_layer.update()
+print("GROUND_LIFT", lift)
 for img in bpy.data.images:
     if img.size[0] > TEX:
         img.scale(TEX, TEX)
@@ -240,7 +274,7 @@ bpy.ops.export_scene.gltf(
     export_def_bones=False, export_optimize_animation_size=False, export_bake_animation=False,
     export_extras=False, export_cameras=False, export_lights=False,
 )
-meta = {"fps": FPS, "source": "art/footman_3d/footman_rig.blend", "forward": [0, 0, 1],
-        "height_m": round(float(max((rig.matrix_world @ b("HeadTop_End").head).z, 1.7)), 3), "clips": clips}
+meta = {"fps": FPS, "source": "art/footman_3d/footman_rig.blend", "forward": [0, 0, 1], "variants": variants,
+        "ground_lift_m": lift, "height_m": height, "clips": clips}
 OUT.with_suffix(".json").write_text(json.dumps(meta, indent=1))
 print("EXPORT_DONE", OUT, OUT.stat().st_size)

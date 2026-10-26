@@ -135,6 +135,12 @@
           "path": "unit-roster-host.html",
           "group": "Unit roster",
           "subgroup": "Hillsvain Host"
+        },
+        {
+          "name": "Height chart",
+          "path": "unit-heights.html",
+          "group": "Unit roster",
+          "subgroup": "Heights"
         }
       ],
       "status": "active",

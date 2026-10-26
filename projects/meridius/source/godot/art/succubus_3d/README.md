@@ -10,7 +10,7 @@ Started 23 October 2026. Concept, Higgsfield receipts and the Tripo task IDs are
 | --- | --- |
 | `succubus_base.blend` | Body (spike removed, hips and legs adjusted, paw pads, fur tufts), wings, tail and whip, textures packed. From `tools/build_succubus.py`. |
 | `succubus_rig.blend` | The rigged character: `SuccubusRig` (Mixamo names, no fingers) with tail, wing and loincloth bones, the whip's handle (`WhipGrip`) and coil (`WhipCoil`) bones, and the attack's lash (`WhipLash`, 2 m on `Lash_1`..`Lash_16`). From `tools/rig_succubus.py`; `tools/kiss_rig.py` adds the Sovereign Kiss's `Kiss_Pucker` and `Exhale` shape keys and `KissSocket`. No actions. |
-| `succubus_anim.blend` | The rig with the clips as actions: tail, wing and loincloth motion, the whip arm and coil kept out of her body, the attack's lash. From `tools/retarget_clips.py`, `tools/secondary_motion.py`, then `tools/whip_motion.py`. |
+| `succubus_anim.blend` | The rig with the clips as actions: tail, wing and loincloth motion, the whip arm and coil kept out of her body, the attack's lash. From `tools/retarget_clips.py`, `tools/secondary_motion.py`, then `tools/whip_motion.py`. Local, not in git: the clips are retargeted from Mixamo clips. |
 | `review/` | Review renders: `clip_<name>.gif` (game camera and from behind), paw pads, fur, hips and legs; `clip_sovereign_kiss*.gif` and `kiss_heart.gif` (see Sovereign Kiss). |
 | `local/succubus_3d/succubus_sovereign_kiss_fog.blend` (repository root, not in git) | `succubus_anim.blend` plus the Sovereign Kiss cast (`sovereign_kiss`, `sovereign_kiss_source` and their face actions) and its fog heart (`SK_FogHeart`). Local because the clip is made from a Mixamo clip; rebuilt by the commands under Rebuild. |
 
@@ -260,6 +260,10 @@ sheets are on hold as an option.
 "$B" -b succubus_anim.blend --python tools/export_godot.py -- <out>/succubus.fbx 1024
 "$B" -b succubus_anim.blend --python tools/verify_fbx.py -- <copy of>/succubus.fbx
 ```
+
+`succubus.fbx` carries the Mixamo-derived clips, so like `succubus_anim.blend` it stays
+local; only `succubus.json` is in git. Where the FBX is missing, the 3D sandbox leaves her
+out.
 
 `export_godot.py` writes `succubus.fbx` (body, wings, tail, whip and lash skinned to 59
 deforming bones, the eight clips as takes, 1024 px textures embedded, Y up, facing +Z) and

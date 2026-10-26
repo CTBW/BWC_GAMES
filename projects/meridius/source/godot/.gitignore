@@ -16,6 +16,12 @@
 /prototypes/footman_anim/art3d/footman.glb
 /prototypes/footman_anim/art3d/footman.glb.import
 /art/footman_3d/footman_rig.blend
+# The succubus's clips are retargeted from Mixamo clips: her animation scene and
+# its FBX export stay local (the sidecar is in Git); the sandbox leaves her out
+# where the FBX is missing.
+/art/succubus_3d/succubus_anim.blend
+/prototypes/footman_anim/art3d/succubus.fbx
+/prototypes/footman_anim/art3d/succubus.fbx.import
 # The goblin rabble's sandbox exports carry Mixamo motion and stay local (their
 # sidecars are in Git); the roster leaves the goblins out where they are missing.
 /prototypes/goblin_rabble_anim/art3d/*

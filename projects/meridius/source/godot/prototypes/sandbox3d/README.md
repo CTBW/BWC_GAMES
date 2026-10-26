@@ -112,8 +112,11 @@ lets it go. It does nothing to the target yet (the sandbox only says it
 reached it), and only the target it was cast at is marked. The succubi's
 squad keeps to the whip (its drill's `attacks`).
 
-The footman's model (`footman.glb`), the wolf scout's export and the goblins'
-GLBs, the archer's, the spearman's and the orc brute's too (their sidecars are in Git), are not in Git. Where they are missing, the
+The rigged models carry Mixamo-derived clips and are not in Git: the
+footman's (`footman.glb`), the spearman's, crossbowman's and battle mage's
+(`art3d/*.glb`), the succubus's (`succubus.fbx`), the wolf scout's export and
+the goblins' GLBs, the archer's, the goblin spearman's and the orc brute's
+too. Their sidecars are in Git, except the wolf scout's. Where they are missing, the
 sandbox leaves those units out (and their squads) and says which in the left
 panel and the console.
 
@@ -274,8 +277,8 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   loaded from `local/` at run time onto a unit's model.
 - `shaders/`: the ground (relief bake, fog, grid, route marks, hover), the
   painted cards and the kiss's fog (`fog_heart.gdshader`).
-- `art3d/`: the spearman, crossbowman and battle mage exports with their
-  sidecars, and the kiss heart's two shapes (`kiss_heart_sdf.png`,
+- `art3d/`: the spearman, crossbowman and battle mage exports (the GLBs stay
+  local, see above) with their sidecars, and the kiss heart's two shapes (`kiss_heart_sdf.png`,
   `kiss_puff_sdf.png`: distance from the edge, imported lossless). The
   footman and succubus are read from `prototypes/footman_anim/art3d`, the
   wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble

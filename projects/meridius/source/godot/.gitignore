@@ -22,6 +22,15 @@
 /art/succubus_3d/succubus_anim.blend
 /prototypes/footman_anim/art3d/succubus.fbx
 /prototypes/footman_anim/art3d/succubus.fbx.import
+# So do the spearman's rig and the spearman's, crossbowman's and battle mage's
+# GLBs (their sidecars and textures are in Git).
+/art/spearman_3d/spearman_rig.blend
+/prototypes/sandbox3d/art3d/spearman.glb
+/prototypes/sandbox3d/art3d/spearman.glb.import
+/prototypes/sandbox3d/art3d/crossbowman.glb
+/prototypes/sandbox3d/art3d/crossbowman.glb.import
+/prototypes/sandbox3d/art3d/mage.glb
+/prototypes/sandbox3d/art3d/mage.glb.import
 # The goblin rabble's sandbox exports carry Mixamo motion and stay local (their
 # sidecars are in Git); the roster leaves the goblins out where they are missing.
 /prototypes/goblin_rabble_anim/art3d/*

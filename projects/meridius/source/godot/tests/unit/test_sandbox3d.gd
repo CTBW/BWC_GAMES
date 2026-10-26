@@ -111,14 +111,11 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 	if slow("loads every rigged 3D model"): return
 	var tree := Engine.get_main_loop() as SceneTree
 	var units: Array = Roster.available()
-	# The footman's GLB and the wolf scout's export are not in Git: a unit whose
-	# files are missing is left out, but the sandbox's own exports are there.
+	# The rigged models carry Mixamo-derived clips and are not in Git: a unit
+	# whose files are missing is left out (a fresh clone has none of them).
 	for m in Roster.missing():
 		print("  (%s left out: %s)" % [m.title, ", ".join(m.files)])
-		for f in m.files:
-			assert_false(String(f).begins_with(Roster.ART), "the sandbox's own export " + f)
 	assert_eq(units.size() + Roster.missing().size(), Roster.UNITS.size())
-	assert_true(units.size() >= 3, "at least the sandbox's own units")
 	for p in units:
 		var id := String(p.id)
 		if p.get("controller", "") == "footman":

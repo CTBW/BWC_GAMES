@@ -5,8 +5,8 @@
 ## the parts drawn without an outline or from both sides. Roles a sidecar
 ## names itself (`roles`, the spearman's, crossbowman's, goblins' and orc's exports)
 ## fill the rest. A model whose file is missing is left out of the roster
-## (the footman's GLB, the wolf scout's export and the goblins' and the orc
-## brute's GLBs are not in Git).
+## (the rigged models carry Mixamo-derived clips and are not in Git; their
+## sidecars are, except the wolf scout's).
 extends RefCounted
 
 const ART := "res://prototypes/sandbox3d/art3d/"

@@ -54,6 +54,8 @@ projects/meridius/references/characters/goblin_*/*.png
 !projects/meridius/references/characters/goblin_archer/source_crop.png
 !projects/meridius/references/characters/goblin_spear/source_crop.png
 !projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
+projects/meridius/references/characters/orc_*/*.png
+!projects/meridius/references/characters/orc_brute/source.png
 # Terrain and boss art is public as WebP copies in its Workspace card; the
 # reference library's full-size PNGs stay local.
 projects/meridius/references/backgrounds/terrain/**/*.png

@@ -5,7 +5,8 @@ look: the terrain lab's painted ground on hills, the painted woodland (cards
 that fade when a unit walks behind them), grass blades, a pond, the fog of war
 and a night light. The camera is the game's: orthographic, 30 degrees down, a
 soldier 49 px tall at zoom 1. Use it to judge how each unit walks over the
-map, idles, attacks, takes a blow and dies, beside the others.
+map, idles, attacks, takes a blow and dies, beside the others, and how each
+kind's squad marches, stands and fights.
 
 ```
 tools/godot.sh --path . res://prototypes/sandbox3d/scenes/sandbox3d.tscn
@@ -21,20 +22,29 @@ foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
 stealth stance), succubus (whip lash with its slash effects), the goblin
 rabble in its three loadouts (knife, hatchet, cleaver: one chop each, with the
-barrel-bottom or plank shield), the goblin archer (horn bow, arrows) and the
-goblin spearman (a two-handed spear thrust). Players
-are blue, enemies red. Two straw
-dummies stand in the yard, and a drill line of six in its south faces the
-footman squad.
+barrel-bottom or plank shield), the goblin archer (horn bow, arrows), the
+goblin spearman (a two-handed spear thrust) and the orc brute (a spiked club,
+or one in each fist). Players
+are blue, enemies red. Every kind fights in its own squad (see **The
+squads**); one of each stands alone on the bench, a row on the open ground
+north of the yard, to try his clips and blows, with two straw dummies before
+it. A drill line of six dummies stands in the yard for the footmen.
 
-The **Goblin Rabble** stands by the wolf scouts, one goblin per loadout, each
-with his own roster button. All three share the rig's idle, in-place walk
+**Wolf Scout 2** stands on the bench beside the original Wolf Scout, with
+her own roster button, model and squad. She uses the approved v04.5 sneak walk and the original
+Scout's idle, twin-dagger attack and death motion transferred to the revised
+rig. The attack still strikes at 0.8 and 0.8333 seconds; locomotion uses the
+sneak's authored 1.83015 m/s speed. Select her, then use the clip buttons or
+ordinary move/attack orders. The original Wolf Scout remains available.
+
+The **Goblin Rabble** stands on the bench by the wolf scouts, one goblin per
+loadout, each with his own roster button (their squad mixes the three). All three share the rig's idle, in-place walk
 (0.86 m/s), chop (the blow at 0.8667 s, the hatchet's at 0.8333 s) and death,
 retargeted from Mixamo and baked per loadout by
 `references/characters/blender/goblin_rabble/tools/export_godot.py`. They
 have no hit clip and flinch procedurally.
 
-The **Goblin Archer** stands behind them, the hooded goblin with the horn bow.
+The **Goblin Archer** stands beside them, the hooded goblin with the horn bow.
 He walks into range (10 m) and a clear line, draws an arrow over his shoulder,
 nocks it and looses at 1.033 s: the sandbox's `arrow` missile leaves from the
 arrow's middle at that frame (the sidecar's `shot_from`), so it takes the drawn
@@ -43,7 +53,7 @@ arrow's place and flies on a gentle arc. Struck, he raises the bow to block
 in the clip list. Exported by
 `references/characters/blender/goblin_archer/tools/export_godot.py`.
 
-The **Goblin Spearman** stands north of the rabble, the bald goblin with the
+The **Goblin Spearman** stands beside him, the bald goblin with the
 red-ragged spear held level in both hands. His walk (in place, moved at
 0.66 m/s) keeps the spear carried. He draws back and drives a two-handed thrust: the tip is
 furthest forward, 2.29 m from where he stands, at 1.267 s (the blow), so he
@@ -51,14 +61,90 @@ strikes from 2 m. In his death the right fist opens at 1.5 s and the spear falls
 flat beside him. He has no hit clip and flinches procedurally. Exported by
 `references/characters/blender/goblin_spear/tools/export_godot.py`.
 
+The **Orc Brute** stands beside the spearman, the brown-skinned orc, two
+metres tall, with the spiked club in his right fist and his left hand empty.
+His walk (in place, moved at 1.33 m/s) carries the club. His blow is a wild
+rising swing on his right side: he winds the club far back, throws his left
+arm up and sweeps the club up through chest height; the club's head is
+furthest forward, 1.76 m from where he stands, at 1.033 s (the blow), so he
+strikes from 1.6 m. In his death his fist lets the club go at 0.9 s and it
+falls flat beside him. He has no hit clip and flinches procedurally.
+**Orc Brute · two clubs** (`orc_brute_dual.glb`) stands beside him with a
+club in each fist: the same clips and blow, the left club held up with his
+left arm; dying, he lets the left club go at 0.733 s and the right at
+0.833 s. Both are exported by
+`references/characters/blender/orc_brute/tools/export_godot.py`.
+
+The brutes' faces and kit tell the men of their squad apart. The sidecar's
+`faces` names each face variant: `jaw` (an iron jaw guard on his head),
+`beard` (a braided beard, its braids resting on his chest strap) and `scar`
+(two claw gouges over his left eye, painted into a copy of his body's colour
+that sits next to the GLB). A profile's `face` lists the faces a unit wears;
+the meshes of the other faces go, and a face's `albedo` swaps the body's
+colour. The sidecar's `kit` names gear a man can lose: `no_left_pauldron` and
+`no_right_pauldron` hide that spiked shoulder plate, and a profile's `kit`
+lists his (`unit3d.gd` `_dress`). The squad's `faces` in `Roster.SQUADS` deals
+one to each man, shuffled: jaw, beard, scar, beard and scar, jaw and scar, and
+one bare; its `kit`, shuffled on its own, takes the left pauldron off one man
+and the right off another. Its `units` make two of the six men two-club
+brutes. The brutes on the bench are bare, in full kit.
+
 The footman's model (`footman.glb`), the wolf scout's export and the goblins'
-GLBs, the archer's and the spearman's too (their sidecars are in Git), are not in Git. Where they are missing, the
-sandbox leaves those units out (and the squad with the footman) and says which
-in the left panel and the console.
+GLBs, the archer's, the spearman's and the orc brute's too (their sidecars are in Git), are not in Git. Where they are missing, the
+sandbox leaves those units out (and their squads) and says which in the left
+panel and the console.
+
+## The squads
+
+Every kind fights in its own squad (`Roster.SQUADS`; each kind's drill in
+`squad3d.gd` `DRILLS`), the players' west of the yard facing east and the
+enemy's east of it facing west. Click a man, or the squad's button in the
+left panel, to select his squad; **Battle: every squad attacks** sets each
+squad on the foe squad nearest it.
+
+| Squad | Men | Drill and fight |
+| --- | --- | --- |
+| Footmen | 6 | two ranks of three; the front rank fights, or **Spread to the line** (below) |
+| Spearmen | 6 | two chequered ranks of three; both ranks thrust, the rear rank's spears past the front rank's shoulders |
+| Crossbowmen | 6 | two chequered ranks of three; they halt in range with a clear line and loose in volleys, or at will |
+| Battle Mages | 3 | a wedge; each casts his own spell when he is ready (a frost nova at a foe close by), or in volleys |
+| Wolf Scouts, Wolf Scouts 2 | 3 each | a wedge; they close round the foe, each to a flank |
+| Succubi | 3 | a wedge; they close round the foe with room for the whips |
+| Goblin Rabble | 10 | two ragged ranks of five, knives, hatchets and cleavers mixed, each goblin his own size and pace; the rear rank joins the line |
+| Goblin Archers | 8 | two chequered ranks of four; volleys on the arc, or at will |
+| Goblin Spearmen | 8 | two chequered ranks of four; both ranks thrust |
+| Orc Brutes | 6 | two loose ranks of three, each man with his own face, two with a club in each fist and two missing a pauldron; the rear rank shoulders in beside the front |
+
+How every squad fights:
+
+- **Each man goes for the foe nearest him**, each foe a mate already strikes
+  counting 0.6 m farther, so that the men share the foes out; a man with no
+  foe in reach goes to a free place by the foe nearest him (a spear in the
+  rear rank keeps his place and strikes from there).
+- **The man set upon answers.** A man picked or struck by a foe strikes back
+  at him if he is in his reach (or a step beyond), rear rank or not; a man who
+  has struck all his blows is given one more to answer with, at most three
+  times a fight. His squad, if it stands at rest, takes up the fight with the
+  foe's front when the foe is near (a shooting squad when he is in range) and
+  turns to face a farther one. A strike back is not answered.
+- **Every fight ends.** A squad that took up a fight because it was set upon
+  (it is `answering`) is not set on again, once it has re-formed, by its foe's
+  last blows: its man struck strikes back once from his place when he has
+  steadied, and the squad stays at rest. A blow from a squad at rest is a
+  strike back, which nobody answers.
+- **Blows** come each after the man's own pause, never two at once.
+  **Shooting squads** halt in range with a clear line; in a volley every man
+  waits for the others to have reloaded, then each starts his shot so that
+  all leave together (within 0.22 s).
+- With a squad selected, a ghost of its formation shows where it would stand
+  at the cursor, and a foe under the cursor rings his whole squad red.
+- The squad's panel: its orders, **Front rank only / Spread to the line** for
+  a drill whose front rank fights, **In volleys / At will** for shooters, and
+  a button per man (in his rank's row) to select him alone.
 
 ## The footman squad
 
-Six footmen in two ranks of three, each on the footman's own controller, who
+The footmen's drill in detail. Six footmen in two ranks of three, each on the footman's own controller, who
 march, stand and fight together but never quite in step. Where the squad looks
 lab (`prototypes/squad_looks`) is present, it dresses each man as a squad of
 the blue livery and the line kit: his own helmet, face and build, and the
@@ -89,8 +175,7 @@ the men are the plain footman.
 
 The squad's panel also has **Re-form**, **Wheel left / right** (**Q / E**),
 **About face**, **Halt**, hit, death, revive and stop for all six, and a
-button per man to select him alone (his own clips and actions). A struck man
-whose squad stands idle sets the squad on his attacker.
+button per man to select him alone (his own clips and actions).
 
 ## Controls
 
@@ -108,9 +193,11 @@ whose squad stands idle sets the squad on his attacker.
   **G** grid, **V** fog, **N** night.
 - Footman only: **B** (held) block, **C** shield charge, **X** counter,
   **L** lane step, **P** walk pace or game pace.
-- With the squad selected: **1 / Space** attack, **Q / E** wheel left or right.
+- With a squad selected: **1 / Space** attack the nearest foe, **Q / E** wheel
+  left or right. **Tab** goes through the squads, then the bench.
 
-The left panel lists the roster and, for the selected unit, its attacks,
+The left panel lists the squads, the **Battle** button and the bench's
+roster and, for the selected squad its panel, for the selected unit its attacks,
 stances and every clip in its model (any clip can be played). The right panel
 switches the fog (and forgets the explored ground), grid, night, follow,
 outlines, shadows, the footman's 2D sprite beside him, **Lethal blows** (a
@@ -130,15 +217,21 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
 ## Files
 
 - `scenes/sandbox3d.tscn`, `scripts/sandbox3d.gd`: camera, selection, orders,
-  combat (blows, fight back, missiles), fog, panels, captures.
+  combat (blows, fight back, missiles), fog, panels, captures. It sets every
+  figure on the relief and tilts a fallen one onto the ground's plane under it
+  (sampled 0.9 m either way, over 0.8 s), so a body and the weapons it dropped
+  lie on a slope rather than half above and half in it; a revived one stands
+  back up.
 - `scripts/field3d.gd`: the 28 x 28 map (hills, the yard, a road, the pond,
   woods) with a forest ring, its relief, ground bake, woodland cards, grass
   blades, routes (A* with string pulling) and ground picking.
-- `scripts/squad3d.gd`: the footman squad: its formation, march, fight and
-  re-forming (the sandbox spawns it, its drill line and its panel).
+- `scripts/squad3d.gd`: a squad: its drill (every kind's in `DRILLS`),
+  formation, march, fight, volleys, answering and re-forming (the sandbox
+  spawns every squad, the drill line and the squad's panel).
 - `scripts/fog3d.gd`: seen and explored tiles from the battle's visibility rules
   (`scripts/rules/visibility.gd`), eased into the ground shader's fog texture.
-- `scripts/roster.gd`: one profile per unit (see below).
+- `scripts/roster.gd`: one profile per unit (see below) and the squads
+  (`SQUADS`: units, size, home, blurb, drill).
 - `scripts/unit3d.gd`: a rigged unit: clips from its sidecar, walking with the
   clip's ground speed, turning, attacks timed on the sidecar's events, hit
   (a short procedural flinch when the model has no hit clip), a random death
@@ -153,8 +246,10 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
 - `art3d/`: the spearman, crossbowman and battle mage exports with their
   sidecars. The footman and succubus are read from `prototypes/footman_anim/art3d`,
   the wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble
-  from `prototypes/goblin_rabble_anim/art3d` and the archer from
-  `prototypes/goblin_archer_anim/art3d` (outside the ignored `art/`, so
+  from `prototypes/goblin_rabble_anim/art3d`, the archer from
+  `prototypes/goblin_archer_anim/art3d`, the goblin spearman from
+  `prototypes/goblin_spear_anim/art3d` and the orc brute from
+  `prototypes/orc_brute_anim/art3d` (outside the ignored `art/`, so
   Godot imports them), the squad's dress from `prototypes/squad_looks/scripts`.
 
 ## Adding a unit
@@ -173,10 +268,16 @@ roles and attacks itself. A profile whose files are missing is left out.
 ## Checks
 
 - `tools/test.sh test_sandbox3d`: the map, routes, fog, sidecar events, every
-  roster model with its clips, and the squad (its ranks, places, foe's front,
-  free places, and whole fights on stand-in men: only the front rank strikes,
-  the blows are staggered, spread to the line all six strike, a rear man
-  closes up, the ranks re-form).
+  roster model with its clips, and the squads: every squad's size and drill,
+  the homes, bench and drill line on open ground and apart, each drill's
+  places (two ranks of five, chequered ranks, the wedge), the footmen's ranks,
+  places, foe's front and free places, and whole fights on stand-in men (only
+  the front rank strikes, the blows are staggered, spread to the line all six
+  strike, a rear man closes up, the ranks re-form; each man's first blow at
+  the foe nearest him; both ranks of spears strike from their places; two
+  volleys of six; a wedge closes round its foe; a squad set upon answers, each
+  man struck strikes back and the fight ends; a squad at rest strikes back
+  from its places).
 - Review captures in a real window (all shots, or those starting with a prefix):
   ```
   tools/godot.sh --path . --audio-driver Dummy res://prototypes/sandbox3d/scenes/sandbox3d.tscn -- --capture=res://tests/visual/out/sandbox3d [--shots=strike]
@@ -187,8 +288,15 @@ roles and attacks itself. A profile whose files are missing is left out.
   strikes back), a lethal thrust and the mage's four spells. `--shots=squad`
   takes the squad's: the start view, its ranks, the march to the drill line,
   the front rank's blows, the re-formed ranks, the line of six, a march north
-  and a lone foe, and prints who struck when (`SQUAD` lines). `--clean` hides
-  the panels and selection rings.
+  and a lone foe, and prints who struck when (`SQUAD` lines). `--shots=army`
+  takes only the squads' shots: every squad at home (a squad with faces also
+  close up, turned to the camera), the bench, then a battle
+  and a battle with lethal blows (the advance, the clash, each squad close in
+  the fight, a crossbow volley, the height of it, after), and prints `ARMY`
+  lines: how many blows went to the foe nearest, the men struck who struck
+  back, each shooting squad's volleys (shots and spread), who still stands
+  and the frame rate in the clash. `--clean` hides the panels and selection
+  rings.
 - A tour of about a minute and a half for a video, ending with the squad's
   fight (game time, so the movie maker records it frame by frame), then quit:
   ```
@@ -197,18 +305,20 @@ roles and attacks itself. A profile whose files are missing is left out.
   The Workspace's Sandbox card shows the clean captures.
 - Frame cost with its parts switched off in turn:
   `tools/godot.sh --path . --audio-driver Dummy -s res://prototypes/sandbox3d/qa/perf.gd`.
-  On an RTX 4070 at 1600 x 900, with the squad: about 63 fps at zoom 1.25 and
-  53 at zoom 0.62 (measured with another Godot instance busy alongside; 77
-  and 63 before the squad, alone); the sandbox's own `_process` takes about
-  3 ms. Selection rings sample the relief at eight points each and are kept
-  while their unit stands still: six re-sampled each frame cost under 1 ms.
+  On an RTX 4070 at 1600 x 900, with every squad and the bench (75 figures):
+  about 52 fps at zoom 1.25 and 48 at zoom 0.62 (19 and 21 ms a frame; 78 fps
+  without the figures, whose animation is most of the cost). The sandbox's
+  own `_process` is under 1 ms: the crown fade looks only at the figures in
+  the screen's columns under each crown, and a figure is set on the ground
+  only where it moved. Selection rings sample the relief at eight points each
+  and are kept while their unit stands still.
 
 ## Open points
 
 - The spearman's `turn_90` clip turns only 67.5 degrees; the sandbox does not use
   it (units turn in place by steering their yaw).
 - The crossbowman's walk speed (1.19 m/s) comes from local Mixamo sources.
-- The wolf scout and the goblin rabble have no hit clip; they flinch
+- The wolf scout, the goblins and the orc brute have no hit clip; they flinch
   procedurally.
 - The goblins' walk is in place; its planted foot slides about 4% slower than
   the walk's root speed (`speed_footlock_mps` 0.8197 against 0.8555 m/s).

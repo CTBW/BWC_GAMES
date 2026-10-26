@@ -1,0 +1,185 @@
+{
+ "fps": 30.0,
+ "source": "projects/meridius/references/characters/blender/orc_brute/orc_brute_dual_rig.blend",
+ "loadout": "dual",
+ "props": [
+  "Club",
+  "ClubLeft"
+ ],
+ "faces": {
+  "jaw": {
+   "show": [
+    "JawPlate"
+   ]
+  },
+  "beard": {
+   "show": [
+    "Beard"
+   ]
+  },
+  "scar": {
+   "albedo": {
+    "OrcBrute": "orc_brute_body_scar_basecolor.jpg"
+   }
+  }
+ },
+ "kit": {
+  "no_left_pauldron": {
+   "hide": [
+    "PauldronLeft"
+   ]
+  },
+  "no_right_pauldron": {
+   "hide": [
+    "PauldronRight"
+   ]
+  }
+ },
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.929,
+ "height_rest_m": 2.006,
+ "roles": {
+  "idle": "idle",
+  "walk": "walk",
+  "attack": [
+   "attack"
+  ],
+  "death": [
+   "death"
+  ]
+ },
+ "notes": [
+  "Clips are baked from the rig's evaluated pose (both grips, forearm twist, the loincloth flaps, and the keyed weapons); no constraints or drivers go out. The club is skinned to the bone Club (child of mixamorig:RightHand). The second club, ClubLeft, is skinned to the bone ClubLeft (child of mixamorig:LeftHand).",
+  "Locomotion is in place. walk moves the figure by root_vel (m/s, Godot axes): the travel retarget_clips.py removed (travel_from); speed_footlock_mps is how fast his planted foot slides back. idle stands still, a club in each fist, as does the walk. The death keeps its authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "attack is a rising swing of the club on his right side: drawn back low behind his hip, swept forward past his side and up through the foe at chest height, then over his left shoulder. events.contact is when the club's tip is furthest forward while it moves fast (tip_reach_m from where he stood, at tip_height_m); events.swing spans the fast part of the swing up to it. The left club stays in his left fist, its arm kept clear of the body.",
+  "death: events.club_drop and events.clubleft_drop are when each fist lets go; the Club and ClubLeft bones then lay the clubs on the ground.",
+  "No hit clip: the sandbox flinches procedurally.",
+  "faces: his squad's face variants, any of which a unit may combine. A unit shows the meshes of its faces' `show` and drops every other face's; `albedo` swaps a mesh's base colour for the file next to the GLB (the scar: the body's colour with two claw gouges over his left eye). JawPlate (an iron jaw guard) rides the head; Beard (braided, resting on the chest strap) blends from the head through the neck to the chest.",
+  "kit: variants of his gear, which a unit may combine with each other and with his faces. A unit drops the meshes of its kit's `hide`: PauldronLeft and PauldronRight are his spiked shoulder plates, skinned as the body (the shoulder beneath is modelled and painted).",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "Beard",
+  "Club",
+  "ClubLeft",
+  "JawPlate",
+  "OrcBrute",
+  "PauldronLeft",
+  "PauldronRight"
+ ],
+ "bones": 60,
+ "triangles": 34676,
+ "texture_px": 1024,
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 5.3333,
+   "loop": true,
+   "frames": 161,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.2,
+   "loop": true,
+   "frames": 37,
+   "root_vel": [
+    0.0,
+    0.0,
+    1.3299
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.3333,
+      "Left"
+     ],
+     [
+      0.9,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.0,
+   "speed_mps": 1.3299,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 1.3431
+  },
+  "attack": {
+   "anim": "attack",
+   "length": 3.1667,
+   "loop": false,
+   "frames": 96,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    -0.0003,
+    -0.0
+   ],
+   "events": {
+    "contact": 1.0333,
+    "swing": [
+     0.8,
+     1.0333
+    ]
+   },
+   "tip_reach_m": 1.763,
+   "tip_height_m": 1.406,
+   "lead_m": 0.277,
+   "tip_speed_max_mps": 25.55
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.5667,
+   "loop": false,
+   "frames": 78,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 44.2,
+   "hips_drift": [
+    -0.1526,
+    -0.4556,
+    0.8297
+   ],
+   "events": {
+    "settled": 1.9333,
+    "club_drop": 0.8333,
+    "clubleft_drop": 0.7333
+   }
+  }
+ }
+}

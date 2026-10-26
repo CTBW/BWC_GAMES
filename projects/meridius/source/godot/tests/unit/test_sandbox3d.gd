@@ -1,8 +1,10 @@
 extends "res://tests/test_case.gd"
 
 ## The 3D unit sandbox (prototypes/sandbox3d): its map and routes, its fog,
-## every rigged unit of the roster with the clips the sandbox plays, and the
-## footman squad's formation and fight (on stand-in men and ground).
+## every rigged unit of the roster with the clips the sandbox plays, the
+## footman squad's formation and fight, and every kind's squad: its size,
+## home and drill, how it fights, and how a squad set upon answers (on
+## stand-in men and ground).
 
 const Field3D = preload("res://prototypes/sandbox3d/scripts/field3d.gd")
 const Fog3D = preload("res://prototypes/sandbox3d/scripts/fog3d.gd")
@@ -150,6 +152,66 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 		u.free()
 
 
+## The brutes' faces and kit: no two men of the squad share a face, each wears
+## its own meshes and none of the others', the scar paints his body, and a
+## pauldron taken off is gone; some men carry a club in each fist.
+func test_orc_brute_faces_dress_each_man() -> void:
+	var squad: Dictionary = Roster.SQUADS.filter(func(s): return s.id == "orc_brute")[0]
+	var brute: Dictionary = Roster.UNITS.filter(func(p): return p.id == "orc_brute")[0]
+	var dual: Dictionary = Roster.UNITS.filter(func(p): return p.id == "orc_brute_dual")[0]
+	var meta: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(brute.meta))
+	assert_true(squad.units.has("orc_brute") and squad.units.has("orc_brute_dual"), "one club and two clubs in the squad")
+	assert_eq(squad.faces.size(), int(squad.size), "a face for every brute")
+	assert_eq(squad.kit.size(), int(squad.size), "a kit for every brute")
+	var seen := {}
+	for f in squad.faces:
+		var key := "+".join(PackedStringArray(f))
+		assert_false(seen.has(key), "two brutes with the face " + key)
+		seen[key] = true
+		for k in f:
+			assert_true(meta.faces.has(k), "the sidecar has the face " + k)
+	for kit in squad.kit:
+		for k in kit:
+			assert_true(meta.kit.has(k), "the sidecar has the kit " + k)
+	if FileAccess.file_exists(dual.meta):
+		var dual_meta: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(dual.meta))
+		assert_eq(dual_meta.faces, meta.faces, "the two-club brute has the same faces")
+		assert_eq(dual_meta.kit, meta.kit, "and the same kit")
+	if slow("loads the orc brutes once a face and a kit"): return
+	if not ResourceLoader.exists(brute.model) or not ResourceLoader.exists(dual.model):
+		print("  (the orc brutes' GLBs are not on disk)")
+		return
+	var tree := Engine.get_main_loop() as SceneTree
+	# Each face on the one-club brute, each kit on the two-club brute.
+	var looks := []
+	for f in squad.faces:
+		looks.append([brute, f, []])
+	for kit in squad.kit:
+		looks.append([dual, [], kit])
+	for look in looks:
+		var p: Dictionary = look[0].duplicate(true)
+		var f: Array = look[1]
+		var kit: Array = look[2]
+		p["face"] = f
+		p["kit"] = kit
+		var u: Node3D = Unit3D.new()
+		u.setup(p)
+		tree.root.add_child(u)
+		if not u.is_node_ready():
+			u._ready()
+		var key := "%s %s" % [p.id, "+".join(PackedStringArray(f + kit))]
+		assert_eq(u.model.find_child("JawPlate", true, false) != null, f.has("jaw"), key + ": the jaw plate")
+		assert_eq(u.model.find_child("Beard", true, false) != null, f.has("beard"), key + ": the beard")
+		var body := u.model.find_child("OrcBrute", true, false) as MeshInstance3D
+		var tex: Texture2D = (body.get_active_material(0) as StandardMaterial3D).albedo_texture
+		assert_eq(tex.resource_path.ends_with("orc_brute_body_scar_basecolor.jpg"), f.has("scar"), key + ": the scar")
+		assert_eq(u.model.find_child("PauldronLeft", true, false) != null, not kit.has("no_left_pauldron"), key + ": the left pauldron")
+		assert_eq(u.model.find_child("PauldronRight", true, false) != null, not kit.has("no_right_pauldron"), key + ": the right pauldron")
+		assert_true(u.model.find_child("Club", true, false) != null, key + ": the club")
+		assert_eq(u.model.find_child("ClubLeft", true, false) != null, p.id == "orc_brute_dual", key + ": the left club")
+		u.free()
+
+
 ## The footman's own controller needs the live tree: check his model's clips.
 func _check_footman(p: Dictionary) -> void:
 	var model: Node = (load(p.model) as PackedScene).instantiate()
@@ -276,6 +338,321 @@ func test_squad_closes_up_when_a_front_man_falls() -> void:
 	_free_squad(r)
 
 
+# --- Every kind's squad -----------------------------------------------------------
+
+func test_roster_squads_have_their_sizes_and_drills() -> void:
+	var sizes := {"footman": 6, "spearman": 6, "crossbowman": 6, "mage": 3, "wolf_scout": 3, "wolf_scout_2": 3,
+		"succubus": 3, "goblin_rabble": 10, "goblin_archer": 8, "goblin_spearman": 8, "orc_brute": 6}
+	var ids := {}
+	for p in Roster.UNITS:
+		ids[p.id] = p
+	var served := {}
+	for s in Roster.SQUADS:
+		assert_eq(int(s.size), int(sizes.get(s.id, -1)), s.id + " size")
+		assert_true(Squad3D.DRILLS.has(String(s.get("drill", s.id))), s.id + " has its drill")
+		for u in s.units:
+			assert_true(ids.has(u), "%s's men (%s) are in the roster" % [s.id, u])
+			served[u] = true
+	for id in sizes:
+		assert_true(Roster.SQUADS.any(func(s): return s.id == id), id + " has a squad")
+	for p in Roster.UNITS:
+		assert_true(served.has(p.id), p.id + " serves in a squad")
+	# The goblins in two ranks of four, the rabble two of five, threes in a wedge.
+	assert_eq(int(Squad3D.drill_for("goblin_archer").width), 4)
+	assert_eq(int(Squad3D.drill_for("goblin_spearman").width), 4)
+	assert_eq(int(Squad3D.drill_for("goblin_rabble").width), 5)
+	for id in ["mage", "wolf_scout", "succubus"]:
+		assert_eq(int(Squad3D.drill_for(id).width), 1, id + " stands in a wedge")
+
+
+func test_squads_bench_and_drill_line_stand_apart_on_open_ground() -> void:
+	var f := _field()
+	var ids := {}
+	for p in Roster.UNITS:
+		ids[p.id] = p
+	var k: Dictionary = load("res://prototypes/sandbox3d/scripts/sandbox3d.gd").get_script_constant_map()
+	var groups := {}
+	for s in Roster.SQUADS:
+		var player: bool = ids[s.units[0]].faction == "player"
+		var at: Vector3 = Vector3(s.home.x, 0, s.home.y) * f.tile_m
+		var d: Dictionary = Squad3D.drill_for(String(s.get("drill", s.id)))
+		var spots: Array = Squad3D.slots(at, k.PLAYER_FACING if player else k.ENEMY_FACING, int(s.size), d)
+		for p in spots:
+			assert_true(f.walkable(f.tile_of(p)), "%s's man at %s on open ground" % [s.id, f.tile_of(p)])
+		groups[s.id] = spots
+	var bench := []
+	for i in Roster.UNITS.size():
+		var t: Vector2 = k.BENCH + k.BENCH_STEP * i
+		bench.append(Vector3(t.x, 0, t.y) * f.tile_m)
+	for t in k.DUMMY_TILES:
+		bench.append(Vector3(t.x, 0, t.y) * f.tile_m)
+	for i in k.DRILL_COUNT:
+		var g: Vector2 = k.DRILL + Vector2(0, (i - (k.DRILL_COUNT - 1) * 0.5) * Squad3D.FILE / f.tile_m)
+		bench.append(Vector3(g.x, 0, g.y) * f.tile_m)
+	for p in bench:
+		assert_true(f.walkable(f.tile_of(p)), "bench, dummy or drill line at %s on open ground" % f.tile_of(p))
+	groups["the bench, its dummies and the drill line"] = bench
+	# No two squads (or a squad and the bench) near enough to count as one front.
+	var names := groups.keys()
+	for i in names.size():
+		for j in range(i + 1, names.size()):
+			var near := INF
+			for p in groups[names[i]]:
+				for q in groups[names[j]]:
+					near = minf(near, Squad3D.flat(p - q).length())
+			assert_true(near > Squad3D.LINK + 1.0, "%s and %s %.1f m apart" % [names[i], names[j], near])
+	f.free()
+
+
+func test_drills_stand_as_their_kinds_do() -> void:
+	var y := PI / 2
+	var fwd := Vector3(sin(y), 0, cos(y))
+	var left := Vector3(cos(y), 0, -sin(y))
+	# The rabble: two ranks of five, a file apart.
+	var rd: Dictionary = Squad3D.drill_for("goblin_rabble")
+	var rabble: Array = Squad3D.slots(Vector3.ZERO, y, 10, rd)
+	assert_eq(rabble.size(), 10)
+	for i in 10:
+		assert_almost(rabble[i].dot(fwd), rd.rank * (0.5 if i < 5 else -0.5), 1e-5, "rabble man %d's rank" % i)
+		assert_almost(absf(rabble[i].dot(left)), absf(((i % 5) - 2) * rd.file), 1e-5, "rabble man %d's file" % i)
+	# The archers: two ranks of four, each rear man behind a gap in the front rank.
+	var ad: Dictionary = Squad3D.drill_for("goblin_archer")
+	var arch: Array = Squad3D.slots(Vector3.ZERO, y, 8, ad)
+	for i in range(4, 8):
+		var gap := INF
+		for j in 4:
+			gap = minf(gap, absf(arch[i].dot(left) - arch[j].dot(left)))
+		assert_almost(gap, ad.file * 0.5, 1e-5, "archer %d stands behind a gap" % i)
+	# Three in a wedge: the point ahead in the middle, two behind either side.
+	var w: Array = Squad3D.slots(Vector3.ZERO, y, 3, Squad3D.drill_for("mage"))
+	assert_almost(w[0].dot(left), 0.0, 1e-5, "the wedge's point in the middle")
+	assert_true(w[0].dot(fwd) > w[1].dot(fwd) and w[0].dot(fwd) > w[2].dot(fwd), "the point ahead")
+	assert_almost(w[1].dot(left), -w[2].dot(left), 1e-5, "the two behind either side")
+	var r := _kind_rig("goblin_rabble", 10, 0)
+	assert_eq(r.squad.formation(), "two ranks of five")
+	_free_squad(r)
+	r = _kind_rig("wolf_scout", 3, 0)
+	assert_eq(r.squad.formation(), "a wedge")
+	_free_squad(r)
+
+
+func test_ten_men_take_the_nearest_places() -> void:
+	var d: Dictionary = Squad3D.drill_for("goblin_rabble")
+	var spots: Array = Squad3D.slots(Vector3.ZERO, 0.0, 10, d)
+	var order := [7, 2, 9, 0, 5, 3, 8, 1, 6, 4]
+	assert_eq(Squad3D.assign(order.map(func(i): return spots[i]), spots), order)
+	var pick: Array = Squad3D.assign(spots, Squad3D.slots(Vector3.ZERO, PI, 10, d))
+	for i in 5:
+		assert_true(pick[i] >= 5, "front man %d goes to the new rear rank" % i)
+		assert_true(pick[i + 5] < 5, "rear man %d goes to the new front rank" % i)
+
+
+func test_each_man_goes_for_the_foe_nearest_him() -> void:
+	var r := _kind_rig("footman", 6, 6)
+	r.squad.attack(r.foes[2])
+	_run(r, 90.0)
+	var first := {}
+	for b in r.blows:
+		if not first.has(b.man):
+			first[b.man] = b
+	assert_eq(first.size(), 3, "the front rank struck")
+	for m in first:
+		var b: Dictionary = first[m]
+		var near: Node3D = null
+		for f in r.foes:
+			if near == null or Squad3D.flat(f.position - b.pos).length() < Squad3D.flat(near.position - b.pos).length():
+				near = f
+		assert_eq(b.target, near, "a front man's first blow at the foe nearest him")
+	var struck := {}
+	for b in r.blows:
+		struck[b.target] = true
+	assert_true(struck.size() >= 3, "the front rank shares the foes out")
+	_free_squad(r)
+
+
+func test_both_ranks_of_spears_strike_from_their_places() -> void:
+	for id in ["spearman", "goblin_spearman"]:
+		var n := 6 if id == "spearman" else 8
+		var r := _kind_rig(id, n, 6)
+		var sq = r.squad
+		sq.attack(r.foes[2])
+		_run(r, 120.0)
+		var roles := {}
+		var spots: Array = Squad3D.slots(sq.center, sq.yaw, n, sq.drill)
+		for b in r.blows:
+			roles[b.role] = true
+			if b.role == "rear":
+				assert_true(Squad3D.flat(b.pos - spots[b.slot]).length() < Squad3D.SETTLE + 0.2, id + " rear man strikes from his place")
+		assert_true(roles.has("front") and roles.has("rear"), id + ": both ranks strike")
+		_assert_staggered(r.blows, sq.drill.gap.x)
+		assert_eq(sq.mode, "idle", id + ": the fight ended")
+		_free_squad(r)
+
+
+func test_shooters_loose_in_volleys_or_at_will() -> void:
+	var r := _kind_rig("crossbowman", 6, 6)
+	r.squad.attack(r.foes[2])
+	_run(r, 90.0)
+	var groups := []
+	for b in r.blows:
+		if groups.is_empty() or b.t - groups[-1][-1] > 1.0:
+			groups.append([b.t])
+		else:
+			groups[-1].append(b.t)
+	assert_eq(r.blows.size(), 12, "two shots each")
+	assert_eq(groups.size(), 2, "in two volleys")
+	for g in groups:
+		assert_eq(g.size(), 6, "every man looses in the volley")
+		assert_true(g[-1] - g[0] <= Squad3D.VOLLEY_SPREAD.y + 0.05, "the volley's shots leave together (%.2f s)" % (g[-1] - g[0]))
+	assert_eq(r.squad.mode, "idle", "the fight ended")
+	_free_squad(r)
+	r = _kind_rig("crossbowman", 6, 6)
+	r.squad.volley = false
+	r.squad.attack(r.foes[2])
+	_run(r, 90.0)
+	assert_eq(r.blows.size(), 12, "at will: two shots each")
+	_assert_staggered(r.blows)
+	_free_squad(r)
+
+
+func test_a_wedge_closes_round_its_foe() -> void:
+	var r := _kind_rig("wolf_scout", 3, 1)
+	var foe: Node3D = r.foes[0]
+	r.squad.attack(foe)
+	_run(r, 90.0)
+	var at := {}
+	for b in r.blows:
+		if not at.has(b.man):
+			at[b.man] = b.pos
+	assert_eq(at.size(), 3, "every wolf strikes")
+	var angles := []
+	for m in at:
+		assert_true(Squad3D.flat(at[m] - foe.position).length() <= r.squad.reach + 0.05, "a wolf strikes from within reach")
+		for o in at:
+			if o != m:
+				assert_true(Squad3D.flat(at[m] - at[o]).length() >= float(r.squad.drill.room) - 0.05, "room between the wolves")
+		var d := Squad3D.flat(at[m] - foe.position)
+		angles.append(atan2(d.x, d.z))
+	var spread := 0.0
+	for a in angles:
+		for b in angles:
+			spread = maxf(spread, absf(angle_difference(a, b)))
+	assert_true(spread > deg_to_rad(60.0), "round the foe, not in a file (%.0f degrees)" % rad_to_deg(spread))
+	_free_squad(r)
+
+
+func test_a_squad_set_upon_answers_and_the_fight_ends() -> void:
+	var host := FakeHost.new()
+	var a = _side_squad(host, "player", Vector3(12, 0, 20), PI / 2)
+	var b = _side_squad(host, "enemy", Vector3(20, 0, 20), -PI / 2)
+	host.squad = a
+	host.units = a.members + b.members
+	a.attack(b.members[1])
+	var answered := false
+	var dt := 1.0 / 30.0
+	while host.now < 150.0:
+		host.now += dt
+		for m in host.units:
+			m.tick(dt)
+		a.tick(dt)
+		b.tick(dt)
+		if b.mode == "fight" and b.answering:
+			answered = true
+		if host.now > 2.0 and a.mode == "idle" and b.mode == "idle":
+			break
+	assert_true(answered, "the squad set upon took up the fight")
+	assert_eq(a.mode, "idle", "the attackers' fight ended")
+	assert_eq(b.mode, "idle", "the answer ended too: no endless exchange")
+	# Every man struck strikes back at a man who struck him.
+	var struck := {}
+	for x in host.blows:
+		if x.man in a.members:
+			if not struck.has(x.target):
+				struck[x.target] = []
+			struck[x.target].append(x)
+	assert_false(struck.is_empty(), "the attackers struck")
+	for t in struck:
+		var t0: float = struck[t][0].t
+		var by: Array = struck[t].map(func(x): return x.man)
+		assert_true(host.blows.any(func(y): return y.man == t and y.t > t0 and y.target in by), "the man struck strikes back at his striker")
+	_free_sides(host, a, b)
+
+
+func test_a_squad_at_rest_strikes_back_from_its_places() -> void:
+	var host := FakeHost.new()
+	var a = _side_squad(host, "player", Vector3(12, 0, 20), PI / 2)
+	var b = _side_squad(host, "enemy", Vector3(15, 0, 20), -PI / 2)
+	host.squad = a
+	host.units = a.members + b.members
+	# The foes answer a fight that is over for the squad: its man struck
+	# strikes back once from his place, and the squad stays at rest.
+	b.attack(a.members[1])
+	b.answering = true
+	var m: Node3D = a.members[1]
+	var foe: Node3D = b.members[1]
+	var at := m.position
+	a.counter(m, foe)
+	var dt := 1.0 / 30.0
+	while host.now < 3.0:
+		host.now += dt
+		for n in a.members:
+			n.tick(dt)
+		a.tick(dt)
+	assert_eq(a.mode, "idle", "the squad stays at rest")
+	var back: Array = host.blows.filter(func(x): return x.man == m)
+	assert_eq(back.size(), 1, "the man struck strikes back once")
+	assert_true(not back.is_empty() and back[0].target == foe, "at the man who struck him")
+	assert_almost(Squad3D.flat(m.position - at).length(), 0.0, 1e-4, "from his place")
+	# Set upon by foes who are not answering, it takes up the fight.
+	b.answering = false
+	a.counter(m, foe)
+	assert_eq(a.mode, "fight", "the squad takes up the fight")
+	assert_true(a.answering, "as the one set upon")
+	_free_sides(host, a, b)
+
+
+func _free_sides(host, a, b) -> void:
+	for m in host.units:
+		m.free()
+	a._men.clear()
+	b._men.clear()
+	host.squad = null
+
+
+## Six stand-in footmen of `side` in two ranks at `at` facing `yaw`.
+func _side_squad(host, side: String, at: Vector3, yaw: float):
+	var men := []
+	var sq = Squad3D.new()
+	for i in 6:
+		var m := FakeMan.new()
+		m.host = host
+		m.set_meta("side", side)
+		m.set_meta("squad", sq)
+		men.append(m)
+	sq.setup(men, FakeField.new(), host, at, yaw)
+	sq.place(at, yaw)
+	return sq
+
+
+## n stand-in men of squad kind `id` in its drill facing east, 8 m from a
+## line of `foes` dummies a file apart.
+func _kind_rig(id: String, n: int, foes: int) -> Dictionary:
+	var host := FakeHost.new()
+	var men := []
+	for i in n:
+		var m := FakeMan.new()
+		m.host = host
+		men.append(m)
+	for k in foes:
+		var f := Node3D.new()
+		f.position = Vector3(20, 0, 20 + (k - (foes - 1) * 0.5) * Squad3D.FILE)
+		host.dummies.append(f)
+	var sq = Squad3D.new()
+	host.squad = sq
+	sq.setup(men, FakeField.new(), host, Vector3(12, 0, 20), PI / 2, Squad3D.drill_for(id))
+	sq.place(Vector3(12, 0, 20), PI / 2)
+	return {"squad": sq, "host": host, "foes": host.dummies, "blows": host.blows}
+
 func _squad_fight(wide: bool) -> Dictionary:
 	var r := _squad_rig()
 	r.squad.wide = wide
@@ -316,10 +693,10 @@ func _run(r: Dictionary, seconds: float, until_idle := true) -> void:
 			break
 
 
-func _assert_staggered(blows: Array) -> void:
+func _assert_staggered(blows: Array, least: float = Squad3D.GAP.x) -> void:
 	for i in range(1, blows.size()):
 		var gap: float = blows[i].t - blows[i - 1].t
-		assert_true(gap >= Squad3D.GAP.x - 0.04, "blows %d and %d %.2f s apart" % [i - 1, i, gap])
+		assert_true(gap >= least - 0.04, "blows %d and %d %.2f s apart" % [i - 1, i, gap])
 
 
 func _assert_in_ranks(sq) -> void:
@@ -372,7 +749,9 @@ class FakeMan extends Node3D:
 		turn_to(t.position)
 		state = "attack"
 		_busy = 1.5
-		host.blows.append({"man": self, "t": host.now, "role": host.squad._men[self].role})
+		var sq = get_meta("squad") if has_meta("squad") else host.squad
+		var b: Dictionary = sq._men[self]
+		host.blows.append({"man": self, "t": host.now, "role": b.role, "slot": b.slot, "target": t, "pos": position})
 
 	func tick(dt: float) -> void:
 		if dead:
@@ -411,8 +790,12 @@ class FakeHost:
 	func _alive(n) -> bool:
 		return n != null and not (n.has_method("is_dead") and n.is_dead())
 
-	func _hostile(_a, b) -> bool:
-		return b in dummies
+	## A dummy, or a man of the other side (his "side" meta).
+	func _hostile(a, b) -> bool:
+		return b in dummies or (a.has_meta("side") and b.has_meta("side") and a.get_meta("side") != b.get_meta("side"))
+
+	func _squad_of(n):
+		return n.get_meta("squad") if n.has_meta("squad") else null
 
 	func show_route(_marks) -> void:
 		pass

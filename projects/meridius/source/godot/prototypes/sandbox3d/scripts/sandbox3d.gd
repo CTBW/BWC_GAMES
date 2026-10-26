@@ -8,12 +8,14 @@
 ##   ... -- --capture=<dir> [--shots=<prefix>]   review captures, then quit
 ##   ... -- --tour                                a short tour for a video, then quit
 ## (--clean hides the panels and selection rings for either.)
-## The footman squad (squad3d.gd): six footmen in two ranks of three in the
-## south of the yard, with a drill line of six straw dummies to fight. Click a
-## man to select the squad; it marches, stands and fights together, its front
-## rank striking while the rear rank stands ready (or, with "Spread to the
-## line", the rear rank stepping up beside it). The squad looks lab
-## (prototypes/squad_looks) dresses its men when it is on disk.
+## The squads (squad3d.gd, Roster.SQUADS): every kind in its own squad and
+## drill, the players' west of the yard facing east and the enemy's east of it
+## facing west. Click a man to select his squad; it marches, stands and fights
+## together, each man going for the foe nearest him, and a squad set upon
+## answers. The footmen have a drill line of six straw dummies to fight; the
+## squad looks lab (prototypes/squad_looks) dresses them when it is on disk.
+## One of each kind stands on the bench north of the yard, alone,
+## to try his clips and blows.
 ## Grown from the footman's sandbox (prototypes/footman_anim), which stays as
 ## his flat-ground bench for its QA scripts; this scene keeps the names they
 ## use (footman, dummy, click, march_to_tile, _set_zoom, ...). Nothing here
@@ -47,24 +49,25 @@ const FACINGS := {"SE": Vector3(1, 0, 0), "SW": Vector3(0, 0, 1), "NW": Vector3(
 const OUTLINE_PX := 2.0
 const ZOOM_MIN := 0.6
 const ZOOM_MAX := 6.0
+const FADE_COLUMN := 64.0
 ## The game's footman sprite (squadgen sheet) for comparison: its scale and
 ## the squad member scale (squad_view.gd MEMBER_SCALE), idle frames 0 1 2 1.
 const SPRITE_DOC := "res://assets/sprites/anim/footman.json"
 const MEMBER_SCALE := 0.52
 const IDLE_FRAME := 0.42
-## Where everyone starts (tiles), in the flat yard: the player's units on its
-## west side facing east, the enemy's on the east facing west, dummies between.
-const PLAYER_TILES := [Vector2i(11, 15), Vector2i(10, 17), Vector2i(9, 19), Vector2i(10, 13), Vector2i(12, 20), Vector2i(12, 12)]
-const ENEMY_TILES := [Vector2i(18, 15), Vector2i(18, 18), Vector2i(19, 13), Vector2i(19, 20)]
-const DUMMY_TILES := [Vector2i(13, 16), Vector2i(15, 13)]
-## The squad: its men, its centre (tiles) and facing at the start, each man's
-## own pace (his playback, so no two keep step), and its drill line: six
-## dummies a file apart, a march east of it.
-const SQUAD_SIZE := 6
-const SQUAD_HOME := Vector2(12.0, 20.0)
-const SQUAD_FACING := PI / 2
-const SQUAD_RATE := Vector2(0.95, 1.05)
-const DRILL := Vector2(16.0, 20.0)
+## The bench (tiles): one of each unit, in the roster's order, a tile apart in
+## a row on the open ground north of the yard, facing the camera; two straw
+## dummies before it.
+const BENCH := Vector2(8.0, 9.0)
+const BENCH_STEP := Vector2(1.0, 0.0)
+const BENCH_FACING := PI / 4
+const DUMMY_TILES := [Vector2i(10, 11), Vector2i(13, 11)]
+## The squads face east (the players') and west (the enemy's) at the start.
+const PLAYER_FACING := PI / 2
+const ENEMY_FACING := -PI / 2
+## The footman squad's drill line: six dummies a file apart, north-east of
+## it, out of the two sides' way.
+const DRILL := Vector2(16.2, 12.0)
 const DRILL_COUNT := 6
 ## The squad looks lab (prototypes/squad_looks) dresses the squad's men, each
 ## in his own face, hair, kit and helmet under the company's blue livery, when
@@ -72,9 +75,9 @@ const DRILL_COUNT := 6
 const LOOKS := "res://prototypes/squad_looks/scripts/"
 const SQUAD_LIVERY := 0
 const SQUAD_KIT := "line"
-## The camera at the start: the yard with the squad and its drill line in view.
-const START := Vector2(13.3, 17.4)
-const START_ZOOM := 1.1
+## The camera at the start: the two sides' squads facing each other over the yard.
+const START := Vector2(16.4, 17.1)
+const START_ZOOM := 0.8
 const DAY := {"sun": 0.5, "sun_color": Color(1.0, 0.96, 0.88), "ambient": 0.6, "ambient_color": Color(0.86, 0.9, 1.0),
 	"paint": Vector3(1, 1, 1), "bg": Color(0.07, 0.09, 0.07)}
 const NIGHT := {"sun": 0.3, "sun_color": Color(0.62, 0.72, 1.0), "ambient": 0.42, "ambient_color": Color(0.5, 0.6, 0.95),
@@ -104,7 +107,11 @@ var world: Node3D
 var units: Array = []
 var dummies: Array = []
 var selected: Array = []
+## Every squad, and the footman squad (as the footman's QA scripts know it).
+var squads: Array = []
 var squad
+## Each squad's entry in Roster.SQUADS (its home, blurb, ...).
+var _squad_def := {}
 ## The drill line's dummies (also in `dummies`).
 var drill: Array = []
 ## The footman and the first dummy, as the footman's QA scripts know them.
@@ -120,7 +127,12 @@ var _armed := 0
 var _dragging := false
 var _drag_moved := 0.0
 var _hover_tile := Vector2i(-99, -99)
+var _hover_point := Vector3.INF
 var _hover_unit: Node3D
+## Seconds of play, each frame counted at most 0.05 s (a capture's stall is not play).
+var _clock := 0.0
+## The selected squad's places at the ground under the cursor, kept while the cursor stays on its tile.
+var _ghost := {}
 var _route := {}
 var _flash_text := ""
 var _flash_t := 0.0
@@ -135,6 +147,13 @@ var _status: Label
 var _info: Label
 var _buttons := {}
 var _fade_t := 0.0
+## The field's tree cards (_fade_crowns).
+var _tree_cards: Array = []
+## Where each unit and dummy was last set on the ground, and its height there.
+var _grounded := {}
+var _grounded_y := {}
+## How far each fallen unit has tilted onto the slope under it (0 upright, 1 lying on it).
+var _lying := {}
 var _focus_goal := Vector3.INF
 var _capturing := false
 var _cap_dir := ""
@@ -183,12 +202,16 @@ func _ready() -> void:
 	_spawn()
 	for m in Roster.missing():
 		print("Sandbox: %s left out, not on this computer: %s" % [m.title, ", ".join(m.files)])
-	if squad == null:
-		print("Sandbox: no footman squad without the footman")
+	for s in Roster.SQUADS:
+		if not squads.any(func(q): return q.id == s.id):
+			print("Sandbox: no %s, their men are not on this computer" % s.title)
 	_build_sprite()
 	_build_ui()
 	focus = field.on_ground(START) + Vector3(0, 0.85, 0)
-	_select([footman] if footman else ([units[0]] if not units.is_empty() else []))
+	if squad:
+		_select(squad.alive())
+	else:
+		_select([footman] if footman else ([units[0]] if not units.is_empty() else []))
 	_apply_look()
 	_apply_light()
 	get_window().title = "Meridius - 3D unit sandbox"
@@ -235,10 +258,8 @@ func _build_world() -> void:
 	cam.make_current()
 
 
-## The roster on its start tiles, and the dummies.
+## The roster on the bench, the dummies, then the squads.
 func _spawn() -> void:
-	var pi := 0
-	var ei := 0
 	for p in Roster.available():
 		var u: Node3D = FootmanUnit.new() if p.get("controller", "") == "footman" else Unit3D.new()
 		u.setup(p)
@@ -247,16 +268,10 @@ func _spawn() -> void:
 		if p.get("controller", "") == "footman":
 			u.tile_m = tile_m
 			footman = u
-		var t: Vector2i
-		if u.faction == "player":
-			t = PLAYER_TILES[pi % PLAYER_TILES.size()]
-			pi += 1
-		else:
-			t = ENEMY_TILES[ei % ENEMY_TILES.size()]
-			ei += 1
+		var t: Vector2 = BENCH + BENCH_STEP * (units.size())
 		u.set_meta("home", t)
-		u.position = field.on_ground(Vector2(t))
-		u.rotation.y = atan2(1.0, 0.0) if u.faction == "player" else atan2(-1.0, 0.0)
+		u.position = field.on_ground(t)
+		u.rotation.y = BENCH_FACING
 		u.impact.connect(_on_impact.bind(u))
 		u.release.connect(_on_release.bind(u))
 		units.append(u)
@@ -268,41 +283,66 @@ func _spawn() -> void:
 		world.add_child(d)
 		dummies.append(d)
 	dummy = dummies[0]
-	_spawn_squad()
-
-
-## The footman squad in two ranks in the south of the yard, facing east toward
-## its drill line.
-func _spawn_squad() -> void:
-	var p: Dictionary = {}
-	for q in Roster.available():
-		if q.get("controller", "") == "footman":
-			p = q
-	if p.is_empty():
-		return
-	squad = Squad3D.new()
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
+	for s in Roster.squads():
+		_spawn_squad(s, rng)
+	if squad:
+		_spawn_drill_line()
+
+
+## Squad `s` (Roster.squads) on its home ground in its drill, each man at his
+## own pace (his playback, so no two keep step), with his own face and kit if
+## the squad has them and, if the drill says so, of his own size; the footmen
+## dressed by the squad looks lab when it is on disk.
+func _spawn_squad(s: Dictionary, rng: RandomNumberGenerator) -> void:
+	var d: Dictionary = Squad3D.drill_for(String(s.get("drill", s.id)))
+	var sq = Squad3D.new()
+	var n := int(s.size)
 	var dressed: Script = null
 	var looks := []
-	if ResourceLoader.exists(LOOKS + "dressed_footman.gd"):
+	if s.id == "footman" and ResourceLoader.exists(LOOKS + "dressed_footman.gd"):
 		dressed = load(LOOKS + "dressed_footman.gd")
 		var squad_look: Script = load(LOOKS + "squad_look.gd")
 		var livery: Dictionary = squad_look.get_script_constant_map().LIVERIES[SQUAD_LIVERY]
-		looks = squad_look.squad(SQUAD_SIZE, rng.randi(), livery, SQUAD_KIT)
+		looks = squad_look.squad(n, rng.randi(), livery, SQUAD_KIT)
+	# Several kinds (the rabble's knives, hatchets and cleavers) share the men out, mixed.
+	var kinds := []
+	for i in n:
+		kinds.append(s.profiles[i % s.profiles.size()])
+	kinds.shuffle()
+	# Faces tell the men apart (the brutes' jaw plates, beards and scars), and so does their kit
+	# (a brute's pauldron gone), each dealt out the same way.
+	var faces: Array = s.get("faces", []).duplicate()
+	faces.shuffle()
+	var kit: Array = s.get("kit", []).duplicate()
+	kit.shuffle()
 	var men := []
-	for i in SQUAD_SIZE:
-		var u: Node3D = dressed.new() if dressed else FootmanUnit.new()
+	for i in n:
+		var p: Dictionary = kinds[i]
+		var size := rng.randf_range(d.size.x, d.size.y)
+		if not is_equal_approx(size, 1.0):
+			p = p.duplicate()
+			p["scale"] = float(p.get("scale", 1.0)) * size
+		if not faces.is_empty() or not kit.is_empty():
+			p = p.duplicate()
+		if not faces.is_empty():
+			p["face"] = faces[i % faces.size()]
+		if not kit.is_empty():
+			p["kit"] = kit[i % kit.size()]
+		var footy: bool = p.get("controller", "") == "footman"
+		var u: Node3D = dressed.new() if dressed else (FootmanUnit.new() if footy else Unit3D.new())
 		u.setup(p)
-		u.name = "SquadFootman%d" % (i + 1)
+		u.name = "Squad%s%d" % [String(s.id).to_pascal_case(), i + 1]
 		if dressed:
 			u.look_spec = looks[i]
 		world.add_child(u)
-		u.tile_m = tile_m
-		var r := rng.randf_range(SQUAD_RATE.x, SQUAD_RATE.y)
+		if footy:
+			u.tile_m = tile_m
+		var r := rng.randf_range(d.rate.x, d.rate.y)
 		u.set_meta("rate", r)
 		u.playback = speed * r
-		u.set_meta("squad", squad)
+		u.set_meta("squad", sq)
 		u.impact.connect(_on_impact.bind(u))
 		u.release.connect(_on_release.bind(u))
 		units.append(u)
@@ -310,9 +350,25 @@ func _spawn_squad() -> void:
 	if dressed:
 		# Each man glances at his squadmates and at the roster's units.
 		load(LOOKS + "unit_look.gd").link(men, _roster())
-	var home: Vector3 = field.on_ground(SQUAD_HOME)
-	squad.setup(men, field, self, home, SQUAD_FACING)
-	squad.place(home, SQUAD_FACING)
+	var facing := _home_facing(s)
+	var home: Vector3 = field.on_ground(s.home)
+	sq.setup(men, field, self, home, facing, d)
+	sq.id = s.id
+	sq.title = s.title
+	sq.faction = s.faction
+	sq.place(home, facing)
+	squads.append(sq)
+	_squad_def[sq] = s
+	if s.id == "footman":
+		squad = sq
+
+
+func _home_facing(s: Dictionary) -> float:
+	return PLAYER_FACING if s.faction == "player" else ENEMY_FACING
+
+
+## Six dummies in a line a march east of the footman squad.
+func _spawn_drill_line() -> void:
 	for k in DRILL_COUNT:
 		var d := Dummy3D.new()
 		d.name = "Drill%d" % k
@@ -329,14 +385,17 @@ func _roster() -> Array:
 	return units.filter(func(u): return not u.has_meta("squad"))
 
 
-## The squad, when its standing men are the selection.
+## The squad whose standing men are the selection, or null.
 func _squad_sel():
-	if squad == null or selected.is_empty():
+	if selected.is_empty() or not is_instance_valid(selected[0]):
+		return null
+	var sq = _squad_of(selected[0])
+	if sq == null:
 		return null
 	for u in selected:
-		if not is_instance_valid(u) or _squad_of(u) != squad:
+		if not is_instance_valid(u) or _squad_of(u) != sq:
 			return null
-	return squad if selected.filter(func(u): return not u.is_dead()).size() == squad.standing() else null
+	return sq if selected.filter(func(u): return not u.is_dead()).size() == sq.standing() else null
 
 
 ## The squad `u` serves in, or null (get_meta errors on a missing key even with a null default).
@@ -364,7 +423,7 @@ func clear_route(marks: Dictionary) -> void:
 		show_route({})
 
 
-## Everyone back on their start tiles, alive and idle.
+## Everyone back on the bench and in their squads' ranks at home, alive and idle.
 func reset_field() -> void:
 	fx.clear()
 	for u in units:
@@ -374,15 +433,16 @@ func reset_field() -> void:
 			continue
 		u.stop()
 		u.position = field.on_ground(Vector2(u.get_meta("home")))
-		u.rotation.y = atan2(1.0, 0.0) if u.faction == "player" else atan2(-1.0, 0.0)
-	if squad:
-		squad.place(field.on_ground(SQUAD_HOME), SQUAD_FACING)
+		u.rotation.y = BENCH_FACING
+	for sq in squads:
+		var s: Dictionary = _squad_def[sq]
+		sq.place(field.on_ground(s.home), _home_facing(s))
 	for d in dummies:
 		d.position = field.on_ground(Vector2(d.get_meta("home")))
 	_route = {}
 	_counter_from.clear()
 	field.mark(_route)
-	_flash("Units back on their start tiles")
+	_flash("Everyone home: the squads in their ranks, one of each on the bench")
 
 
 # --- The game's 2D footman beside the 3D one ------------------------------------------
@@ -451,8 +511,21 @@ func _build_ui() -> void:
 	col.mouse_filter = Control.MOUSE_FILTER_PASS
 	scroll.add_child(col)
 	col.add_child(UI.cinzel("3D UNIT SANDBOX", 22, 700, UI.LIGHT_TITLE))
-	col.add_child(_note("Every rigged 3D character on the battle's ground. Click a unit to select it, the ground to march, a foe or a dummy to attack."))
-	col.add_child(_head("ROSTER"))
+	col.add_child(_note("Every rigged 3D character on the battle's ground, in squads. Click a man to select his squad, the ground to march it, a foe or a dummy to attack."))
+	if not squads.is_empty():
+		col.add_child(_head("SQUADS"))
+		var sg := UI.grid(2, 6, 6)
+		sg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		for sq in squads:
+			var b := _button("%s · %d" % [sq.title, sq.members.size()], _pick_squad.bind(sq), "squad:" + sq.id, true)
+			b.add_theme_color_override("font_color", UI.BLUE_BRIGHT if sq.faction == "player" else UI.RED_BRIGHT)
+			# The goblins' longer names a size smaller, so that the count shows.
+			if b.text.length() > 17:
+				b.add_theme_font_size_override("font_size", 13)
+			sg.add_child(b)
+		col.add_child(sg)
+		col.add_child(_row([["Battle: every squad attacks", func(): battle()]], []))
+	col.add_child(_head("ON THE BENCH  ·  ONE OF EACH"))
 	var roster := UI.grid(2, 6, 6)
 	roster.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for u in _roster():
@@ -462,15 +535,7 @@ func _build_ui() -> void:
 	col.add_child(roster)
 	var gone: Array = Roster.missing().map(func(m): return m.title)
 	if not gone.is_empty():
-		var why := "Not on this computer: %s (their model files are missing)." % ", ".join(gone)
-		if squad == null:
-			why += " The footman squad needs the footman."
-		col.add_child(_note(why))
-	if squad:
-		col.add_child(_head("SQUADS"))
-		var sb := _button("Footman squad  ·  %d men" % squad.members.size(), func(): _pick(squad.alive()), "squad", true)
-		sb.add_theme_color_override("font_color", UI.BLUE_BRIGHT)
-		col.add_child(sb)
+		col.add_child(_note("Not on this computer: %s (their model files are missing), nor their squads." % ", ".join(gone)))
 	_panel_unit = UI.vbox(6)
 	col.add_child(_panel_unit)
 	# The right column: what is under the cursor, then the scene's settings.
@@ -514,7 +579,7 @@ func _build_ui() -> void:
 	help.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	help.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	root.add_child(help)
-	help.add_child(UI.label("Left click: select · march · attack   Right click: order   Right / middle drag, WASD: pan   Wheel: zoom   Tab: next unit   1-8: attacks   H hit · K die · R revive · Space strike · F follow · G grid · V fog · N night · Esc: deselect", "SmallLabel", 15, UI.DARK_MUTED))
+	help.add_child(UI.label("Left click: select · march · attack   Right click: order   Ctrl click: select a foe   Right / middle drag, WASD: pan   Wheel: zoom   Tab: next   1-8: attacks   Q E wheel · H hit · K die · R revive · Space strike · F follow · G grid · V fog · N night · Esc: deselect", "SmallLabel", 15, UI.DARK_MUTED))
 	_refresh_unit_panel()
 	_refresh()
 
@@ -602,27 +667,88 @@ func _refresh_unit_panel() -> void:
 	_panel_unit.add_child(cg)
 
 
+## What each kind of fight does, for the squad's panel.
+const FIGHTS := {
+	"front": "In a fight the front rank strikes while the rear rank stands ready behind it, and a rear man steps up for a front man who falls. Spread to the line: the rear rank steps up beside the front rank, so every man strikes.",
+	"ranks": "In a fight both ranks strike from their places, the rear rank past the front rank's shoulders.",
+	"all": "In a fight every man goes to a free place by the foe.",
+	"shoot": "In a fight the squad halts in range with a clear line and looses: in volleys, every shot timed to leave together once all have reloaded, or at will.",
+}
+
+
 ## The squad's part of the panel: its orders, how it fights, its reactions and its men.
 func _squad_panel(sq) -> void:
-	_panel_unit.add_child(_head("FOOTMAN SQUAD  ·  PLAYER"))
-	_panel_unit.add_child(_note("Six footmen in two ranks of three, each in his own time. Click the ground to march them in formation, a foe or a dummy to attack: the front rank strikes while the rear rank stands ready behind it, and after a few blows each the squad re-forms its ranks. Spread to the line: the rear rank steps up beside the front rank, so all six strike."))
+	_panel_unit.add_child(_head(sq.title.to_upper() + ("  ·  PLAYER" if sq.faction == "player" else "  ·  ENEMY")))
+	_panel_unit.add_child(_note(String(_squad_def[sq].get("blurb", ""))))
+	_panel_unit.add_child(_note(FIGHTS.get(sq.drill.fight, "") + " Each man goes for the foe nearest him, and a man set upon answers, his squad with him. After a few blows each the squad re-forms its ranks."))
 	var g := UI.grid(2, 6, 6)
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for a in [["1  Attack", "attack"], ["Re-form", "reform"], ["Wheel left  (Q)", "wheel_l"], ["Wheel right  (E)", "wheel_r"], ["About face", "about"], ["Halt", "halt"]]:
-		g.add_child(_button(a[0], _squad_action.bind(a[1])))
+	for a in [["Attack  (1)", "attack"], ["Re-form", "reform"], ["Wheel left  (Q)", "wheel_l"], ["Wheel right  (E)", "wheel_r"], ["About face", "about"], ["Halt", "halt"]]:
+		var b := _button(a[0], _squad_action.bind(a[1]))
+		if a[1] == "attack":
+			b.tooltip_text = "Attack the nearest foe"
+		g.add_child(b)
 	_panel_unit.add_child(g)
-	_panel_unit.add_child(UI.label("IN A FIGHT", "SmallLabel", 13, UI.DARK_MUTED))
-	_panel_unit.add_child(_row([["Front rank only", func(): _set_wide(false)], ["Spread to the line", func(): _set_wide(true)]], ["sq:Front rank only", "sq:Spread to the line"]))
+	match sq.drill.fight:
+		"front":
+			_panel_unit.add_child(UI.label("IN A FIGHT", "SmallLabel", 13, UI.DARK_MUTED))
+			_panel_unit.add_child(_row([["Front rank only", func(): _set_wide(false)], ["Spread to the line", func(): _set_wide(true)]], ["sq:Front rank only", "sq:Spread to the line"]))
+		"shoot":
+			_panel_unit.add_child(UI.label("LOOSING", "SmallLabel", 13, UI.DARK_MUTED))
+			_panel_unit.add_child(_row([["In volleys", func(): _set_volley(true)], ["At will", func(): _set_volley(false)]], ["sq:In volleys", "sq:At will"]))
 	_panel_unit.add_child(_row([["Hit", func(): _react("hit")], ["Death", func(): _react("die")], ["Revive", func(): _react("revive")], ["Stop", func(): _react("stop")]], []))
-	_panel_unit.add_child(UI.label("ITS MEN (ONE ALONE: HIS CLIPS)", "SmallLabel", 13, UI.DARK_MUTED))
-	var men := UI.grid(6, 4, 4)
+	_panel_unit.add_child(UI.label("ITS MEN, AS THEY STAND (ONE ALONE: HIS CLIPS)", "SmallLabel", 13, UI.DARK_MUTED))
+	# One button a man, in his rank's row of the grid; a wedge's men in one row.
+	var w: int = sq.drill.width if int(sq.drill.width) > 1 else sq.members.size()
+	var men := UI.grid(w, 4, 4)
 	men.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for i in sq.members.size():
 		var m: Node3D = sq.members[i]
-		var b := _button(str(i + 1), func(): _select([m]))
+		var b := _button(str(i + 1) if sq.members.size() > 8 else "%d  %s" % [i + 1, _short(m)], func(): _select([m]))
 		b.custom_minimum_size.y = 30
+		b.add_theme_font_size_override("font_size", 13)
+		if m.is_dead():
+			b.modulate = Color(1, 1, 1, 0.45)
 		men.add_child(b)
 	_panel_unit.add_child(men)
+
+
+## A man's kind in a word, for his button: the rabble's weapon, else nothing.
+func _short(m: Node3D) -> String:
+	var t: String = m.title()
+	return t.get_slice(" ", t.get_slice_count(" ") - 1) if String(m.profile.id).begins_with("goblin_rabble") else ""
+
+
+## Select squad `sq`'s standing men (from the panel).
+func _pick_squad(sq) -> void:
+	if sq.standing() > 0:
+		_pick(sq.alive())
+	else:
+		_flash("The %s have all fallen: Revive all, or Reset field" % sq.title)
+		_refresh()
+
+
+## Every squad with men standing attacks the nearest squad of the other side
+## (at the man of it nearest), and the squads set upon answer.
+func battle() -> void:
+	var orders := []
+	for sq in squads:
+		if sq.standing() == 0:
+			continue
+		var c: Vector3 = sq.centroid()
+		var best: Node3D = null
+		for o in squads:
+			if o.faction == sq.faction or o.standing() == 0:
+				continue
+			for m in o.alive():
+				if best == null or Squad3D.flat(m.position - c).length() < Squad3D.flat(best.position - c).length():
+					best = m
+		if best:
+			orders.append([sq, best])
+	for o in orders:
+		o[0].attack(o[1])
+	_flash("Battle: every squad attacks the nearest foe" if not orders.is_empty() else "No two sides left to fight")
+	_refresh()
 
 
 func _squad_action(id: String) -> void:
@@ -668,8 +794,16 @@ func _squad_target(sq) -> Node3D:
 
 
 func _set_wide(on: bool) -> void:
-	if squad:
-		squad.wide = on
+	var sq = _squad_sel()
+	if sq:
+		sq.wide = on
+	_refresh()
+
+
+func _set_volley(on: bool) -> void:
+	var sq = _squad_sel()
+	if sq:
+		sq.volley = on
 	_refresh()
 
 
@@ -684,10 +818,14 @@ func _refresh() -> void:
 	}
 	for x in units:
 		on["roster:" + str(x.get_instance_id())] = x in selected
-	on["squad"] = _squad_sel() != null
-	if squad:
-		on["sq:Spread to the line"] = squad.wide
-		on["sq:Front rank only"] = not squad.wide
+	var sel = _squad_sel()
+	for sq in squads:
+		on["squad:" + sq.id] = sel == sq
+	if sel:
+		on["sq:Spread to the line"] = sel.wide
+		on["sq:Front rank only"] = not sel.wide
+		on["sq:In volleys"] = sel.volley
+		on["sq:At will"] = not sel.volley
 	if u:
 		for s in u.profile.get("stances", []):
 			on["u:stance:" + s] = u.stance == s
@@ -816,11 +954,13 @@ func _select(list: Array) -> void:
 	_refresh()
 
 
-## Tab: the next of the roster's units, then the squad.
+## Tab: the next squad, then the bench's units.
 func select_next() -> void:
-	var entries: Array = _roster().map(func(u): return [u])
-	if squad and squad.standing() > 0:
-		entries.append(squad.alive())
+	var entries: Array = []
+	for sq in squads:
+		if sq.standing() > 0:
+			entries.append(sq.alive())
+	entries.append_array(_roster().map(func(u): return [u]))
 	if entries.is_empty():
 		return
 	var i := -1
@@ -1049,7 +1189,7 @@ func _firing_spot(u: Node3D, target: Node3D, r: float) -> Vector3:
 func _on_impact(target: Node3D, landed: bool, _reach: float, who: Node3D) -> void:
 	_flash(who.title() + ": " + String(who.last_impact))
 	# A strike back is not answered, all its hits (the wolf's twin daggers) alike.
-	var counter: bool = _counter_from.has(who)
+	var counter := _strikes_back(who)
 	if target == null or not is_instance_valid(target):
 		return
 	var h: float = target.height_m() if target.has_method("height_m") else 1.5
@@ -1067,10 +1207,17 @@ func _missile_land(target: Node3D, who: Node3D, kind: String) -> void:
 	if kind == "frost":
 		for n in units + dummies:
 			if _hostile(who, n) and _alive(n) and n.position.distance_to(who.position) < 3.4:
-				_blow(who, n, _counter_from.has(who))
+				_blow(who, n, _strikes_back(who))
 		return
 	if target and _alive(target):
-		_blow(who, target, _counter_from.has(who))
+		_blow(who, target, _strikes_back(who))
+
+
+## Who strikes back now: a lone unit answering, or a man of a squad at rest
+## (squad3d.gd _riposte).
+func _strikes_back(who: Node3D) -> bool:
+	var sq = _squad_of(who)
+	return _counter_from.has(who) or (sq != null and sq.at_rest())
 
 
 ## A landed blow: the dummy rocks, a unit flinches (or falls, with lethal
@@ -1083,13 +1230,17 @@ func _blow(who: Node3D, target: Node3D, counter: bool) -> void:
 	if target.is_dead():
 		return
 	target.take_hit(who.position, lethal)
-	if lethal or counter or not fight_back or not _is_unit(who) or who.faction == target.faction:
+	if not fight_back or not _is_unit(who) or who.faction == target.faction:
 		return
 	var sq = _squad_of(target)
 	if sq:
-		# A squad answers together: struck while it stands, it attacks the striker.
-		if sq.mode in ["idle", "reform"]:
-			sq.attack(who)
+		# A squad answers together (squad3d.gd counter): the struck man strikes
+		# back if he can and his squad takes up the fight, even if he fell; a
+		# lone unit's strike back starts no new fight.
+		if not counter or sq.mode == "fight":
+			sq.counter(target, who)
+		return
+	if lethal or counter:
 		return
 	_fight_back(target, who)
 
@@ -1287,15 +1438,43 @@ func _hover(screen: Vector2) -> void:
 	_hover_unit = _pick_body(screen)
 	var g = _ground_at(screen)
 	_hover_tile = field.tile_of(g) if g != null else Vector2i(-99, -99)
+	_hover_point = g if g != null else Vector3.INF
 	field.mat.set_shader_parameter("hover", Vector2(_hover_tile) if _hover_unit == null else Vector2(-99, -99))
 
 
 # --- Frame ---------------------------------------------------------------------------------
 
+## The ground's plane under a fallen body (half its length either way), so a body and the
+## weapons it dropped lie on a slope rather than in its feet's level plane.
+const LIE_R := 0.9
+## Seconds to tilt onto the slope as it falls, and back up when it is revived.
+const LIE_IN := 0.8
+
+
+func _lie(n: Node3D, dt: float) -> void:
+	var w0: float = _lying.get(n, 0.0)
+	var w := move_toward(w0, 1.0 if n.is_dead() else 0.0, dt / LIE_IN)
+	if w == 0.0 and w0 == 0.0:
+		return
+	_lying[n] = w
+	var p := n.global_position
+	var up := Vector3(field.ground_y(p.x - LIE_R, p.z) - field.ground_y(p.x + LIE_R, p.z), 2.0 * LIE_R,
+		field.ground_y(p.x, p.z - LIE_R) - field.ground_y(p.x, p.z + LIE_R)).normalized()
+	up = n.global_basis.orthonormalized().transposed() * up
+	n.model.quaternion = Quaternion.IDENTITY.slerp(Quaternion(Vector3.UP, up), w)
+
+
 func _process(dt: float) -> void:
+	_clock += minf(dt, 0.05)
 	# Feet on the ground: the units have moved this frame (they process first).
 	for n in units + dummies:
-		n.position.y = field.ground_y(n.position.x, n.position.z)
+		var at := Vector2(n.position.x, n.position.z)
+		if _grounded.get(n, Vector2.INF) != at or n.position.y != _grounded_y.get(n, NAN):
+			n.position.y = field.ground_y(at.x, at.y)
+			_grounded[n] = at
+			_grounded_y[n] = n.position.y
+	for n in units:
+		_lie(n, dt)
 	var keys := Vector2(Input.get_axis("cam_left", "cam_right"), Input.get_axis("cam_up", "cam_down"))
 	if keys.length() > 0.0 and not _capturing:
 		follow = false
@@ -1305,8 +1484,8 @@ func _process(dt: float) -> void:
 	zoom = lerpf(zoom, _zoom_goal, minf(1.0, dt * 10.0))
 	if absf(zoom - old) > 1e-4:
 		_apply_look()
-	if squad:
-		squad.tick(dt)
+	for q in squads:
+		q.tick(dt)
 	var lead := _sel()
 	var sq = _squad_sel()
 	if follow and lead:
@@ -1354,42 +1533,64 @@ func _update_fog(dt: float) -> void:
 
 
 ## Tree crowns fade while a figure stands behind them (the battle's canopy fade).
+## The figures go in columns of the screen, FADE_COLUMN px wide, so that each
+## tree looks only at those under its crown (a thousand trees, seventy men).
 func _fade_crowns() -> void:
 	var view := Vector3(1, 0, 1).normalized()   # towards the camera, on the ground
-	var figs := []
+	if _tree_cards.is_empty():
+		_tree_cards = field.cards.filter(func(c): return String(c.kind).begins_with("tree"))
+	var cols := {}
 	for u in units:
 		if u.visible:
-			figs.append([u.position, cam.unproject_position(u.position + Vector3(0, u.height_m() * 0.6, 0))])
-	for c in field.cards:
-		if not String(c.kind).begins_with("tree"):
-			continue
+			var sh := cam.unproject_position(u.position + Vector3(0, u.height_m() * 0.6, 0))
+			var k := floori(sh.x / FADE_COLUMN)
+			if not cols.has(k):
+				cols[k] = []
+			cols[k].append([u.position, sh])
+	for c in _tree_cards:
 		var on := false
 		var foot: Vector3 = c.foot
 		var sf := cam.unproject_position(foot)
-		var half: float = c.half_w * ppu * zoom
+		var half: float = c.half_w * ppu * zoom * 0.8
 		var top: float = c.top * ppu * zoom
-		for f in figs:
-			# Behind the trunk (farther from the camera) and inside the crown on screen.
-			if (f[0] - foot).dot(view) > -0.3:
-				continue
-			var sh: Vector2 = f[1]
-			if absf(sh.x - sf.x) < half * 0.8 and sh.y < sf.y + 4.0 and sh.y > sf.y - top:
-				on = true
+		for k in range(floori((sf.x - half) / FADE_COLUMN), floori((sf.x + half) / FADE_COLUMN) + 1):
+			for f in cols.get(k, []):
+				# Behind the trunk (farther from the camera) and inside the crown on screen.
+				if (f[0] - foot).dot(view) > -0.3:
+					continue
+				var sh: Vector2 = f[1]
+				if absf(sh.x - sf.x) < half and sh.y < sf.y + 4.0 and sh.y > sf.y - top:
+					on = true
+					break
+			if on:
 				break
 		field.set_card_faded(c, on)
 
 
-## Selection rings on the ground under the selected units (gold) and the foe
-## under the cursor (red), draped over the relief.
+## Selection rings on the ground under the selected units (gold, each the
+## size of its unit), the foe under the cursor and his squad (red) and, for a
+## selected squad over open ground, faint marks where its men would stand if
+## it marched there; draped over the relief.
 func _draw_rings() -> void:
 	_ring_mesh.clear_surfaces()
 	var rings := []
 	for u in selected:
-		if is_instance_valid(u) and u.visible:
-			rings.append([u.position, Color(1.0, 0.84, 0.4, 0.95) if u.faction == "player" else Color(1.0, 0.55, 0.4, 0.95), 0.62])
+		if is_instance_valid(u) and u.visible and not u.is_dead():
+			rings.append([u.position, Color(1.0, 0.84, 0.4, 0.95) if u.faction == "player" else Color(1.0, 0.55, 0.4, 0.95), _ring_size(u)])
 	var lead := _sel()
 	if _hover_unit and lead and _hostile(lead, _hover_unit) and _hover_unit.visible:
-		rings.append([_hover_unit.position, Color(1.0, 0.3, 0.22, 0.95), 0.6])
+		var sq = _squad_of(_hover_unit)
+		for n in (sq.alive() if sq else [_hover_unit]):
+			if n.visible:
+				rings.append([n.position, Color(1.0, 0.3, 0.22, 0.95 if n == _hover_unit else 0.6), _ring_size(n)])
+	var sel = _squad_sel()
+	if sel and _hover_unit == null and _hover_point != Vector3.INF and field.walkable(_hover_tile):
+		var key := [sel, _hover_tile, sel.standing()]
+		if _ghost.get("key") != key:
+			var spots: Array = Squad3D.slots(_hover_point, sel.march_facing(_hover_point), sel.standing(), sel.drill)
+			_ghost = {"key": key, "spots": spots.filter(func(s): return field.walkable(field.tile_of(s)))}
+		for s in _ghost.spots:
+			rings.append([Vector3(s.x, field.ground_y(s.x, s.z), s.z), Color(1.0, 0.84, 0.4, 0.38), 0.3])
 	if rings.is_empty():
 		return
 	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -1403,6 +1604,12 @@ func _draw_rings() -> void:
 	_ring_mesh.surface_end()
 
 
+## A unit's ring: a footman's 0.62 m, larger or smaller with its height.
+func _ring_size(u: Node3D) -> float:
+	var h: float = u.height_m() if u.has_method("height_m") else 1.7
+	return 0.62 * clampf(h / 1.7, 0.7, 1.5)
+
+
 ## A ring's points on the ground round `c`, inner and outer by turns. Sampling
 ## the relief is the costly part (a squad's six rings on the march), so the
 ## ground is sampled at eight points round the ring and eased between them,
@@ -1411,7 +1618,7 @@ func _ring_points(c: Vector3, rad: float) -> PackedVector3Array:
 	var key := Vector4(snappedf(c.x, 0.01), snappedf(c.y, 0.01), snappedf(c.z, 0.01), rad)
 	if _ring_pts.has(key):
 		return _ring_pts[key]
-	if _ring_pts.size() > 64:
+	if _ring_pts.size() > 96:
 		_ring_pts.clear()
 	var n := 40
 	var m := 8
@@ -1436,7 +1643,7 @@ func _hud() -> void:
 	var s := ""
 	var sq = _squad_sel()
 	if sq:
-		s = "Footman squad · %s · %d of %d standing" % [sq.describe(), sq.standing(), sq.members.size()]
+		s = "%s · %s · %d of %d standing" % [sq.title, sq.describe(), sq.standing(), sq.members.size()]
 	elif u:
 		var clip: String = String(u.player.current_animation)
 		var shown := clip.get_slice("|", clip.get_slice_count("|") - 1)
@@ -1475,6 +1682,11 @@ func _capture(dir: String, only := "") -> void:
 	get_window().size = Vector2i(1600, 900)
 	field.mat.set_shader_parameter("hover", Vector2(-99, -99))
 	await _wait(1.0)
+	if only.begins_with("army"):
+		# The squads' shots start from a reset field: no need to play the rest first.
+		await _army_shots()
+		get_tree().quit()
+		return
 	var yard: Vector3 = field.on_ground(Field3D.YARD) + Vector3(0, 0.8, 0)
 	# The field and the yard.
 	await _shot("field_overview", 0.62, field.on_ground(Vector2(13.5, 13.5)))
@@ -1507,6 +1719,7 @@ func _capture(dir: String, only := "") -> void:
 	await _shot("pond", 1.6, field.on_ground(Vector2(6.5, 20.5)), 0.6)
 	if squad:
 		await _squad_shots()
+	await _army_shots()
 	# Every unit strikes a dummy: caught as the blow lands (or the missile leaves).
 	for u in _roster():
 		reset_field()
@@ -1568,7 +1781,7 @@ func _capture(dir: String, only := "") -> void:
 
 ## The squad's shots: its ranks at rest, the march to the drill line, the
 ## front rank's blows with the rear rank ready, the ranks again, the same fight
-## spread to a line of six, a march north and a lone foe. Prints who struck
+## spread to a line of six, a march west and a lone foe. Prints who struck
 ## when (SQUAD lines).
 func _squad_shots() -> void:
 	reset_field()
@@ -1618,8 +1831,8 @@ func _squad_shots() -> void:
 	print("SQUAD re-formed after the line: farthest man %.2f m off his place" % _squad_off())
 	for m in squad.members:
 		m.impact.disconnect(logs[m])
-	# A march north into the yard, the ranks wheeling with the route.
-	squad.march_to(field.on_ground(Vector2(14.0, 18.3)))
+	# A march west along the yard, the ranks wheeling with the route.
+	squad.march_to(field.on_ground(Vector2(12.0, 12.6)))
 	follow = true
 	await _shot("squad_wheel", 2.0, Vector3.INF, 5.0)
 	await _until(func(): return squad.mode == "idle", 30.0)
@@ -1628,13 +1841,158 @@ func _squad_shots() -> void:
 	# A lone foe: the front rank turns on it.
 	var wolf := _unit("wolf_scout")
 	if wolf:
-		wolf.position = field.on_ground(Vector2(16.5, 16.5))
+		wolf.position = field.on_ground(Vector2(15.6, 14.6))
 		wolf.rotation.y = Squad3D.yaw_to(wolf.position, squad.centroid())
 		squad.attack(wolf)
 		await _until(func(): return squad.engaged, 30.0)
 		await _shot("squad_lone_foe", 2.4, wolf.position.lerp(squad.center, 0.5) + Vector3(0, 0.9, 0), 0.6)
 		await _until(func(): return squad.mode == "idle", 40.0)
 	reset_field()
+
+
+## The squads' shots (--shots=army plays only these): every squad at home in
+## its drill, the bench, then a battle (every squad attacks the nearest foe and
+## the squads set upon answer) as it closes, at its height, close on each
+## squad that fights and after; then the same battle with lethal blows. Prints
+## (ARMY lines) how often a man struck the foe nearest him, how often a man
+## struck answered his striker, how close together each volley's shots left
+## and the frame rate in the thick of it.
+func _army_shots() -> void:
+	reset_field()
+	_select([])
+	var mid: Vector3 = field.on_ground(START) + Vector3(0, 0.85, 0)
+	await _shot("army_overview", START_ZOOM, mid, 0.8)
+	for sq in squads:
+		_select(sq.alive())
+		await _shot("army_" + sq.id, 2.6, sq.centroid() + Vector3(0, 0.8, 0), 0.4)
+		var s: Dictionary = _squad_def[sq]
+		if s.has("faces"):
+			# Close on the men's faces, which tell them apart: turned to the camera, then home.
+			sq.place(field.on_ground(s.home), PI / 4)
+			await _shot("army_" + sq.id + "_faces", 5.0, sq.centroid() + Vector3(0, 1.5, 0), 0.3)
+			sq.place(field.on_ground(s.home), _home_facing(s))
+	_select([])
+	var bench_mid: Vector2 = BENCH + BENCH_STEP * (_roster().size() - 1) * 0.5
+	await _shot("army_bench", 1.5, field.on_ground(bench_mid) + Vector3(0, 0.8, 0), 0.3)
+	for lethal_round in [false, true]:
+		reset_field()
+		_select([])
+		await _wait(0.6)
+		if lethal_round:
+			_toggle("lethal")
+		var tag := "army_lethal_" if lethal_round else "army_battle_"
+		var log := []
+		var hooks := _army_log(log)
+		battle()
+		await _shot(tag + "advance", 1.0, mid, 3.0)
+		await _until(func(): return log.size() >= 8, 30.0)
+		await _shot(tag + "clash", 1.0, mid, 1.2)
+		var fps := Engine.get_frames_per_second()
+		if not lethal_round:
+			for sq in squads:
+				if sq.mode == "fight" and sq.engaged:
+					await _shot("army_close_" + sq.id, 2.2, sq.centroid() + Vector3(0, 0.8, 0), 0.05)
+			var xb = _squad_by_id("crossbowman")
+			if xb:
+				var shots := log.filter(func(e): return e.sq == xb and e.kind == "shot").size()
+				await _until(func(): return log.filter(func(e): return e.sq == xb and e.kind == "shot").size() > shots, 20.0)
+				await _shot("army_volley", 2.2, xb.centroid() + Vector3(0, 0.8, 0), 0.08)
+		await _shot(tag + "height", 1.0, mid, 3.0)
+		await _until(func(): return squads.all(func(q): return q.mode == "idle" or q.standing() == 0), 90.0)
+		await _shot(tag + "after", 1.0, mid, 0.5)
+		for k in hooks:
+			k.impact.disconnect(hooks[k][0])
+			k.release.disconnect(hooks[k][1])
+		_army_report(log, fps, tag)
+		if lethal_round:
+			_toggle("lethal")
+	reset_field()
+
+
+## Logs every blow and shot of the squads' men into `log`: who, at whom, when,
+## how far the foe was and how far the foe nearest him. Returns the hooks.
+func _army_log(log: Array) -> Dictionary:
+	var t0 := _clock
+	var hooks := {}
+	for sq in squads:
+		for m in sq.members:
+			var note := func(t: Node3D, kind: String):
+				if t == null or not _is_unit(t):
+					return
+				var near := INF
+				for n in units:
+					if _hostile(m, n) and _alive(n):
+						near = minf(near, Squad3D.flat(n.position - m.position).length())
+				var d := Squad3D.flat(t.position - m.position).length()
+				# The man struck can answer: he stands, and has his striker in reach.
+				var theirs = _squad_of(t)
+				var able: bool = theirs != null and not t.is_dead() and (theirs.shooting() or d <= theirs.reach)
+				log.append({"sq": sq, "man": m, "target": t, "kind": kind, "s": _clock - t0,
+					"d": d, "near": near, "able": able})
+			hooks[m] = [func(t, _l, _r): note.call(t, "blow"), func(t, _k): note.call(t, "shot")]
+			m.impact.connect(hooks[m][0])
+			m.release.connect(hooks[m][1])
+	return hooks
+
+
+func _army_report(log: Array, fps: float, tag: String) -> void:
+	var blows := log.filter(func(e): return e.kind == "blow")
+	var nearest := blows.filter(func(e): return e.d <= e.near + 0.05).size()
+	var close := blows.filter(func(e): return e.d <= e.near + Squad3D.SHARE * 2.0 + 0.05).size()
+	print("%s %d blows, %d shots; the blow's foe the nearest: %d, within %.1f m of the nearest: %d" % [tag.to_upper(), blows.size(), log.size() - blows.size(), nearest, Squad3D.SHARE * 2.0, close])
+	# Answered: a man struck by a squad's man, who could answer him, strikes
+	# that striker afterwards (unless that blow was itself a strike back: the
+	# man struck had struck him first).
+	var struck := {}
+	for e in log:
+		if e.able and not struck.has(e.target) and not log.any(func(x): return x.man == e.target and x.target == e.man and x.s < e.s):
+			struck[e.target] = e
+	var answered := 0
+	# The others by who struck whom: struck another man of his strikers', another foe, or none after.
+	var others := {}
+	for t in struck:
+		var first: Dictionary = struck[t]
+		if log.any(func(e): return e.man == t and e.target == first.man and e.s > first.s):
+			answered += 1
+			continue
+		var by: Array = log.filter(func(e): return e.target == t).map(func(e): return e.man)
+		var after: Array = log.filter(func(e): return e.man == t and e.s > first.s)
+		var how := "none after" if after.is_empty() else ("another striker" if after.any(func(e): return e.target in by) else "another foe")
+		var key := "%s by %s: %s" % [_squad_of(t).id, first.sq.id, how]
+		others[key] = int(others.get(key, 0)) + 1
+	print("%s men struck who could answer: %d, who struck back at that striker: %d; the others %s" % [tag.to_upper(), struck.size(), answered, others])
+	# Volleys: a squad's shots, grouped where a second passes without one.
+	for sq in squads:
+		if not sq.shooting():
+			continue
+		var times: Array = log.filter(func(e): return e.sq == sq and e.kind == "shot").map(func(e): return e.s)
+		var groups := []
+		for s in times:
+			if groups.is_empty() or s - groups[-1][-1] > 1.0:
+				groups.append([s])
+			else:
+				groups[-1].append(s)
+		print("%s %s (%s): shots %d, volleys (shots, spread s): %s" % [tag.to_upper(), sq.id, "volleys" if sq.volley else "at will", times.size(),
+			groups.map(func(g): return [g.size(), snappedf(g[-1] - g[0], 0.01)])])
+	var last: float = log.reduce(func(t, e): return maxf(t, e.s), 0.0)
+	for q in squads:
+		if q.mode != "idle" and q.standing() > 0:
+			print("%s still %s: %s answering %s, blows %s, foes %s" % [tag.to_upper(), q.mode, q.id, q.answering,
+				q.alive().map(func(m): return q._men[m].blows), q.foes.map(func(f): return _squad_of(f).id if _squad_of(f) else f.name)])
+	var late := log.filter(func(e): return e.s > last - 20.0)
+	var pairs := {}
+	for e in late:
+		var k := "%s>%s" % [e.sq.id, _squad_of(e.target).id if _squad_of(e.target) else "?"]
+		pairs[k] = int(pairs.get(k, 0)) + 1
+	print("%s the last 20 s: %s" % [tag.to_upper(), pairs])
+	print("%s standing: %s · last blow at %.0f s · fps in the clash %d" % [tag.to_upper(), ", ".join(squads.map(func(q): return "%s %d/%d" % [q.id, q.standing(), q.members.size()])), last, fps])
+
+
+func _squad_by_id(id: String):
+	for sq in squads:
+		if sq.id == id:
+			return sq
+	return null
 
 
 ## How many of the squad's men struck the blows logged.
@@ -1645,12 +2003,12 @@ static func _men_struck(blows: Array) -> int:
 	return seen.size()
 
 
-## The farthest any of the squad's men stands from his place, metres.
-func _squad_off() -> float:
+## The farthest any of a squad's men (the footmen's) stands from his place, metres.
+func _squad_off(sq = squad) -> float:
 	var err := 0.0
-	var spots: Array = Squad3D.slots(squad.center, squad.yaw, squad.standing())
-	for m in squad.alive():
-		err = maxf(err, Squad3D.flat(m.position - spots[squad._men[m].slot]).length())
+	var spots: Array = Squad3D.slots(sq.center, sq.yaw, sq.standing(), sq.drill)
+	for m in sq.alive():
+		err = maxf(err, Squad3D.flat(m.position - spots[sq._men[m].slot]).length())
 	return err
 
 

@@ -26,3 +26,6 @@
 # And the goblin spearman's.
 /prototypes/goblin_spear_anim/art3d/*
 !/prototypes/goblin_spear_anim/art3d/*.json
+# And the orc brute's.
+/prototypes/orc_brute_anim/art3d/*
+!/prototypes/orc_brute_anim/art3d/*.json

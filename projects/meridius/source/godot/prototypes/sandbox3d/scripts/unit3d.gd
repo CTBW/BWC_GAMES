@@ -4,10 +4,14 @@
 ## footman has his own controller (footman_unit.gd) with the same interface:
 ##   order_move(points, then)   walk a route (world points on the ground)
 ##   strike(target, i)          turn to a target and play attack i of the profile
+##   strike_at(target)          a squad's man's blow: an attack that reaches it
 ##   take_hit(from, lethal)     the hit reaction, or the death
 ##   play_clip(name)            any clip once (a loop until the next order)
 ##   die() revive() stop() is_dead() actions() clip_names()
 ##   set_look(mode, outline) set_outline_width(m) playback height_m()
+## A profile's `face` picks the sidecar's face variants (`faces`) the unit
+## wears; the other faces' meshes go. Its `kit` picks the sidecar's gear
+## variants (`kit`), whose `hide` meshes go.
 ## Every model faces +Z: a direction d on the ground is the yaw atan2(d.x, d.z).
 ## The sandbox sets the height of the ground under the unit after it moves.
 ## A view of motion only: the sandbox decides who is hit and who falls.
@@ -107,12 +111,13 @@ func _ready() -> void:
 	_outline.shader = OUTLINE
 	_outline_thin = ShaderMaterial.new()
 	_outline_thin.shader = OUTLINE
+	_dress(profile.get("face", []) + profile.get("kit", []))
 	for mi in model.find_children("*", "MeshInstance3D", true, false):
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		if _named(mi, profile.get("full_detail", [])):
 			mi.lod_bias = 128.0
 		for i in mi.mesh.get_surface_count():
-			_surfaces.append([mi, i, mi.mesh.surface_get_material(i)])
+			_surfaces.append([mi, i, mi.get_active_material(i)])
 	if profile.get("fx", "") == "whip" and skeleton:
 		fx = WhipFX.new()
 		fx.name = "WhipFX"
@@ -123,6 +128,46 @@ func _ready() -> void:
 	_rng.randomize()
 	_play(idle_clip(), 0.0)
 	player.seek(_rng.randf() * float(clips.get(idle_clip(), {}).get("length", 1.0)), true)
+
+
+## Wears the sidecar's faces and kit named in `chosen`: the meshes the other
+## faces show go, and so do the meshes a chosen variant's `hide` names (the
+## brute's pauldrons); a chosen face's `albedo` swaps a mesh's base colour for
+## that file next to the sidecar (the brute's scar is painted into his body's).
+func _dress(chosen: Array) -> void:
+	var variants: Dictionary = meta.get("faces", {}).merged(meta.get("kit", {}))
+	if variants.is_empty():
+		return
+	var shown := {}
+	var hidden := {}
+	var albedo := {}
+	for f in chosen:
+		var v: Dictionary = variants.get(f, {})
+		for m in v.get("show", []):
+			shown[m] = true
+		for m in v.get("hide", []):
+			hidden[m] = true
+		albedo.merge(v.get("albedo", {}), true)
+	for f in variants:
+		for m in variants[f].get("show", []):
+			if not shown.has(m):
+				hidden[m] = true
+	for m in hidden:
+		var mi := model.find_child(m, true, false) as MeshInstance3D
+		if mi:
+			mi.get_parent().remove_child(mi)
+			mi.free()
+	for m in albedo:
+		var mi := model.find_child(m, true, false) as MeshInstance3D
+		var tex: Texture2D = load(String(profile.meta).get_base_dir().path_join(albedo[m]))
+		if mi == null or tex == null:
+			continue
+		for i in mi.mesh.get_surface_count():
+			var src := mi.get_active_material(i) as StandardMaterial3D
+			if src:
+				var mat: StandardMaterial3D = src.duplicate()
+				mat.albedo_texture = tex
+				mi.set_surface_override_material(i, mat)
 
 
 ## The sidecar's clips matched to the model's animations, with the sidecar's
@@ -235,8 +280,9 @@ func idle_clip() -> String:
 	return stance if stance != "" else profile.get("idle", "idle")
 
 
+## Metres a second on the walk clip (a model scaled up strides farther).
 func walk_speed() -> float:
-	return maxf(float(clips.get(profile.get("walk", "walk"), {}).get("speed", 1.0)), 0.3)
+	return maxf(float(clips.get(profile.get("walk", "walk"), {}).get("speed", 1.0)), 0.3) * float(profile.get("scale", 1.0))
 
 
 func clip_names() -> Array:
@@ -290,6 +336,53 @@ func reach(i: int) -> float:
 
 func is_ranged(i: int) -> bool:
 	return attack_info(i).has("missile")
+
+
+## The attacks a squad's man uses (indices): those whose clips are in `names`
+## (all of his, if it is empty) and that he has.
+func squad_attacks(names: Array = []) -> Array:
+	var out := []
+	var atks: Array = profile.get("attacks", [])
+	for i in atks.size():
+		if clips.has(atks[i].clip) and (names.is_empty() or atks[i].clip in names):
+			out.append(i)
+	return out
+
+
+## One of his squad's attacks (`names`, see squad_attacks) that reaches
+## `target` from where he stands, at random; the first of them if none does.
+func pick_attack(target: Node3D, names: Array = []) -> int:
+	var all := squad_attacks(names)
+	if all.is_empty():
+		return 0
+	if target == null:
+		return all[0]
+	var d := Vector2(target.position.x - position.x, target.position.z - position.z).length()
+	var fit := all.filter(func(i): return d <= reach(i) + (0.0 if is_ranged(i) else 0.45))
+	return fit[_rng.randi_range(0, fit.size() - 1)] if not fit.is_empty() else all[0]
+
+
+## Seconds from the start of attack i to its first blow or shot, at his playback.
+func hit_lead(i: int) -> float:
+	var a := attack_info(i)
+	if a.is_empty() or not clips.has(a.clip):
+		return 0.0
+	var c: Dictionary = clips[a.clip]
+	var names: Array = a.get("hits", HIT_EVENTS)
+	var t: float = float(c.length) * float(a.get("hit_at", 0.45))
+	for e in c.events:
+		if String(e[1]) in names or String(e[1]).get_slice(":", 0) in names:
+			t = e[0]
+			break
+	return t / maxf(playback, 0.05)
+
+
+## A blow or a shot at `target`, as a squad's man strikes: attack i, or one
+## of his that reaches it (pick_attack).
+func strike_at(target: Node3D, i := -1) -> void:
+	if is_dead() or target == null:
+		return
+	strike(target, i if i >= 0 else pick_attack(target))
 
 
 ## Where attack i's missile leaves (the current attack's when i < 0), in the

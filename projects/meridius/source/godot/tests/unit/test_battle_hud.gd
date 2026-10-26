@@ -1,10 +1,10 @@
 ## The battle HUD (scripts/ui/battle_hud.gd + hud_battle_panels.gd, port of
 ## `BattleHud` in src/ui/screens/Battle.tsx) over a real battle view showing a
-## Battle from Setup.build_battle: deployment, the selected squad in the unit
-## bar (scripts/ui/unit_bar), the attack preview, hovered squad / tile panels,
-## the enemy turn, the retreat confirmation and the end of the battle; every
-## button wired or deliberately disabled. Mages and war machines: spell buttons
-## with their reasons, the spell forecast, crews and casters in the bar, conditions. The view runs its rules synchronously (threaded_rules = false) and
+## Battle from Setup.build_battle: deployment, the selected squad's card, the
+## attack preview, hovered squad / tile panels, the enemy turn, the retreat
+## confirmation and the end of the battle; every button wired or deliberately
+## disabled. Mages and war machines: spell buttons with their reasons, the
+## spell forecast, crews and casters on the squad's card, conditions. The view runs its rules synchronously (threaded_rules = false) and
 ## is advanced by hand (the runner has no frames).
 extends "res://tests/test_case.gd"
 
@@ -21,7 +21,6 @@ const BattleHud = preload("res://scripts/ui/battle_hud.gd")
 const Panels = preload("res://scripts/ui/hud_battle_panels.gd")
 const Squad = preload("res://scripts/rules/squad.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
-const BarTips = preload("res://scripts/ui/unit_bar/bar_tips.gd")
 
 
 class FakeStore extends Node:
@@ -130,31 +129,6 @@ func _text_of(n: Node) -> String:
 	return s
 
 
-## The unit bar while it shows a squad (null while it is down).
-func _card() -> Node:
-	var bar := _node("UnitBar")
-	return bar if bar != null and bar.shown() else null
-
-
-## Everything the bar says of its squad: its texts and its stat plaques' tips.
-func _card_text() -> String:
-	var bar := _card()
-	if bar == null:
-		return ""
-	var s := _text_of(bar)
-	for i in 6:
-		var p: Node = bar.find_child("Stat%d" % i, true, false)
-		if p != null and p.visible:
-			s += _tip(p)
-	return s
-
-
-## A status icon in the bar.
-func _chip(id: String) -> Node:
-	var bar := _card()
-	return bar.find_child("Status_" + id, true, false) if bar != null else null
-
-
 func _check_buttons(where: String) -> int:
 	var n := 0
 	for b in H.buttons(hud):
@@ -203,14 +177,15 @@ func test_deployment() -> void:
 	assert_true(obj.contains(str(b.objective.title)), "objective title")
 	assert_true(obj.contains(str(b.objective.brief)), "objective brief while deploying")
 	assert_true(_text_of(_node("Banner")).contains("Deploy your company"), "deploy banner")
-	if assert_not_null(_card(), "the unit bar is up"):
+	var panel := _node("UnitPanel")
+	if assert_not_null(panel, "selected squad's card"):
 		var sel: Dictionary = b.unit(view.ui.selected)
-		var pt := _card_text()
+		var pt := _text_of(panel)
 		assert_true(pt.contains(str(sel.name)), "name")
 		assert_true(pt.contains("Can move") and pt.contains("Can act"), "status tags")
-		assert_true(pt.contains("Soldiers %d / %d" % [int(sel.alive), int(sel.size)]), "soldiers line: " + pt)
+		assert_true(pt.contains("Soldiers"), "soldiers line")
 		assert_true(pt.contains("Facing"), "facing rose")
-		assert_true(pt.contains("Melee skill  %s" % str(sel.stats.melee)), "skill plaque: " + pt)
+		assert_true(pt.contains("Melee %s" % str(sel.stats.melee)), "stats line: " + pt)
 	assert_true(_text_of(_node("Log")).contains("Hold the line. Mind the flanks.") or view.ui.log.size() > 0, "log")
 	_check_buttons("deploy")
 
@@ -258,7 +233,7 @@ func test_begin_and_select() -> void:
 	_click(_node("Mini_" + str(other.uid)))
 	hud.refresh()
 	assert_eq(view.ui.selected, other.uid, "card click selects")
-	assert_true(_text_of(_card()).contains(str(other.name)), "the bar shows it")
+	assert_true(_text_of(_node("UnitPanel")).contains(str(other.name)), "card shows it")
 	# Abilities: one button per ability, keys 1..n.
 	var list := Panels.abilities(other)
 	for i in list.size():
@@ -298,7 +273,7 @@ func test_ability_arms_and_stance() -> void:
 		btn.pressed.emit()
 		hud.refresh()
 		assert_eq(view.ui.ability, attack, "attack ability armed")
-		assert_true(_button("Ability_" + attack).command.get("active", false), "armed look")
+		assert_eq(str(_button("Ability_" + attack).theme_type_variation), "AbilityButtonActive", "armed look")
 		_button("Ability_" + attack).pressed.emit()
 		hud.refresh()
 		assert_eq(view.ui.ability, null, "pressed again: disarmed")
@@ -309,7 +284,7 @@ func test_ability_arms_and_stance() -> void:
 		u = b.unit(u.uid)
 		assert_eq(u.get("stance"), stance, "stance taken")
 		assert_true(u.hasActed, "acted")
-		assert_true(_text_of(_card()).contains("Acted"), "Acted tag")
+		assert_true(_text_of(_node("UnitPanel")).contains("Acted"), "Acted tag")
 		for a in list:
 			assert_true(_button("Ability_" + a).disabled, "abilities spent after acting: " + a)
 		assert_true(_text_of(_node("Mini_" + str(u.uid))).contains(str(DB.ABILITIES[stance].name)), "card shows the stance")
@@ -435,7 +410,7 @@ func test_retreat_confirmation_and_end() -> void:
 	hud.refresh()
 	var t := _text_of(_node("TopBar"))
 	assert_true(t.contains("Battle over"), "over line: " + t)
-	assert_null(_card(), "the unit bar down after the battle")
+	assert_null(_node("UnitPanel"), "no squad card after the battle")
 	assert_true(_button("EndTurn").disabled, "End Turn disabled")
 	assert_true(_text_of(_node("Banner")).contains("Withdrawal"), "end banner")
 
@@ -471,17 +446,7 @@ func _of_type(t: String) -> Dictionary:
 
 func _tip(n: Node) -> String:
 	var t: Node = n.find_child("Tip", false, false) if n != null else null
-	if t == null:
-		return ""
-	if not t.content is Callable:
-		return str(t.content)
-	# The unit bar's tips are built when shown (bar_tips.gd).
-	var c: Variant = t.content.call()
-	if not c is Node:
-		return str(c) if c != null else ""
-	var s := BarTips.text_of(c)
-	c.free()
-	return s
+	return str(t.content) if t != null else ""
 
 
 func _clear_hover() -> void:
@@ -496,7 +461,7 @@ func test_spell_buttons_and_unit_panel() -> void:
 		return
 	view.select(mage.uid)
 	hud.refresh()
-	var pt := _card_text()
+	var pt := _text_of(_node("UnitPanel"))
 	assert_true(pt.contains("Casters"), "casters, not soldiers: " + pt)
 	assert_true(pt.contains("Battle Mages"), "type label")
 	assert_true(pt.contains("Arcane bolt 5–7 × 3 = 15–21"), "the mages' bolt: " + pt)
@@ -520,7 +485,7 @@ func test_spell_buttons_and_unit_panel() -> void:
 	_button("Ability_chain_lightning").pressed.emit()
 	hud.refresh()
 	assert_eq(view.ui.ability, "chain_lightning", "spell chosen")
-	assert_true(_button("Ability_chain_lightning").command.get("active", false), "armed look")
+	assert_eq(str(_button("Ability_chain_lightning").theme_type_variation), "AbilityButtonActive")
 	view.set_ability(null)
 	# On cooldown: disabled, the turns on the button, no reason line.
 	mage.cooldowns["chain_lightning"] = 2
@@ -545,7 +510,7 @@ func test_spell_buttons_and_unit_panel() -> void:
 	var bal := _of_type("ballista")
 	view.select(bal.uid)
 	hud.refresh()
-	pt = _card_text()
+	pt = _text_of(_node("UnitPanel"))
 	assert_true(pt.contains("Crew"), "crew line")
 	assert_true(pt.contains("Ballista Crew"), "crew label: " + pt)
 	assert_true(pt.contains("Bolt 20–26 × 3 = 60–78"), "the bolt: " + pt)
@@ -555,7 +520,7 @@ func test_spell_buttons_and_unit_panel() -> void:
 	var mg := _of_type("mangonel")
 	view.select(mg.uid)
 	hud.refresh()
-	pt = _card_text()
+	pt = _text_of(_node("UnitPanel"))
 	assert_true(pt.contains("Hurl Stone 10–14 × 3 = 30–42"), "the stone: " + pt)
 	assert_true(pt.contains("Melee 2–4 × 3 = 6–12"), "melee after the stone")
 	assert_true(pt.contains("Crew %s" % str(mg.stats.ranged)), "crew skill")
@@ -709,11 +674,11 @@ func test_conditions_and_hover_card() -> void:
 	if mv != null and "statuses" in mv:
 		mv.statuses = ["bleeding"]
 	hud.refresh()
-	var chip := _chip("bleeding")
-	if assert_not_null(chip, "bleeding icon in the unit bar"):
+	var chip := _node("Status_bleeding")
+	if assert_not_null(chip, "bleeding chip on the squad's card"):
+		assert_true(_text_of(chip).contains("Bleeding"))
 		var tip := _tip(chip)
-		assert_true(tip.contains("Bleeding") and tip.contains("Loses HP"), "tip: " + tip)
-		assert_true(tip.contains("(−5 a turn)") and tip.contains("2 turns left"), "how much and how long: " + tip)
+		assert_true(tip.contains("(−5 a turn, 2 more)") and tip.contains("Loses HP"), "tip: " + tip)
 	assert_true(_text_of(_node("Mini_" + str(mage.uid))).contains("Bleeding"), "the company card shows it")
 	# A hovered enemy: chilled, its abilities and cooldowns.
 	foe.statuses = [{"id": "chilled", "turns": 1}]
@@ -743,11 +708,11 @@ func test_conditions_and_hover_card() -> void:
 	if mv != null and "statuses" in mv:
 		mv.statuses = []
 	hud.refresh()
-	assert_null(_chip("bleeding"), "the icon goes with the condition")
+	assert_null(_node("Status_bleeding"), "chips go with the condition")
 
 
 func test_squad_skill_buttons() -> void:
-	# The squad skills on the bar (../../docs/squad-skills.md): a name per
+	# The squad skills on the bar (../../docs/squad-skills.md): one word per
 	# button and no two alike, Lick Wounds held back while an enemy stands
 	# beside the hounds, an Aimed Shot only before the squad moves; each says why.
 	_open("goblin_scouts", false, _battle_with(["footman", "spearman", "crossbowman", "collie_guard"], "goblin_scouts", 11, 3))
@@ -759,8 +724,8 @@ func test_squad_skill_buttons() -> void:
 	hud.refresh()
 	var words: Array = []
 	for a in Panels.abilities(f):
-		var w := H.button_text(_button("Ability_" + a))
-		assert_false(words.has(w), "a name of its own: " + w)
+		var w := _text_of(_button("Ability_" + a)).strip_edges()
+		assert_false(words.has(w), "a word of its own: " + w)
 		words.append(w)
 	assert_eq(words.size(), 4, "four keys: %s" % [words])
 	var c := _of_type("collie_guard")

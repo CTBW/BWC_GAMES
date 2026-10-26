@@ -219,7 +219,9 @@ func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
 ## The arc (the height at mid-flight over the straight line) an arrow from
 ## `from` to `to` needs to pass 0.25 m over the head of every man of `who`'s
 ## side within 0.4 m of its path, all the way over him (0.25 m before and
-## behind his axis); 0 with none in the way, at most half the shot's length.
+## behind his axis); 0 with none in the way, at most a quarter of the shot's
+## length (a loose at 45 degrees): an arrow dropping on a man in a melee may
+## graze the men of its side fighting him rather than climb far over the field.
 func _over_friends(who: Node3D, from: Vector3, to: Vector3) -> float:
 	if not friends.is_valid():
 		return 0.0
@@ -238,7 +240,7 @@ func _over_friends(who: Node3D, from: Vector3, to: Vector3) -> float:
 		for kk in [k - 0.25 / d, k, k + 0.25 / d]:
 			if kk > 0.0 and kk < 1.0:
 				need = maxf(need, (head - lerpf(from.y, to.y, kk)) / (4.0 * kk * (1.0 - kk)))
-	return minf(need, d * 0.5)
+	return minf(need, d * 0.25)
 
 
 ## Sparks where a blow lands (warm), or dust where it misses.

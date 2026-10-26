@@ -51,7 +51,8 @@ nocks it and looses at 1.033 s: the sandbox's `arrow` missile leaves from the
 arrow's middle at that frame (the sidecar's `shot_from`), so it takes the drawn
 arrow's place and flies on a gentle arc, or lobs over the men of his own side
 in the way (the goblin spearmen in front of the archers), 0.25 m over their
-heads all the way over them. Struck, he raises the bow to block
+heads all the way over them, but never higher than a quarter of the shot's
+length (a loose at 45 degrees). Struck, he raises the bow to block
 (his `block` clip is the hit role); in his death he drops the bow. His run is
 in the clip list. Exported by
 `references/characters/blender/goblin_archer/tools/export_godot.py`.

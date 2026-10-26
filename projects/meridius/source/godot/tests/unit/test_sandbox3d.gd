@@ -356,7 +356,8 @@ class Tall extends Node3D:
 ## An arrow flies its flat arc where its way is clear, a man of its own side
 ## beside the way included, and lobs over a man of its own side in the way
 ## (the goblin archers behind their spears), at least 0.2 m over his head all
-## the way over him; either way it lands once, on its target.
+## the way over him, but no higher than a quarter of the shot over a man at the
+## target's side (in a melee); either way it lands once, on its target.
 func test_an_arrow_lobs_over_its_own_side() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	var fx: Node3D = Fx3D.new()
@@ -371,12 +372,14 @@ func test_an_arrow_lobs_over_its_own_side() -> void:
 	mate.position = Vector3(0.1, 0, 4.8)
 	var aside := Tall.new()
 	aside.position = Vector3(1.2, 0, 3.0)
-	for n in [archer, target, mate, aside]:
+	var close := Tall.new()
+	close.position = Vector3(0, 0, 5.6)
+	for n in [archer, target, mate, aside, close]:
 		tree.root.add_child(n)
 	var mates := []
 	fx.friends = func(_who): return mates
 	var step := 1.0 / 60.0
-	for case in [[], [aside], [mate, aside]]:
+	for case in [[], [aside], [mate, aside], [close]]:
 		mates.clear()
 		mates.append_array(case)
 		var landed := []
@@ -393,12 +396,15 @@ func test_an_arrow_lobs_over_its_own_side() -> void:
 				break
 		assert_eq(landed.size(), 1, "it lands once (%d in the way)" % case.size())
 		assert_true(not landed.is_empty() and landed[0] == target, "on its target")
-		if mate in case:
+		if close in case:
+			var flat := Vector2(e.to.x - e.from.x, e.to.z - e.from.z).length()
+			assert_almost(e.arc, flat * 0.25, 1e-4, "a quarter of the shot over a man at the target's side")
+		elif mate in case:
 			assert_true(e.arc > d * 0.05 + 0.3, "it lobs: %.2f m over the line at mid-flight" % e.arc)
 			assert_true(over >= 0.2, "%.2f m over the head of the man in the way" % over)
 		else:
 			assert_almost(e.arc, d * 0.05, 1e-4, "the flat arc with %d beside the way" % case.size())
-	for n in [fx, archer, target, mate, aside]:
+	for n in [fx, archer, target, mate, aside, close]:
 		n.free()
 
 

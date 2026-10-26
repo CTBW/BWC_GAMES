@@ -740,6 +740,17 @@ func test_a_swing_cut_short_by_a_hit_is_given_back() -> void:
 	m.state = "idle"
 	assert_eq(int(b.blows), left + 1, "a blow lost with the footman's turn is given back")
 	assert_false(b.swing, "and no swing is left to come")
+	# GIVE_BACK (2) blows given back this fight: a third swing cut short is spent.
+	assert_eq(Squad3D.GIVE_BACK, 2)
+	b.swing = true
+	m.state = "attack"
+	sq.struck(m)
+	m.state = "idle"
+	assert_eq(int(b.blows), left + 1, "no more than GIVE_BACK blows given back a fight")
+	assert_false(b.swing, "the swing cut short is over")
+	# A new fight gives him his GIVE_BACK again.
+	sq.attack(r.foes[2])
+	assert_eq(int(b.given), 0, "a new fight, none given back yet")
 	_run(r, 90.0)
 	assert_eq(sq.mode, "idle", "the fight ends")
 	_free_squad(r)

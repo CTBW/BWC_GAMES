@@ -111,6 +111,9 @@ const RIPOSTE_WAIT := 4.0
 ## A man who has struck all his blows is given one to answer a foe with at
 ## most this many times a fight.
 const ANSWERS := 3
+## A man whose swing a hit cuts short is given the blow back at most this
+## many times a fight (struck), so that fights stay short.
+const GIVE_BACK := 2
 
 ## The footmen's drill, and what every other drill leaves as it is (see the
 ## header). `rate`: each man's pace against the clip's; `size`: his scale.
@@ -204,7 +207,8 @@ var _marks := {}
 ## foe who came for him, whom he answers), answers (the blows he was given
 ## to answer with this fight), riposte and riposte_in (the foe he strikes back
 ## at when he has steadied, his squad at rest; the time left), swing (a blow
-## or shot begun that has not left yet)}.
+## or shot begun that has not left yet), given (the blows given back to him
+## this fight)}.
 var _men := {}
 var _rng := RandomNumberGenerator.new()
 
@@ -231,7 +235,7 @@ func setup(men: Array, f, sandbox, at: Vector3, facing: float, drill_: Dictionar
 	for i in men.size():
 		_men[men[i]] = {"slot": i, "role": "front" if i < front else "rear", "act": Callable(), "delay": 0.0,
 			"moving": false, "goal": men[i].position, "still": 0.0, "target": null, "blows": 0, "pause": 0.0,
-			"joined": false, "counter": null, "riposte": null, "riposte_in": 0.0, "answers": 0, "swing": false}
+			"joined": false, "counter": null, "riposte": null, "riposte_in": 0.0, "answers": 0, "swing": false, "given": 0}
 
 
 ## Reach and striking distance from the drill, or from the first man's attacks.
@@ -637,6 +641,7 @@ func attack(target: Node3D) -> void:
 		b.joined = false
 		b.counter = null
 		b.answers = 0
+		b.given = 0
 		b.pause = _rng.randf_range(FIRST_PAUSE.x, FIRST_PAUSE.y)
 	# Up to the foe in formation (straight in when it is near), then fight.
 	var route: Array = []
@@ -769,15 +774,17 @@ func swung(m: Node3D) -> void:
 ## Man m is struck, before his hit reaction. A hit that cuts his swing short
 ## (his blow had not left) gives him the blow back, else a man struck often
 ## enough would spend all his blows on swings that never land and never
-## answer his foes. So does a hit in a footman's step turn to strike (state
-## "turn"): it ends the turn and the blow that was to follow it. A unit that
-## turns while idle (unit3d.gd) swings after the hit, so that only delays it.
+## answer his foes. So does a hit in a turn in place to strike (state "turn",
+## the footman's): it ends the turn and the blow that was to follow it. A unit
+## that turns on the spot swings after the hit, so that only delays it. At
+## most GIVE_BACK blows a fight are given back.
 func struck(m: Node3D) -> void:
 	if not _men.has(m) or m.state not in ["attack", "turn"]:
 		return
 	var b: Dictionary = _men[m]
-	if b.swing and mode == "fight":
+	if b.swing and mode == "fight" and b.given < GIVE_BACK:
 		b.blows += 1
+		b.given += 1
 	b.swing = false
 
 
@@ -952,13 +959,14 @@ func _follow(sdt: float) -> bool:
 	if _follow_in > 0.0 or flat(_anchor.position - _anchor_at).length() < FOLLOW:
 		return false
 	var was := answering
-	var given := {}
+	var kept := {}
 	for m in members:
-		given[m] = _men[m].answers
+		kept[m] = [_men[m].answers, _men[m].given]
 	attack(_anchor)
 	answering = was
 	for m in members:
-		_men[m].answers = given[m]
+		_men[m].answers = kept[m][0]
+		_men[m].given = kept[m][1]
 	return true
 
 
@@ -1138,7 +1146,7 @@ func _reaim(sdt: float) -> void:
 			best = f
 	var left := {}
 	for m in members:
-		left[m] = [_men[m].blows, _men[m].answers]
+		left[m] = [_men[m].blows, _men[m].answers, _men[m].given]
 	var was := answering
 	var tries := _retries + 1
 	attack(best)
@@ -1147,6 +1155,7 @@ func _reaim(sdt: float) -> void:
 	for m in members:
 		_men[m].blows = left[m][0]
 		_men[m].answers = left[m][1]
+		_men[m].given = left[m][2]
 
 
 ## Man m strikes `t` with attack i, or one of his drill's that reaches it.

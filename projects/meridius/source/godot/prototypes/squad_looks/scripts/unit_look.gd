@@ -1,4 +1,4 @@
-## Dresses a squad's footman (footman_unit.gd) in his look (squad_look.gd):
+## Dresses a squad's footman (dressed_footman.gd) in his look (squad_look.gd):
 ##  - Regions: his body mesh is copied once per model with vertex colours made
 ##    from its skin weights (R head and neck, G legs, B the lower face, A the
 ##    height at rest / 2 m), which unit_variant.gdshader needs to tell hair

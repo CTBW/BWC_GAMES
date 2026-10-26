@@ -118,9 +118,6 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 	assert_eq(units.size() + Roster.missing().size(), Roster.UNITS.size())
 	for p in units:
 		var id := String(p.id)
-		if p.get("controller", "") == "footman":
-			_check_footman(p)
-			continue
 		# The whip effect samples posed bones, which needs the live tree; the
 		# suite runs outside it, before the tree readies nodes.
 		p.erase("fx")
@@ -136,7 +133,7 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 		assert_between(u.walk_speed(), 0.3, 3.0, id + " walk speed")
 		var attacks := 0
 		for a in u.actions():
-			if a.get("target", false):
+			if String(a.id).begins_with("attack:"):
 				attacks += 1
 				var atk: Dictionary = u.attack_info(int(String(a.id).get_slice(":", 1)))
 				assert_false(u.clips[atk.clip].events.is_empty(), "%s %s has its blow timed" % [id, atk.clip])
@@ -147,6 +144,10 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 					assert_between(Vector2(from.x - u.position.x, from.z - u.position.z).length(), 0.2, 1.2,
 						"%s %s leaves within arm's reach" % [id, atk.clip])
 		assert_true(attacks > 0, id + " has an attack")
+		if id == "footman":
+			# His moves come from his clips: the shared code finds them.
+			for m in ["can_march", "can_step_turn", "can_charge", "has_block", "can_step_lane"]:
+				assert_true(u.call(m), "footman " + m)
 		u.free()
 
 
@@ -309,18 +310,6 @@ func test_orc_brute_faces_dress_each_man() -> void:
 		assert_true(u.model.find_child("Club", true, false) != null, key + ": the club")
 		assert_eq(u.model.find_child("ClubLeft", true, false) != null, p.id == "orc_brute_dual", key + ": the left club")
 		u.free()
-
-
-## The footman's own controller needs the live tree: check his model's clips.
-func _check_footman(p: Dictionary) -> void:
-	var model: Node = (load(p.model) as PackedScene).instantiate()
-	var player: AnimationPlayer = model.find_children("*", "AnimationPlayer", true, false)[0]
-	var clips := ["idle", "walk", "hit", "death"]
-	for atk in p.get("attacks", []):
-		clips.append(atk.clip)
-	for c in clips:
-		assert_true(player.has_animation(c), "footman " + c)
-	model.free()
 
 
 # --- The footman squad -----------------------------------------------------------

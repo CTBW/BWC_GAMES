@@ -17,8 +17,8 @@ Sandbox card, or `Meridius Sandbox.cmd` in the repository root. Both run
 `tools/sandbox.ps1`, which opens the sandbox maximized without a console (or
 brings an open one to the front).
 
-The roster: footman (his own controller: start and stop, turns on the planted
-foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
+The roster: footman (start and stop, turns on the planted foot, block, lane
+step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
 stealth stance), succubus (whip lash with its slash effects, and the
 Sovereign Kiss where its clip is on disk), the goblin
@@ -176,7 +176,7 @@ How every squad fights:
 
 ## The footman squad
 
-The footmen's drill in detail. Six footmen in two ranks of three, each on the footman's own controller, who
+The footmen's drill in detail. Six footmen in two ranks of three, who
 march, stand and fight together but never quite in step. Where the squad looks
 lab (`prototypes/squad_looks`) is present, it dresses each man as a squad of
 the blue livery and the line kit: his own helmet, face and build, and the
@@ -223,8 +223,8 @@ button per man to select him alone (his own clips and actions).
   dummy within six tiles (in place if none); **Space** strikes again with it.
   **H** hit, **K** die, **R** revive, **Q / E** turn a quarter, **F** follow,
   **G** grid, **V** fog, **N** night.
-- Footman only: **B** (held) block, **C** shield charge, **X** counter,
-  **L** lane step, **P** walk pace or game pace.
+- For a unit whose clips have the move (the footman): **B** (held) block,
+  **C** shield charge, **X** counter, **L** lane step, **P** walk pace or game pace.
 - With a squad selected: **1 / Space** attack the nearest foe, **Q / E** wheel
   left or right. **Tab** goes through the squads, then the bench.
 
@@ -267,9 +267,12 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
 - `scripts/unit3d.gd`: a rigged unit: clips from its sidecar, walking with the
   clip's ground speed, turning, attacks timed on the sidecar's events, hit
   (a short procedural flinch when the model has no hit clip), a random death
-  among its death clips, revive, stances. `scripts/footman_unit.gd` puts the
-  footman's own controller (`prototypes/footman_anim/scripts/footman3d.gd`)
-  behind the same interface.
+  among its death clips, revive, stances, and the moves its clips allow,
+  found by their names (the footman has them all): the march's start and stop
+  (`start`, `stop`: moved by their own travel and planned in whole strides to
+  halt on the spot), turns in place (`turn_90`, `turn_90_r`, `turn_180`), the
+  charge (`run` and `charge_hit`, `charge_thrust`, `charge_stab`), the block
+  (`block`, `block_hit`) and the lane step (`lane`).
 - `scripts/fx3d.gd`: sparks, the bolt, the arrow, fireball, chain lightning,
   frost nova and earth fist, and the succubus's kiss (`scripts/kiss_fx3d.gd`).
   A missile leaves from its unit's `missile_from()` where the sidecar gives
@@ -297,7 +300,14 @@ Export the rigged model (GLB or FBX) and its sidecar JSON (per clip: `length`,
 `model`, `meta`, and what the sidecar does not say: `idle` / `walk` / `hit` /
 `death` clip names if not those, `attacks` (`clip`, `label`, `reach` in metres
 centre to centre, `hits`: the events that land, `missile` for a shot or spell,
-`then`: a clip that follows, such as a reload) and `stances`. A shot's clip
+`then`: a clip that follows, such as a reload; `weight`: how often it is
+picked, 0 for only when asked; `near` / `over`: how much nearer or farther
+than its reach it is still used) and `stances`. An attack with no `reach`
+whose clip gives `tip_reach_m` stands where its blade reaches. Optional:
+`plant_feet` (turns on the move about the planted foot, measures foot slide;
+the charge needs it), `counter`, `face_blow` (false: a blow does not turn
+him), `hit_arc`, `variant_on_wrap` (an idle variant waits for the idle's
+first frame), `blend` (cross-fade seconds by clip) and `labels.charge`. A shot's clip
 can give `shot_from` (where the missile leaves, model axes from the feet). A sidecar with
 `roles` (the spearman's, crossbowman's and goblins' exports) fills the clip
 roles and attacks itself. A profile whose files are missing is left out.

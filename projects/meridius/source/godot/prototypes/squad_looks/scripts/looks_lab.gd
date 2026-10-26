@@ -68,7 +68,7 @@ func _ready() -> void:
 	var fm_meta: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FOOTMAN_META))
 	ppu = SOLDIER_PX / (float(fm_meta.get("height_m", 1.7)) * cos(deg_to_rad(ELEVATION)))
 	for q in Roster.available():
-		if q.get("controller", "") == "footman":
+		if q.id == "footman":
 			_profile = q
 	_build_world()
 	# The footman's export is kept out of Git: a clean clone has no men to dress.

@@ -25,12 +25,10 @@ extends Node3D
 const Field3D = preload("res://prototypes/sandbox3d/scripts/field3d.gd")
 const Fog3D = preload("res://prototypes/sandbox3d/scripts/fog3d.gd")
 const Unit3D = preload("res://prototypes/sandbox3d/scripts/unit3d.gd")
-const FootmanUnit = preload("res://prototypes/sandbox3d/scripts/footman_unit.gd")
 const Fx3D = preload("res://prototypes/sandbox3d/scripts/fx3d.gd")
 const Squad3D = preload("res://prototypes/sandbox3d/scripts/squad3d.gd")
 const Roster = preload("res://prototypes/sandbox3d/scripts/roster.gd")
 const Dummy3D = preload("res://prototypes/footman_anim/scripts/dummy3d.gd")
-const Footman3D = preload("res://prototypes/footman_anim/scripts/footman3d.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
 const UI = preload("res://scripts/ui/ui.gd")
 
@@ -261,12 +259,12 @@ func _build_world() -> void:
 ## The roster on the bench, the dummies, then the squads.
 func _spawn() -> void:
 	for p in Roster.available():
-		var u: Node3D = FootmanUnit.new() if p.get("controller", "") == "footman" else Unit3D.new()
+		var u: Node3D = Unit3D.new()
 		u.setup(p)
 		u.name = String(p.id).capitalize().replace(" ", "")
+		u.tile_m = tile_m
 		world.add_child(u)
-		if p.get("controller", "") == "footman":
-			u.tile_m = tile_m
+		if p.id == "footman":
 			footman = u
 		var t: Vector2 = BENCH + BENCH_STEP * (units.size())
 		u.set_meta("home", t)
@@ -330,15 +328,13 @@ func _spawn_squad(s: Dictionary, rng: RandomNumberGenerator) -> void:
 			p["face"] = faces[i % faces.size()]
 		if not kit.is_empty():
 			p["kit"] = kit[i % kit.size()]
-		var footy: bool = p.get("controller", "") == "footman"
-		var u: Node3D = dressed.new() if dressed else (FootmanUnit.new() if footy else Unit3D.new())
+		var u: Node3D = dressed.new() if dressed else Unit3D.new()
 		u.setup(p)
+		u.tile_m = tile_m
 		u.name = "Squad%s%d" % [String(s.id).to_pascal_case(), i + 1]
 		if dressed:
 			u.look_spec = looks[i]
 		world.add_child(u)
-		if footy:
-			u.tile_m = tile_m
 		var r := rng.randf_range(d.rate.x, d.rate.y)
 		u.set_meta("rate", r)
 		u.playback = speed * r
@@ -652,7 +648,7 @@ func _refresh_unit_panel() -> void:
 		g.add_child(_button(label, _do_action.bind(a.id), "u:" + a.id, a.get("toggle", false)))
 	_panel_unit.add_child(g)
 	_panel_unit.add_child(_row([["Hit", func(): _react("hit")], ["Death", func(): _react("die")], ["Revive", func(): _react("revive")], ["Stop", func(): _react("stop")]], []))
-	if u == footman:
+	if u.can_march():
 		_panel_unit.add_child(_row([["Walk pace", func(): _set_pace("walk")], ["Game pace", func(): _set_pace("game")]], ["pace:Walk pace", "pace:Game pace"]))
 		_panel_unit.add_child(_row([["Turn, then walk", func(): _set_step_turns(true)], ["Turn as he walks", func(): _set_step_turns(false)]], ["start:Turn, then walk", "start:Turn as he walks"]))
 	_panel_unit.add_child(UI.label("ALL CLIPS", "SmallLabel", 13, UI.DARK_MUTED))
@@ -829,12 +825,13 @@ func _refresh() -> void:
 	if u:
 		for s in u.profile.get("stances", []):
 			on["u:stance:" + s] = u.stance == s
-		if u == footman:
-			on["u:stance:block"] = footman.block_held
-			on["pace:Walk pace"] = footman.pace == "walk"
-			on["pace:Game pace"] = footman.pace == "game"
-			on["start:Turn, then walk"] = footman.step_turns
-			on["start:Turn as he walks"] = not footman.step_turns
+		if u.has_block():
+			on["u:stance:block"] = u.block_held
+		if u.can_march():
+			on["pace:Walk pace"] = u.pace == "walk"
+			on["pace:Game pace"] = u.pace == "game"
+			on["start:Turn, then walk"] = u.step_turns
+			on["start:Turn as he walks"] = not u.step_turns
 	for k in on:
 		if _buttons.has(k) and is_instance_valid(_buttons[k]):
 			_buttons[k].set_pressed_no_signal(on[k])
@@ -891,19 +888,25 @@ func _apply_light() -> void:
 	field.mat.set_shader_parameter("deep", Vector3(p.bg.r, p.bg.g, p.bg.b))
 
 
+## The march's pace of the selected unit (or the footman's): walk or game.
 func _set_pace(p: String) -> void:
-	if footman == null:
-		return
-	footman.pace = p
-	if footman.state == "walk":
-		footman._start_walk()
+	var u := _marcher()
+	if u:
+		u.set_pace(p)
 	_refresh()
 
 
 func _set_step_turns(on: bool) -> void:
-	if footman:
-		footman.step_turns = on
+	var u := _marcher()
+	if u:
+		u.step_turns = on
 	_refresh()
+
+
+## The selected unit if it has the march (the start and stop), else the footman.
+func _marcher() -> Node3D:
+	var u := _sel()
+	return u if u and u.can_march() else footman
 
 
 func _set_look(m: String) -> void:
@@ -1018,7 +1021,7 @@ func _do_action(id: String) -> void:
 	elif id == "charge":
 		var t := _target_for(u)
 		if t and not u.charge(t):
-			_flash("Too close to charge (it needs a run of %d tiles): he walks up instead" % Footman3D.CHARGE_MIN_TILES)
+			_flash("Too close to charge (it needs a run of %d tiles): he walks up instead" % Unit3D.CHARGE_MIN_TILES)
 	elif id == "counter":
 		var t := _target_for(u)
 		if t:
@@ -1395,8 +1398,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_hover(event.position)
 	elif event is InputEventKey and not event.echo:
 		var u := _sel()
-		if event.keycode == KEY_B and footman and u == footman:
-			footman.set_block(event.pressed)
+		if event.keycode == KEY_B and u and u.has_block():
+			u.set_block(event.pressed)
 			_refresh()
 			return
 		if not event.pressed:
@@ -1423,17 +1426,17 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_V: _toggle("fog")
 			KEY_N: _toggle("night")
 			KEY_C:
-				if u and u.has_method("charge"):
+				if u and u.can_charge():
 					_do_action("charge")
 			KEY_X:
-				if u and u.has_method("counter"):
+				if u and u.profile.get("counter", false):
 					_do_action("counter")
 			KEY_L:
-				if u and u.has_method("step_lane"):
+				if u and u.can_step_lane():
 					_do_action("lane")
 			KEY_P:
-				if footman:
-					_set_pace("game" if footman.pace == "walk" else "walk")
+				if _marcher():
+					_set_pace("game" if _marcher().pace == "walk" else "walk")
 			KEY_Q:
 				if u:
 					u.turn_to(u.position + Vector3(sin(u.rotation.y + PI / 2), 0, cos(u.rotation.y + PI / 2)))

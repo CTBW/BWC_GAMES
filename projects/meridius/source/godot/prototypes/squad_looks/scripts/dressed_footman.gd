@@ -1,7 +1,8 @@
-## The sandbox's footman (prototypes/sandbox3d/scripts/footman_unit.gd) in his
-## look in his squad: set `look_spec` (a man from squad_look.gd) before he
-## enters the tree, and unit_look.gd dresses him whenever his look is set.
-extends "res://prototypes/sandbox3d/scripts/footman_unit.gd"
+## The sandbox's footman (prototypes/sandbox3d/scripts/unit3d.gd, with the
+## roster's footman profile) in his look in his squad: set `look_spec` (a man
+## from squad_look.gd) before he enters the tree, and unit_look.gd dresses him
+## whenever his look is set.
+extends "res://prototypes/sandbox3d/scripts/unit3d.gd"
 
 const UnitLook := preload("res://prototypes/squad_looks/scripts/unit_look.gd")
 

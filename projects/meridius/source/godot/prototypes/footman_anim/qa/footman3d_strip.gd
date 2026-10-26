@@ -18,6 +18,8 @@ func _run() -> void:
 			args[kv[0]] = kv[1]
 	var sb: Node3D = load("res://prototypes/footman_anim/scenes/footman3d_sandbox.tscn").instantiate()
 	root.add_child(sb)
+	if sb.footman == null:
+		return  # his export is not on disk: the lab has quit
 	sb.set_process_unhandled_input(false)
 	sb.sprite.visible = false
 	sb.dummy.visible = false

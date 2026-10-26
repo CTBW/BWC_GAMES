@@ -23,10 +23,23 @@ const GSPEAR := "res://prototypes/goblin_spear_anim/art3d/"
 const ORC := "res://prototypes/orc_brute_anim/art3d/"
 
 const UNITS := [
-	{"id": "footman", "title": "Footman", "faction": "player", "controller": "footman",
+	# His export has every move unit3d.gd knows: the start and stop, the turns
+	# in place, the charge, the block and the lane step. The slash, or now and
+	# then the stab (and the stab when he is too close to slash); the lunge only
+	# when asked for. Each attack stands where its blade reaches (tip_reach_m).
+	# The cross-fades suit his clips, which start and end on one guard.
+	{"id": "footman", "title": "Footman", "faction": "player",
 		"model": FOOTMAN + "footman.glb", "meta": FOOTMAN + "footman.json",
-		"blurb": "Line holder. His own controller: the start and stop, turns on the planted foot, the block, the lane step and the shield charge.",
-		"attacks": [{"clip": "attack", "label": "Slash"}, {"clip": "attack_stab", "label": "Stab"}, {"clip": "attack_thrust", "label": "Lunge"}]},
+		"blurb": "Line holder: the start and stop, turns on the planted foot, the block, the lane step and the shield charge.",
+		"attacks": [{"clip": "attack", "label": "Slash", "weight": 0.65, "near": 0.25},
+			{"clip": "attack_stab", "label": "Stab", "weight": 0.35, "over": 0.35},
+			{"clip": "attack_thrust", "label": "Lunge", "weight": 0.0}],
+		"labels": {"charge": "Shield charge"}, "face_blow": false, "hit_arc": 70.0, "plant_feet": true,
+		"counter": true, "variant_on_wrap": true,
+		"blend": {"idle": 0.25, "walk": 0.2, "attack": 0.1, "attack_stab": 0.1, "attack_thrust": 0.1, "block": 0.18,
+			"hit": 0.1, "death": 0.12, "lane": 0.25, "turn_90": 0.25, "turn_90_r": 0.25, "turn_180": 0.25, "start": 0.25,
+			"stop": 0.12, "block_hit": 0.08, "run": 0.2, "charge_hit": 0.0, "charge_thrust": 0.0, "charge_stab": 0.0,
+			"idle_guard": 0.1}},
 	{"id": "spearman", "title": "Spearman", "faction": "player",
 		"model": ART + "spearman.glb", "meta": ART + "spearman.json", "reach": 2.7,
 		"attack_defaults": {"reach": 2.7, "label": "Spear thrust"},

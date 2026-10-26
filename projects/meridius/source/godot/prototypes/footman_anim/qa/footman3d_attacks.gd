@@ -33,7 +33,7 @@ func _place(dist: float, from_deg: float) -> void:
 	fm.rotation.y = fm.yaw_of(-d)
 	fm.path.clear()
 	fm.state = "idle"
-	fm.player.play("idle", 0.0)
+	fm._play("idle", 0.0, true)
 
 
 func _blow(label: String) -> void:
@@ -73,11 +73,13 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	sb = load("res://prototypes/footman_anim/scenes/footman3d_sandbox.tscn").instantiate()
 	root.add_child(sb)
+	if sb.footman == null:
+		return  # his export is not on disk: the lab has quit
 	sb.set_process_unhandled_input(false)
 	fm = sb.footman
-	fm.rng.seed = 20261024
-	print("ATTACKS slash stands %.2f m off (tip %.2f m), stab %.2f m off (tip %.2f m); stab chance %.2f" % [
-		fm.strike_dist("attack"), fm.meta.clips.attack.tip_reach_m, fm.strike_dist("attack_stab"), fm.meta.clips.attack_stab.tip_reach_m, fm.ATTACK_STAB_CHANCE])
+	fm._rng.seed = 20261024
+	print("ATTACKS slash stands %.2f m off (tip %.2f m), stab %.2f m off (tip %.2f m); stab share %.2f" % [
+		fm.strike_dist("attack"), fm.meta.clips.attack.tip_reach_m, fm.strike_dist("attack_stab"), fm.meta.clips.attack_stab.tip_reach_m, fm._share("attack_stab")])
 	sb._set_zoom(2.4)
 	sb.follow = true
 	# In place at the slash's distance: the stab only when it reaches.
@@ -93,7 +95,7 @@ func _run() -> void:
 		fm.attack_target(sb.dummy)
 		await _until(func(): return fm.state == "attack", 10.0)
 		var to: Vector3 = sb.dummy.position - fm.position
-		print("WALKUP %d: %s from %.2f m (stands for it at %.2f)" % [i + 1, fm._attack_clip, Vector2(to.x, to.z).length(), fm.strike_dist(fm._attack_clip)])
+		print("WALKUP %d: %s from %.2f m (stands for it at %.2f)" % [i + 1, fm._attack.clip, Vector2(to.x, to.z).length(), fm.strike_dist(fm._attack.clip)])
 		await _blow("walk up %d" % (i + 1))
 	# Counters: the blow taken (on the shield when it is up), then struck back.
 	_place(fm.strike_dist("attack"), 0.0)
@@ -118,7 +120,7 @@ func _run() -> void:
 	_place(fm.strike_dist("attack"), 25.0)
 	fm.set_block(true)
 	await _wait(1.2)
-	fm.rng.seed = 3  # a stab for this one's answer
+	fm._rng.seed = 3  # a stab for this one's answer
 	await _strip("counter_block", func(): fm.counter(sb.dummy), 2, 360, 12)
 	fm.set_block(false)
 	print("ATTACKS_DONE")

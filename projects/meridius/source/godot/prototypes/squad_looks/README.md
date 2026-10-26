@@ -44,7 +44,7 @@ lab shows a message.
   surfaces of revolution fitted to the cropped head's outline. The shield's
   eagle is found once from its texture: a light patch the painted field
   encloses.
-- `scripts/dressed_footman.gd` extends the sandbox's `footman_unit.gd`: set
+- `scripts/dressed_footman.gd` extends the sandbox's `unit3d.gd`: set
   `look_spec` before he enters the tree.
 - Every man shares three materials per look mode. The Compatibility renderer
   shows `ALBEDO` unconverted, so colours stay display (sRGB) values.
@@ -52,7 +52,7 @@ lab shows a message.
 ## To the sandbox's squad
 
 In `prototypes/sandbox3d/scripts/sandbox3d.gd`, `_spawn_squad` would create
-`DressedFootman` instead of `FootmanUnit` and set
+`DressedFootman` instead of `Unit3D` and set
 `u.look_spec = SquadLook.squad(SQUAD_SIZE, seed, SquadLook.LIVERIES[0], "line")[i]`
 before `add_child`, then call `UnitLook.link(men)`. That folder belongs to the
 unit sandbox's owner; ask before changing it.

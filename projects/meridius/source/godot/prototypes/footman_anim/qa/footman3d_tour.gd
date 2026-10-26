@@ -84,6 +84,8 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	sb = load("res://prototypes/footman_anim/scenes/footman3d_sandbox.tscn").instantiate()
 	root.add_child(sb)
+	if sb.footman == null:
+		return  # his export is not on disk: the lab has quit
 	# Only the tour drives it: a real mouse over the window must not zoom or click.
 	sb.set_process_unhandled_input(false)
 	fm = sb.footman

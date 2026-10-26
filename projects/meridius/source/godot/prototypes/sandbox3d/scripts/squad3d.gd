@@ -1,5 +1,4 @@
-## A squad in the 3D sandbox: men of one kind (unit3d.gd, or the footman's
-## footman_unit.gd, each on his own controller) who march, stand and fight
+## A squad in the 3D sandbox: men of one kind (unit3d.gd) who march, stand and fight
 ## together, each in his own time, so that no two move in step. Its drill
 ## (DRILLS, the footmen's FOOTMEN unless it says otherwise) is how its kind
 ## stands and fights:
@@ -129,7 +128,7 @@ const FOOTMEN := {
 ## `standoff`: how far from its foe a shooting squad halts; `attacks`: the
 ## clips its men use (else all theirs).
 const DRILLS := {
-	"footman": {"reach": REACH, "strike": STRIKE_DIST},
+	"footman": {"reach": REACH, "strike": STRIKE_DIST, "attacks": ["attack", "attack_stab"]},
 	"spearman": {"file": 1.0, "rank": 0.9, "stagger": true, "fight": "ranks", "jitter": Vector2(0.04, 0.04),
 		"yaw_jitter": 0.04, "rear_blows": Vector2i(3, 4), "pause": Vector2(0.2, 0.9), "gap": Vector2(0.14, 0.4)},
 	"crossbowman": {"file": 1.25, "rank": 1.2, "stagger": true, "fight": "shoot", "volley": true, "standoff": 8.5,

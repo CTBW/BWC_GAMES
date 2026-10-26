@@ -74,7 +74,7 @@ func _ready() -> void:
 	play("idle")
 
 
-## The same looks as the footman's (footman3d.gd set_look).
+## The same looks as the footman's (sandbox3d/scripts/unit3d.gd set_look).
 func set_look(mode: String, outline: bool) -> void:
 	for s in _surfaces:
 		var src: Material = s[2]

@@ -75,7 +75,7 @@ func _place(tiles: float, from_deg: float, turn_deg: float) -> void:
 	fm.rotation.y = fm.yaw_of(-d) + deg_to_rad(turn_deg)
 	fm.path.clear()
 	fm.state = "idle"
-	fm.player.play("idle", 0.0)
+	fm._play("idle", 0.0, true)
 	fm.slides.clear()
 	sb.focus = (fm.position + sb.dummy.position) * 0.5 + Vector3(0, 0.85, 0)
 
@@ -107,7 +107,7 @@ func _charge(label: String, tiles: float, from_deg: float, turn_deg: float, shot
 	var s := []
 	for x in fm.slides:
 		s.append("%s %.1f(%s)" % [x[0].substr(0, 1), x[1] * 100.0, x[2]])
-	var clip: String = fm._strike_clip if charged else fm._attack_clip
+	var clip: String = fm._attack.clip
 	print("CHARGE %s: from %.1f tiles, turned %d deg; charged=%s (%s); braking at %.2f s, blow at %.2f s after the order; %s; rests %.2f m from the dummy (aim %.2f); hits +%d; slides_cm=%s" % [
 		label, tiles, int(turn_deg), charged, clip, (t_hit - t0) / 30.0, (t_blow - t0) / 30.0, fm.last_impact,
 		to.length(), fm.strike_dist(clip), sb.dummy.hits - hits0, s])
@@ -156,13 +156,15 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	sb = load("res://prototypes/footman_anim/scenes/footman3d_sandbox.tscn").instantiate()
 	root.add_child(sb)
+	if sb.footman == null:
+		return  # his export is not on disk: the lab has quit
 	sb.set_process_unhandled_input(false)
 	fm = sb.footman
 	sb.follow = false
 	_watch()
 	print("CHARGE_CLIPS run %.2f m/s (%.2f s a tile), strike travels %.2f m, contact %.3f s after it takes over" % [
 		fm.run_speed(), sb.tile_m / fm.run_speed(), fm.travel_of("charge_hit"), float(fm.meta.clips.charge_hit.events.contact)])
-	fm.rng.seed = 20261024
+	fm._rng.seed = 20261024
 	if "strip" in OS.get_cmdline_user_args():
 		await _filmstrip("close_stab", 2.3, 20.0, 0.0, 2, 360, 10)
 		_done = true

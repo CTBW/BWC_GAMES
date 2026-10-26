@@ -41,6 +41,9 @@ func test_every_original_sound_has_baked_takes() -> void:
 				assert_eq((s as AudioStreamWAV).format, AudioStreamWAV.FORMAT_16_BITS, "%s PCM" % n)
 		# What play() picks from: recorded takes once the bank lists them, the baked ones until then.
 		var r: Dictionary = sfx.bank.resolve(n)
+		if sfx.bank.events.get(n, {}).get("silent", false):
+			assert_eq(sfx.variant_count(n), 0, "%s is silenced" % n)
+			continue
 		assert_true(sfx.variant_count(n) >= 1, "%s resolves to takes" % n)
 		if r.source == "synth":
 			assert_eq(sfx.variant_count(n), takes, "%s plays its baked takes" % n)

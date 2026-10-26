@@ -131,9 +131,15 @@ func test_shipped_bank_routes_the_original_names() -> void:
 	for n in fx.names:
 		assert_true(b.events.has(n), "%s in bank.json" % n)
 		var r: Dictionary = b.resolve(n)
+		if b.events[n].get("silent", false):
+			assert_eq(r.takes, [], "%s is silenced" % n)
+			continue
 		# Recorded takes where the bank has them, else the baked synth ones: every name sounds.
 		assert_true(r.source in ["bank", "synth"], "%s sounds (%s)" % [n, r.source])
 		assert_eq(r.via, n)
+	# Your turn starts quietly (the owner's word); the enemy turn's drum plays.
+	assert_false(b.has_event("turn"), "your turn has no sound")
+	assert_true(b.has_event("drum"), "the enemy turn has its drum")
 	# (Events with takes in Git; the others may fall back to synth in a clone.)
 	for n in ["block", "step", "horn", "warhorn"]:
 		assert_eq(b.resolve(n).source, "bank", "%s plays recorded takes" % n)
@@ -230,6 +236,8 @@ func test_resolution_and_fallback_chain() -> void:
 			"loop_a": {"fallback": "loop_b"},
 			"loop_b": {"fallback": "loop_a"},
 			"orphan": {"fallback": "nothing_here"},
+			"hit_flesh": {"silent": true},
+			"after_silent": {"fallback": "hit_flesh"},
 		},
 	}, _synth_meta())
 	var r: Dictionary = b.resolve("recorded")
@@ -258,6 +266,11 @@ func test_resolution_and_fallback_chain() -> void:
 	assert_eq(b.resolve("loop_a").takes, [])
 	assert_eq(b.resolve("orphan").takes, [])
 	assert_eq(b.resolve("no_such_event").takes, [])
+	# A silenced event plays nothing, not even its synth takes, nor does one that falls back to it.
+	assert_true(b.synth.has("hit_flesh"))
+	assert_eq(b.resolve("hit_flesh").takes, [])
+	assert_false(b.has_event("hit_flesh"))
+	assert_eq(b.resolve("after_silent").takes, [])
 	assert_true(b.missing_files().has(MISSING))
 
 

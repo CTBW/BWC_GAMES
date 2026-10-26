@@ -71,7 +71,8 @@
   "turn": {
    "takes": [],
    "bus": "UI",
-   "max_voices": 2
+   "max_voices": 2,
+   "silent": true
   },
   "step": {
    "takes": [

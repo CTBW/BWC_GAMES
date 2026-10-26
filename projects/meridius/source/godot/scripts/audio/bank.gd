@@ -12,7 +12,8 @@
 ##   3. else its `fallback` event, resolved the same way (step_troll → step_large → step).
 ## So the game keeps its synth sounds until recorded takes are listed, and a
 ## listed file that is missing (not yet added, or a typo) falls through
-## instead of going silent.
+## instead of going silent. An event with `"silent": true` plays nothing, synth
+## included (the owner dropped your turn's `turn`, 26 Oct 2026).
 ##
 ## Options (bank `defaults`, overridden per event; an event without a value
 ## takes its fallback event's, then the default):
@@ -151,6 +152,8 @@ func _resolve(name: String) -> Dictionary:
 	var at := name
 	for i in MAX_CHAIN:
 		var e: Dictionary = events.get(at, {})
+		if e.get("silent", false):
+			break
 		var own: Array = []
 		for t in e.get("takes", []):
 			if exists(t.file):

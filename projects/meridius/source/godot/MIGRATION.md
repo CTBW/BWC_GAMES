@@ -651,6 +651,14 @@ measurements, not yet by ear (the owner swaps takes on
       Tests (deliberate): `test_shipped_bank_routes_the_original_names`
       lets a voice's local takes be missing and checks that nothing outside
       `local/` has a Sonniss or Higgsfield source.
+- [x] Your turn starts without a sound (26 Oct, the owner's word: the
+      synth `turn` sounded bad). bank.json marks `turn` `"silent": true`, so
+      it plays nothing, synth included (`bank.gd` `_resolve`), in the 3D
+      battle and in `battle_view.gd` alike; the enemy turn keeps its drum.
+      Tests: `test_resolution_and_fallback_chain` (a silenced event and
+      one that falls back to it), `test_shipped_bank_routes_the_original_names`
+      (`turn` silent, `drum` sounds), `test_sfx::test_every_original_sound_has_baked_takes`
+      (a silenced name keeps its baked takes but plays none).
 - [ ] By ear: the owner's remaining picks and round 2's voices, then levels
       (the order answers: whether -14 dB is right and whether every
       select should answer; the day battle's wind and the camp's wind,

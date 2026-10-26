@@ -1188,6 +1188,7 @@ func _firing_spot(u: Node3D, target: Node3D, r: float) -> Vector3:
 
 func _on_impact(target: Node3D, landed: bool, _reach: float, who: Node3D) -> void:
 	_flash(who.title() + ": " + String(who.last_impact))
+	_swung(who)
 	# A strike back is not answered, all its hits (the wolf's twin daggers) alike.
 	var counter := _strikes_back(who)
 	if target == null or not is_instance_valid(target):
@@ -1200,7 +1201,15 @@ func _on_impact(target: Node3D, landed: bool, _reach: float, who: Node3D) -> voi
 
 func _on_release(target: Node3D, kind: String, who: Node3D) -> void:
 	_flash(who.title() + ": " + String(who.last_impact))
+	_swung(who)
 	fx.launch(kind, who, target, _missile_land.bind(who, kind))
+
+
+## A squad man's blow or shot has left: a hit no longer cuts it short.
+func _swung(who: Node3D) -> void:
+	var sq = _squad_of(who)
+	if sq:
+		sq.swung(who)
 
 
 func _missile_land(target: Node3D, who: Node3D, kind: String) -> void:
@@ -1234,10 +1243,13 @@ func _blow(who: Node3D, target: Node3D, counter: bool) -> void:
 		return
 	if target.is_dead():
 		return
+	# A swing the hit cuts short is given back to a squad's man (squad3d.gd struck).
+	var sq = _squad_of(target)
+	if sq:
+		sq.struck(target)
 	target.take_hit(who.position, lethal)
 	if not fight_back or not _is_unit(who) or who.faction == target.faction:
 		return
-	var sq = _squad_of(target)
 	if sq:
 		# A squad answers together (squad3d.gd counter): the struck man strikes
 		# back if he can and his squad takes up the fight, even if he fell; a

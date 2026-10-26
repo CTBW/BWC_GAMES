@@ -203,7 +203,8 @@ var _marks := {}
 ## target, blows, pause, joined (a rear man sent to the line), counter (the
 ## foe who came for him, whom he answers), answers (the blows he was given
 ## to answer with this fight), riposte and riposte_in (the foe he strikes back
-## at when he has steadied, his squad at rest; the time left)}.
+## at when he has steadied, his squad at rest; the time left), swing (a blow
+## or shot begun that has not left yet)}.
 var _men := {}
 var _rng := RandomNumberGenerator.new()
 
@@ -230,7 +231,7 @@ func setup(men: Array, f, sandbox, at: Vector3, facing: float, drill_: Dictionar
 	for i in men.size():
 		_men[men[i]] = {"slot": i, "role": "front" if i < front else "rear", "act": Callable(), "delay": 0.0,
 			"moving": false, "goal": men[i].position, "still": 0.0, "target": null, "blows": 0, "pause": 0.0,
-			"joined": false, "counter": null, "riposte": null, "riposte_in": 0.0, "answers": 0}
+			"joined": false, "counter": null, "riposte": null, "riposte_in": 0.0, "answers": 0, "swing": false}
 
 
 ## Reach and striking distance from the drill, or from the first man's attacks.
@@ -759,6 +760,25 @@ func _riposte(m: Node3D, foe: Node3D, d: float) -> void:
 	_men[m].riposte_in = RIPOSTE_WAIT
 
 
+## Man m's blow or shot has left (the sandbox's _on_impact and _on_release).
+func swung(m: Node3D) -> void:
+	if _men.has(m):
+		_men[m].swing = false
+
+
+## Man m is struck, before his hit reaction. A hit that cuts his swing short
+## (his blow had not left) gives him the blow back, else a man struck often
+## enough would spend all his blows on swings that never land and never
+## answer his foes. A hit while he turns to strike only delays his swing.
+func struck(m: Node3D) -> void:
+	if not _men.has(m) or m.state != "attack":
+		return
+	var b: Dictionary = _men[m]
+	if b.swing and mode == "fight":
+		b.blows += 1
+	b.swing = false
+
+
 ## The squad is not fighting: its men's blows are strikes back (_riposte).
 func at_rest() -> bool:
 	return mode in ["idle", "reform"]
@@ -1129,6 +1149,7 @@ func _reaim(sdt: float) -> void:
 
 ## Man m strikes `t` with attack i, or one of his drill's that reaches it.
 func _strike(m: Node3D, t: Node3D, i := -1) -> void:
+	_men[m].swing = true
 	if not m.has_method("squad_attacks"):
 		m.strike_at(t)
 		return

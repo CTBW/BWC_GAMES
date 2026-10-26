@@ -665,6 +665,35 @@ func test_a_squad_at_rest_strikes_back_from_its_places() -> void:
 	_free_sides(host, a, b)
 
 
+func test_a_swing_cut_short_by_a_hit_is_given_back() -> void:
+	var r := _squad_rig()
+	var sq = r.squad
+	sq.attack(r.foes[2])
+	_run_until(r, func(): return not r.blows.is_empty(), 30.0)
+	assert_false(r.blows.is_empty(), "a man strikes")
+	var m: Node3D = r.blows[0].man
+	var b: Dictionary = sq._men[m]
+	var left: int = b.blows
+	# Struck before his blow left: the hit reaction ends his swing.
+	sq.struck(m)
+	m.state = "idle"
+	assert_eq(int(b.blows), left + 1, "the blow cut short is given back")
+	# Struck after it left (or while he only turns to strike): he keeps what he has.
+	_run_until(r, func(): return r.blows.size() > 1 and r.blows[-1].man == m, 30.0)
+	left = b.blows
+	sq.swung(m)
+	sq.struck(m)
+	assert_eq(int(b.blows), left, "a blow that left is spent")
+	b.swing = true
+	m.state = "idle"
+	sq.struck(m)
+	assert_eq(int(b.blows), left, "a hit while he turns only delays his swing")
+	assert_true(b.swing, "his swing is still to come")
+	_run(r, 90.0)
+	assert_eq(sq.mode, "idle", "the fight ends")
+	_free_squad(r)
+
+
 func _free_sides(host, a, b) -> void:
 	for m in host.units:
 		m.free()
@@ -745,6 +774,17 @@ func _run(r: Dictionary, seconds: float, until_idle := true) -> void:
 		r.squad.tick(dt)
 		if until_idle and r.squad.mode == "idle":
 			break
+
+
+## The fight until `done` holds, for at most `seconds`.
+func _run_until(r: Dictionary, done: Callable, seconds: float) -> void:
+	var dt := 1.0 / 30.0
+	var end: float = r.host.now + seconds
+	while r.host.now < end and not done.call():
+		r.host.now += dt
+		for m in r.squad.members:
+			m.tick(dt)
+		r.squad.tick(dt)
 
 
 func _assert_staggered(blows: Array, least: float = Squad3D.GAP.x) -> void:

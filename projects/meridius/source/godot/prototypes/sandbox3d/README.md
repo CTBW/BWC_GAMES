@@ -150,6 +150,10 @@ How every squad fights:
   times a fight. His squad, if it stands at rest, takes up the fight with the
   foe's front when the foe is near (a shooting squad when he is in range) and
   turns to face a farther one. A strike back is not answered.
+- **A swing cut short is not spent.** A hit reaction ends a man's swing; if
+  his blow or shot had not left yet, he is given it back, so that a man struck
+  often (a spearman among the rabble) still strikes back once the blows slack.
+  A hit while he only turns to strike delays his swing.
 - **Every fight ends.** A squad that took up a fight because it was set upon
   (it is `answering`) is not set on again, once it has re-formed, by its foe's
   last blows: its man struck strikes back once from his place when he has
@@ -304,7 +308,8 @@ roles and attacks itself. A profile whose files are missing is left out.
   strike, a rear man closes up, the ranks re-form; each man's first blow at
   the foe nearest him; both ranks of spears strike from their places; two
   volleys of six; a wedge closes round its foe; a squad set upon answers, each
-  man struck strikes back and the fight ends; a squad at rest strikes back
+  man struck strikes back and the fight ends; a swing cut short by a hit is
+  given back, one that left is spent; a squad at rest strikes back
   from its places), and the kiss heart's course on a stand-in caster (it
   lands once, about 0.5 s after the release from 5 m, its cards go back to
   the pool, and a cast cut short lands nothing).

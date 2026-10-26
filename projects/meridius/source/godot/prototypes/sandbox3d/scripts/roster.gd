@@ -17,6 +17,8 @@ const WOLF := "res://prototypes/wolf_scout_anim/art3d/"
 const GOBLIN := "res://prototypes/goblin_rabble_anim/art3d/"
 ## references/characters/blender/goblin_archer/tools/export_godot.py.
 const ARCHER := "res://prototypes/goblin_archer_anim/art3d/"
+## references/characters/blender/goblin_spear/tools/export_godot.py.
+const GSPEAR := "res://prototypes/goblin_spear_anim/art3d/"
 
 const UNITS := [
 	{"id": "footman", "title": "Footman", "faction": "player", "controller": "footman",
@@ -71,6 +73,10 @@ const UNITS := [
 		"model": ARCHER + "goblin_archer.glb", "meta": ARCHER + "goblin_archer.json", "reach": 10.0,
 		"home_tile": Vector2i(22, 16), "attack_defaults": {"missile": "arrow", "reach": 10.0, "label": "Shot", "hits": ["shot"]},
 		"blurb": "Skirmisher: a horn bow and a quiver of red-fletched arrows. Walks into range and a clear line, draws an arrow over his shoulder and looses. Struck, he raises the bow to block."},
+	{"id": "goblin_spearman", "title": "Goblin Spearman", "faction": "enemy",
+		"model": GSPEAR + "goblin_spearman.glb", "meta": GSPEAR + "goblin_spearman.json", "reach": 2.0,
+		"home_tile": Vector2i(21, 14), "attack_defaults": {"reach": 2.0, "label": "Spear thrust"},
+		"blurb": "Line goblin: a red-ragged spear held level in both hands. Draws back and drives a two-handed thrust from two metres; dying, he drops the spear."},
 ]
 
 

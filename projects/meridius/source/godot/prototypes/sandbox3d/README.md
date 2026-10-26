@@ -21,7 +21,8 @@ foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
 stealth stance), succubus (whip lash with its slash effects), the goblin
 rabble in its three loadouts (knife, hatchet, cleaver: one chop each, with the
-barrel-bottom or plank shield) and the goblin archer (horn bow, arrows). Players
+barrel-bottom or plank shield), the goblin archer (horn bow, arrows) and the
+goblin spearman (a two-handed spear thrust). Players
 are blue, enemies red. Two straw
 dummies stand in the yard, and a drill line of six in its south faces the
 footman squad.
@@ -42,8 +43,16 @@ arrow's place and flies on a gentle arc. Struck, he raises the bow to block
 in the clip list. Exported by
 `references/characters/blender/goblin_archer/tools/export_godot.py`.
 
+The **Goblin Spearman** stands north of the rabble, the bald goblin with the
+red-ragged spear held level in both hands. His walk (in place, moved at
+0.66 m/s) keeps the spear carried. He draws back and drives a two-handed thrust: the tip is
+furthest forward, 2.29 m from where he stands, at 1.267 s (the blow), so he
+strikes from 2 m. In his death the right fist opens at 1.5 s and the spear falls
+flat beside him. He has no hit clip and flinches procedurally. Exported by
+`references/characters/blender/goblin_spear/tools/export_godot.py`.
+
 The footman's model (`footman.glb`), the wolf scout's export and the goblins'
-GLBs, the archer's too (their sidecars are in Git), are not in Git. Where they are missing, the
+GLBs, the archer's and the spearman's too (their sidecars are in Git), are not in Git. Where they are missing, the
 sandbox leaves those units out (and the squad with the footman) and says which
 in the left panel and the console.
 

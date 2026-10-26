@@ -1,0 +1,146 @@
+{
+ "fps": 30.0,
+ "source": "projects/meridius/references/characters/blender/goblin_spear/goblin_spear_rig.blend",
+ "props": [
+  "Spear"
+ ],
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.459,
+ "height_rest_m": 1.486,
+ "roles": {
+  "idle": "idle",
+  "walk": "walk",
+  "attack": [
+   "attack"
+  ],
+  "death": [
+   "death"
+  ]
+ },
+ "notes": [
+  "Clips are baked from the rig's evaluated pose (both grips, the left hand's hold on the shaft, forearm twist, the cape and the skirt flaps, and the keyed spear); no constraints or drivers go out. The spear is skinned to the bone Spear (child of mixamorig:RightHand).",
+  "Locomotion is in place. walk moves the figure by root_vel (m/s, Godot axes): the travel retarget_clips.py removed (travel_from); speed_footlock_mps is how fast his planted foot slides back. idle stands still with the spear levelled in both hands, as does the walk. The death keeps its authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "attack is a two-handed thrust: events.contact is when the spear's tip is furthest forward after it is drawn back (tip_reach_m from where he stood, at tip_height_m); events.thrust spans the drive.",
+  "death: events.spear_drop is when his right fist lets go; the Spear bone then lays the spear on the ground.",
+  "No hit clip: the sandbox flinches procedurally.",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "GoblinSpearman",
+  "Spear"
+ ],
+ "bones": 61,
+ "triangles": 11497,
+ "texture_px": 1024,
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 6.6667,
+   "loop": true,
+   "frames": 201,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.3667,
+   "loop": true,
+   "frames": 42,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.6634
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    -0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.6,
+      "Left"
+     ],
+     [
+      1.1667,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.0,
+   "speed_mps": 0.6634,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 0.6471
+  },
+  "attack": {
+   "anim": "attack",
+   "length": 2.1,
+   "loop": false,
+   "frames": 64,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    -0.0005,
+    0.0
+   ],
+   "events": {
+    "contact": 1.2667,
+    "thrust": [
+     0.2,
+     1.2667
+    ]
+   },
+   "tip_reach_m": 2.286,
+   "tip_height_m": 0.959,
+   "lead_m": 0.292,
+   "tip_speed_max_mps": 5.39
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.3667,
+   "loop": false,
+   "frames": 72,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 1.9,
+   "hips_drift": [
+    -0.1429,
+    -0.3143,
+    0.8906
+   ],
+   "events": {
+    "settled": 2.2,
+    "spear_drop": 1.5
+   }
+  }
+ }
+}

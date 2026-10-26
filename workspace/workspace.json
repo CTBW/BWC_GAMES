@@ -95,6 +95,12 @@
           "subgroup": "Goblin Archer"
         },
         {
+          "name": "Goblin Spearman 3D rig",
+          "path": "goblin-spear-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Spearman"
+        },
+        {
           "name": "Mixar setup",
           "path": "mixar.html",
           "group": "Character rigs",

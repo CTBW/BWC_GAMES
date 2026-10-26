@@ -23,3 +23,6 @@
 # So do the goblin archer's.
 /prototypes/goblin_archer_anim/art3d/*
 !/prototypes/goblin_archer_anim/art3d/*.json
+# And the goblin spearman's.
+/prototypes/goblin_spear_anim/art3d/*
+!/prototypes/goblin_spear_anim/art3d/*.json

@@ -24,5 +24,7 @@ so the toggle compares those cutouts with the magenta-keyed originals.
 
 Regenerate provenance and the reviewed movie with
 `node projects/meridius/review/terrain-lab/woodland-media.mjs --encode` from the
-repository root, after the native `fog_of_war_shots.gd` capture completes.
+repository root, after the native `fog_of_war_shots.gd` capture completes
+(that capture went with the campaign map on 2026-10-26; take it from Git
+history to regenerate the movie).
 The script accepts `MERIDIUS_FFMPEG_BIN` for the installed FFmpeg directory.

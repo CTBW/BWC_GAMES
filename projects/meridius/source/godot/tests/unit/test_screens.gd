@@ -382,7 +382,7 @@ func test_prep() -> void:
 	s._toggle(army0[0])
 	assert_true(s.army.has(army0[0]), "toggled in")
 	s.march_button.pressed.emit()
-	assert_eq(App.screen, "campaign", "marched out")
+	assert_eq(App.screen, "battle", "marched out onto the field")
 	assert_not_null(App.game.expedition)
 	var n := _press_all(func():
 		fixture()

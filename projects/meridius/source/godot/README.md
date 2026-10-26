@@ -1,8 +1,9 @@
 # Meridius (Godot 4.7)
 
-Isometric, turn-based squad tactics on the Nordmark frontier: hold Amberfeld
-Garrison, recruit and train a company, march expeditions across a randomised
-campaign map and fight the greenskin horde in squad battles.
+Squad tactics on the Nordmark frontier: hold Amberfeld Garrison, recruit and
+train a company, and fight the greenskin horde in squad battles. The game is
+being redesigned around 3D units: an expedition is now one turn-based battle
+on Ashby farm, shown with the 3D units (the campaign map is set aside).
 
 This is the Godot port of the original TypeScript/Canvas game in `../game`,
 which stays in the repository as the reference. Godot is the only runtime.
@@ -33,7 +34,8 @@ From a shell (Git Bash), in this folder:
 | `tools/review_ui.sh` | Rebuild themes, capture the interface at three desktop resolutions, then run the input-driven playthrough with muted audio |
 | `tools/export.sh` | Windows build → `build/windows/Meridius.exe` (+ `Meridius.console.exe`) |
 | `build/windows/Meridius.console.exe -- --smoke` | Self-test of the built game (exit code 0 = OK) |
-| `tools/godot.sh --path . -s res://tests/visual/playthrough.gd` | Input-driven play-through in a 1920×1080 window (~2 min; `-- --full` adds a second expedition, restart and last-stand turns, ~5 min); exit code 0 = every check passed and no error was logged |
+| `tools/godot.sh --path . -s res://tests/visual/playthrough.gd` | Input-driven play-through in a 1920×1080 window (~2.5 min; `-- --full` adds Save and Quit on the field, a second expedition left by Retreat and New Company, ~5 min); exit code 0 = every check passed and no error was logged |
+| `tools/godot.sh --path . --resolution 1920x1080 -s res://tests/visual/battle3d_flow.gd` | The 3D battle from March Out to the report: deployment, a turn played by clicks, the enemy's turn, then the AI on both sides; captures in `tests/visual/out/battle3d_flow/` |
 | `tools/godot.sh --path . -s res://tests/visual/battle_open_time.gd` | Time to open the first and the second battle (boot warm-up check) |
 
 ### The play-through regression check
@@ -43,14 +45,14 @@ only through synthesized input (`Input.parse_input_event`: mouse motion,
 clicks, wheel, keys) at positions taken from the Controls' rects and the world
 cameras: title → New Company → welcome → buildings on the camp map (Barracks:
 hire) → Roster → a soldier → Sound → F11 → Esc menu → prep (army, supplies,
-advice) → March Out → map nodes to a battle, dialogs through their buttons →
-the battle played to its end by clicks (a small bot asks `Ai.act_unit` on a
-copy of the battle what to do and clicks it: select, point at a tile edge /
-Q / E for the facing, move, attack, ability buttons and number keys, Redo,
-Done / Space, End Turn / Enter) → result → Retreat home → report → garrison →
-the last stand's minimap click → Save and Quit. `-- --full` adds Save and
-Quit / Continue mid-expedition, more nodes, a second expedition with a battle
-left by Retreat, two turns of the last stand and New Company over the save.
+advice) → March Out → the turn-based battle on Ashby farm, in 3D, played to
+its end by clicks and keys (deployment: two squads swap tiles; Speed, Begin
+Battle; each turn the grid (G), the danger (Alt), the wheel and WASD, Tab and
+the company panel; a squad selected by clicking a man, marched by a click on a
+tile, turned with Q / E, set on a foe by clicking him, a move taken back with
+Backspace; Done (Space), End Turn (Enter)) → the report → garrison.
+`-- --full` adds Save and Quit / Continue on the field, a second expedition
+left by Retreat (asked twice) and New Company over the save.
 Each step is checked against the game state. It writes
 `tests/visual/out/playthrough/`: `playthrough.txt` (every step, frame times per
 phase, frames over 100 ms, logged errors, orphan nodes) and numbered
@@ -156,7 +158,7 @@ scripts/core     JS-compatible maths, the seeded RNG, prefs
 scripts/rules    battle rules, AI, map generation, battle setup (no nodes)
 scripts/meta     company, soldiers, garrison economy, saves
 scripts/campaign expeditions and the auto-player
-scripts/render   iso maths, camera, terrain, FX, battle/garrison/campaign views
+scripts/render   iso maths, camera, terrain, FX, battle/garrison views, the 3D battle
 scripts/ui       theme, widgets, screens, HUDs
 scripts/app      App autoload (game flow and saves), main scene
 scripts/audio    Sfx autoload: sound bank, placed sound, ambience, music

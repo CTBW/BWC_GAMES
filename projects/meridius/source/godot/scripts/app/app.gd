@@ -2,7 +2,7 @@
 ##
 ## STATE (read freely; change only through the methods)
 ##   game: Dictionary|null      GameState (scripts/meta/game.gd), the save
-##   screen: String             "loading" | "title" | "base" | "prep" | "campaign" | "battle" | "report"
+##   screen: String             "loading" | "title" | "base" | "prep" | "battle" | "report"
 ##   panel: String|null         open base panel: building id | "roster" | "memorial"
 ##   soldier: String|null       roster id shown in the soldier detail overlay
 ##   manual: String|null        open Field Manual page id
@@ -10,7 +10,8 @@
 ##   report: Dictionary|null    ExpeditionReport shown by the report screen
 ##   battle_info: Dictionary|null  {title, objective} of the expedition battle being fought
 ##   battle                     the Battle (scripts/rules/battle.gd) of the current battle
-##   base_view / campaign_view / battle_view: Node|null   the active world views
+##   base_view / battle_view: Node|null   the active world views (battle_view: the
+##                              3D battle, scripts/render/battle3d.gd)
 ##   load_progress: float       0..1 while loading
 ##   version: int               bumped by every change
 ## SIGNAL
@@ -18,8 +19,8 @@
 ## FLOW (store.ts names in snake_case)
 ##   new_game(seed = null), continue_game(), go_title(), go_base(), open_panel(id|null),
 ##   open_manual(page|null), open_soldier(id|null), go_prep(),
-##   launch(campaign_id, army: Array, supplies: Dictionary, cost: int), go_campaign(),
-##   click_node(id), dismiss(), go_home("success"|"retreat"), start_battle(), finish_battle(),
+##   launch(campaign_id, army: Array, supplies: Dictionary, cost: int), start_battle(),
+##   finish_battle(), go_home("success"|"retreat"|"defeat"),
 ##   open_menu(bool), toggle_mute(), toggle_fullscreen(), quit_to_title() (save, then title)
 ##   set_volume(key, v), volume(key): the sound sliders (master|music|ambience|sfx|voice, 0..1)
 ##   commit() = save() + emit_changed(); emit_changed(); sfx(name)
@@ -31,8 +32,19 @@
 ##   has_save(), save(), load_save() -> bool
 ##   use_views := true   false: no world views are created (store-only tests).
 ##   manual_seen() / mark_manual_seen() (prefs key "manualSeen").
-## AUTOMATION (store.debug.*): debug_test_battle(encounter_id, opts := {seed, night, darkness, mapId, army: [typeId…], level}),
-##   debug_player_turn(), debug_auto_battle(), debug_auto_expedition(seed := 1),
+## THE EXPEDITION is one battle for now (the game is being redesigned around the
+##   3D units: the campaign map is set aside): launch() takes the army straight
+##   into the battle, a fixed warband (FIELD_ENCOUNTER, no waves) on Ashby farm
+##   (FIELD), fought by the turn-based rules (Setup.build_battle with the field's
+##   map, Battlefields.battle_map) and shown by the 3D battle. When its end has
+##   played, finish_battle() applies it (Expedition.apply_battle: losses,
+##   experience, loot) and the company goes home (Expedition.return_home:
+##   success on a victory, retreat, defeat).
+## AUTOMATION (store.debug.*): debug_test_battle(opts := {seed, army: [typeId…], level, encounter})
+##   a battle on the field outside any expedition; debug_player_turn() the AI
+##   plays the company's turn; debug_auto_battle() the AI fights the whole
+##   battle; debug_settle_battle(result) ends the expedition's battle as
+##   "victory" | "defeat" | "retreat" without fighting it;
 ##   debug_auto_prepare(seed := 1) -> bool
 ## VIEWS  main.gd sets `world_host` (a Node2D); views are created here and shown
 ##   there (without main, under an internal host so tests still run them).
@@ -48,7 +60,11 @@ const Rng = preload("res://scripts/core/rng.gd")
 const Deps = preload("res://scripts/ui/deps.gd")
 
 ## Music track (bank.json `music.tracks`) for each screen.
-const SCREEN_MUSIC := {"title": "menu", "base": "camp", "prep": "camp", "report": "camp", "campaign": "campaign", "battle": "battle"}
+const SCREEN_MUSIC := {"title": "menu", "base": "camp", "prep": "camp", "report": "camp", "battle": "battle"}
+## The expedition's battle: the warband (data/encounters) and the 3D battlefield it is fought on.
+const FIELD_ENCOUNTER := "brute_vanguard"
+const FIELD := "ashby"
+const FIELD_TITLE := "Ashby farm"
 
 var game: Variant = null
 var screen := "loading"
@@ -60,7 +76,6 @@ var report: Variant = null
 var battle_info: Variant = null
 var battle: Variant = null
 var base_view: Node = null
-var campaign_view: Node = null
 var battle_view: Node = null
 var load_progress := 0.0
 var version := 0
@@ -212,9 +227,8 @@ func _set_base_view(dim := false) -> void:
 		base_view.spawn_walkers(game)
 	if base_view != null and "dim" in base_view:
 		base_view.dim = dim
-	# Showing the base frees the campaign and battle views.
+	# Showing the base frees the battle view.
 	_show_view(base_view)
-	campaign_view = null
 	battle_view = null
 
 
@@ -234,11 +248,19 @@ func _new_view(key: String) -> Node:
 	return Deps.instance(key) if use_views else null
 
 
+## The 3D battle showing Battle `b`.
 func _make_battle_view(b: Variant) -> Node:
-	var v := _new_view("battle_view")
+	var v := _new_view("battle3d")
 	if v != null and v.has_method("setup"):
 		v.setup(b)
 	return v
+
+
+## The rules' setup of a battle against encounter `roll` on the field.
+func _field_setup(roll: Dictionary, army: Array, opts: Dictionary) -> Dictionary:
+	var o := opts.duplicate()
+	o.map = Deps.battlefields().battle_map(FIELD)
+	return Deps.setup().build_battle(roll, army, o)
 
 
 # ---------------------------------------------------------------- flow
@@ -253,7 +275,7 @@ func continue_game() -> void:
 	if not load_save():
 		return
 	if game.get("expedition") != null:
-		go_campaign()
+		start_battle()
 	else:
 		go_base()
 
@@ -335,50 +357,7 @@ func launch(campaign_id: String, army: Array, supplies: Dictionary, cost: int) -
 	Deps.expedition().start_expedition(game, campaign_id, army, supplies, cost)
 	save()
 	sfx("horn")
-	go_campaign()
-
-
-func go_campaign() -> void:
-	var ex: Variant = _get_expedition()
-	screen = "campaign"
-	_drop_view(base_view)
-	base_view = null
-	_drop_view(battle_view)
-	battle_view = null
-	battle = null
-	campaign_view = _new_view("campaign_view")
-	if campaign_view != null:
-		if campaign_view.has_method("setup"):
-			# CampaignScene(ex, getExpedition, onNodeClick): setup(ex, getter) + node_clicked.
-			campaign_view.setup(ex, Callable(self, "_get_expedition"))
-		if campaign_view.has_signal("node_clicked"):
-			campaign_view.connect("node_clicked", Callable(self, "click_node"))
-		_subscribe(campaign_view)
-	_show_view(campaign_view)
-	emit_changed()
-
-
-func click_node(id: String) -> void:
-	var Ex = Deps.expedition()
-	if game == null or not Ex.can_march(game, id):
-		sfx("deny")
-		return
-	Ex.march(game, id)
-	commit()
-
-
-func dismiss() -> void:
-	if game == null:
-		return
-	var ex: Variant = game.get("expedition")
-	var p: Variant = ex.get("pending") if ex is Dictionary else null
-	var was_defeat: bool = p is Dictionary and p.get("kind") == "battleResult" and p.report.get("result") == "defeat"
-	Deps.expedition().dismiss_pending(game)
-	if was_defeat or game.get("expedition") == null:
-		report = game.lastReport
-		screen = "report"
-		_set_base_view(true)
-	commit()
+	start_battle()
 
 
 func go_home(outcome: String) -> void:
@@ -391,43 +370,63 @@ func go_home(outcome: String) -> void:
 	commit()
 
 
+## The expedition's army takes the field: the battle pending, else the
+## warband on Ashby farm (made the pending battle and saved, so Continue comes
+## back to the same one).
 func start_battle() -> void:
 	var g: Variant = game
 	if g == null or g.get("expedition") == null:
 		return
-	var p: Variant = g.expedition.get("pending")
-	if not (p is Dictionary) or p.get("kind") != "battle":
-		return
 	var Ex = Deps.expedition()
-	var night: Dictionary = Ex.prepare_night(g)
-	var setup: Dictionary = Deps.setup().build_battle(p.roll, Ex.battle_army(g), {"title": p.title, "darkness": night.darkness})
-	battle = Deps.battle().new(setup)
+	var ex: Dictionary = g.expedition
+	var p: Variant = ex.get("pending")
+	if not (p is Dictionary) or p.get("kind") != "battle":
+		var roll: Dictionary = Ex.ex_rng(ex, func(r: RefCounted) -> Dictionary: return Deps.setup().roll_encounter(FIELD_ENCOUNTER, r, 1))
+		roll.waves = []
+		p = {"kind": "battle", "nodeId": ex.current, "roll": roll, "title": FIELD_TITLE, "objective": true, "surprise": false}
+		ex.pending = p
+		save()
+	battle = Deps.battle().new(_field_setup(p.roll, Ex.battle_army(g), {"title": p.title}))
 	battle_info = {"title": p.title, "objective": p.objective}
+	_drop_view(base_view)
+	base_view = null
+	_drop_view(battle_view)
 	battle_view = _make_battle_view(battle)
 	if battle_view != null:
-		if night.night and battle_view.get("atmo") != null:
-			battle_view.atmo.night = true
 		if battle_view.has_signal("ended"):
 			battle_view.connect("ended", func(_r: String): finish_battle())
 		_subscribe(battle_view)
-	_drop_view(campaign_view)
-	campaign_view = null
 	_show_view(battle_view)
 	screen = "battle"
-	if not manual_seen():
-		manual = "battle"
 	emit_changed()
 
 
+## The battle's end has played: it is applied to the roster and the expedition
+## (Expedition.apply_battle) and the company goes home. A battle not yet over
+## counts as a withdrawal. Outside an expedition (debug_test_battle) it only
+## goes back to the base.
 func finish_battle() -> void:
 	var g: Variant = game
-	var b: Variant = battle_view.b if battle_view != null and is_instance_valid(battle_view) and battle_view.get("b") != null else battle
-	if g == null or b == null or battle_info == null:
+	if g == null:
 		return
-	Deps.expedition().apply_battle(g, b, battle_info.title, battle_info.objective)
+	var view: Node = battle_view if battle_view != null and is_instance_valid(battle_view) else null
+	var b: Variant = view.b if view != null and view.get("b") != null else battle
+	if g.get("expedition") == null or battle_info == null or b == null:
+		battle_info = null
+		battle = null
+		_drop_view(view)
+		battle_view = null
+		go_base()
+		return
+	if b.result == null:
+		b.phase = "over"
+		b.result = "retreat"
+	var rep: Dictionary = Deps.expedition().apply_battle(g, b, battle_info.title, battle_info.objective)
 	battle_info = null
-	save()
-	go_campaign()
+	battle = null
+	_drop_view(view)
+	battle_view = null
+	go_home({"victory": "success", "retreat": "retreat"}.get(String(rep.result), "defeat"))
 
 
 # ---------------------------------------------------------------- menu (Godot addition)
@@ -488,31 +487,29 @@ func quit_to_title() -> void:
 	manual = null
 	soldier = null
 	menu_open = false
-	if screen == "battle" or screen == "campaign":
+	if screen == "battle":
 		_drop_view(battle_view)
 		battle_view = null
-		battle = null
 		battle_info = null
-		_drop_view(campaign_view)
-		campaign_view = null
+		battle = null
 	go_title()
 
 
 # ---------------------------------------------------------------- automation (play-tests)
 
-## Start a stand-alone battle for review, outside any expedition.
-func debug_test_battle(encounter_id: String, opts: Dictionary = {}) -> void:
+## A stand-alone battle on the field for review, outside any expedition: the
+## warband (`encounter`, else FIELD_ENCOUNTER) against a chosen army of fresh
+## squads (`army`: type ids, at `level`), else the roster's first six.
+func debug_test_battle(opts: Dictionary = {}) -> void:
 	var g: Variant = game
 	if g == null:
 		return
-	var roll: Dictionary = Deps.setup().roll_encounter(encounter_id, Rng.new(JS.get_or(opts, "seed", 7)), 2)
-	if opts.get("mapId") != null:
-		roll.mapId = opts.mapId
+	var seed: int = JS.get_or(opts, "seed", 7)
+	var roll: Dictionary = Deps.setup().roll_encounter(String(JS.get_or(opts, "encounter", FIELD_ENCOUNTER)), Rng.new(seed), 1)
+	roll.waves = []
 	var Soldier = Deps.soldier()
-	# A chosen army of fresh squads (review captures), or the roster's first six.
 	var army: Array = []
 	if opts.get("army") != null:
-		var seed: int = JS.get_or(opts, "seed", 7)
 		var n := [0]
 		var next_id := func() -> String:
 			n[0] += 1
@@ -523,22 +520,16 @@ func debug_test_battle(encounter_id: String, opts: Dictionary = {}) -> void:
 	else:
 		for so in g.roster.slice(0, 6):
 			army.append(Soldier.soldier_to_unit(so))
-	var bopts := {}
-	if opts.get("darkness") != null:
-		bopts.darkness = opts.darkness
-	battle = Deps.battle().new(Deps.setup().build_battle(roll, army, bopts))
+	battle = Deps.battle().new(_field_setup(roll, army, {"title": FIELD_TITLE}))
 	battle_info = null
+	_drop_view(base_view)
+	base_view = null
+	_drop_view(battle_view)
 	battle_view = _make_battle_view(battle)
 	if battle_view != null:
-		if opts.get("night") and battle_view.get("atmo") != null:
-			battle_view.atmo.night = true
 		if battle_view.has_signal("ended"):
 			battle_view.connect("ended", func(_r: String): go_base())
 		_subscribe(battle_view)
-	_drop_view(base_view)
-	base_view = null
-	_drop_view(campaign_view)
-	campaign_view = null
 	_show_view(battle_view)
 	screen = "battle"
 	emit_changed()
@@ -548,37 +539,49 @@ func debug_test_battle(encounter_id: String, opts: Dictionary = {}) -> void:
 func debug_player_turn() -> void:
 	var s := battle_view
 	var b: Variant = s.b if s != null else battle
-	if b == null or b.phase != "player":
+	if b == null or b.phase != "player" or (s != null and s.rules_running()):
 		return
-	Deps.ai().run_player_auto(b)
 	if s != null:
-		s.pump()
+		s.run_rules(func(bb): Deps.ai().run_player_auto(bb))
+	else:
+		Deps.ai().run_player_auto(b)
 
 
-## Fight the current battle with the AI on both sides.
+## Fight the current battle with the AI on both sides; the view plays it back.
 func debug_auto_battle() -> void:
 	var s := battle_view
 	var b: Variant = s.b if s != null else battle
-	if b == null:
+	if b == null or (s != null and s.rules_running()):
 		return
-	if b.phase == "deploy" and s != null:
-		s.begin()
-	Deps.autoplay().auto_battle(b)
 	if s != null:
-		s.pump()
-	elif battle_info != null:
+		s.run_rules(func(bb): Deps.autoplay().auto_battle(bb))
+		return
+	Deps.autoplay().auto_battle(b)
+	if battle_info != null:
 		# No view to play the end back: settle the battle at once.
 		finish_battle()
 
 
-func debug_auto_expedition(seed := 1) -> void:
-	if game == null:
+## Ends the expedition's battle as `result` without fighting it, then goes home
+## (a defeat: every squad of the company falls).
+func debug_settle_battle(result: String) -> void:
+	if game == null or game.get("expedition") == null:
 		return
-	Deps.autoplay().auto_expedition(game, Rng.new(seed))
-	report = game.lastReport
-	screen = "report"
-	_set_base_view(true)
-	commit()
+	if battle == null or battle_info == null:
+		start_battle()
+	var view: Node = battle_view if battle_view != null and is_instance_valid(battle_view) else null
+	var b: Variant = view.b if view != null and view.get("b") != null else battle
+	if b == null or (view != null and view.rules_running()):
+		return
+	if result == "defeat":
+		for u in b.units:
+			if u.faction == "player":
+				u.status = "dead"
+				u.alive = 0
+				u.hp = 0
+	b.phase = "over"
+	b.result = result
+	finish_battle()
 
 
 func debug_auto_prepare(seed := 1) -> bool:
@@ -587,5 +590,5 @@ func debug_auto_prepare(seed := 1) -> bool:
 	var ok: bool = Deps.autoplay().auto_prepare(game, Rng.new(seed))
 	if ok:
 		save()
-		go_campaign()
+		start_battle()
 	return ok

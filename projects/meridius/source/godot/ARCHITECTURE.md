@@ -17,10 +17,10 @@ Compatibility. Base resolution 1920×1080, stretch `canvas_items`/`expand`.
 | `data/*.json` | Content tables (units, abilities, terrain, props, maps, encounters, events, items, buildings, campaigns, names). Loaded by `scripts/data/db.gd`. Exported once by `tools/export_data.ts`; now the editable source. | `src/data/*` |
 | `scripts/core/` | `js.gd` (JS-semantics helpers), `rng.gd` (bit-exact mulberry32), `prefs.gd` | `src/core/*` |
 | `scripts/data/db.gd` | Static access to the tables: `DB.UNIT_TYPES`, `DB.squad_size()`, … | `src/data/*` |
-| `scripts/rules/` | Pure battle rules: `grid.gd`, `squad.gd`, `battle.gd`, `ai.gd`, `mapgen.gd`, `setup.gd` | `src/battle/*` |
+| `scripts/rules/` | Pure battle rules: `grid.gd`, `squad.gd`, `battle.gd`, `ai.gd`, `mapgen.gd`, `setup.gd`; `battlefields.gd` (the 3D battlefields as battle maps; Godot only) | `src/battle/*` |
 | `scripts/meta/` | `game.gd` (GameState, base, roster economy), `soldier.gd` | `src/meta/*` |
 | `scripts/campaign/` | `expedition.gd`, `autoplay.gd` | `src/campaign/*` |
-| `scripts/render/` | Presentation: `iso.gd`, `assets.gd` (sprite registry), `terrain.gd`, `atmosphere.gd`, `fx.gd`, `formation.gd`, `squad_view.gd`, `soldier_anim.gd` (frame-animated figures: the footmen; Godot only), `battle_view.gd`, `base_view.gd`, `campaign_view.gd` | `src/render/*` |
+| `scripts/render/` | Presentation: `iso.gd`, `assets.gd` (sprite registry), `terrain.gd`, `atmosphere.gd`, `fx.gd`, `formation.gd`, `squad_view.gd`, `soldier_anim.gd` (frame-animated figures: the footmen; Godot only), `battle_view.gd`, `base_view.gd`; Godot only: `battle3d.gd`, `battle3d_field.gd` (the expedition's 3D battle) | `src/render/*` |
 | `scripts/ui/` | Godot Control UI: theme, widgets, screens, HUDs | `src/ui/*` |
 | `scripts/audio/` | `sfx.gd` autoload `Sfx`; Godot only: `bank.gd` (sound bank), `placement.gd` (on-screen pan and level), `loop_deck.gd` (fading loops), `ambience.gd` (beds, positional loops, scheduled one-shots) | `src/audio/sfx.ts` |
 | `scripts/app/` | `app.gd` autoload `App` (flow/store, saves), `main.gd` (root scene) | `src/ui/store.ts`, `App.tsx`, `main.tsx` |
@@ -91,17 +91,20 @@ plays back rule events; it never changes rule outcomes (the original's
 ## Runtime architecture
 
 - `App` autoload (`scripts/app/app.gd`): the store. Holds `game` (GameState
-  dict), `screen` (`title|base|prep|campaign|battle|report`), panel/manual/
+  dict), `screen` (`title|base|prep|battle|report`), panel/manual/
   soldier overlays; flow methods mirror `store.ts` (`new_game`, `continue_game`,
-  `go_base`, `open_panel`, `go_prep`, `launch`, `go_campaign`, `click_node`,
-  `dismiss`, `go_home`, `start_battle`, `finish_battle`) and a `debug`-style
-  automation API. Emits `changed`. Saves `user://meridius_save.json` (GameState
-  JSON, same shape as the original's localStorage save).
+  `go_base`, `open_panel`, `go_prep`, `launch`, `go_home`, `start_battle`,
+  `finish_battle`) and a `debug`-style automation API. The game is being
+  redesigned around the 3D units: the campaign map is set aside, and an
+  expedition is one battle shown in 3D (see *The 3D battle*). Emits
+  `changed`. Saves `user://meridius_save.json` (GameState JSON, same shape as
+  the original's localStorage save).
 - `scenes/main.tscn` (`scripts/app/main.gd`): root Control. Children: a world
   host (SubViewportContainer or Node2D layer showing the active view) and the UI
   layer. Applies the UI theme at the root so every Control inherits it.
 - Views (Node2D, world pixels = original world pixels, `iso.gd` TW 128 / TH 64 /
-  LH 26): `battle_view.gd`, `base_view.gd`, `campaign_view.gd`. Each owns its
+  LH 26): `battle_view.gd` (the 2D battle, now only in the Unit
+  Playground, the Terrain Lab and tests), `base_view.gd`. Each owns its
   camera (pan with WASD/arrows/drag, wheel zoom), input on the world, and emits
   signals for the UI. Their public methods mirror the original scene classes in
   snake_case (`BattleScene.setAbility` → `set_ability`, `ui` state dict mirrors
@@ -117,6 +120,50 @@ plays back rule events; it never changes rule outcomes (the original's
   The procedural canvas art of the original (figures, portraits, fallbacks) is
   baked to PNG by `tools/bake/` through the original renderer; Blender sprites
   are imported as is.
+
+## The 3D battle (Godot addition)
+
+The expedition is one battle for now: `App.launch` takes the army straight into
+it, the turn-based rules fight it (`scripts/rules/battle.gd`, the AI, morale,
+abilities, fog of war, as in the 2D battles) and a 3D view shows it. When its
+end has played, `App.finish_battle` applies it (`Expedition.apply_battle`:
+losses, experience, loot) and the company goes home (`Expedition.return_home`:
+success on a victory, retreat, defeat). The encounter is a fixed warband
+(`App.FIELD_ENCOUNTER`, `brute_vanguard`, no waves) on Ashby farm (`App.FIELD`),
+made the expedition's pending battle and saved, so Continue comes back to it.
+
+- `scripts/rules/battlefields.gd` (Deps `battlefields`): a field of the 3D
+  battlefields (`prototypes/battlefields3d/scripts/bf_fields.gd`, already a map
+  in the rules' format) as a battle map: every thing on it solid (the farm
+  things without a rules prop take one; the map is `solidWoods`, so its trees
+  and bushes block a move as well, `Grid.tile_passable`) and each side's
+  deployment tiles. `Setup.build_battle` takes it as `opts.map`. Every field
+  is ringed by woods (`bf_fields.gd`, `_border`), so its edges are closed
+  except where its roads run out.
+- `scripts/render/battle3d.gd` (Deps `battle3d`, `App.battle_view`): a Node3D
+  view with the 2D `battle_view.gd`'s interface (`setup(battle)`, `ui`,
+  `select`, `set_ability`, `begin`, `end_turn`, `retreat`, `run_rules`, `pump`,
+  `resolve_pointer`, signals `ui_changed` and `ended(result)`), so the battle
+  HUD drives it unchanged. Each rules squad takes the field as a squad of the
+  3D sandbox's figures (`prototypes/sandbox3d`: `unit3d.gd`, `squad3d.gd`,
+  `roster.gd`; `SQUAD_OF` maps the unit types; the footmen dressed by
+  `prototypes/squad_looks` when it is on disk). The view plays back the rules'
+  events: a march along the rules' path, an attack as a short fight in which as
+  many men fall as the rules say, a volley, a spell with the casters' clips,
+  words over the squads and the turn banners. Squads' events play side by
+  side, turn banners alone. The ground shows the reach (light-edged squares, as
+  in the 2D battle), the deployment tiles, the danger (Alt), the march's path
+  and the facing it will arrive with; the field's fog (`bf_fog`) shows what the
+  company sees. The shadows are the paintings' own for now; `sun_shadows`
+  (off) has the sun cast those of the men, the trees, the houses and the
+  things instead (the field's `sun_shadows` drops the painted ones). A man
+  never stands on a tile the rules keep clear of squads.
+  The view is the host `squad3d.gd` expects (`units`, `_squad_of`, `_hostile`,
+  `show_route`, `_line_clear`, …).
+- `scripts/render/battle3d_field.gd`: the battlefield prototype's ground plus
+  what the units need: `walkable` (the rules' solid tiles), `path_to` (A* over
+  the tiles, no bank steeper than a figure climbs), fading tree crowns.
+- The HUD is the battle HUD (`scripts/ui/battle_hud.gd`, Deps `battle_hud`).
 
 ## Painted woodland camp (Godot addition)
 
@@ -219,7 +266,7 @@ through `tools/import.sh` (locked). Do not commit; the lead commits.
 | `scripts/rules/{grid,squad,battle,ai}.gd`, battle parity | rules agent |
 | `scripts/rules/{mapgen,setup}.gd`, `scripts/meta/*`, `scripts/campaign/*`, their parity | world/meta agent |
 | `assets/sprites/**`, `assets/sprites.json`, `assets/audio/**`, `assets/shaders/sprite_*`, `tools/bake/**`, `scripts/render/assets.gd`, `scripts/audio/sfx.gd` | asset agent |
-| `scripts/render/{iso,terrain,atmosphere,fx,camera}.gd`, `assets/shaders/{terrain,atmo}*`, `base_view`, `campaign_view`, `scenes/{base,campaign}/*` | world-render agent |
+| `scripts/render/{iso,terrain,atmosphere,fx,camera}.gd`, `assets/shaders/{terrain,atmo}*`, `base_view`, `scenes/base/*` | world-render agent |
 | `scripts/render/{battle_view,squad_view,formation}.gd`, `scenes/battle/*` | battle-view agent |
 | `scripts/ui/*`, `scripts/app/*`, `scenes/main.tscn`, `scenes/ui/*`, `assets/fonts/**`, `assets/icons/**`, `assets/ui/**` | UI agents |
 
@@ -364,7 +411,7 @@ the earlier first-call spread unless `initial_every` is supplied.
 
 **Music**: `Sfx.set_music(id)` crossfades (3 s) to a track of
 `music.tracks`; `App` asks for the track of each screen (`SCREEN_MUSIC`:
-title → menu, base/prep/report → camp, campaign, battle). No tracks are listed
+title → menu, base/prep/report → camp, battle). No tracks are listed
 yet, so nothing plays. Tracks come from the owner's Suno downloads
 (`music/suno/<track>/` in the library), named `suno/<track>/<file>.wav` in
 `recipe.json`: a group of kind `music` makes stereo Vorbis loops, and a take

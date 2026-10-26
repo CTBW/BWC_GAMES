@@ -949,6 +949,88 @@ battle deploy captures and day and night close-ups of the fallen wood: 0 errors.
   fields, the fog, that every painting loads, and that each field draws its
   pieces and decor without the weeping willow.
 
+### 2026-10-26 - The campaign map set aside; one turn-based battle shown in 3D
+
+The game is being redesigned around the 3D units of `prototypes/sandbox3d`. For
+now the campaign map and the old battlefields are out of the game and an
+expedition is one battle on Ashby farm, one of the 3D battlefields, still
+fought turn by turn, one side after the other (the owner's call).
+
+- Flow: Plan Expedition → March Out takes the army straight into the battle
+  (`App.launch` → `start_battle`): a fixed warband (`App.FIELD_ENCOUNTER`,
+  `brute_vanguard`, its waves dropped) rolled through the expedition's
+  generator and made its pending battle, so a save continues into the same
+  battle from its deployment. The end banner, or a withdrawal through Retreat,
+  ends it; `App.finish_battle` applies it (`Expedition.apply_battle`: losses,
+  experience, loot, the objective) and the company goes home
+  (`Expedition.return_home`: victory success, retreat retreat, defeat defeat)
+  → report → garrison.
+- Rules: the turn-based rules unchanged, on the field's map:
+  `scripts/rules/battlefields.gd` makes a field of
+  `prototypes/battlefields3d/scripts/bf_fields.gd` a battle map (deployment
+  tiles for each side) and `Setup.build_battle` takes it as `opts.map`.
+  Every thing on the field is solid: the farm things drawn with no rules prop
+  (pumpkins, bales, sacks, the wheelbarrow, the scarecrow, the signpost…) take
+  one (`Battlefields.THINGS`: haystack, crates or fence), and the map carries
+  `solidWoods`, under which `Grid.tile_passable` also blocks trees and bushes
+  (one tree or bush on its tile here, not a stand of woodland as on the 2D
+  maps, where they stay passable). Maps without the flag are unchanged, so the
+  battle traces and campaign runs stand (no re-record).
+- The battle: `scripts/render/battle3d.gd` shows it with the sandbox's figures
+  and squads, through the 2D `battle_view.gd`'s interface, so the battle HUD
+  (`scripts/ui/battle_hud.gd`) drives it unchanged. It plays back the rules'
+  events (marches along the rules' paths, attacks as short fights in which as
+  many men fall as the rules say, volleys, spells with the casters' clips) and
+  shows the reach tiles as the 2D battle does, the danger, the march's path
+  and facing, and the field's fog. `battle3d_field.gd` gives the men the
+  rules' solid tiles; a man whose place in his squad's ranks is on one stands
+  on the nearest clear ground instead. The rigged models are not in Git: a
+  type whose squad's men are not on disk takes the field as the footmen or
+  the goblin rabble, and as no figures when they are missing too.
+- Removed: `campaign_view.gd` and `scenes/campaign/`, the campaign HUD and its
+  dialogs (`campaign_hud.gd`, `hud_campaign_dialogs.gd`, `hud_choice.gd`),
+  their tests (`test_campaign_view`, `test_campaign_hud`, `test_hud_flow`) and
+  the visual scripts that drove them (`capture_campaign`, `capture_hud`,
+  `capture_magic`, `capture_skills`, `fog_of_war_shots`, `profile_campaign`).
+  `battle_view.gd` stays for the Unit Playground, the Terrain Lab and tests.
+  The Field Manual opens from the pause menu only; its pages still describe
+  the campaign map.
+- Tests: `test_battle3d` (Ashby farm's map and zones, its things solid, the
+  battle built on it and fought to an end by the AI, the squads each type
+  takes the field as, and those in their stead); `test_app_flow`,
+  `test_boot_warm` and `test_screens` follow the new flow; `smoke.gd` checks
+  March Out → battle → report.
+  Visual: `tests/visual/battle3d_flow.gd`; `playthrough.gd` plays the battle
+  by clicks and keys; `ui_flow_check.gd` begins it and withdraws.
+- Closed by woods (the owner's call): every 3D battlefield
+  (`bf_fields.gd`, `_border`) is ringed by woods along its edge, a tile to a
+  few deep and deeper in tongues, so a field has an irregular shape with
+  nooks and narrows. Every tile of the band is a tree or a bush ("wild"), so
+  on the battle's `solidWoods` map no squad crosses it; it stands back from
+  what the field places (pieces, decor, fences, yards, fields, squares,
+  roads, whose lanes run out through it) and from a field's "open" boxes, and
+  the band on the near side is thickets so it hides less. Ashby's deployment
+  zones are unchanged and still joined.
+- Northern woods (the owner's call): the woods are mostly spruce, young fir
+  and Scots pine with birch, from the game's own woodland paintings
+  (`bf_field.gd`, `NORTH`): a pine prop is an evergreen, most oaks are birches
+  (gold or aspen in autumn, bare in winter), some bushes young firs.
+- `battle3d_flow.gd` clicks a man of the squad that the pointer resolves to,
+  since a man behind another squad's men selects that squad.
+- Shadows from the sun (trial, the owner's request; off for now, the owner
+  keeps the painted shadows): with `battle3d.gd` `sun_shadows` the sun casts
+  every shadow in the battle. The paintings' own shadows are not laid; each
+  card has an unseen copy turned to the sun that only casts
+  (`bf_card_caster.gdshader`; a piece's stands over its footprint, as tall
+  as the building). The copies of one picture are one mesh, which sways each
+  card's part by its own phase: on Ashby 45 draws into each shadow split
+  instead of 1,772, about 3 ms a frame less, close to the painted shadows'
+  cost. The ground takes the shadows through an overlay
+  (`bf_sun_shade.gdshader`), the men's too. The sun's shadow map is four
+  splits over the camera's depth, which `_place_camera` fits to the ground in
+  view (an orthogonal camera's near to far is what Godot splits).
+  `tests/visual/battle3d_shadows.gd` shows Ashby both ways.
+
 ### 2026-10-26 - Rule: the fallen rise wounded; a cut-down squad rises Injured
 
 The owner's rule (rules chat). It replaces field triage and the downed sergeant.

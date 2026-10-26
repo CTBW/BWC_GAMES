@@ -7,7 +7,7 @@
 ##
 ##   const Deps = preload("res://scripts/ui/deps.gd")
 ##   Deps.game().level(g, "barracks")      # static funcs of scripts/meta/game.gd
-##   if Deps.has("battle_view"): ...
+##   if Deps.has("battle3d"): ...
 extends RefCounted
 
 const PATHS := {
@@ -23,12 +23,9 @@ const PATHS := {
 	"assets": "res://scripts/render/assets.gd",
 	"base_view_scene": "res://scenes/base/base_view.tscn",
 	"base_view": "res://scripts/render/base_view.gd",
-	"campaign_view_scene": "res://scenes/campaign/campaign_view.tscn",
-	"campaign_view": "res://scripts/render/campaign_view.gd",
-	"battle_view_scene": "res://scenes/battle/battle_view.tscn",
-	"battle_view": "res://scripts/render/battle_view.gd",
+	"battlefields": "res://scripts/rules/battlefields.gd",
+	"battle3d": "res://scripts/render/battle3d.gd",
 	"battle_hud": "res://scripts/ui/battle_hud.gd",
-	"campaign_hud": "res://scripts/ui/campaign_hud.gd",
 }
 
 static var _cache: Dictionary = {}
@@ -71,6 +68,10 @@ static func expedition() -> Variant:
 
 static func autoplay() -> Variant:
 	return mod("autoplay")
+
+
+static func battlefields() -> Variant:
+	return mod("battlefields")
 
 
 static func setup() -> Variant:

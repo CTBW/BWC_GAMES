@@ -9,7 +9,7 @@ extends SceneTree
 const OUT := "res://tests/visual/out"
 const ALL := ["title", "welcome", "base", "barracks", "roster", "soldier", "memorial", "command", "training",
 	"armoury", "infirmary", "quartermaster", "manual", "prep", "report", "menu",
-	"hover", "tooltip", "tip", "confirm", "barracks2", "soldier2", "roster2", "infirmary2", "prep2", "memorial2", "campaign", "battle"]
+	"hover", "tooltip", "tip", "confirm", "barracks2", "soldier2", "roster2", "infirmary2", "prep2", "memorial2", "battle"]
 
 var app: Node
 var main: Node
@@ -126,7 +126,7 @@ func _prepare(shot: String) -> void:
 			app.go_base()
 			if app.game.get("lastReport") == null:
 				app.debug_auto_prepare(1)
-				app.debug_auto_expedition(1)
+				app.debug_settle_battle("victory")
 			else:
 				app.report = app.game.lastReport
 				app.screen = "report"
@@ -157,11 +157,8 @@ func _prepare(shot: String) -> void:
 			app.go_title()
 			await _frames(3)
 			main.find_child("NewCompany", true, false).emit_signal("pressed")
-		"campaign":
-			app.go_base()
-			app.debug_auto_prepare(5)
 		"battle":
 			app.go_base()
-			app.debug_test_battle("raiding_party", {"seed": 3})
+			app.debug_auto_prepare(5)
 	app.emit_changed()
 	await _frames(4)

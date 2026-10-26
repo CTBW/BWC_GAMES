@@ -3,8 +3,8 @@
 ## Runs inside the real runtime (exported or editor build), so it proves the
 ## packed data, sprites, sounds and scripts load outside the editor: every data
 ## table and sprite resolves, a new company plays a full expedition with the AI,
-## every encounter builds and fights to an end, and the three world views and the
-## UI screens come up and draw frames. Prints "SMOKE OK" or "SMOKE FAIL: …" and
+## every encounter builds and fights to an end, and the world views (the base,
+## the 3D battle) and the UI screens come up and draw frames. Prints "SMOKE OK" or "SMOKE FAIL: …" and
 ## quits with exit code 0 or 1. Results also go to user://smoke.log.
 extends RefCounted
 
@@ -105,18 +105,28 @@ static func run(host: Node) -> void:
 			await tree.process_frame
 		_check(str(app.get("screen")) == "base", "new game opens the garrison")
 		if app.has_method("debug_auto_prepare") and app.debug_auto_prepare(3):
-			for i in 10:
-				await tree.process_frame
-			_check(str(app.get("screen")) == "campaign", "expedition opens the campaign map")
-		if app.has_method("debug_test_battle"):
-			app.debug_test_battle("raid_camp" if _has_encounter("raid_camp") else DB.ENCOUNTERS[0].id, {"seed": 7})
 			for i in 30:
 				await tree.process_frame
-			_check(str(app.get("screen")) == "battle", "a battle opens")
-			if app.has_method("debug_auto_battle"):
-				app.debug_auto_battle()
-				for i in 30:
-					await tree.process_frame
+			_check(str(app.get("screen")) == "battle", "the expedition opens on the 3D battle")
+			var v: Variant = app.get("battle_view")
+			_check(v != null and v.get("squads") is Array and v.squads.size() > 4, "both sides on the field")
+			app.debug_auto_battle()
+			for i in 1200:
+				if v == null or not v.rules_running():
+					break
+				await tree.process_frame
+			_check(v != null and v.b.phase == "over", "the AI fights the battle to an end, turn by turn")
+			for i in 60:
+				await tree.process_frame
+			app.finish_battle()
+			for i in 10:
+				await tree.process_frame
+			_check(str(app.get("screen")) == "report", "the battle applied, the company home")
+		if app.has_method("debug_test_battle"):
+			app.debug_test_battle({"seed": 7})
+			for i in 30:
+				await tree.process_frame
+			_check(str(app.get("screen")) == "battle", "a stand-alone battle opens")
 		app.go_title()
 		for i in 5:
 			await tree.process_frame
@@ -130,10 +140,3 @@ static func run(host: Node) -> void:
 	if f != null:
 		f.store_string("\n".join(_log) + "\n")
 	tree.quit(0 if _fails.is_empty() else 1)
-
-
-static func _has_encounter(id: String) -> bool:
-	for e in DB.ENCOUNTERS:
-		if e.id == id:
-			return true
-	return false

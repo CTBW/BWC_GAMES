@@ -6,7 +6,7 @@ extends "res://tests/visual/ui_capture.gd"
 const REVIEW_OUT := "res://tests/visual/out/ui-art-review"
 const REVIEW_SHOTS := ["title", "base", "welcome", "barracks", "roster", "soldier", "memorial2",
 	"command", "training", "armoury", "infirmary2", "quartermaster", "manual", "prep", "report",
-	"menu", "hover", "tooltip", "tip", "confirm", "campaign", "battle", "battle_live"]
+	"menu", "hover", "tooltip", "tip", "confirm", "battle", "battle_live"]
 
 class ReviewErrors extends Logger:
 	var errors: Array = []
@@ -39,7 +39,7 @@ func _run() -> void:
 		app.save()
 		await _prepare("battle" if shot == "battle_live" else shot)
 		if shot == "battle_live":
-			app.battle_view.begin()
+			app.debug_auto_battle()
 			await create_timer(2.0).timeout
 		await _review_shot(shot)
 	# Desktop aspect checks: the game uses a 1920 x 1080 minimum logical canvas.
@@ -50,7 +50,7 @@ func _run() -> void:
 			app.game = load("res://scripts/meta/game.gd").new_game(1234)
 			await _prepare("battle" if shot == "battle_live" else shot)
 			if shot == "battle_live":
-				app.battle_view.begin()
+				app.debug_auto_battle()
 				await create_timer(2.0).timeout
 			await _review_shot("%s-%dx%d" % [shot, resolution.x, resolution.y])
 	Prefs.set_prefs(previous)

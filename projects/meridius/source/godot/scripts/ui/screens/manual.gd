@@ -1,7 +1,8 @@
 ## Port of src/ui/screens/Manual.tsx: the Captain's Field Manual — page tabs
 ## (Battle, The Horde, Squads, Magic & Machines, Your Troops, Morale and Rout,
-## Expeditions, Amberfeld), the page text, "To the field". It opens on its own the first time
-## a battle starts (App.start_battle, prefs "manualSeen").
+## Expeditions, Amberfeld), the page text, "To the field". Opened from the pause menu;
+## closing it marks it seen (prefs "manualSeen"). The pages still describe the
+## turn-based battles and the campaign map the redesign has set aside.
 ##
 ##   const Manual = preload("res://scripts/ui/screens/manual.gd")
 ##   Manual.make(start := "battle", on_close := Callable()) -> Control   (full-rect modal)

@@ -43,13 +43,21 @@ comes from `prototypes/footman_anim/art3d/footman.json`, 1.7 m without it).
   `data/terrain.json`), so `scripts/rules/visibility.gd` works out the fog over
   it unchanged, plus the pieces (each over a footprint that carries its rules
   prop: a house blocks sight as a high wall), the decor and the tiles' art.
+  Every field is ringed by woods along its edge (`_border`): a tile to a few
+  deep and deeper in tongues, so the open ground has nooks and narrows; every
+  tile of it is a tree or a bush ("wild"). The band stands back from what the
+  field places and from its "open" boxes; roads run out through it.
 - `scripts/bf_field.gd` builds the scene from it: the ground as one mesh over
   the relief surface (`scripts/render/relief.gd`), painted once by the battle's
   relief shader in the field's season (`terrain_relief.gdshader`, `season` and
   `frozen`) into two top-down pictures; the woods, pieces and decor as upright
   painted cards with their shadows draped over the ground
   (`shaders/bf_card.gdshader`); grass strokes; the water (`bf_water.gd`)
-  unless it is frozen.
+  unless it is frozen. With `sun_shadows` (the 3D battle's) a scene's sun
+  casts the shadows instead: each card has an unseen copy turned to the sun
+  (`shaders/bf_card_caster.gdshader`; one mesh per picture) and the ground
+  takes them (`shaders/bf_sun_shade.gdshader`); the prototype keeps the
+  painted ones.
 - `scripts/bf_fog.gd` is the battle's fog of war over a field, eased as the
   battle eases its shroud (copied from the sandbox's fog so this prototype
   stands alone). The ground, the water, the cards and the smoke shade with the
@@ -57,6 +65,8 @@ comes from `prototypes/footman_anim/art3d/footman.json`, 1.7 m without it).
   it, so the edge of the shroud cuts a house or a tree as it cuts the ground.
 - `scripts/bf_weather.gd`: snow, leaves or petals over the part of the field
   in view, chimney smoke and the burnt barn's embers.
+- The woods are northern (`NORTH` in `bf_field.gd`): spruce, young fir and
+  Scots pine, birch for most broadleaves, young firs among the bushes.
 - Seasons: summer paintings turn gold in autumn; in winter the woods are the
   winter paintings (snowy spruce and pines, bare oaks and birches) and props
   have their own snowy paintings (`*_w`); what has none takes snow along its

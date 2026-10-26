@@ -7,10 +7,18 @@
 ##     (shaders/bf_ground.gdshader);
 ##   - the cards: the painted trees, rocks, houses, ruins, the bridge and the
 ##     farm's things as upright cut-outs turned to the camera, each with its
-##     painted shadow draped over the ground (shaders/bf_card.gdshader). Summer
-##     paintings turn gold in autumn; in winter the woods are the winter kit's
-##     snowy spruce, pines and bare trees, and what has no winter painting
-##     takes snow along its top edges;
+##     painted shadow draped over the ground (shaders/bf_card.gdshader). The
+##     woods are northern (NORTH): dark spruce and fir with Scots pine, silver
+##     birch, now and then an oak or a beech, small firs in the thickets.
+##     Summer paintings turn gold in autumn; in winter the woods are the
+##     winter kit's snowy spruce, pines and bare trees, and what has no winter
+##     painting takes snow along its top edges. With `sun_shadows` (set before
+##     build; the scene's DirectionalLight3D shines along `sun_way`) the sun
+##     casts the shadows instead of the paintings: no painted shadow is laid,
+##     each card has an unseen copy turned to the sun that only casts
+##     (shaders/bf_card_caster.gdshader; the copies of one picture are one
+##     mesh, `_build_casters`), and the ground takes the shadows
+##     (shaders/bf_sun_shade.gdshader, the ground's overlay);
 ##   - grass strokes in the season's colours, and the open water's sheet
 ##     (bf_water.gd), unless the water is frozen;
 ##   - the points the chimney smoke and the burnt barn's smoke rise from
@@ -26,6 +34,8 @@ const Water = preload("res://prototypes/battlefields3d/scripts/bf_water.gd")
 const ReliefShader = preload("res://assets/shaders/terrain_relief.gdshader")
 const GroundShader = preload("res://prototypes/battlefields3d/shaders/bf_ground.gdshader")
 const CardShader = preload("res://prototypes/battlefields3d/shaders/bf_card.gdshader")
+const CasterShader = preload("res://prototypes/battlefields3d/shaders/bf_card_caster.gdshader")
+const ShadeShader = preload("res://prototypes/battlefields3d/shaders/bf_sun_shade.gdshader")
 const FOG_GRAIN := "res://assets/terrain/fog_grain.png"
 const ART := "res://prototypes/battlefields3d/art/art.json"
 const GROUND_ART := "res://prototypes/battlefields3d/art/ground/"
@@ -57,11 +67,28 @@ const CARD_PULL := 0.7
 const CARD_PAD := 7
 ## Decor that bends in the wind and grows in varying sizes.
 const SOFT := ["reeds", "reeds_small", "iris", "marigolds", "horsetail"]
+## The northern woods (docs/terrain-direction-2026-10-23.md: tall spruce and
+## Scots pine, silver birch, the odd broadleaf, dark natural greens): each
+## kind's woodland paintings (assets/sprites.json) by name, repeated by share.
+const NORTH := {
+	"n_evergreen": ["woodland_spruce", "woodland_spruce", "woodland_spruce", "woodland_fir_young",
+		"woodland_scots_pine", "woodland_scots_pine", "woodland_pine"],
+	"n_birch": ["woodland_birch"],
+	"n_aspen": ["woodland_aspen_gold"],
+	"n_fir_young": ["woodland_fir_young"],
+}
+## Of a tile's broadleaf tree (tree_oak), the share that is a birch.
+const BIRCH := 0.7
 
 var tile_m := 2.72
 var level_m := 0.9
 var elevation := 30.0
 var ppu := 33.0
+## The sun casts the shadows, not the paintings (see the top).
+var sun_shadows := false
+## The sun's light across the ground (horizontal): from the screen's upper
+## left, as the battle's and the sandbox's sun.
+var sun_way := Vector3(1, 0, 0)
 var data: Dictionary
 var map: Dictionary
 var season := "summer"
@@ -74,11 +101,17 @@ var cards: Array = []
 ## Where smoke rises: {"at": Vector3, "kind": "chimney" | "ash"}.
 var smoke: Array = []
 var _card_mats := {}
+## The casters by material (sun_shadows), merged once the field is built:
+## {key: {"mat", "parts": [[verts, uvs, uv2s, idx], ...]}}.
+var _casters := {}
+## The ground's overlay that takes the sun's shadows (sun_shadows).
+var _shade_mat: ShaderMaterial
 var _glow_mats: Array = []
 var _shared := {}
 var _blades: MeshInstance3D
 var _sprites: Dictionary
 var _art: Dictionary
+var _north := {}
 var _outer: Array = []
 var _mark_img: Image
 var _mark_tex: ImageTexture
@@ -103,6 +136,8 @@ func build(field_id: String, tile: float, level: float, elev: float, px_per_m: f
 	_build_ground()
 	_build_woodland()
 	_build_pieces()
+	if sun_shadows:
+		_build_casters()
 	_build_blades()
 	if not data.frozen:
 		water = Water.build(relief, map.tiles + _outer, float(data.water_level), tile_m, level_m)
@@ -257,6 +292,12 @@ func _build_ground() -> void:
 	_mark_tex = ImageTexture.create_from_image(_mark_img)
 	mat.set_shader_parameter("mark_tex", _mark_tex)
 	ground.material_override = mat
+	if sun_shadows:
+		_shade_mat = ShaderMaterial.new()
+		_shade_mat.shader = ShadeShader
+		_shade_mat.set_shader_parameter("map_size", Vector2(W, H))
+		_shade_mat.set_shader_parameter("tile_m", tile_m)
+		ground.material_overlay = _shade_mat
 	add_child(ground)
 
 
@@ -342,18 +383,23 @@ func _seasonal(prop: String, t: Dictionary) -> Array:
 		"tree_pine":
 			if winter:
 				return ["w_spruce" if h < 0.5 else ("w_scots_pine" if h < 0.8 else "w_fir_young"), 1.0, {}]
-			return ["tree_pine", 1.0, {}]
+			return ["n_evergreen", 1.0, {}]
 		"tree_oak":
+			var birch := Rng.hash2(t.x, t.y, data.seed + 19) < BIRCH
 			if winter:
-				return ["w_oak_bare" if h < 0.55 else "w_birch_bare", 1.0, {}]
+				return ["w_birch_bare" if birch else "w_oak_bare", 1.0, {}]
 			if t.has("art"):
 				return [t.art, 1.0, {}]
-			if season == "autumn":
-				return ["tree_oak_autumn", 1.0, {}] if h < 0.4 else ["tree_oak", 1.0, {"autumn": 1.0}]
-			return ["tree_oak", 1.0, {}]
+			if birch:
+				if season == "autumn":
+					return ["n_aspen", 1.0, {}] if h < 0.5 else ["n_birch", 1.0, {"autumn": 0.85}]
+				return ["n_birch", 1.0, {}]
+			return ["tree_oak", 1.0, {"autumn": 1.0} if season == "autumn" else {}]
 		"bush":
 			if winter:
 				return ["w_fir_young", 0.5, {}] if h < 0.45 else _snowed("deadwood")
+			if h < 0.4:
+				return ["n_fir_young", 0.5, {}]
 			return ["bush", 1.0, {"autumn": 0.85} if season == "autumn" else {}]
 		"stump", "log", "rock_small", "rock_large":
 			return [("w_" + prop) if winter else prop, 1.0, {}]
@@ -369,7 +415,30 @@ func _snowed(key: String) -> Array:
 func _variants(key: String) -> Array:
 	if _art.has(key):
 		return _art[key]
+	if NORTH.has(key):
+		return _northern(key)
 	return _sprites.get(key, [])
+
+
+## A NORTH kind's paintings: each name's entry in sprites.json (the one at a
+## third of the painting's size where it has several).
+func _northern(key: String) -> Array:
+	if _north.has(key):
+		return _north[key]
+	var out := []
+	for stem in NORTH[key]:
+		var found = null
+		for k in _sprites:
+			if not _sprites[k] is Array:
+				continue
+			for e in _sprites[k]:
+				if e is Dictionary and String(e.get("file", "")).get_file().get_basename() == stem:
+					if found == null or absf(float(e.scale) - 0.3333) < absf(float(found.scale) - 0.3333):
+						found = e
+		if found != null:
+			out.append(found)
+	_north[key] = out
+	return out
 
 
 func _build_woodland() -> void:
@@ -438,7 +507,7 @@ func _build_pieces() -> void:
 		var e: Dictionary = variants[0]
 		var lived: bool = pc.glow or e.has("smoke")
 		var card := _card(holder, e, pc.foot, 1.0, "piece", pc.key, {"glow": lived, "snow": 1.0 if winter and not pc.key.begins_with("w_") else 0.0,
-			"stand": pc.key == "bridge_stone"})
+			"stand": pc.key == "bridge_stone", "piece": pc})
 		for s in e.get("smoke", []):
 			smoke.append({"at": _card_point(card, e, Vector2(s[0], s[1])), "kind": "chimney"})
 		if pc.smoke == "ash":
@@ -524,9 +593,10 @@ func _card(parent: Node3D, e: Dictionary, at: Vector2, size: float, kind: String
 		for i in cu:
 			var a := j * (cu + 1) + i
 			idx.append_array([a, a + 1, a + cu + 2, a, a + cu + 2, a + cu + 1])
-	# The painted shadow below the foot point, draped: 8 x 4 cells.
+	# The painted shadow below the foot point, draped: 8 x 4 cells (unless the
+	# sun casts the shadows).
 	var below := region.position.y + region.size.y - ay
-	if below > 2.0 and not stand:
+	if below > 2.0 and not stand and not sun_shadows:
 		var base := verts.size()
 		var su := 8
 		var sv := 4
@@ -559,9 +629,108 @@ func _card(parent: Node3D, e: Dictionary, at: Vector2, size: float, kind: String
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.material_override = _card_material(e.file, kind, look)
 	parent.add_child(mi)
+	if sun_shadows and not stand:
+		_caster(mi, tex, region, Vector2(ax, ay), m_px, look)
 	var card := {"node": mi, "grid": at, "kind": kind, "key": key, "foot": foot, "size": size}
 	cards.append(card)
 	return card
+
+
+## A card's shadow caster (sun_shadows): its upright part again, square to the
+## sun's way and as tall as the card stands, swaying with it; drawn into the
+## sun's shadow map only, merged with its picture's others (`_build_casters`). A piece's (a house, a mill,
+## a ruin) stands over its footprint: as wide as the footprint across the
+## sun's way, a quarter of the footprint down the sun's way from its middle,
+## and only as tall as the building is (its painted base, the footprint's
+## depth on screen, taken off the bottom, the rest stretched to the top).
+func _caster(card: MeshInstance3D, tex: Texture2D, region: Rect2, anchor: Vector2, m_px: float, look: Dictionary) -> void:
+	var el := deg_to_rad(elevation)
+	var side := Vector3.UP.cross(sun_way).normalized()
+	var top_px := anchor.y - region.position.y
+	var origin := Vector3.ZERO
+	var across := m_px
+	var base_px := 0.0
+	var pc: Dictionary = look.get("piece", {})
+	if not pc.is_empty():
+		var fp: Vector2i = Fields.PIECE[pc.key].fp
+		var c := on_ground(pc.c)
+		var reach := absf(sun_way.x) * fp.x + absf(sun_way.z) * fp.y
+		origin = c + sun_way * reach * 0.25 * tile_m - card.position
+		origin.y = c.y - card.position.y
+		across = (absf(side.x) * fp.x + absf(side.z) * fp.y) * tile_m / region.size.x
+		anchor.x = region.position.x + region.size.x * 0.5
+		# The footprint's depth on screen in the painting's pixels (a tile is
+		# 64 px deep at zoom 1), from the foot to the middle of the base.
+		base_px = (fp.x + fp.y) * 16.0 / (m_px * ppu)
+	var tall := maxf(top_px - base_px, 1.0) * m_px / cos(el)
+	# UV2: the card's phase in the wind (from its foot, as bf_card.gdshader
+	# takes it) and how far the point sways (its height up the card's node,
+	# times its share of the height squared).
+	var ph := card.position.x * 0.37 + card.position.z * 0.53
+	var verts := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var uv2s := PackedVector2Array()
+	var idx := PackedInt32Array()
+	var cu := 2
+	var cv := 6
+	for j in cv + 1:
+		var v := region.position.y + top_px * float(j) / cv
+		var up := maxf(anchor.y - v - base_px, 0.0) * m_px / cos(el)
+		var h := up / tall
+		for i in cu + 1:
+			var u := region.position.x + region.size.x * float(i) / cu
+			verts.append(card.position + origin + side * (u - anchor.x) * across + Vector3.UP * up)
+			uvs.append(Vector2(u / tex.get_width(), v / tex.get_height()))
+			uv2s.append(Vector2(ph, h * h * (origin.y + up)))
+	for j in cv:
+		for i in cu:
+			var a := j * (cu + 1) + i
+			idx.append_array([a, a + 1, a + cu + 2, a, a + cu + 2, a + cu + 1])
+	var sway: float = card.material_override.get_shader_parameter("sway")
+	var key := "%s|%.3f" % [tex.resource_path, sway]
+	if not _casters.has(key):
+		var m := ShaderMaterial.new()
+		m.shader = CasterShader
+		m.set_shader_parameter("tex", tex)
+		m.set_shader_parameter("sway", sway)
+		_casters[key] = {"mat": m, "parts": []}
+	_casters[key].parts.append([verts, uvs, uv2s, idx])
+
+
+## The casters merged into one shadow-only mesh per picture and sway (in the
+## field's space, as the cards' holders are): a draw per picture into each of
+## the sun's shadow splits, not one per card.
+func _build_casters() -> void:
+	var holder := Node3D.new()
+	holder.name = "Casters"
+	add_child(holder)
+	for key in _casters:
+		var verts := PackedVector3Array()
+		var uvs := PackedVector2Array()
+		var uv2s := PackedVector2Array()
+		var idx := PackedInt32Array()
+		for part in _casters[key].parts:
+			var base := verts.size()
+			verts.append_array(part[0])
+			uvs.append_array(part[1])
+			uv2s.append_array(part[2])
+			for i in part[3]:
+				idx.append(base + i)
+		var arr := []
+		arr.resize(Mesh.ARRAY_MAX)
+		arr[Mesh.ARRAY_VERTEX] = verts
+		arr[Mesh.ARRAY_TEX_UV] = uvs
+		arr[Mesh.ARRAY_TEX_UV2] = uv2s
+		arr[Mesh.ARRAY_INDEX] = idx
+		var mesh := ArrayMesh.new()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arr)
+		var mi := MeshInstance3D.new()
+		mi.name = "Caster"
+		mi.mesh = mesh
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		mi.material_override = _casters[key].mat
+		holder.add_child(mi)
+	_casters.clear()
 
 
 ## One material per picture and look, shared by its cards: the fog and the
@@ -603,6 +772,8 @@ func _card_material(file: String, kind: String, look: Dictionary) -> ShaderMater
 func set_shared(param: String, value: Variant) -> void:
 	_shared[param] = value
 	mat.set_shader_parameter(param, value)
+	if _shade_mat:
+		_shade_mat.set_shader_parameter(param, value)
 	for m in _card_mats.values():
 		m.set_shader_parameter(param, value)
 	if _blades:

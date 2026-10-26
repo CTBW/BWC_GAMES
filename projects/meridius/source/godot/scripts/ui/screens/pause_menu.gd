@@ -35,7 +35,7 @@ func _init() -> void:
 		["Resume", "RedButton", func(): App.open_menu(false)],
 		["Field Manual", "Button", func():
 			App.open_menu(false)
-			App.open_manual("battle" if App.screen == "battle" else ("campaign" if App.screen == "campaign" else "base"))],
+			App.open_manual("battle" if App.screen == "battle" else "base")],
 		["", "Button", func(): App.toggle_mute()],
 		["", "Button", func(): App.toggle_fullscreen()],
 		["Save and Quit to Title", "Button", func(): App.quit_to_title()],

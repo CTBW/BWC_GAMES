@@ -283,7 +283,8 @@ static func _stage(map: Dictionary, waves: Array, by_uid: Dictionary) -> void:
 
 
 ## The battle for an encounter roll and the company's squads (BattleUnit
-## dictionaries; they are deployed in place). opts: {darkness?, title?}.
+## dictionaries; they are deployed in place). opts: {darkness?, title?,
+## map? (a ready battle map with its deployment zones, instead of the roll's)}.
 static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dictionary:
 	var enc := DB.encounter_by_id(roll.encounterId)
 	var rng := Rng.new(JS.to_i32(roll.seed) ^ 0x5bd1e995)
@@ -298,7 +299,8 @@ static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dic
 	for w in waves:
 		if not approaches.has(w.edge):
 			approaches.append(w.edge)
-	var map := MapGen.generate_map(roll.mapId, roll.seed, {"ambush": roll.ambush, "approaches": approaches})
+	# opts.map: a battle map ready to fight on (a 3D battlefield, Battlefields.battle_map).
+	var map: Dictionary = opts.map if opts.get("map") != null else MapGen.generate_map(roll.mapId, roll.seed, {"ambush": roll.ambush, "approaches": approaches})
 	var to_grid := func(e: String) -> String: return MapGen.TRANSPOSED[e] if map.get("transposed", false) else e
 	var enemies: Array = []
 	for i in roll.enemies.size():

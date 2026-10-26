@@ -30,7 +30,7 @@ func _run() -> void:
 		await process_frame
 	for n in 2:
 		var t0 := Time.get_ticks_usec()
-		app.debug_test_battle("raiding_party", {"seed": 3 + n})
+		app.debug_test_battle({"seed": 3 + n})
 		var t1 := Time.get_ticks_usec()
 		var fr: Array = []
 		var last := t1

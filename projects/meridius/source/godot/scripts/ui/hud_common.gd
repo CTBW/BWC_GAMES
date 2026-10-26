@@ -1,6 +1,6 @@
-## Small builders shared by the campaign and battle HUDs (campaign_hud.gd,
-## battle_hud.gd): the inline CSS bits of src/ui/screens/Campaign.tsx and
-## Battle.tsx that are not shared widgets (`.dialog` titles and paragraphs,
+## Small builders of the battle HUD (battle_hud.gd; the campaign HUD that
+## shared them is set aside): the inline CSS bits of src/ui/screens/Campaign.tsx
+## and Battle.tsx that are not shared widgets (`.dialog` titles and paragraphs,
 ## `kbd`, wrapped tag rows, absolute placement like CSS `position: absolute`).
 ##
 ##   const H = preload("res://scripts/ui/hud_common.gd")

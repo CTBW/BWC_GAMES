@@ -7,6 +7,14 @@
 ##   - "decor": single props (stalls, carts, harvest, yard and waterside
 ##     things, reeds, bank flowers) on their tiles;
 ##   - tile "art": a card other than the prop's own (a winter spruce for a pine).
+## Every field is closed by woods: a band of trees and thickets along its edge,
+## a tile to a few deep, deeper in tongues that make nooks and narrows, every
+## tile of it a tree or a bush ("wild"), so no squad crosses it (the battle's
+## maps are solidWoods). It stands back from what is placed (the pieces, the
+## decor, fences, yards, fields, squares and roads, whose lanes run out
+## through it) and from a field's "open" boxes. The woods go on outside. On
+## the camera's side (south and east) the woods' first NEAR_RIM tiles are
+## thickets, so no tree there hides the field behind it.
 ## Rules props are DB.PROPS ids, so the map is one the battle could load.
 ## Pure data: no nodes. bf_field.gd builds the scene from it.
 extends RefCounted
@@ -18,6 +26,9 @@ const W := 28
 const H := 28
 const BORDER := 12
 const IDS := ["millford", "ashby", "frosthollow", "willowford"]
+## How far into the woods on the camera's side they are thickets (tiles): a
+## tree hides about this much of the ground behind it.
+const NEAR_RIM := 3.5
 
 ## Footprints (tiles across x, y) and rules props of the pieces. A piece's card
 ## stands on the near corner of its painted base: its width in world px (as
@@ -347,6 +358,117 @@ static func _near(p: Vector2, pts: PackedVector2Array) -> Array:
 	return [best, dir]
 
 
+## Smooth noise in [0, 1] along a line: hashed values a unit apart, eased between.
+static func _wave(s: float, seed: int) -> float:
+	var i := floori(s)
+	var k := s - i
+	k = k * k * (3.0 - 2.0 * k)
+	return lerpf(Rng.hash2(i, 0, seed), Rng.hash2(i + 1, 0, seed), k)
+
+
+## Tile p's distance from edge e (0 north y = 0, 1 south, 2 west x = 0, 3 east)
+## and its place along it: (distance, place).
+static func _from_edge(e: int, p: Vector2i) -> Vector2i:
+	match e:
+		0:
+			return Vector2i(p.y, p.x)
+		1:
+			return Vector2i(H - 1 - p.y, p.x)
+		2:
+			return Vector2i(p.x, p.y)
+	return Vector2i(W - 1 - p.x, p.y)
+
+
+## The woods along each edge: for each tile along it, how deep they stand (a
+## tile is in them when its distance from that edge is less). A field may set
+## "border": {"depth", "spread", "deep"}: the least depth, how much it waves
+## and how deep the tongues go. Each depth stops at the tiles in `keep`, so
+## whatever is placed stays open and joined to the field.
+static func _border(f: Dictionary, keep: Dictionary) -> Array:
+	var b: Dictionary = f.get("border", {})
+	var seed: int = f.seed
+	var out := []
+	for e in 4:
+		var row := PackedFloat32Array()
+		row.resize(W)
+		for s in W:
+			var d: float = b.get("depth", 1.2) + b.get("spread", 2.6) * _wave(s * 0.26, seed + 101 + e * 7)
+			d += b.get("deep", 5.0) * maxf(0.0, _wave(s * 0.42 + 0.5, seed + 131 + e * 7) - 0.6) / 0.4
+			row[s] = d
+		out.append(row)
+	for k in keep:
+		for e in 4:
+			var ds := _from_edge(e, k)
+			if ds.y >= 0 and ds.y < W:
+				out[e][ds.y] = minf(out[e][ds.y], float(ds.x))
+	return out
+
+
+## A tile of the woods on the camera's side (south or east, in the field or
+## outside it) less than NEAR_RIM in from their edge.
+static func _near_rim(border: Array, x: int, y: int) -> bool:
+	for e in [1, 3]:
+		var ds := _from_edge(e, Vector2i(x, y))
+		if ds.y >= 0 and ds.y < W and ds.x < border[e][ds.y] and border[e][ds.y] - ds.x <= NEAR_RIM:
+			return true
+	return false
+
+
+static func _in_border(border: Array, x: int, y: int) -> bool:
+	for e in 4:
+		var ds := _from_edge(e, Vector2i(x, y))
+		if ds.x < border[e][ds.y]:
+			return true
+	return false
+
+
+## The tiles the edge woods stand back from: what the field places (the
+## ground cleared round the pieces, a tile round the decor), its fences, yards, fields, squares, roads
+## and "open" boxes.
+static func _kept(f: Dictionary, pieces: Array) -> Dictionary:
+	var keep := {}
+	for pc in pieces:
+		for c in pc.tiles:
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					keep[c + Vector2i(dx, dy)] = true
+		# The ground cleared of trees round a piece (_generate) as well.
+		for y in range(floori(pc.c.y) - 4, floori(pc.c.y) + 5):
+			for x in range(floori(pc.c.x) - 4, floori(pc.c.x) + 5):
+				if Vector2(x, y).distance_to(pc.c) < 3.3:
+					keep[Vector2i(x, y)] = true
+	for d in f.get("decor", []):
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				keep[Vector2i(roundi(d.at.x) + dx, roundi(d.at.y) + dy)] = true
+	for line in f.get("fences", []):
+		var steps := ceili(line[0].distance_to(line[1]) * 2.0)
+		for i in steps + 1:
+			var q: Vector2 = line[0].lerp(line[1], float(i) / steps)
+			keep[Vector2i(roundi(q.x), roundi(q.y))] = true
+	var st: Dictionary = f.get("stooks", {})
+	var boxes: Array = f.get("open", []).duplicate()
+	for fl in f.get("fields", []):
+		boxes.append(fl.rect)
+	if not st.is_empty():
+		boxes.append(st.rect)
+	for y in H:
+		for x in W:
+			var p := Vector2(x, y)
+			var k := false
+			for r in boxes:
+				k = k or Rect2(r).grow(0.5).has_point(p)
+			for yd in f.get("yards", []):
+				k = k or p.distance_to(yd.c) < yd.r + 0.5
+			for sq in f.get("squares", []):
+				k = k or p.distance_to(sq.c) < sq.r + 0.5
+			for rd in f.get("roads", []):
+				k = k or _near(p, rd.pts)[0] < rd.w
+			if k:
+				keep[Vector2i(x, y)] = true
+	return keep
+
+
 static func _footprint(c: Vector2, fp: Vector2i) -> Array:
 	var x0 := roundi(c.x - fp.x * 0.5 + 0.5)
 	var y0 := roundi(c.y - fp.y * 0.5 + 0.5)
@@ -379,6 +501,7 @@ static func _generate(f: Dictionary) -> Dictionary:
 			pads.append({"c": p.c, "fp": Vector2(info.fp), "h": hf.call(p.c.x, p.c.y)})
 	var river: Dictionary = f.get("river", {})
 	var ponds: Array = f.get("ponds", [])
+	var border := _border(f, _kept(f, pieces))
 	var tiles: Array = []
 	var outer: Array = []
 	var flows := {}
@@ -426,15 +549,17 @@ static func _generate(f: Dictionary) -> Dictionary:
 					terrain = "mud"
 			var wet := terrain in ["water", "shallows"]
 			var woods: bool = f.woods.call(x, y, n)
+			var out := maxf(maxf(-x, x - W + 1), maxf(-y, y - H + 1))
+			# The edge woods, and outside the field their close stand.
+			var wild: bool = not wet and (_in_border(border, x, y) if inside else out <= 5.0)
 			if not inside:
-				var out := maxf(maxf(-x, x - W + 1), maxf(-y, y - H + 1))
 				woods = woods or n < 0.62 - out * 0.02
 			if wet:
 				woods = false
 			if woods:
 				terrain = "forest"
 				if n < 0.44:
-					prop = "tree_pine" if n < 0.21 else "tree_oak"
+					prop = "tree_pine" if n < 0.29 else "tree_oak"
 				elif n < 0.6:
 					prop = "bush"
 				elif n < 0.635:
@@ -463,6 +588,12 @@ static func _generate(f: Dictionary) -> Dictionary:
 				if fl.rect.has_point(p):
 					terrain = "grass"
 					prop = ""
+			if wild:
+				terrain = "forest"
+				var k := Rng.hash2(x, y, seed + 97)
+				prop = "tree_pine" if k < 0.62 else ("tree_oak" if k < 0.88 else "bush")
+				if _near_rim(border, x, y):
+					prop = "bush"
 			for r in f.get("roads", []):
 				if not wet and _near(p, r.pts)[0] < r.w:
 					terrain = "dirt"
@@ -470,6 +601,8 @@ static func _generate(f: Dictionary) -> Dictionary:
 			var t := {"x": x, "y": y, "h": roundi(e), "surface_h": e, "terrain": terrain, "v": floori(n * 10000)}
 			if prop != "":
 				t["prop"] = prop
+			if wild and inside and prop != "":
+				t["wild"] = true
 			if flows.has(Vector2i(x, y)):
 				var fd: Vector2 = flows[Vector2i(x, y)]
 				t["flow"] = [fd.x, fd.y]

@@ -76,7 +76,8 @@ TURN_LOWER = 16.0      # degrees the spear dips during the turn
 TURN_EASE = 6          # frames to ease the dip in and out
 MODES = {"idle": "two", "attack": "two",
          "idle_rest": "carry", "walk": "carry", "step_lane": "shoulder",
-         "hit": os.environ.get("SPEAR_HIT_MODE", "rigid"), "death": "drop", "death_2": "drop", "death_3": "drop", "turn_90": "turn"}
+         "hit": os.environ.get("SPEAR_HIT_MODE", "rigid"), "death": "drop", "death_2": "drop", "death_3": "drop", "turn_90": "turn",
+         "turn_90_r": "turn", "turn_180": "turn"}
 SHAFT_R = 0.02
 DROP_FRAMES = 14       # 0.47 s from letting go to lying on the ground
 # Hit: the rigid spear swung through his belly and his left forearm in 10 of 61 frames as he
@@ -312,8 +313,9 @@ ARM_BONES = [f"mixamorig:{s}{b}" for s in ("Left", "Right") for b in ("Shoulder"
 
 
 def turn_two_handed(act, frames):
-    """The turn: arms from the guard (looping its frames) on the turning body, the spear
-    dipped by TURN_LOWER (eased), the front fist re-solved onto the dipped shaft."""
+    """The turn: arms from the guard (looping its frames, so that the last is the guard's
+    first, where idle takes over) on the turning body, the spear dipped by TURN_LOWER
+    (eased), the front fist re-solved onto the dipped shaft."""
     idle = bpy.data.actions["idle"]
     n_idle = int(idle["frames"])
     rig.animation_data.action = idle
@@ -326,7 +328,7 @@ def turn_two_handed(act, frames):
     for i, f in enumerate(frames):
         sc.frame_set(f)
         for b in ARM_BONES:
-            PB[b].rotation_quaternion = guard[(i % n_idle) + 1][b]
+            PB[b].rotation_quaternion = guard[((i - n + 1) % n_idle) + 1][b]
             PB[b].keyframe_insert("rotation_quaternion", frame=f)
         bpy.context.view_layer.update()
         ease = min(1.0, (i + 1) / TURN_EASE, (n - i) / TURN_EASE)

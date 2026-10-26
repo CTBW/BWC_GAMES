@@ -13,14 +13,17 @@
 ## wears; the other faces' meshes go. Its `kit` picks the sidecar's gear
 ## variants (`kit`), whose `hide` meshes go.
 ##
-## Moves the export's clips make possible, found by their names (the footman's
-## export has them all; see "Moves" below):
+## Moves the export's clips make possible, found by their names or under the
+## names the profile's `moves` maps them to (the footman's export has them all;
+## see "Moves" below):
 ##   start, stop        the march: he sets off and slows to a halt on the spot
 ##                      he was sent to, each step moved by its own travel
 ##                      (root_path); the walk between them is planned in whole
 ##                      strides. `pace` "game" walks at the game's speed instead.
-##   turn_90, turn_90_r, turn_180   turns in place (root_yaw), for a change of
-##                      heading of STEP_TURN_MIN or more
+##                      Without a start (the crossbowman's) he sets off straight
+##                      into the walk.
+##   turn_90, turn_90_r, turn_180   turns in place (root_yaw, about `pivot`),
+##                      for a change of heading of STEP_TURN_MIN or more
 ##   run, charge_hit, charge_thrust, charge_stab   the charge (charge(target)):
 ##                      a run that brakes into a strike
 ##   block, block_hit   the raised shield (set_block), blows taken on it
@@ -60,6 +63,10 @@ const HIT_EVENTS := ["contact", "strike", "strikes", "strike_left", "strike_righ
 ## READY_BLEND (the clip starts in the ready stance).
 const READY_HOLD := 6.0
 const READY_BLEND := 0.3
+## A turn in place ends in the idle's first pose and hands over in 0.05 s; a
+## cape (the sidecar's `cape_bones`) still swinging from the turn settles into
+## the idle's over CAPE_SETTLE instead.
+const CAPE_SETTLE := 0.35
 ## An attack whose clip gives its blade's reach (`tip_reach_m`) and whose
 ## profile entry gives none stands with the tip SLASH_INTO past the target's
 ## centre for a slash, THRUST_INTO for a thrust (strike_dist); its blow lands
@@ -162,21 +169,24 @@ var _rng := RandomNumberGenerator.new()
 var _outline: ShaderMaterial
 var _outline_thin: ShaderMaterial
 var _surfaces: Array = []
-## The moves (see the header) his export has: "march", "turns", "charge",
-## "block", "lane".
+## The moves (see the header) his export has: "march" (the stop), "start",
+## "turns", "charge", "block", "lane".
 var _moves := {}
-## A turn in place: its clip, root_yaw curve, scale and the heading it started from.
+## A turn in place: its clip, root_yaw curve, scale, the heading and place it
+## started from and the point he turns about.
 var _turn := {}
 ## The travel of the clip moving him (start, stop, lane, a charge's strike)
 ## applied so far; the lane step's stretched to the distance asked for.
 var _root_prev := Vector2.ZERO
 var _lane_scale := 1.0
-## The march: whether it uses the start and stop, the stop's cue (committed,
-## and the slight change of pace that lands it) and the walk's time last frame.
+## The march: whether it uses the stop (and the start), the stop's cue (committed,
+## and the slight change of pace that lands it), the walk's time last frame and
+## the march so far, at its own pace and as stretched.
 var _full_march := false
 var _stop_cue := {}
 var _stretch := 1.0
 var _walk_t_prev := 0.0
+var _march_run := Vector2.ZERO
 ## The charge: seconds into it, the run's time last frame, and the strike's cue
 ## (as the stop's, from the run); the run so far, at its own pace and as
 ## stretched; the strike he goes for when two land about as well.
@@ -336,6 +346,14 @@ func _read_clips() -> void:
 			var v: Array = info.root_vel
 			speed = Vector3(v[0], v[1], v[2]).length()
 		clips[c] = {"anim": anim, "length": a.length, "loop": loop, "speed": speed, "events": _events(info.get("events", []))}
+	# A move whose clip the export names otherwise (the profile's `moves`) has it under the move's name.
+	for m in profile.get("moves", {}):
+		var c: String = profile.moves[m]
+		if clips.has(c) and not clips.has(m):
+			clips[m] = clips[c]
+			meta.clips[m] = meta.clips[c]
+			clips.erase(c)
+			meta.clips.erase(c)
 
 
 ## Events as [[seconds, name], ...] in time order, from any of the sidecar
@@ -687,8 +705,9 @@ func stop() -> void:
 	_play(idle_clip())
 
 
-## Walk the route (points on the ground), then `then`. With the march (start
-## and stop) he sets off and halts on its end; the shield comes down first.
+## Walk the route (points on the ground), then `then`. With the march (the
+## stop) he halts on its end, with turns he turns in place first (_march); the
+## shield comes down first.
 func order_move(points: Array, then := Callable()) -> void:
 	if is_dead():
 		return
@@ -702,7 +721,7 @@ func order_move(points: Array, then := Callable()) -> void:
 	if path.is_empty():
 		_arrive()
 		return
-	if can_march():
+	if can_march() or can_step_turn():
 		_march()
 		return
 	if state != "walk":
@@ -1014,11 +1033,11 @@ func _on_finished(_anim: StringName) -> void:
 			if _counter_target != null:
 				_answer_counter()
 		"turn":
-			rotation.y = _turn.start + _turn.want
+			_turn_by(_turn.want)
 			_turn = {}
-			# Every turn ends in idle's first pose, turned.
+			# Every turn ends in idle's first pose, turned (and the cape settles).
 			state = "idle"
-			_play(idle_clip(), 0.05, true)
+			_play(idle_clip(), CAPE_SETTLE if not meta.get("cape_bones", []).is_empty() else 0.05, true)
 			var t := _after_turn
 			_after_turn = Callable()
 			if t.is_valid():
@@ -1043,7 +1062,8 @@ func _find_moves() -> void:
 		if _feet.size() < 2:
 			_feet = {}
 	_moves = {
-		"march": _clip_has("start", ["root_path", "exit_walk_t"]) and _clip_has("stop", ["root_path", "enter_walk_t"]) and clips.has(profile.get("walk", "walk")),
+		"march": _clip_has("stop", ["root_path", "enter_walk_t"]) and clips.has(profile.get("walk", "walk")),
+		"start": _clip_has("start", ["root_path", "exit_walk_t"]),
 		"turns": ["turn_90", "turn_90_r", "turn_180"].all(func(c): return _clip_has(c, ["root_yaw"])),
 		"block": clips.has("block") and clips.has("block_hit"),
 		"lane": _clip_has("lane", ["root_path"]),
@@ -1242,6 +1262,7 @@ func _march() -> void:
 	if state in ["stop", "charge"]:
 		# Off again before he has settled (or off the charge): straight into the stride.
 		_full_march = path_length() >= travel_of("stop") + 0.3
+		_march_run = Vector2.ZERO
 		_start_walk()
 		return
 	# A first corner within half a metre is the centre of the tile he already
@@ -1267,17 +1288,29 @@ func _march() -> void:
 		_set_off()
 
 
-## From a standstill: the start step when the march is long enough for it and
-## the stop, otherwise straight into the walk.
+## From a standstill: the start step and the stop when the march is long
+## enough for both at their shortest stretch, with the walk between them up to
+## the stride the stop joins at (without a start, the walk under way to it:
+## _march_walk); otherwise straight into the walk to the spot.
 func _set_off() -> void:
-	_full_march = pace != "game" and path_length() >= travel_of("start") + travel_of("stop") + 0.15
-	if _full_march:
+	if not can_march():
+		_start_walk()
+		return
+	var walk: String = profile.get("walk", "walk")
+	var L := float(clips[walk].length)
+	var enter := float(meta.clips.stop.enter_walk_t)
+	var start := walk_speed() * fposmod(enter - float(meta.clips[walk].get("start_from_idle", 0.0)), L)
+	if start < 0.5 * walk_speed() * L:
+		start += walk_speed() * L
+	if _moves.start:
+		start = travel_of("start") + walk_speed() * fposmod(enter - float(meta.clips.start.exit_walk_t), L)
+	_full_march = pace != "game" and path_length() >= (start + travel_of("stop")) * (1.0 - SLACK)
+	_march_run = Vector2.ZERO
+	if _full_march and _moves.start:
 		state = "start"
 		_root_prev = Vector2.ZERO
 		# The whole march planned at once: the start, whole strides, the stop.
-		var L := float(clips[profile.get("walk", "walk")].length)
-		var lead := walk_speed() * fposmod(float(meta.clips.stop.enter_walk_t) - float(meta.clips.start.exit_walk_t), L)
-		_stretch = _plan(path_length(), travel_of("start") + lead + travel_of("stop"), walk_speed() * L).stretch
+		_stretch = _plan(path_length(), start + travel_of("stop"), walk_speed() * L).stretch
 		_play("start")
 	else:
 		_start_walk()
@@ -1351,11 +1384,27 @@ func _start_turn(delta_deg: float, then: Callable) -> void:
 	# The 180 turn steps round one way only; a turn the other way goes the long way round to match it.
 	if clip == "turn_180" and signf(want) != signf(total):
 		want -= 360.0 * signf(want)
-	_turn = {"clip": clip, "curve": curve, "scale": want / total, "start": rotation.y, "want": deg_to_rad(want)}
+	var p: Array = meta.clips[clip].get("pivot", [0.0, 0.0])
+	_turn = {"clip": clip, "curve": curve, "scale": want / total, "start": rotation.y, "want": deg_to_rad(want),
+		"at": position, "pivot": Vector3(p[0], 0.0, p[1]) * _k()}
 	_after_turn = then
 	_yaw_goal = NAN
+	# From the idle into a turn that starts on the ready stance (the spearman's
+	# guard): blended as an attack is, and he ends it on guard.
+	var from_idle: bool = _clip == profile.get("idle", "idle") and profile.has("ready")
+	_keep_ready()
 	state = "turn"
-	_play(clip)
+	_play(clip, READY_BLEND if from_idle else BLEND)
+
+
+## The turn in place `yaw` (radians) on from its start, about its pivot (the
+## sidecar's `pivot`, in his own space: the spearman's hips over his guard, off
+## his origin; else the origin), so the body stays where the clip has it.
+func _turn_by(yaw: float) -> void:
+	rotation.y = _turn.start + yaw
+	var pv: Vector3 = _turn.pivot
+	var p: Vector3 = _turn.at + pv.rotated(Vector3.UP, _turn.start) - pv.rotated(Vector3.UP, rotation.y)
+	position = Vector3(p.x, position.y, p.z)
 
 
 ## Charge a target (the game's shield_charge): from CHARGE_MIN_TILES or more
@@ -1517,7 +1566,9 @@ func _process(dt: float) -> void:
 				t.call()
 	match state:
 		"walk":
-			if can_march():
+			# Planned into the stop, or turning about his planted foot (without
+			# planted feet, rounding sharp corners nearly on the spot as before).
+			if can_march() and (_full_march or not _feet.is_empty()):
 				_march_walk(sdt)
 			else:
 				_walk(sdt)
@@ -1527,6 +1578,7 @@ func _process(dt: float) -> void:
 			_root_prev = r
 			d.y *= _stretch
 			_move_along(d.y, sdt)
+			_march_run += Vector2(d.y / _stretch, d.y)
 			position += Vector3(d.x, 0, 0).rotated(Vector3.UP, rotation.y)
 			speed_now = d.length() / maxf(sdt, 1e-4)
 		"turn":
@@ -1534,7 +1586,7 @@ func _process(dt: float) -> void:
 			var f := clampf(player.current_animation_position * float(meta.get("fps", 30.0)), 0.0, curve.size() - 1.0)
 			var i := int(f)
 			var j := mini(i + 1, curve.size() - 1)
-			rotation.y = _turn.start + deg_to_rad(lerpf(curve[i], curve[j], f - i) * _turn.scale)
+			_turn_by(deg_to_rad(lerpf(curve[i], curve[j], f - i) * _turn.scale))
 		"lane":
 			var r := root_at("lane", player.current_animation_position) * _lane_scale
 			var d := r - _root_prev
@@ -1622,11 +1674,16 @@ func _walk(sdt: float) -> void:
 	player.speed_scale = playback * clampf(spd / walk_speed(), 0.35, 1.0)
 
 
-## The march's walk. With the start and stop in it (_full_march) every frame
+## The march's walk. With the stop in it (_full_march) every frame
 ## the plan is remade (_plan): which coming crossing of the stride the stop
 ## joins at (enter_walk_t) to stop at (k cycles after the next), and the
-## stretch of pace and stop that lands him on the target. Otherwise he walks
-## the route, turning about his planted foot.
+## stretch of pace and stop that lands him on the target. As in the charge the
+## stretch is planned for the whole march, what he has walked counting as
+## stretched: replanned for only what is left, it would fade as the march
+## shortens and he would miss by up to half a stride. The stop joins a walk
+## under way: a crossing within its first half cycle (from a standstill, without
+## a start) is passed by. Otherwise he walks the route, turning about his
+## planted foot.
 func _march_walk(sdt: float) -> void:
 	var spd := walk_speed()
 	if _full_march:
@@ -1635,14 +1692,21 @@ func _march_walk(sdt: float) -> void:
 		var enter := float(meta.clips.stop.enter_walk_t)
 		var crossed := (_walk_t_prev <= enter and enter < t) or (t < _walk_t_prev and (enter >= _walk_t_prev or enter < t))
 		_walk_t_prev = t
-		if crossed and not _stop_cue.is_empty() and int(_stop_cue.k) == 0:
+		if crossed and not _stop_cue.is_empty() and int(_stop_cue.k) == 0 and not _stop_cue.skip:
 			_begin_stop(fposmod(t - enter, L))
 			return
 		var d_next := walk_speed() * fposmod(enter - t, L)
-		_stop_cue = _plan(path_length(), d_next + travel_of("stop"), walk_speed() * L)
-		_stretch = float(_stop_cue.stretch)
+		var skip := _march_run.x + d_next < 0.5 * walk_speed() * L
+		if skip:
+			d_next += walk_speed() * L
+		_stop_cue = _plan(path_length() + _march_run.y, _march_run.x + d_next + travel_of("stop"), walk_speed() * L)
+		_stop_cue.skip = skip
+		# What is left takes the stretch that brings the whole march to the plan's.
+		var rest := maxf(d_next + int(_stop_cue.k) * walk_speed() * L + travel_of("stop"), 0.5)
+		_stretch = clampf((float(_stop_cue.stretch) * (_march_run.x + rest) - _march_run.y) / rest, 1.0 - SLACK, 1.0 + SLACK)
 		spd *= _stretch
 		_move_along(spd * sdt, sdt)
+		_march_run += Vector2(walk_speed(), spd) * sdt
 		speed_now = spd
 		return
 	if path.is_empty():

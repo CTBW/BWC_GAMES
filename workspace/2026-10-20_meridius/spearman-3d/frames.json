@@ -347,22 +347,60 @@
     "file": "sheets/turn_90_sw.webp",
     "frames": 29,
     "cols": 6,
-    "w": 279,
-    "h": 282,
-    "x": 108.0,
-    "y": 101.2
+    "w": 281,
+    "h": 256,
+    "x": 103.5,
+    "y": 127.5
    },
    "se": {
     "file": "sheets/turn_90_se.webp",
     "frames": 29,
     "cols": 7,
     "w": 279,
-    "h": 381,
+    "h": 372,
     "x": 110.2,
-    "y": 0.0
+    "y": 10.5
    },
    "nw": {
     "file": "sheets/turn_90_nw.webp",
+    "frames": 29,
+    "cols": 6,
+    "w": 279,
+    "h": 322,
+    "x": 0.0,
+    "y": 57.8
+   },
+   "ne": {
+    "file": "sheets/turn_90_ne.webp",
+    "frames": 29,
+    "cols": 7,
+    "w": 282,
+    "h": 380,
+    "x": 4.5,
+    "y": 0.0
+   }
+  },
+  "turn_90_r": {
+   "sw": {
+    "file": "sheets/turn_90_r_sw.webp",
+    "frames": 29,
+    "cols": 6,
+    "w": 273,
+    "h": 270,
+    "x": 103.5,
+    "y": 113.2
+   },
+   "se": {
+    "file": "sheets/turn_90_r_se.webp",
+    "frames": 29,
+    "cols": 7,
+    "w": 279,
+    "h": 380,
+    "x": 110.2,
+    "y": 3.0
+   },
+   "nw": {
+    "file": "sheets/turn_90_r_nw.webp",
     "frames": 29,
     "cols": 6,
     "w": 279,
@@ -371,12 +409,50 @@
     "y": 72.8
    },
    "ne": {
-    "file": "sheets/turn_90_ne.webp",
+    "file": "sheets/turn_90_r_ne.webp",
     "frames": 29,
     "cols": 7,
-    "w": 279,
+    "w": 273,
     "h": 380,
-    "x": 2.2,
+    "x": 12.8,
+    "y": 0.0
+   }
+  },
+  "turn_180": {
+   "sw": {
+    "file": "sheets/turn_180_sw.webp",
+    "frames": 25,
+    "cols": 7,
+    "w": 247,
+    "h": 384,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "se": {
+    "file": "sheets/turn_180_se.webp",
+    "frames": 25,
+    "cols": 5,
+    "w": 390,
+    "h": 301,
+    "x": 0.0,
+    "y": 84.8
+   },
+   "nw": {
+    "file": "sheets/turn_180_nw.webp",
+    "frames": 25,
+    "cols": 5,
+    "w": 390,
+    "h": 366,
+    "x": 0.0,
+    "y": 0.0
+   },
+   "ne": {
+    "file": "sheets/turn_180_ne.webp",
+    "frames": 25,
+    "cols": 7,
+    "w": 247,
+    "h": 379,
+    "x": 142.5,
     "y": 0.0
    }
   }

@@ -24,7 +24,9 @@
   "extra": [
    "idle",
    "step_lane",
-   "turn_90"
+   "turn_90",
+   "turn_90_r",
+   "turn_180"
   ]
  },
  "variants": {
@@ -46,8 +48,8 @@
  "notes": [
   "Cape: glTF cannot carry the cloth's PC2 caches, so the baked cloth of every clip is fitted with 24 cape bones (6 columns round his back x 4 rows, Cape_<row>_<col>, row 0 at the hem, children of mixamorig:Spine2; bilinear weights; the pinned rows under the hood keep their spine weights). Their keys reproduce cape_cache/<clip>.pc2 (errors per clip in clips.<clip>.cape_fit; spine_only_mean_cm is the error of the cape skinned to the spine alone). No new cloth bake. Solidify (1 cm, inwards) is applied.",
   "Spear: the per-clip object actions (<clip>__spear) are baked onto the bones 'SpearGrip' (child of mixamorig:RightHand, at the point of the shaft nearest the right fist's centre) and 'SpearBone' (its child, the butt; it only slides along the shaft), so cross-fades turn the spear about the fist and slide it through; the spear mesh is skinned to SpearBone. In the deaths it leaves the hand at spear_release.",
-  "Locomotion is in place. walk and step_lane move the figure by root_vel (m/s, Godot axes); idle, idle_rest and turn_90 stand still (their small source drift was removed by retarget_clips.py). Deaths keep their authored travel on the hips (root_motion true, hips_drift); do not add it again.",
-  "turn_90: the turn is moved to the root as in the footman's export: the body stays at idle's heading and root_yaw (degrees per frame from the first frame) turns the figure.",
+  "Locomotion is in place. walk and step_lane move the figure by root_vel (m/s, Godot axes); idle, idle_rest and the turns stand still (their small source drift was removed by retarget_clips.py). Deaths keep their authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "turn_90, turn_90_r (turn_90 played backwards) and turn_180 start and end in idle's first pose, turned. The turn is moved to the root as in the footman's export: the body stays at idle's heading and root_yaw (degrees per frame from the first frame) turns the figure about pivot ([x, z] in Godot axes: the guard's hips), so the hips end where idle has them.",
   "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
  ],
  "objects": [
@@ -225,18 +227,18 @@
     -0.0
    ],
    "root_motion": false,
-   "turn_deg": 67.5,
+   "turn_deg": 67.6,
    "hips_drift": [
-    0.0721,
-    -0.0057,
-    -0.0644
+    -0.0016,
+    0.0001,
+    0.0014
    ],
    "events": {},
    "cape_fit": {
-    "mean_cm": 0.91,
-    "p95_cm": 1.96,
-    "max_cm": 7.34,
-    "spine_only_mean_cm": 6.56
+    "mean_cm": 0.92,
+    "p95_cm": 1.97,
+    "max_cm": 7.31,
+    "spine_only_mean_cm": 6.41
    },
    "root_yaw": [
     0.0,
@@ -260,14 +262,134 @@
     35.92,
     39.59,
     43.16,
-    46.65,
-    50.02,
-    53.12,
-    55.92,
-    58.77,
-    61.66,
-    64.56,
-    67.46
+    46.66,
+    50.07,
+    53.22,
+    56.07,
+    58.96,
+    61.86,
+    64.76,
+    67.64
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
+   ]
+  },
+  "turn_90_r": {
+   "anim": "turn_90_r",
+   "length": 0.9333,
+   "loop": false,
+   "frames": 29,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -67.6,
+   "hips_drift": [
+    0.0016,
+    -0.0001,
+    -0.0014
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 0.85,
+    "p95_cm": 1.87,
+    "max_cm": 4.93,
+    "spine_only_mean_cm": 7.09
+   },
+   "root_yaw": [
+    0.0,
+    -2.88,
+    -5.77,
+    -8.68,
+    -11.57,
+    -14.42,
+    -17.57,
+    -20.98,
+    -24.48,
+    -28.04,
+    -31.71,
+    -35.51,
+    -39.36,
+    -43.26,
+    -47.18,
+    -51.1,
+    -55.02,
+    -58.95,
+    -62.87,
+    -66.74,
+    -70.57,
+    -74.33,
+    -78.05,
+    -80.84,
+    -81.47,
+    -79.81,
+    -76.29,
+    -71.77,
+    -67.64
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
+   ]
+  },
+  "turn_180": {
+   "anim": "turn_180",
+   "length": 0.8,
+   "loop": false,
+   "frames": 25,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -162.9,
+   "hips_drift": [
+    -0.0018,
+    -0.0022,
+    0.0014
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 1.09,
+    "p95_cm": 2.32,
+    "max_cm": 6.61,
+    "spine_only_mean_cm": 9.83
+   },
+   "root_yaw": [
+    0.0,
+    0.9,
+    -2.63,
+    -12.39,
+    -27.37,
+    -44.56,
+    -57.6,
+    -63.46,
+    -69.17,
+    -75.71,
+    -82.49,
+    -89.52,
+    -97.19,
+    -105.44,
+    -113.71,
+    -121.3,
+    -128.24,
+    -134.15,
+    -139.2,
+    -143.92,
+    -147.99,
+    -151.88,
+    -155.81,
+    -159.68,
+    -162.91
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
    ]
   },
   "attack": {

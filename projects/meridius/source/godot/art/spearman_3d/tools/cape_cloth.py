@@ -436,5 +436,5 @@ if mode == "setup":
     setup()
 elif mode == "sim":
     cache = Path(argv[1])
-    clips = argv[2].split(",") if len(argv) > 2 and argv[2] else ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "turn_90", "step_lane"]
+    clips = argv[2].split(",") if len(argv) > 2 and argv[2] else ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "turn_90", "turn_90_r", "turn_180", "step_lane"]
     sim(cache, clips)

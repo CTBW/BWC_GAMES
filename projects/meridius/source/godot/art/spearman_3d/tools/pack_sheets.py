@@ -1,11 +1,11 @@
 """Pack rendered frames into the report's sprite sheets (needs Pillow).
 
-  python pack_sheets.py <WORK/renders> <workspace/2026-10-20_meridius/spearman-3d>
+  python pack_sheets.py <WORK/renders> <workspace/2026-10-20_meridius/spearman-3d> [clip,clip...]
 
-Reads <renders>/<clip>_<facing>/*.png for all ten clips (render_clips.sh), crops every
-clip/facing to the union of its frames' alpha boxes, scales by 0.75 and writes
-sheets/<clip>_<facing>.webp plus frames.json. Paste frames.json into the tab's
-<script id="frames-data"> afterwards.
+Reads <renders>/<clip>_<facing>/*.png for all twelve clips (render_clips.sh), or only those
+listed (the others' entries in frames.json are kept), crops every clip/facing to the union
+of its frames' alpha boxes, scales by 0.75 and writes sheets/<clip>_<facing>.webp plus
+frames.json. Paste frames.json into the tab's <script id="frames-data"> afterwards.
 """
 import glob, json, math, os, sys
 from concurrent.futures import ProcessPoolExecutor
@@ -41,10 +41,16 @@ def pack(args):
 if __name__ == "__main__":
     src, out = sys.argv[1], sys.argv[2]
     os.makedirs(f"{out}/sheets", exist_ok=True)
-    jobs = [(src, out, c, f) for c in ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "step_lane", "turn_90"] for f in ["sw", "se", "nw", "ne"]]
+    clips = ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "step_lane", "turn_90",
+             "turn_90_r", "turn_180"]
+    only = sys.argv[3].split(",") if len(sys.argv) > 3 else None
+    jobs = [(src, out, c, f) for c in (only or clips) for f in ["sw", "se", "nw", "ne"]]
     meta = {"clips": {}, "fps": 30, "canvas": [int(520 * SCALE), int(560 * SCALE)]}
+    if only:
+        meta = json.load(open(f"{out}/frames.json"))
     with ProcessPoolExecutor(max_workers=3) as ex:
         for clip, f, m in ex.map(pack, jobs):
             meta["clips"].setdefault(clip, {})[f] = m
+    meta["clips"] = {c: meta["clips"][c] for c in clips + sorted(set(meta["clips"]) - set(clips)) if c in meta["clips"]}
     json.dump(meta, open(f"{out}/frames.json", "w"), indent=1)
     print("packed", len(jobs))

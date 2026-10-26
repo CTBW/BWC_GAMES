@@ -650,6 +650,7 @@ func _refresh_unit_panel() -> void:
 	_panel_unit.add_child(_row([["Hit", func(): _react("hit")], ["Death", func(): _react("die")], ["Revive", func(): _react("revive")], ["Stop", func(): _react("stop")]], []))
 	if u.can_march():
 		_panel_unit.add_child(_row([["Walk pace", func(): _set_pace("walk")], ["Game pace", func(): _set_pace("game")]], ["pace:Walk pace", "pace:Game pace"]))
+	if u.can_step_turn():
 		_panel_unit.add_child(_row([["Turn, then walk", func(): _set_step_turns(true)], ["Turn as he walks", func(): _set_step_turns(false)]], ["start:Turn, then walk", "start:Turn as he walks"]))
 	_panel_unit.add_child(UI.label("ALL CLIPS", "SmallLabel", 13, UI.DARK_MUTED))
 	var cg := UI.grid(2, 4, 4)
@@ -830,6 +831,7 @@ func _refresh() -> void:
 		if u.can_march():
 			on["pace:Walk pace"] = u.pace == "walk"
 			on["pace:Game pace"] = u.pace == "game"
+		if u.can_step_turn():
 			on["start:Turn, then walk"] = u.step_turns
 			on["start:Turn as he walks"] = not u.step_turns
 	for k in on:
@@ -897,13 +899,15 @@ func _set_pace(p: String) -> void:
 
 
 func _set_step_turns(on: bool) -> void:
-	var u := _marcher()
+	var u := _sel()
+	if u == null or not u.can_step_turn():
+		u = footman
 	if u:
 		u.step_turns = on
 	_refresh()
 
 
-## The selected unit if it has the march (the start and stop), else the footman.
+## The selected unit if it has the march (the stop), else the footman.
 func _marcher() -> Node3D:
 	var u := _sel()
 	return u if u and u.can_march() else footman

@@ -199,6 +199,98 @@ func test_spearman_stands_at_ease_and_holds_his_guard_in_a_fight() -> void:
 	u.free()
 
 
+## The spearman turns in place with his turn clips (left, right and about),
+## about his hips: the export holds them still over the guard's (`hips_drift`)
+## and gives that spot (`pivot`), the unit turns about it, and he ends on
+## guard. (Out of the live tree the skeleton keeps one pose, so the hips are
+## the pivot here, in his own space.)
+func test_spearman_turns_in_place_about_his_hips() -> void:
+	if slow("loads the spearman's model"): return
+	var found: Array = Roster.available().filter(func(q): return q.id == "spearman")
+	if found.is_empty():
+		skip("the spearman's model is not on disk")
+		return
+	var u: Node3D = Unit3D.new()
+	u.setup(found[0].duplicate(true))
+	(Engine.get_main_loop() as SceneTree).root.add_child(u)
+	if not u.is_node_ready():
+		u._ready()
+	assert_true(u.can_step_turn(), "his turn clips give him turns in place")
+	for c in ["turn_90", "turn_90_r", "turn_180"]:
+		var m: Dictionary = u.meta.clips[c]
+		var drift: Array = m.get("hips_drift", [1.0, 0.0, 1.0])
+		assert_between(Vector2(drift[0], drift[2]).length(), 0.0, 0.01, c + " holds the hips still")
+		assert_true(m.has("pivot"), c + " gives the spot it turns about")
+	var p: Array = u.meta.clips.turn_90.pivot
+	var pivot_at := func() -> Vector3:
+		return u.transform * (Vector3(p[0], 0.0, p[1]) * u._k())
+	var dt := 1.0 / 30.0
+	for deg in [90.0, -90.0, 180.0, -60.0]:
+		# On guard, at its first frame: where every turn starts and ends.
+		u._keep_ready()
+		u._play("idle", 0.0, true)
+		u.player.seek(0.0, true)
+		var before: Vector3 = pivot_at.call()
+		var want: float = u.rotation.y + deg_to_rad(deg)
+		u.face(want)
+		assert_eq(u.state, "turn", "a %d degree turn is a turn clip" % deg)
+		for i in 60:
+			u.player.advance(dt)
+			u._process(dt)
+			if u.state != "turn":
+				break
+		u.player.advance(0.1)
+		assert_eq(u._clip, "idle", "on guard after the %d degree turn" % deg)
+		assert_almost(angle_difference(u.rotation.y, want), 0.0, 1e-3, "turned %d degrees" % deg)
+		assert_between(before.distance_to(pivot_at.call()), 0.0, 0.01, "hips where they stood after the %d degree turn" % deg)
+	u.free()
+
+
+## The crossbowman has a stop but no start: he sets off straight into the
+## walk, and his walk_stop (the profile's `moves`) slows him to a halt on the
+## spot he was sent to.
+func test_crossbowman_halts_on_the_spot_with_his_stop() -> void:
+	if slow("loads the crossbowman's model"): return
+	var found: Array = Roster.available().filter(func(q): return q.id == "crossbowman")
+	if found.is_empty():
+		skip("the crossbowman's model is not on disk")
+		return
+	var u: Node3D = Unit3D.new()
+	u.setup(found[0].duplicate(true))
+	(Engine.get_main_loop() as SceneTree).root.add_child(u)
+	if not u.is_node_ready():
+		u._ready()
+	assert_true(u.can_march(), "his stop gives him the march")
+	assert_false(u._moves.start, "no start step")
+	assert_true(u.has_clip("stop") and not u.has_clip("walk_stop"), "walk_stop is his stop")
+	var goal := Vector3(0.5, 0.0, 7.0)
+	u.order_move([goal])
+	assert_eq(u.state, "walk", "straight into the walk")
+	var dt := 1.0 / 30.0
+	var stopped := false
+	for i in 30 * 20:
+		u.player.advance(dt)
+		u._process(dt)
+		stopped = stopped or u.state == "stop"
+		if u.state == "idle":
+			break
+	assert_true(stopped, "he slowed with the stop")
+	assert_eq(u.state, "idle", "and stands")
+	assert_between(Vector2(u.position.x - goal.x, u.position.z - goal.z).length(), 0.0, Unit3D.ARRIVE_TOLERANCE, "on the spot")
+	# Too short a march for the stop: he walks it and stands.
+	goal = u.position + u.forward() * 1.0
+	u.order_move([goal])
+	for i in 30 * 5:
+		u.player.advance(dt)
+		u._process(dt)
+		assert_ne(u.state, "stop", "no stop on a one-metre march")
+		if u.state == "idle":
+			break
+	assert_eq(u.state, "idle")
+	assert_between(Vector2(u.position.x - goal.x, u.position.z - goal.z).length(), 0.0, 0.05, "on the spot")
+	u.free()
+
+
 ## A stand-in caster for the kiss heart: casting, at her own playback.
 class Caster extends Node3D:
 	var state := "attack"

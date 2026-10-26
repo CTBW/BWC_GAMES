@@ -1,8 +1,9 @@
 ## Every rigged 3D character ready for the sandbox, in the panel's order. A
 ## profile names the model and its clips' sidecar and says what the sidecar
 ## does not: which clips are the attacks, how far each reaches (metres, centre
-## to centre, where the striker stands) or what it looses, the stances, and
-## the parts drawn without an outline or from both sides. Roles a sidecar
+## to centre, where the striker stands) or what it looses, the stances, the
+## parts drawn without an outline or from both sides, and the clips of
+## unit3d.gd's moves the export names otherwise (`moves`). Roles a sidecar
 ## names itself (`roles`, the spearman's, crossbowman's, goblins' and orc's exports)
 ## fill the rest. A model whose file is missing is left out of the roster
 ## (the rigged models carry Mixamo-derived clips and are not in Git; their
@@ -43,12 +44,14 @@ const UNITS := [
 	{"id": "spearman", "title": "Spearman", "faction": "player",
 		"model": ART + "spearman.glb", "meta": ART + "spearman.json", "reach": 2.7,
 		"attack_defaults": {"reach": 2.7, "label": "Spear thrust"},
-		"blurb": "Anti-charge: the long spear keeps a foe at two metres."},
+		"blurb": "Anti-charge: the long spear keeps a foe at two metres. Turns in place on guard, the spear dipped."},
 	{"id": "crossbowman", "title": "Crossbowman", "faction": "player",
 		"model": ART + "crossbowman.glb", "meta": ART + "crossbowman.json", "reach": 12.0,
 		"attack_defaults": {"missile": "bolt", "reach": 12.0, "then": "reload"},
 		"labels": {"shoot": "Snap shot", "shoot_2": "Shot", "steady_shot": "Steady shot"},
-		"blurb": "Ranged: walks into range and a clear line, shoots a bolt, then reloads."},
+		# His walk_stop slows him over four steps to a halt on the spot (unit3d.gd's march).
+		"moves": {"stop": "walk_stop"},
+		"blurb": "Ranged: walks into range and a clear line, slows to a halt, shoots a bolt, then reloads."},
 	{"id": "mage", "title": "Battle Mage", "faction": "player",
 		"model": ART + "mage.glb", "meta": ART + "mage.json",
 		"idle": "Idle", "walk": "Walk", "hit": "Hit", "death": "Death", "reach": 9.0,

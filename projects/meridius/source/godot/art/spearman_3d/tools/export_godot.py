@@ -19,9 +19,11 @@ only (the .blend is not saved):
     skinned cape matches the baked cloth; the error is printed and written to the sidecar.
     The bind shape is the cloth hanging at idle_rest's first frame, brought back to the rest
     pose through the spine. Solidify is applied (1 cm, inwards, as in the renders);
-  * the turn's rotation moves from the hips to the root, as the footman's: the body is held
+  * the turns' rotation moves from the hips to the root, as the footman's: the body is held
     at idle's heading and `root_yaw` (degrees per frame, from the first frame) turns the
-    figure in the sandbox;
+    figure in the sandbox, about `pivot`: the guard's hips, 13 cm off the origin (turned
+    about the origin, he ended a turn that far from where idle has his hips). turn_90_r
+    (the left turn played backwards) and turn_180 come from retarget_clips.py;
   * the body's weights go out as authored: up to 6 influences per vertex (all exported;
     Godot skins with 8, while the top 4 would move vertices up to 3 cm), weights a hair
     over 1 clamped (the exporter calls such a mesh invalid);
@@ -54,7 +56,7 @@ BIND_CLIP = "idle_rest"            # the cloth at this clip's first frame is the
 PIN_BOTTOM = 1.31                  # cape_cloth.py: free below, pinned (to the spine) above PIN_TOP
 SPINE = ["Hips", "Spine", "Spine1", "Spine2", "Neck"]
 LOOPS = {"idle", "idle_rest", "walk", "step_lane"}
-STILL = {"idle", "idle_rest", "turn_90", "hit", "attack"}   # stand in place: no ground speed
+STILL = {"idle", "idle_rest", "turn_90", "turn_90_r", "turn_180", "hit", "attack"}   # stand in place: no ground speed
 T0 = time.time()
 
 sc = bpy.context.scene
@@ -66,7 +68,7 @@ spear = bpy.data.objects["Spear"]
 assert rig.matrix_world == Matrix.Identity(4) and cape.matrix_world == Matrix.Identity(4)
 PB = rig.pose.bones
 CLIPS = [a.name for a in bpy.data.actions if "frames" in a and not a.name.endswith("__spear")]
-ORDER = ["idle", "idle_rest", "walk", "step_lane", "turn_90", "attack", "hit", "death", "death_2", "death_3"]
+ORDER = ["idle", "idle_rest", "walk", "step_lane", "turn_90", "turn_90_r", "turn_180", "attack", "hit", "death", "death_2", "death_3"]
 CLIPS = [c for c in ORDER if c in CLIPS] + [c for c in CLIPS if c not in ORDER]
 print("EXPORT clips", CLIPS)
 
@@ -486,7 +488,14 @@ for name in CLIPS:
     print("CLIP", name, json.dumps(info))
 
 # 6. The turn: moved from the hips to the root (footman's export_godot.py). The body is
-# held at idle's heading and the sandbox turns the figure by `root_yaw`.
+# held at idle's heading and the sandbox turns the figure by `root_yaw`, about the guard's
+# hips (`pivot`, Godot x and z): turned about the origin, the hips would end the turn off
+# where idle has them by the turn of their 13 cm offset.
+set_clip("idle")
+sc.frame_set(1)
+PIVOT = b("Hips").matrix.translation.copy()
+PIVOT.z = 0.0
+ABOUT = lambda y: Matrix.Translation(PIVOT) @ Matrix.Rotation(math.radians(-y), 4, "Z") @ Matrix.Translation(-PIVOT)
 for name in [c for c in CLIPS if c.startswith("turn")]:
     act = bpy.data.actions[name]
     set_clip(name)
@@ -502,7 +511,7 @@ for name in [c for c in CLIPS if c.startswith("turn")]:
     ys = ys - ys[0]
     for f, y, m in zip(fr, held, hm):
         sc.frame_set(f)
-        b("Hips").matrix = Matrix.Rotation(math.radians(-y), 4, "Z") @ m
+        b("Hips").matrix = ABOUT(y) @ m
         bpy.context.view_layer.update()
         b("Hips").keyframe_insert("rotation_quaternion", frame=f)
         b("Hips").keyframe_insert("location", frame=f)
@@ -511,6 +520,7 @@ for name in [c for c in CLIPS if c.startswith("turn")]:
         sc.frame_set(f)
         left.append(hips_yaw())
     clips[name]["root_yaw"] = [round(float(y), 2) for y in ys]
+    clips[name]["pivot"] = to_godot(PIVOT)[0::2]
     print("ROOT_YAW", name, round(float(ys[-1]), 1), "hips held at idle's heading within",
           round(max(abs(((v - IDLE_YAW + 180) % 360) - 180) for v in left), 1))
 
@@ -558,7 +568,7 @@ bpy.ops.export_scene.gltf(
 # position in the idle (variants: every_s apart, held hold_s, blended over blend_s).
 roles = {"idle": "idle_rest", "ready": "idle", "walk": "walk", "attack": ["attack"], "hit": "hit",
          "death": [c for c in CLIPS if c.startswith("death")],
-         "extra": [c for c in ("idle", "step_lane", "turn_90") if c in clips]}
+         "extra": [c for c in ("idle", "step_lane", "turn_90", "turn_90_r", "turn_180") if c in clips]}
 variants = {"idle": {"clips": ["idle"], "every_s": [10.0, 20.0], "hold_s": [1.4, 2.8], "blend_s": 0.6}}
 notes = [
     "Cape: glTF cannot carry the cloth's PC2 caches, so the baked cloth of every clip is fitted with "
@@ -571,10 +581,12 @@ notes = [
     "the butt; it only slides along the shaft), so cross-fades turn the spear about the fist and slide it through; "
     "the spear mesh is skinned to SpearBone. In the deaths it leaves the hand at spear_release.",
     "Locomotion is in place. walk and step_lane move the figure by root_vel (m/s, Godot axes); idle, idle_rest "
-    "and turn_90 stand still (their small source drift was removed by retarget_clips.py). Deaths keep their "
+    "and the turns stand still (their small source drift was removed by retarget_clips.py). Deaths keep their "
     "authored travel on the hips (root_motion true, hips_drift); do not add it again.",
-    "turn_90: the turn is moved to the root as in the footman's export: the body stays at idle's heading and "
-    "root_yaw (degrees per frame from the first frame) turns the figure.",
+    "turn_90, turn_90_r (turn_90 played backwards) and turn_180 start and end in idle's first pose, turned. The "
+    "turn is moved to the root as in the footman's export: the body stays at idle's heading and root_yaw (degrees "
+    "per frame from the first frame) turns the figure about pivot ([x, z] in Godot axes: the guard's hips), so "
+    "the hips end where idle has them.",
     "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip "
     "names (clips.<clip>.anim).",
 ]

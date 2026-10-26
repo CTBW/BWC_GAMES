@@ -145,7 +145,7 @@ func _warm_battle() -> void:
 	for so in g.roster:
 		army.append(Soldier.soldier_to_unit(so))
 	var roll: Dictionary = Setup.roll_encounter("raiding_party", Deps.rng().new(1), 2)
-	var b = Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
+	var b = Battle.new(Setup.build_battle(roll, army, {}))
 	var vp := SubViewport.new()
 	vp.name = "WarmBattle"
 	vp.size = Vector2i(480, 270)

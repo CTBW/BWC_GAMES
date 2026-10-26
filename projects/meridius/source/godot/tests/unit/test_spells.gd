@@ -327,7 +327,7 @@ func test_whole_battles_with_the_new_squads_end() -> void:
 			var tag := "a%d-%d" % [pair[1], i]
 			army.append(Soldier.soldier_to_unit(Soldier.new_soldier(Rng.new(pair[1] + i), t, 1, func() -> String: return tag, 0)))
 			i += 1
-		var b = Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
+		var b = Battle.new(Setup.build_battle(roll, army, {}))
 		Autoplay.auto_battle(b)
 		assert_true(b.is_over(), "%s ends" % pair[0])
 		assert_not_null(b.result, "%s has a result" % pair[0])

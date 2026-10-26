@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Rules changelog</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 520px; }
+    th, td { padding: 4px 10px; text-align: left; border-bottom: 1px solid rgba(128,128,128,0.3); vertical-align: top; }
+    .entry { border-left: 3px solid rgba(128,128,128,0.35); padding-left: 16px; margin: 24px 0; }
+    .entry h2 { margin-top: 0; }
+    .meta { font-size: 0.9rem; opacity: 0.75; }
+  </style>
+</head>
+<body>
+<main class="container">
+  <h1>Meridius: rules changelog</h1>
+  <p>Every rule implemented in the main game from the rules chat, newest first. Each entry gives the rule as it now plays, the numbers, what it replaced, the code and tests that changed, and the calls still open for the owner.</p>
+
+  <section class="entry" id="2026-10-26-wounds">
+    <h2>The fallen rise wounded; a cut-down squad rises Injured</h2>
+    <p class="meta">26 October 2026 · Godot, <code>godot-migration</code> · implemented and tested, not committed</p>
+
+    <h3>The rule</h3>
+    <ul>
+      <li><b>During a fight</b> soldiers who go down stay down until it ends, as before.</li>
+      <li><b>After the fight</b> they get back up. The squad keeps every soldier it marched with, but in its <b>next fight</b> it carries a penalty for each soldier who went down. That fight spends it and sets a new one from its own fallen.</li>
+      <li><b>A squad cut down to the last</b> rises again for its next fight, <b>Injured</b>: a heavier penalty. <b>Cut down again while Injured, it is gone for good.</b></li>
+      <li><b>Remedies</b> clear the penalty before the next fight: a camp rest with full rations (every squad) and a bandage (one squad). Relics, command abilities and squad abilities can hook into the same remedy later.</li>
+      <li>Enemy squads are unchanged: cut down means dead.</li>
+    </ul>
+
+    <h3>The numbers (a squad of six)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Went down in the last fight</th><th>Damage</th><th>Defense and ranged defense</th><th>Morale at the start</th><th>Tag</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>−5%</td><td>−5%</td><td>−5</td><td>Wounded (1)</td></tr>
+          <tr><td>2</td><td>−10%</td><td>−10%</td><td>−10</td><td>Wounded (2)</td></tr>
+          <tr><td>3</td><td>−15%</td><td>−15%</td><td>−15</td><td>Wounded (3)</td></tr>
+          <tr><td>4</td><td>−20%</td><td>−20%</td><td>−20</td><td>Wounded (4)</td></tr>
+          <tr><td>5</td><td>−25%</td><td>−25%</td><td>−25</td><td>Wounded (5)</td></tr>
+          <tr><td>All six</td><td>−40%</td><td>−40%</td><td>−30</td><td>Injured: cut down again, gone</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The penalty scales with the share of the squad that fell (30% for a whole squad's worth), so squads of three or nine follow the same curve. Hit chance is untouched. Damage covers attacks, shots and spells.</p>
+
+    <h3>What it replaced</h3>
+    <ul>
+      <li><b>Field triage:</b> each fallen soldier's survival roll (45–85%). Those who failed it died, and only the Barracks replaced them.</li>
+      <li><b>The downed sergeant:</b> a wiped-out squad was rolled dead or kept only its sergeant, with a lasting injury and a bandage spent.</li>
+      <li><b>Left behind:</b> after a defeat, half of the downed squads were lost.</li>
+      <li><b>The Infirmary's survival bonus</b> (+8% / +16%) had nothing left to act on. The Infirmary now only lowers treatment costs.</li>
+    </ul>
+
+    <h3>Where you see it</h3>
+    <ul>
+      <li>A gold <b>Wounded (n)</b> or red <b>Injured</b> tag on squad cards, with the effect in its tooltip.</li>
+      <li>A line in the battle panel and hover panel, a card in the squad detail, a tag in the report's list of returning squads.</li>
+      <li>The Field Manual ("Morale and Rout") and the in-battle log: "cut down to the last; the wounded are dragged clear".</li>
+    </ul>
+
+    <h3>Code and checks</h3>
+    <ul>
+      <li>Rules: <code>scripts/rules/squad.gd</code> (<code>wound_of</code>, the constants), <code>battle.gd</code> (<code>_fall</code>, damage in <code>preview</code> and <code>_spell_damage</code>), <code>scripts/meta/soldier.gd</code> (defense and morale at the start), <code>scripts/campaign/expedition.gd</code> (<code>apply_battle</code>, <code>camp_rest</code>, <code>use_bandage</code>, <code>tend_wounds</code>).</li>
+      <li>Tests: seven rule tests in <code>test_meta_squads</code> and the tags in <code>test_ui_widgets</code>. The quick suite passes without the whole-campaign test: 432 passed, 0 failed, 13 skipped, including 53 battle traces.</li>
+      <li>Battle traces re-recorded: a company squad cut down is now never rolled dead. The setup and economy baselines have no recorder, so their tests set aside the dropped survival bonus and compare everything else as recorded. The campaign baseline was re-recorded by a run already under way, then not run again: rule changes no longer get a whole-campaign test. Details in <code>MIGRATION.md</code> and <code>docs/squads.md</code>.</li>
+    </ul>
+
+    <h3>Calls made in implementing it (open to change)</h3>
+    <ul>
+      <li>The fallen get up with their full HP share; the survivors keep their scratches.</li>
+      <li>An Injured squad rises with a full HP pool and full morale; the −30 morale penalty carries the blow.</li>
+      <li>The penalty stays through the return to Amberfeld until the squad's next fight. With the campaign map set aside, there is currently no camp or bandage step before a battle, so nothing in the live game can clear it yet.</li>
+      <li>A camp rest dresses wounds only with full rations. A bandage clears Injured as well as Wounded.</li>
+      <li>"Injured" sits close to the Infirmary's lasting <em>injuries</em> (the sergeant's gashed arm and the like), which are a different thing.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

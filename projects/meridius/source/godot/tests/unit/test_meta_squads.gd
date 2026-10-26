@@ -10,6 +10,7 @@ const Game = preload("res://scripts/meta/game.gd")
 const Soldier = preload("res://scripts/meta/soldier.gd")
 const Expedition = preload("res://scripts/campaign/expedition.gd")
 const Autoplay = preload("res://scripts/campaign/autoplay.gd")
+const Squad = preload("res://scripts/rules/squad.gd")
 
 
 func _on_expedition(seed := 5) -> Dictionary:
@@ -69,54 +70,177 @@ func test_camp_rest_heals_only_the_survivors() -> void:
 func test_battle_results_copy_squad_strength_back_to_the_roster() -> void:
 	var g := _on_expedition(11)
 	var roll := Setup.roll_encounter("raiding_party", Rng.new(4), 1)
-	var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), {"survivalBonus": 0}))
+	var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), {}))
 	Autoplay.auto_battle(b)
 	var before := {}
 	for s in g.roster:
 		before[s.id] = s.men
 	var report := Expedition.apply_battle(g, b, "Test", false)
 	for u in b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player"):
-		var s: Variant = null
-		for r in g.roster:
-			if r.id == u.get("soldierId"):
-				s = r
+		var s: Variant = _squad(g, u.get("soldierId"))
 		if u.status == "dead":
 			assert_eq(s, null, "the dead leave the roster")
 			continue
 		assert_not_null(s, "survivor on the roster")
-		# Field triage may carry some of the fallen back; nobody else returns.
-		var saved := 0
-		for l in report.losses:
-			if l.name == s.name:
-				saved = JS.get_or(l, "saved", 0)
+		# The fallen get back up; the squad carries their wounds instead.
+		assert_eq(s.men, before[s.id], "the fallen get back up")
 		if u.status == "downed":
-			assert_eq(s.men, 1 + saved, "downed: the sergeant and the saved")
+			assert_true(s.get("injured", false), "cut down to the last: injured")
 		else:
-			assert_eq(s.men, maxi(1, u.alive) + saved, "standing and saved")
+			assert_eq(s.get("wounded", 0), before[s.id] - u.alive, "wounded: those who went down")
 		assert_true(s.hp <= Soldier.squad_hp_cap(s), "hp capped")
-		assert_true(s.men <= before[s.id], "never more men")
 	var lost := 0
 	for l in report.losses:
 		lost += l.lost
 	assert_eq(lost, g.expedition.menLost, "menLost")
 
 
-func test_field_triage_returns_only_soldiers_who_fell_in_this_battle() -> void:
-	for seed in range(1, 25):
-		var g := _on_expedition(seed)
-		var roll := Setup.roll_encounter("orc_overseer", Rng.new(seed), 2)
-		var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), {"survivalBonus": 0.1}))
-		Autoplay.auto_battle(b)
-		var report := Expedition.apply_battle(g, b, "Test", false)
-		for l in report.losses:
-			var u: Dictionary = b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player" and x.name == l.name)[0]
-			# Squads march out at full strength here, so the fallen are size minus the standing.
-			var fell: int = u.size - 1 if u.status == "downed" else u.size - u.alive
-			var saved: int = JS.get_or(l, "saved", 0)
-			assert_true(saved >= 0, "saved >= 0")
-			assert_eq(saved + l.lost, fell, "seed %d: saved + lost = fell" % seed)
-			if l.fate == "dead":
-				assert_eq(saved, 0, "the dead are not saved")
+func _squad(g: Dictionary, id: Variant) -> Variant:
+	for r in g.roster:
+		if r.id == id:
+			return r
+	return null
+
+
+## A battle for the expedition's army, settled by hand: `fate(u, b)` sets what happened to each squad.
+func _settle(g: Dictionary, result: String, fate: Callable, opts := {}) -> Dictionary:
+	var roll := Setup.roll_encounter("raiding_party", Rng.new(4), 1)
+	var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), opts))
+	for u in b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player"):
+		fate.call(u, b)
+	b.phase = "over"
+	b.result = result
+	return Expedition.apply_battle(g, b, "Test", false)
+
+
+func test_the_fallen_rise_wounded_and_weaken_the_squads_next_fight() -> void:
+	var g := _on_expedition(11)
+	var s: Dictionary = g.roster[0]
+	var size: int = DB.squad_size(s.typeId)
+	var per: int = Soldier.soldier_stats(s).hp
+	_settle(g, "victory", func(u: Dictionary, _b) -> void:
+		if u.soldierId == s.id:
+			# Two go down; the four standing share a scratch of 3 HP.
+			u.hp = per * (size - 2) - 3
+			u.alive = size - 2
+	)
+	assert_eq(s.men, size, "the fallen get back up")
+	assert_eq(s.wounded, 2, "two wounded")
+	assert_eq(s.hp, per * size - 3, "the survivors keep their scratches")
+	var clean_s: Dictionary = s.duplicate(true)
+	clean_s.erase("wounded")
+	var clean := Soldier.soldier_to_unit(clean_s)
+	var u := Soldier.soldier_to_unit(s)
+	assert_eq(u.alive, size, "every soldier marches")
+	var w: Dictionary = u.wound
+	assert_eq(w.kind, "wounded")
+	assert_almost(float(w.damage), Squad.WOUND_PENALTY * 2 / size, 1e-9, "damage share")
+	assert_eq(w.morale, JS.rnd(Squad.WOUND_MORALE * 2.0 / size), "morale")
+	assert_eq(u.stats.defense, JS.rnd(clean.stats.defense * (1 - w.defense)), "defense")
+	assert_eq(u.stats.rangedDefense, JS.rnd(clean.stats.rangedDefense * (1 - w.defense)), "ranged defense")
+	assert_eq(u.morale, maxi(1, clean.morale - w.morale), "starts with less morale")
+	assert_eq(clean.get("wound"), null, "no wound, no penalty")
+	for o in g.roster.slice(1, 5):
+		assert_eq(Squad.wound_of(o), null, "nobody else went down")
+
+
+func test_a_wound_is_spent_by_the_next_fight() -> void:
+	var g := _on_expedition(11)
+	var a: Dictionary = g.roster[0]
+	var c: Dictionary = g.roster[1]
+	a.wounded = 3
+	c.injured = true
+	var report := _settle(g, "victory", func(_u, _b) -> void: pass)
+	assert_eq(Squad.wound_of(a), null, "wounded: spent")
+	assert_eq(Squad.wound_of(c), null, "injured: spent")
+	assert_true(report.losses.is_empty(), "nobody went down")
+
+
+func test_a_squad_cut_down_rises_injured_and_is_gone_if_cut_down_again() -> void:
+	var g := _on_expedition(12)
+	var s: Dictionary = g.roster[0]
+	var size: int = DB.squad_size(s.typeId)
+	var st := Soldier.soldier_stats(s)
+	var report := _settle(g, "retreat", func(u: Dictionary, b) -> void:
+		if u.soldierId == s.id:
+			b._fall(u)
+			assert_eq(u.status, "downed", "cut down, not dead")
+	)
+	assert_eq(_squad(g, s.id), s, "still on the roster")
+	assert_true(s.injured, "injured")
+	assert_eq(s.men, size, "rises whole")
+	assert_eq(s.hp, Soldier.squad_hp_cap(s), "full pool")
+	assert_eq(report.injured, [s.name], "reported")
+	assert_eq(g.expedition.menLost, 0, "nobody lost for good")
+	var u := Soldier.soldier_to_unit(s)
+	assert_eq(u.wound.kind, "injured")
+	assert_almost(float(u.wound.damage), Squad.INJURED_PENALTY, 1e-9, "damage")
+	assert_eq(u.morale, st.morale - Squad.INJURED_MORALE, "morale")
+	report = _settle(g, "retreat", func(x: Dictionary, b) -> void:
+		if x.soldierId == s.id:
+			b._fall(x)
+			assert_eq(x.status, "dead", "cut down again while injured: gone")
+	)
+	assert_eq(_squad(g, s.id), null, "gone from the roster")
+	assert_false(g.expedition.army.has(s.id), "gone from the army")
+	assert_eq(g.fallen[0].name, s.name, "remembered among the fallen")
+	assert_eq(report.losses[0].fate, "gone")
+	assert_eq(g.expedition.menLost, size, "the whole squad lost")
+
+
+func test_enemies_cut_down_are_dead_and_carry_no_wounds() -> void:
+	var g := _on_expedition(12)
+	var roll := Setup.roll_encounter("raiding_party", Rng.new(4), 1)
+	var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), {}))
+	var e: Dictionary = b.units.filter(func(x: Dictionary) -> bool: return x.faction == "enemy" and x.status == "active")[0]
+	assert_eq(e.get("wound"), null, "no wounds")
+	b._fall(e)
+	assert_eq(e.status, "dead")
+
+
+func test_wounds_cut_the_damage_a_squad_deals() -> void:
+	var g := _on_expedition(11)
+	var roll := Setup.roll_encounter("raiding_party", Rng.new(4), 1)
+	var b := Battle.new(Setup.build_battle(roll, Expedition.battle_army(g), {"fogOfWar": false}))
+	var a: Dictionary = b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player" and x.typeId == "footman")[0]
+	var t: Dictionary = b.units.filter(func(x: Dictionary) -> bool: return x.faction == "enemy" and x.status == "active")[0]
+	var full: Dictionary = b.preview(a, t)
+	a.wound = Squad.wound_of({"typeId": a.typeId, "wounded": 3})
+	var hurt: Dictionary = b.preview(a, t)
+	var mult: float = 1.0 - Squad.WOUND_PENALTY * 3 / a.size
+	assert_true(hurt.max < full.max, "less damage: %d < %d" % [hurt.max, full.max])
+	assert_eq(hurt.chance, full.chance, "the hit chance is untouched")
+	if full.arc == "front" and not a.tags.has("flanker"):
+		var armor: float = t.stats.armor * (1 - a.meleePierce)
+		assert_eq(hurt.max, maxi(1, JS.rnd(a.melee[1] * mult - armor)) * a.alive, "max per soldier times soldiers")
+
+
+func test_a_nights_rest_or_a_bandage_dresses_the_wounds() -> void:
+	var g := _on_expedition(11)
+	var ex: Dictionary = g.expedition
+	var a: Dictionary = g.roster[0]
+	var c: Dictionary = g.roster[1]
+	a.wounded = 2
+	c.injured = true
+	# A watch is kept, so no raider comes.
+	ex.pending = {"kind": "camp", "nodeId": ex.current, "done": ["watch"], "messages": []}
+	Expedition.camp_rest(g)
+	assert_eq(Squad.wound_of(a), null, "wounded: dressed")
+	assert_eq(Squad.wound_of(c), null, "injured: dressed")
+	assert_true(ex.pending.messages.any(func(m: String) -> bool: return m.begins_with("The wounds of the last fight are dressed: two squads")), "said so")
+	# Hungry, the army sleeps but the wounds stay.
+	a.wounded = 2
+	ex.supplies.rations = 0
+	ex.pending = {"kind": "camp", "nodeId": ex.current, "done": ["watch"], "messages": []}
+	Expedition.camp_rest(g)
+	assert_eq(a.wounded, 2, "no food, no dressing")
+	# A bandage dresses one squad's wounds, even at full HP.
+	a.hp = Soldier.squad_hp_cap(a)
+	var bandages: int = ex.supplies.bandages
+	assert_true(Expedition.use_bandage(g, a.id), "bandaged")
+	assert_eq(Squad.wound_of(a), null, "dressed")
+	assert_eq(ex.supplies.bandages, bandages - 1, "one bandage")
+	assert_false(Expedition.use_bandage(g, a.id), "nothing left to dress")
 
 
 func test_only_the_barracks_raises_men_at_a_price_and_not_on_campaign() -> void:

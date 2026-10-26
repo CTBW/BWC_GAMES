@@ -72,9 +72,6 @@ const INWARD := {"n": 1, "w": 0, "e": 2, "s": 3}
 
 const DEFAULT_OBJECTIVE := {"kind": "rout", "title": "Rout the enemy", "brief": "Destroy or drive off every enemy squad."}
 
-## Chance that a fallen soldier was only wounded (plus 5% per level and the infirmary/bandage bonus).
-const FALL_SURVIVAL_BASE := 0.45
-
 const EDGE_NAME := {"n": "northern", "e": "eastern", "s": "southern", "w": "western"}
 
 
@@ -918,6 +915,9 @@ func preview(a: Dictionary, t: Dictionary, opts: Dictionary = {}) -> Dictionary:
 	# Flankers (wolf riders) tear into sides and backs.
 	if not ranged and arc != "front" and a.tags.has("flanker"):
 		mult *= 1.3
+	# Wounds carried from the squad's last fight.
+	if a.get("wound") != null:
+		mult *= Squad.wound_mult(a)
 	var flat := 0
 	var mtv: Variant = opts.get("movedTiles")
 	var moved_tiles = a.movedTiles if mtv == null else mtv
@@ -1037,10 +1037,12 @@ func _rout(u: Dictionary) -> void:
 # ---------------------------------------------------------------- damage
 
 func _fall(u: Dictionary, killer: Variant = null) -> void:
+	# A company squad cut down rises again after the fight, Injured; cut down
+	# while still Injured from its last fight, it is gone for good.
 	var dead := true
 	if u.faction == "player":
-		var p: float = FALL_SURVIVAL_BASE + 0.05 * (u.level - 1) + setup.survivalBonus
-		dead = not rng.chance(p)
+		var w: Variant = u.get("wound")
+		dead = w != null and w.kind == "injured"
 	u.status = "dead" if dead else "downed"
 	u.erase("stance")
 	u.hp = 0
@@ -1054,7 +1056,7 @@ func _fall(u: Dictionary, killer: Variant = null) -> void:
 	elif dead:
 		text = "%s are wiped out to the last." % name
 	else:
-		text = "%s are cut down; the wounded sergeant is dragged clear." % name
+		text = "%s are cut down to the last; the wounded are dragged clear." % name
 	_log(text, "bad" if u.faction == "player" else "good")
 	if killer != null:
 		killer.kills += 1
@@ -1730,6 +1732,8 @@ static func _chain_order(p: Dictionary, q: Dictionary, last: Dictionary) -> int:
 ## Damage range a spell's share `factor` does to `t`: each caster's blow less armour, times the casters standing.
 func _spell_damage(a: Dictionary, ab: Dictionary, t: Dictionary, factor: Variant) -> Array:
 	var casters: int = maxi(1, a.alive)
+	if a.get("wound") != null:
+		factor *= Squad.wound_mult(a)
 	var pierce = 1 if ab.get("ignoreArmor") else JS.get_or(ab, "pierce", 0)
 	var armor = t.stats.armor * (1 - pierce)
 	var lo: int = maxi(1, JS.rnd(ab.power[0] * factor - armor)) * casters
@@ -2462,12 +2466,6 @@ func _finish(res: String) -> void:
 		if u.status == "routing":
 			u.status = "fled"
 			_emit({"t": "fled", "uid": u.uid})
-	if res == "defeat":
-		for u in units:
-			if u.faction == "player" and u.status == "downed":
-				if rng.chance(0.5):
-					u.status = "dead"
-					_log("The survivors of %s are left behind on the field." % Squad.squad_name(u), "bad")
 	# Experience.
 	for u in units:
 		if u.faction != "player":

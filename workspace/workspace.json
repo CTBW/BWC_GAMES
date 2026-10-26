@@ -31,6 +31,10 @@
           "path": "squads.html"
         },
         {
+          "name": "Rules changelog",
+          "path": "rules-changelog.html"
+        },
+        {
           "name": "Loop 1 · Placeholder art",
           "path": "loop1.html"
         },

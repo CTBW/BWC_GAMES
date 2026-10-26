@@ -26,6 +26,13 @@ Read `ARCHITECTURE.md` before changing code; `README.md` for commands.
   have no recorder: retire the affected cases with a note in MIGRATION.md.
   Never re-run the TypeScript generators in `tools/parity/`, and do not change
   `../game` to match.
+- A change to the game's rules gets no whole-campaign test (the owner, 26
+  October 2026). After it, and before committing it, run every suite except
+  `test_campaign_parity`: `tools/test.sh --quick tests/unit test_battle_parity
+  test_core_parity test_mapgen_parity test_meta_parity test_setup_parity`, then
+  the slow battle traces with `tools/test.sh test_battle_parity`. Re-record the
+  battle traces only, and say in MIGRATION.md that the campaign baseline was
+  not checked.
 - Verify visual changes in a real window: capture scripts in `tests/visual/`
   save PNGs to `tests/visual/out/` (gitignored); look at them.
 - Ship: `tools/export.sh`, then `build/windows/Meridius.console.exe -- --smoke`.

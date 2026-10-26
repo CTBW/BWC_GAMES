@@ -351,7 +351,7 @@ func _lab(units: Array):
 	var roll: Dictionary = Setup.roll_encounter("orc_overseer", Rng.new(5), 2)
 	roll.mapId = "forest_clearing"
 	var army := [Soldier.soldier_to_unit(Soldier.new_soldier(Rng.new(3), "footman", 1, func(): return "army0", 0))]
-	var setup: Dictionary = Setup.build_battle(roll, army, {"survivalBonus": 0})
+	var setup: Dictionary = Setup.build_battle(roll, army, {})
 	for t in setup.map.tiles:
 		t.erase("prop")
 		if t.terrain == "forest" or t.terrain == "brush" or t.terrain == "water":

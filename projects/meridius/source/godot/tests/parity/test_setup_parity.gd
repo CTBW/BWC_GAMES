@@ -42,6 +42,9 @@ func test_setups_match() -> void:
 		var army: Array = c.army.duplicate(true)
 		var setup := Setup.build_battle(c.roll.duplicate(true), army, c.opts)
 		var expected: Dictionary = c.setup.duplicate(true)
+		# Battles no longer roll whether a cut-down squad survives (the wound
+		# rule, MIGRATION.md 2026-10-26): setups carry no survivalBonus.
+		expected.erase("survivalBonus")
 		var got := setup.duplicate(true)
 		assert_true(setup.fogOfWar, "new battles enable fog of war")
 		got.erase("fogOfWar")

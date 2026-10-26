@@ -1,7 +1,7 @@
 ## Port of Roster.tsx `SoldierDetail`: one squad in full — portrait, the
 ## sergeant's name (editable; saved on close), rank/type/strength/CP, blurb,
 ## experience / squad HP / morale bars, the stat grid, equipment, abilities,
-## lasting injuries, reinforcement of empty places (at home), Discharge
+## lasting injuries, wounds from the last fight, reinforcement of empty places (at home), Discharge
 ## (asks first, at home) and Close. Used by the base screen and the campaign HUD.
 ##
 ##   const SoldierDetail = preload("res://scripts/ui/screens/soldier_detail.gd")
@@ -220,6 +220,21 @@ func refresh() -> void:
 				effs.append("%s %s" % [JS.num_str(I.effect[k]), k])
 			ic.add_child(UI.rich("[b]%s[/b]: %s (%s)" % [I.name, UI.esc(I.description), ", ".join(effs)], "SmallText"))
 		col.add_child(inj)
+
+	# Wounds carried from the last fight.
+	var wound: Variant = Deps.squad().wound_of(so)
+	if wound != null:
+		col.add_child(UI.gap(0, 8))
+		var wc := UI.panel("ParchmentCard")
+		wc.name = "Wound"
+		var wcol := UI.vbox(0)
+		wc.add_child(wcol)
+		var injured: bool = wound.kind == "injured"
+		wcol.add_child(UI.label("Injured" if injured else "Wounded", "H4Label"))
+		var why := "Cut down to the last in its last fight." if injured else ("%s went down in its last fight." % ("One soldier" if wound.fell == 1 else "%d soldiers" % wound.fell))
+		var then := " Cut down again, the squad is gone for good." if injured else ""
+		wcol.add_child(UI.rich("%s In its next fight: %s.%s" % [why, Deps.squad().wound_text(wound), then], "SmallText"))
+		col.add_child(wc)
 
 	# Empty places in the ranks.
 	if missing > 0:

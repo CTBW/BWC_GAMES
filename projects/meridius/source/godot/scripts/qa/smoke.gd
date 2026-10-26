@@ -85,7 +85,7 @@ static func run(host: Node) -> void:
 		var units: Array = []
 		for u in army:
 			units.append(u.duplicate(true))
-		var b = Battle.new(Setup.build_battle(roll, units, {"survivalBonus": 0}))
+		var b = Battle.new(Setup.build_battle(roll, units, {}))
 		Auto.auto_battle(b)
 		if b.is_over():
 			ended += 1

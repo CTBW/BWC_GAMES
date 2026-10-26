@@ -98,7 +98,7 @@ func open_field(seed: int) -> Dictionary:
 
 
 func new_battle(units: Array, seed: int, map: Dictionary, extra := {}) -> Variant:
-	var setup := {"seed": seed, "map": map, "units": units, "survivalBonus": 0, "title": "t"}
+	var setup := {"seed": seed, "map": map, "units": units, "title": "t"}
 	setup.merge(extra, true)
 	return Battle.new(setup)
 

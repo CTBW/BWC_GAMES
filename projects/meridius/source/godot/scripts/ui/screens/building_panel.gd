@@ -398,9 +398,7 @@ static func _infirmary(g: Dictionary) -> Control:
 	var Game = Deps.game()
 	var col := UI.vbox(6)
 	var hurt: Array = g.roster.filter(func(so): return so.injuries.size() > 0)
-	var surv: Variant = Game.effect(g, "infirmary", "survival")
-	var intro := "A sergeant's lasting injury weakens the whole squad until treated. Treatment benches the squad for the next expedition. %s" % [
-		("Field surgeons add %d%% to the chance that a cut-down squad's sergeant survives." % JS.rnd(float(surv) * 100.0)) if surv else "Better surgeons will save more sergeants of squads cut down in battle."]
+	var intro := "A sergeant's lasting injury weakens the whole squad until treated. Treatment benches the squad for the next expedition."
 	col.add_child(UI.rich(intro, "SmallMutedText"))
 	if hurt.is_empty():
 		col.add_child(UI.rich("The cots are empty. Long may it last.", "BodyText"))

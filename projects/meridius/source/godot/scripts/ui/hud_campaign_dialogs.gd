@@ -221,7 +221,7 @@ static func _result(hud: Object, p: Dictionary) -> Control:
 	if losses != null:
 		for l in losses:
 			lost_men += int(l.lost)
-			if l.fate == "dead":
+			if l.fate == "dead" or l.fate == "gone":
 				gone += 1
 
 	# Left card: foes, spoils, supplies used.
@@ -283,11 +283,17 @@ static func _result(hud: Object, p: Dictionary) -> Control:
 			for w in r.get("wounded", []):
 				if w.name == l.name:
 					injury = w.injury
-			var fought: bool = l.fate == "fought"
+			var fought: bool = l.fate == "fought" or l.fate == "wounded"
 			var colour := H.NONE if fought else LOSS
 			var first := str(l.name).split(" ")[0]
 			var s := "[b]%s[/b]: " % UI.esc(Squad.squad_name(l))
-			if l.fate == "dead":
+			if l.fate == "gone":
+				s += "cut down again while Injured: gone for good (%d lost)." % int(l.lost)
+			elif l.fate == "injured":
+				s += "cut down to the last; they rise Injured for their next fight."
+			elif l.fate == "wounded":
+				s += "%d went down; they rise wounded for their next fight." % int(l.fell)
+			elif l.fate == "dead":
 				s += "wiped out with their sergeant (%d lost)." % int(l.lost)
 			elif l.fate == "downed":
 				s += "cut down to the last man; %s lives%s. %d lost." % [first, " (%s)" % str(injury).to_lower() if injury != null else "", int(l.lost)]

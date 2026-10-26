@@ -400,7 +400,7 @@ func start_battle() -> void:
 		return
 	var Ex = Deps.expedition()
 	var night: Dictionary = Ex.prepare_night(g)
-	var setup: Dictionary = Deps.setup().build_battle(p.roll, Ex.battle_army(g), {"survivalBonus": Ex.survival_bonus(g), "title": p.title, "darkness": night.darkness})
+	var setup: Dictionary = Deps.setup().build_battle(p.roll, Ex.battle_army(g), {"title": p.title, "darkness": night.darkness})
 	battle = Deps.battle().new(setup)
 	battle_info = {"title": p.title, "objective": p.objective}
 	battle_view = _make_battle_view(battle)
@@ -523,7 +523,7 @@ func debug_test_battle(encounter_id: String, opts: Dictionary = {}) -> void:
 	else:
 		for so in g.roster.slice(0, 6):
 			army.append(Soldier.soldier_to_unit(so))
-	var bopts := {"survivalBonus": 0}
+	var bopts := {}
 	if opts.get("darkness") != null:
 		bopts.darkness = opts.darkness
 	battle = Deps.battle().new(Deps.setup().build_battle(roll, army, bopts))

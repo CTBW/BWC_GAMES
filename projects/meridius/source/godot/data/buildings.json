@@ -234,8 +234,7 @@
      "cost": {},
      "description": "Treat injuries for 40 silver per severity.",
      "effects": {
-      "treatCost": 40,
-      "survival": 0
+      "treatCost": 40
      }
     },
     {
@@ -245,10 +244,9 @@
       "silver": 140,
       "timber": 3
      },
-     "description": "Treatment 25 per severity. Field surgeons: +8% survival for the sergeant of a squad cut down.",
+     "description": "Treat injuries for 25 silver per severity.",
      "effects": {
-      "treatCost": 25,
-      "survival": 0.08
+      "treatCost": 25
      }
     },
     {
@@ -260,10 +258,9 @@
       "iron": 2,
       "trophies": 1
      },
-     "description": "Treatment 15 per severity. +16% survival for the sergeant of a squad cut down.",
+     "description": "Treat injuries for 15 silver per severity.",
      "effects": {
-      "treatCost": 15,
-      "survival": 0.16
+      "treatCost": 15
      }
     }
    ]

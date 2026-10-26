@@ -254,6 +254,11 @@ static func unit_panel(view: Object, u: Dictionary) -> Control:
 	var chips := status_chips(u)
 	if chips != null:
 		mid.add_child(H.margin(chips, 2, 0, 0, 0))
+	var wound: Variant = u.get("wound")
+	if wound != null:
+		var wt := _tiny("%s: %s" % ["Injured" if wound.kind == "injured" else "Wounded", Squad.wound_text(wound)], Color("#8a1f15"))
+		wt.name = "Wound"
+		mid.add_child(H.margin(wt, 2, 0, 0, 0))
 	row.add_child(mid)
 
 	# Status tags, Redo, abilities.
@@ -787,6 +792,16 @@ static func unit_info(view: Object, u: Dictionary) -> Control:
 	var chips := status_chips(u)
 	if chips != null:
 		col.add_child(H.margin(chips, 4, 0, 0, 0))
+	var wound: Variant = u.get("wound")
+	if wound != null:
+		var wl: String
+		if wound.kind == "injured":
+			wl = "Injured in its last fight: %s. Cut down again, the squad is gone for good." % Squad.wound_text(wound)
+		else:
+			wl = "Wounded in its last fight (%d went down): %s." % [wound.fell, Squad.wound_text(wound)]
+		var wlc := _small(wl, Color("#8a1f15"))
+		wlc.name = "Wound"
+		col.add_child(H.margin(wlc, 4, 0, 0, 0))
 	if u.get("leader"):
 		col.add_child(H.margin(_small("Warband leader: if he falls, his followers lose heart.", Color("#8a1f15")), 4, 0, 0, 0))
 	p.add_child(col)

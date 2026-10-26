@@ -940,3 +940,50 @@ battle deploy captures and day and night close-ups of the fallen wood: 0 errors.
   `tools/cut_art.py` cuts them again. `test_battlefields3d` checks the
   fields, the fog, that every painting loads, and that each field draws its
   pieces and decor without the weeping willow.
+
+### 2026-10-26 - Rule: the fallen rise wounded; a cut-down squad rises Injured
+
+The owner's rule (rules chat). It replaces field triage and the downed sergeant.
+
+- Soldiers who go down stay down for the rest of the fight, then get back up
+  (`Expedition.apply_battle`): the squad keeps every soldier it marched with,
+  the survivors keep their scratches and the fallen return with a full share.
+  The squad carries their wounds into its next fight only (`wounded` on the
+  roster squad; `Squad.wound_of`): for the whole squad's worth of fallen, 30%
+  less damage (`Battle.preview`, `_spell_damage`), 30% less defense and
+  ranged defense and 30 less morale at the start (`Soldier.soldier_to_unit`).
+  Two of six down: −10%, −10 morale. Hit chance is untouched. The next fight
+  spends the penalty and sets a new one from its own fallen.
+- A squad cut down to the last rises whole (full pool and morale) but Injured
+  (`injured`): −40% damage and defense, −30 morale. Cut down again while
+  Injured, it is dead (`Battle._fall`) and leaves the roster. The 50% chance
+  that a downed squad was left behind after a defeat is gone, as are the
+  survival roll in `_fall`, `FALL_SURVIVAL_BASE`, `Expedition.survival_bonus`,
+  the setup's `survivalBonus`, the lasting injury of a downed squad and the
+  bandage spent on it.
+- Remedies: a camp rest with full rations dresses every squad's wounds; a
+  bandage dresses one squad's (allowed at full HP when it carries a wound).
+  `Expedition.tend_wounds` clears them; relics and command abilities are to
+  come. The penalty survives the return to Amberfeld: it is spent in the
+  squad's next fight, whenever that is.
+- The Infirmary loses its survival bonus (it only lowers treatment costs now);
+  its descriptions, its panel and the Field Manual say so.
+- HUD and screens: a Wounded (n) / Injured tag with its effect on squad cards,
+  a line in the battle unit panel and hover panel, a card in the squad detail,
+  a tag in the report's returned list. Report keys: `losses[].fate` is
+  `wounded`, `injured` or `gone` with `fell`; `injured` lists the Injured
+  squads (was `wounded`, the injuries); `bandagesUsed` is gone.
+- Goldens: battle traces re-recorded (`MERIDIUS_RECORD=1 tools/test.sh
+  test_battle_parity`): a company squad cut down is now downed, never rolled
+  dead, and its log line reads "cut down to the last; the wounded are dragged
+  clear". `setup_golden.json` has no recorder: `test_setup_parity` drops the
+  recorded `survivalBonus` from the expected setups and compares every other
+  field as recorded. `meta_golden.json` has no recorder either:
+  `test_meta_parity` drops the Infirmary's `survival` effect from the recorded
+  queries and reads its level descriptions from today's data.
+  `campaign_golden.json` was re-recorded by the same run
+  (`test_campaign_parity`, already under way); it was not run again to check
+  it, as the owner wants no whole-campaign test for each rule change.
+- Tests: `test_meta_squads` (rising wounded, the penalty in the next fight and
+  spent by it, Injured then gone, enemies dead, less damage in the preview,
+  camp rest and bandage), `test_ui_widgets` (the tags).

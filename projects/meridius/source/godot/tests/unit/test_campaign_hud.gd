@@ -415,7 +415,7 @@ func test_battle_result_from_a_real_battle() -> void:
 	if n == null:
 		skip("no battle node")
 		return
-	var setup := Setup.build_battle(n.encounter, Expedition.battle_army(g), {"survivalBonus": Expedition.survival_bonus(g), "title": "Test fight", "darkness": false})
+	var setup := Setup.build_battle(n.encounter, Expedition.battle_army(g), {"title": "Test fight", "darkness": false})
 	var b = Battle.new(setup)
 	Autoplay.auto_battle(b)
 	Expedition.apply_battle(g, b, "Test fight", false)

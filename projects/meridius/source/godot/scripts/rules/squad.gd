@@ -9,6 +9,7 @@
 extends RefCounted
 
 const DB = preload("res://scripts/data/db.gd")
+const JS = preload("res://scripts/core/js.gd")
 
 
 ## Soldiers still standing with `hp` left, never more than `cap` (the dead stay dead).
@@ -41,6 +42,43 @@ static func heal_squad(s: Dictionary, amount: Variant) -> Variant:
 ## Soldiers a hit of `damage` would kill.
 static func kills_from(s: Dictionary, damage: Variant) -> int:
 	return s.alive - alive_for(s.hp - damage, s.hpPer, s.alive)
+
+
+# ---------------------------------------------------------------- wounds
+
+## Soldiers who go down in a fight rise again after it, but the squad carries
+## their wounds into its next fight: for the whole squad's worth of fallen,
+## 30% less damage and defense and 30 less morale (2 of 6 down: 10%, 10).
+const WOUND_PENALTY := 0.3
+const WOUND_MORALE := 30
+## A squad cut down to the last soldier rises Injured: 40% less damage and
+## defense, 30 less morale, and gone for good if it is cut down again.
+const INJURED_PENALTY := 0.4
+const INJURED_MORALE := 30
+
+
+## The penalty a roster squad (`wounded`, `injured`) carries into its next fight:
+## {kind: "wounded" | "injured", fell, damage, defense, morale}, or null.
+static func wound_of(s: Dictionary) -> Variant:
+	var size: int = DB.squad_size(s.typeId)
+	if s.get("injured", false):
+		return {"kind": "injured", "fell": size, "damage": INJURED_PENALTY, "defense": INJURED_PENALTY, "morale": INJURED_MORALE}
+	var fell: int = s.get("wounded", 0)
+	if fell <= 0:
+		return null
+	var share := float(fell) / size
+	return {"kind": "wounded", "fell": fell, "damage": WOUND_PENALTY * share, "defense": WOUND_PENALTY * share, "morale": JS.rnd(WOUND_MORALE * share)}
+
+
+## Damage multiplier of a BattleUnit carrying wounds from its last fight.
+static func wound_mult(u: Dictionary) -> float:
+	var w: Variant = u.get("wound")
+	return 1.0 - w.damage if w != null else 1.0
+
+
+## "−10% damage and defense, −10 morale".
+static func wound_text(w: Dictionary) -> String:
+	return "−%d%% damage and defense, −%d morale" % [JS.rnd(w.damage * 100), w.morale]
 
 
 ## "soldier" or "soldiers" in the unit's own words: "goblin spearman", "moss trolls", "crewman" of a war machine.

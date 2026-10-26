@@ -254,7 +254,7 @@ func test_no_two_squads_ever_share_a_tile() -> void:
 			army.append(Soldier.soldier_to_unit(s))
 		for enc in DB.ENCOUNTERS:
 			var roll := Setup.roll_encounter(enc.id, Rng.new(seed * 131 + 7), 1)
-			var b = Battle.new(Setup.build_battle(roll, army.duplicate(true), {"survivalBonus": 0, "title": enc.id, "darkness": false}))
+			var b = Battle.new(Setup.build_battle(roll, army.duplicate(true), {"title": enc.id, "darkness": false}))
 			b.begin(Ai.run_enemy_ai)
 			var where := ""
 			while not b.is_over() and b.turn <= 30 and where == "":

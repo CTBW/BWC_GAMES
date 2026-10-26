@@ -162,7 +162,7 @@ func _soldier(g: Dictionary, id: Variant) -> Variant:
 func _battle_of(g: Dictionary) -> Dictionary:
 	var p: Dictionary = g.expedition.pending
 	var night := Expedition.prepare_night(g)
-	var setup := Setup.build_battle(p.roll, Expedition.battle_army(g), {"survivalBonus": Expedition.survival_bonus(g), "title": p.title, "darkness": night.darkness})
+	var setup := Setup.build_battle(p.roll, Expedition.battle_army(g), {"title": p.title, "darkness": night.darkness})
 	return {"p": p, "b": Battle.new(setup)}
 
 
@@ -179,7 +179,6 @@ func _queries(g: Dictionary) -> Dictionary:
 		"canMarch": ex.nodes.map(func(n: Dictionary) -> bool: return Expedition.can_march(g, n.id)),
 		"views": ex.nodes.map(func(n: Dictionary) -> Dictionary: return Expedition.node_view(n)),
 		"rationCost": Expedition.ration_cost(g),
-		"survivalBonus": Expedition.survival_bonus(g),
 		"army": Expedition.army_soldiers(g).map(func(s: Dictionary) -> String: return s.id),
 		"battleArmy": Expedition.battle_army(g),
 		"bandageHeal": Expedition.army_soldiers(g).map(func(s: Dictionary) -> int: return Expedition.bandage_heal(s)),
@@ -446,7 +445,7 @@ func _script_outcome(g: Dictionary, drv) -> Array:
 	# Mirror _battle_of without touching the game: build on copies to read the units.
 	var copy: Dictionary = H.jsonable(g)
 	var night := Expedition.prepare_night(copy)
-	var setup := Setup.build_battle(H.jsonable(p.roll), Expedition.battle_army(copy), {"survivalBonus": Expedition.survival_bonus(copy), "title": p.title, "darkness": night.darkness})
+	var setup := Setup.build_battle(H.jsonable(p.roll), Expedition.battle_army(copy), {"title": p.title, "darkness": night.darkness})
 	var changes: Array = []
 	for u in setup.units:
 		if u.status == "reserve" and drv.chance(0.6):

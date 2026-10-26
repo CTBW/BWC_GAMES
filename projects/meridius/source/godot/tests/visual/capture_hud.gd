@@ -183,7 +183,7 @@ func _run() -> void:
 	# A battle result from a real (auto-played) battle.
 	var bn: Variant = _node_of_type("battle")
 	if _want("dialog_battleResult"):
-		var setup := Setup.build_battle(bn.encounter, Expedition.battle_army(g), {"survivalBonus": Expedition.survival_bonus(g), "title": "%s at %s" % [DB.encounter_by_id(bn.encounter.encounterId).name, bn.name], "darkness": false})
+		var setup := Setup.build_battle(bn.encounter, Expedition.battle_army(g), {"title": "%s at %s" % [DB.encounter_by_id(bn.encounter.encounterId).name, bn.name], "darkness": false})
 		var b = Battle.new(setup)
 		Autoplay.auto_battle(b)
 		var keep_roster: Array = g.roster.duplicate(true)

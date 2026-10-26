@@ -22,8 +22,9 @@ squad, never individual soldiers.
   HP and 10 per soldier: 60–51 → 6, 50–41 → 5, … 10–1 → 1, 0 → destroyed.
 - One heavy blow can cross several thresholds and kill several soldiers.
 - Healing (bandages, rest, troll regeneration) refills the survivors' shares
-  only. The dead stay dead. Reinforcement at the Barracks is the only way to
-  bring a squad back to strength.
+  only; in battle the fallen stay down. After the fight they get back up,
+  wounded (see below). Reinforcement at the Barracks is the only way to
+  replace soldiers lost for good.
 - A squad that marches out wounded starts with the soldiers its HP can carry.
 - Helpers: `src/battle/squad.ts` (`aliveFor`, `damageSquad`, `healSquad`,
   `killsFrom`); roster side in `src/meta/soldier.ts` (`men`, `squadHpCap`,
@@ -31,18 +32,27 @@ squad, never individual soldiers.
 
 ## After the battle
 
-- **Field triage** (`applyBattle` in `src/campaign/expedition.ts`): once the
-  fighting is over, every soldier who fell gets the survival roll a lone
-  soldier always had (`FALL_SURVIVAL_BASE` 45%, +5% per level, + Infirmary and
-  bandage bonus), ×1.25 when the field is held, ×0.9 after a withdrawal, ×0.4
-  after a defeat, capped at 85%. Those found rejoin their squad with 30% of a
-  share. It happens only after the battle and is reported per squad; in battle
-  the fallen stay down. A squad wiped out to the last gets no triage.
-- **Downed squad**: the whole squad fell but its sergeant lives (the old
-  survival roll); he keeps the squad with 1 soldier plus any found by triage.
+Godot rule since 2026-10-26 (`apply_battle` in `scripts/campaign/expedition.gd`,
+`wound_of` in `scripts/rules/squad.gd`). It replaces field triage and the
+downed sergeant.
+
+- **The fallen rise wounded**: soldiers who go down are out until the fight
+  ends, then get back up. The squad keeps every soldier it marched with; the
+  survivors keep their scratches and the fallen return with a full share.
+- **The penalty is for the next fight only**: for the whole squad's worth of
+  fallen, 30% less damage, 30% less defense and ranged defense and 30 less
+  morale at the start (2 of 6 down: −10%, −10 morale). Hit chance is
+  untouched. That fight spends it and sets a new one from its own fallen. It
+  stays with the squad through the return home until its next fight.
+- **Injured**: a squad cut down to the last rises whole but Injured: −40%
+  damage and defense, −30 morale. Cut down again while Injured, it is gone for
+  good and leaves the roster for the memorial.
+- **Remedies**: a camp rest with full rations dresses every squad's wounds; a
+  bandage dresses one squad's. Relics and command abilities are to come.
 - **Reinforcement** (Barracks, at Amberfeld only): +1 soldier or refill, about
   `recruitCost / size × 0.8` silver per soldier, more for veteran squads. New
-  soldiers arrive at full health. This is the only way to raise `men`.
+  soldiers arrive at full health. Soldiers lost on the road (events, hunger)
+  and squads gone for good are the losses it makes up.
 - Old saves are migrated on load (`migrateSave`): `men = squadSize`, HP scaled
   from one soldier to the squad.
 

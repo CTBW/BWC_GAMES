@@ -3,7 +3,7 @@
 ## An EncounterRoll is a Dictionary {encounterId, mapId, seed, enemies:
 ## [{typeId, level}], ambush, waves: [Wave], allies: [{typeId, level}]}; waves
 ## keep edges in the map template's own terms. A BattleSetup is the Dictionary
-## Battle.new() takes: {seed, map, units, survivalBonus, ambush, enemyFirst,
+## Battle.new() takes: {seed, map, units, ambush, enemyFirst,
 ## darkness?, title, encounterId, kind, objective, waves}. Every wave's squads
 ## are in `units` from the start, as reserves staged off the field.
 ## Use through `const Setup = preload("res://scripts/rules/setup.gd")`.
@@ -283,7 +283,7 @@ static func _stage(map: Dictionary, waves: Array, by_uid: Dictionary) -> void:
 
 
 ## The battle for an encounter roll and the company's squads (BattleUnit
-## dictionaries; they are deployed in place). opts: {survivalBonus, darkness?, title?}.
+## dictionaries; they are deployed in place). opts: {darkness?, title?}.
 static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dictionary:
 	var enc := DB.encounter_by_id(roll.encounterId)
 	var rng := Rng.new(JS.to_i32(roll.seed) ^ 0x5bd1e995)
@@ -378,7 +378,6 @@ static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dic
 		"fogOfWar": opts.get("fogOfWar", true),
 		"map": map,
 		"units": army + allies + enemies + reserve,
-		"survivalBonus": opts.survivalBonus,
 		"ambush": roll.ambush,
 		"enemyFirst": roll.ambush,
 	}

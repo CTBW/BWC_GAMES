@@ -9,6 +9,7 @@ const Deps = preload("res://scripts/ui/deps.gd")
 const Modal = preload("res://scripts/ui/widgets/modal.gd")
 const ResList = preload("res://scripts/ui/widgets/res_list.gd")
 const MenPips = preload("res://scripts/ui/widgets/men_pips.gd")
+const SoldierCard = preload("res://scripts/ui/widgets/soldier_card.gd")
 
 
 func _ready() -> void:
@@ -124,6 +125,8 @@ func refresh() -> void:
 			var nl := UI.label(nm, "SmallLabel")
 			nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			row.add_child(nl)
+			if q.get("wound") != null:
+				row.add_child(SoldierCard.wound_chip(q.wound, 10))
 			row.add_child(MenPips.make(q.men, q.size))
 			losses.add_child(row)
 	else:

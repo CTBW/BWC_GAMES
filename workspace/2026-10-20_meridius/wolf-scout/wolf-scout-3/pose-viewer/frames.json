@@ -1,0 +1,173 @@
+{
+ "clips": {
+  "idle": {
+   "ne": {
+    "file": "sheets/idle_ne.webp",
+    "frames": 120,
+    "cols": 11,
+    "w": 628,
+    "h": 527,
+    "x": 58,
+    "y": 98
+   },
+   "nw": {
+    "file": "sheets/idle_nw.webp",
+    "frames": 120,
+    "cols": 10,
+    "w": 700,
+    "h": 494,
+    "x": 22,
+    "y": 95
+   },
+   "se": {
+    "file": "sheets/idle_se.webp",
+    "frames": 120,
+    "cols": 9,
+    "w": 699,
+    "h": 464,
+    "x": 22,
+    "y": 132
+   },
+   "sw": {
+    "file": "sheets/idle_sw.webp",
+    "frames": 120,
+    "cols": 9,
+    "w": 628,
+    "h": 399,
+    "x": 58,
+    "y": 121
+   }
+  },
+  "sneak": {
+   "ne": {
+    "file": "sheets/sneak_ne.webp",
+    "frames": 32,
+    "cols": 6,
+    "w": 684,
+    "h": 572,
+    "x": 22,
+    "y": 89
+   },
+   "nw": {
+    "file": "sheets/sneak_nw.webp",
+    "frames": 32,
+    "cols": 6,
+    "w": 636,
+    "h": 585,
+    "x": 46,
+    "y": 58
+   },
+   "se": {
+    "file": "sheets/sneak_se.webp",
+    "frames": 32,
+    "cols": 6,
+    "w": 636,
+    "h": 557,
+    "x": 46,
+    "y": 91
+   },
+   "sw": {
+    "file": "sheets/sneak_sw.webp",
+    "frames": 32,
+    "cols": 6,
+    "w": 684,
+    "h": 540,
+    "x": 22,
+    "y": 104
+   },
+   "canvas": [
+    728,
+    720
+   ]
+  },
+  "attack": {
+   "ne": {
+    "file": "sheets/attack_ne.webp",
+    "frames": 62,
+    "cols": 9,
+    "w": 692,
+    "h": 729,
+    "x": 34,
+    "y": 33
+   },
+   "nw": {
+    "file": "sheets/attack_nw.webp",
+    "frames": 62,
+    "cols": 8,
+    "w": 720,
+    "h": 712,
+    "x": 20,
+    "y": 42
+   },
+   "se": {
+    "file": "sheets/attack_se.webp",
+    "frames": 62,
+    "cols": 8,
+    "w": 720,
+    "h": 698,
+    "x": 20,
+    "y": 32
+   },
+   "sw": {
+    "file": "sheets/attack_sw.webp",
+    "frames": 62,
+    "cols": 8,
+    "w": 692,
+    "h": 688,
+    "x": 34,
+    "y": 22
+   },
+   "canvas": [
+    760,
+    784
+   ]
+  },
+  "death": {
+   "ne": {
+    "file": "sheets/death_ne.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 761,
+    "h": 715,
+    "x": 23,
+    "y": 83
+   },
+   "nw": {
+    "file": "sheets/death_nw.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 766,
+    "h": 752,
+    "x": 21,
+    "y": 58
+   },
+   "se": {
+    "file": "sheets/death_se.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 766,
+    "h": 773,
+    "x": 21,
+    "y": 55
+   },
+   "sw": {
+    "file": "sheets/death_sw.webp",
+    "frames": 69,
+    "cols": 9,
+    "w": 761,
+    "h": 791,
+    "x": 23,
+    "y": 20
+   },
+   "canvas": [
+    808,
+    848
+   ]
+  }
+ },
+ "fps": 30,
+ "canvas": [
+  744,
+  720
+ ]
+}

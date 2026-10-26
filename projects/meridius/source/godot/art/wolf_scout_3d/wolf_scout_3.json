@@ -1,0 +1,77 @@
+{
+  "revision": "wolf-scout-3-v1",
+  "source": "art/wolf_scout_3d/wolf_scout_3.blend",
+  "rig": "art/wolf_scout_3d/wolf_scout_3_rig.blend",
+  "fps": 30,
+  "height_m": 1.94,
+  "forward": [
+    0,
+    0,
+    1
+  ],
+  "roles": {
+    "idle": "idle",
+    "walk": "sneak",
+    "attack": [
+      "attack"
+    ],
+    "death": "death"
+  },
+  "objects": [
+    "WolfScout3_Body",
+    "WolfScout3_Cloak",
+    "WolfScout3_Dagger.Left",
+    "WolfScout3_Dagger.Right"
+  ],
+  "bones": 78,
+  "cape": "Five baked bone chains (Cloak.*), no morphs.",
+  "clips": {
+    "idle": {
+      "frames": 121,
+      "length": 4.0,
+      "loop": true,
+      "source": "Crouching - Wolf scout.fbx (held)",
+      "root_motion": false,
+      "events": []
+    },
+    "sneak": {
+      "frames": 33,
+      "length": 1.0666666666666667,
+      "loop": true,
+      "source": "Walk sneak walk- Wolf Scout.fbx",
+      "root_motion": false,
+      "events": [],
+      "speed_mps": 1.830148
+    },
+    "attack": {
+      "frames": 62,
+      "length": 2.033333333333333,
+      "loop": false,
+      "source": "Attack - Wolf scout.fbx",
+      "root_motion": false,
+      "events": [
+        {
+          "time": 0.8,
+          "name": "strike_left"
+        },
+        {
+          "time": 0.8333,
+          "name": "strike_right"
+        }
+      ]
+    },
+    "death": {
+      "frames": 69,
+      "length": 2.2666666666666666,
+      "loop": false,
+      "source": "Death - Wolf Scout.fbx",
+      "root_motion": true,
+      "events": [
+        {
+          "time": 2.2667,
+          "name": "settled"
+        }
+      ]
+    }
+  }
+}

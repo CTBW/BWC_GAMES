@@ -1,0 +1,48 @@
+{
+ "bones": 78,
+ "meshes": [
+  "WolfScout3_Body",
+  "WolfScout3_Cloak",
+  "WolfScout3_Dagger.Left",
+  "WolfScout3_Dagger.Right"
+ ],
+ "clips": {
+  "idle": {
+   "action": "idle",
+   "frame_range": [
+    0.0,
+    120.0
+   ],
+   "max_vertex_error_mm": 0.002
+  },
+  "sneak": {
+   "action": "sneak",
+   "frame_range": [
+    0.0,
+    32.0
+   ],
+   "max_vertex_error_mm": 0.002
+  },
+  "attack": {
+   "action": "attack",
+   "frame_range": [
+    0.0,
+    61.0
+   ],
+   "max_vertex_error_mm": 0.006
+  },
+  "death": {
+   "action": "death",
+   "frame_range": [
+    0.0,
+    68.0
+   ],
+   "max_vertex_error_mm": 0.004
+  }
+ },
+ "textures": [
+  "ws3_body_basecolor",
+  "ws3_cloak_basecolor",
+  "ws3_dagger_basecolor"
+ ]
+}

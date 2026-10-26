@@ -65,17 +65,13 @@ const UNITS := [
 			{"clip": "ChainLightning", "label": "Lightning, full", "missile": "lightning", "reach": 9.0, "hits": ["release"]},
 			{"clip": "FrostNova", "label": "Frost nova, full", "missile": "frost", "reach": 2.6, "hits": ["release"]},
 			{"clip": "EarthFist", "label": "Earth fist, full", "missile": "earth", "reach": 8.0, "hits": ["release"]}]},
-	{"id": "wolf_scout", "title": "Wolf Scout", "faction": "enemy",
-		"model": WOLF + "wolf_scout.fbx", "meta": WOLF + "wolf_scout.json", "reach": 1.3,
-		"blurb": "Raider: twin daggers, and a crouched stealth stance.",
-		"attacks": [{"clip": "attack", "label": "Twin daggers", "reach": 1.3, "hits": ["strike_left", "strike_right"]}],
-		"stances": ["stealth"], "two_sided": ["Cloak"], "no_outline": ["Cloak"]},
-	{"id": "wolf_scout_2", "title": "Wolf Scout 2", "faction": "enemy",
-		"model": WOLF + "wolf_scout_2.glb", "meta": WOLF + "wolf_scout_2.json", "reach": 1.3,
+	# art/wolf_scout_3d/tools/export_wolf_scout_3.py: the rebuilt model, rig and cape.
+	{"id": "wolf_scout_3", "title": "Wolf Scout", "faction": "player",
+		"model": WOLF + "wolf_scout_3.glb", "meta": WOLF + "wolf_scout_3.json", "reach": 1.3,
 		"walk": "sneak",
-		"blurb": "Revised shoulders and cape, with the new sneak walk. Shares Wolf Scout's idle, twin-dagger attack and death motion.",
+		"blurb": "Amberfeld's scout: crouched at rest, both daggers held point back, her hooded cape draped over her back and tail. She sneaks up and strikes with both daggers.",
 		"attacks": [{"clip": "attack", "label": "Twin daggers", "reach": 1.3, "hits": ["strike_left", "strike_right"]}],
-		"two_sided": ["Cloak", "Hood"], "no_outline": ["Cloak", "Hood"]},
+		"two_sided": ["Cloak"], "no_outline": ["Cloak"]},
 	# The Sovereign Kiss is made from a Mixamo clip: it stays in local/ and is
 	# offered where it is on disk (local_clips.gd). Its fog heart is fx3d.gd's "kiss".
 	{"id": "succubus", "title": "Succubus", "faction": "enemy",
@@ -121,8 +117,8 @@ const UNITS := [
 ## shuffled; the variants the sidecar's `faces` and `kit` name), standing in the drill of
 ## squad3d.gd's DRILLS[`drill`] (its id if not given), centred on `home`
 ## (tiles) and facing their side's way (the player's east, the enemy's west).
-## The players' squads stand west of the yard, two lines deep, and the
-## enemy's east of it, a wolf pack on either flank.
+## The players' squads stand west of the yard, two lines deep, the wolf
+## scouts on their south flank, and the enemy's east of it.
 const SQUADS := [
 	{"id": "footman", "title": "Footmen", "units": ["footman"], "size": 6, "home": Vector2(13.0, 16.0),
 		"blurb": "Six footmen in two ranks of three, each in his own time. The front rank strikes while the rear rank stands ready behind it; spread to the line, the rear rank steps up beside it, so all six strike."},
@@ -132,10 +128,8 @@ const SQUADS := [
 		"blurb": "Six crossbows in two chequered ranks. They halt in range with a clear line and loose in volleys: each bolt timed to leave with the others', then each man reloads in his own time. Or at will."},
 	{"id": "mage", "title": "Battle Mages", "units": ["mage"], "size": 3, "home": Vector2(10.6, 14.4),
 		"blurb": "Three mages in a wedge, each casting his own spell when he is ready: fireball, chain lightning, earth fist, or a frost nova at a foe close by. Or in volleys."},
-	{"id": "wolf_scout", "title": "Wolf Scouts", "units": ["wolf_scout"], "size": 3, "home": Vector2(18.6, 13.0),
-		"blurb": "A pack of three in a wedge. They close round the foe, each to a flank, and strike with their twin daggers."},
-	{"id": "wolf_scout_2", "title": "Wolf Scouts 2", "units": ["wolf_scout_2"], "size": 3, "home": Vector2(20.4, 21.6), "drill": "wolf_scout",
-		"blurb": "The revised Wolf Scouts in a pack of three, on their sneak walk: they close round the foe, each to a flank."},
+	{"id": "wolf_scout_3", "title": "Wolf Scouts", "units": ["wolf_scout_3"], "size": 3, "home": Vector2(13.0, 21.6), "drill": "wolf_scout",
+		"blurb": "A pack of three in a wedge, on their sneak walk. They close round the foe, each to a flank, and strike with their twin daggers."},
 	{"id": "succubus", "title": "Succubi", "units": ["succubus"], "size": 3, "home": Vector2(21.0, 14.6),
 		"blurb": "Three succubi in a wide wedge: they spread round the foe at the whip's length and lash it."},
 	{"id": "goblin_rabble", "title": "Goblin Rabble", "units": ["goblin_rabble_knife", "goblin_rabble_hatchet", "goblin_rabble_cleaver"],

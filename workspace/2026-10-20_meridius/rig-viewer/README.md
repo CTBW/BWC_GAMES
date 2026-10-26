@@ -50,6 +50,7 @@ instead of smoothed, so render flaws are not blurred away.
 | Spearman | `spearman_3d/tools/render_clips.sh` | `spearman_3d/tools/pack_sheets.py` |
 | Succubus | `succubus_3d/tools/render_viewer_frames.py` | `crossbowman_3d/tools/build_sheets.py` |
 | Mage | `projects/meridius/review/mage-3d/tools/render_browser_frames.py` | The mage delivery tools beside it |
+| Wolf Scout | `wolf_scout_3d/tools/render_viewer_wolf_scout_3.py` | `crossbowman_3d/tools/build_sheets.py` (scale 0.8), run by `projects/meridius/review/wolf-scout/publish-pose-viewer-wolf-scout-3.mjs` |
 | Goblin Rabble | `projects/meridius/references/characters/blender/goblin_rabble/tools/render_clips.py` | `pack_sheets.py` beside it |
 | Goblin Spearman | `projects/meridius/references/characters/blender/goblin_spear/tools/render_clips.py` | `pack_sheets.py` beside it |
 

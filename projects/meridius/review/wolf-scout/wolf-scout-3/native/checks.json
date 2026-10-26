@@ -1,0 +1,81 @@
+{
+	"checks": [
+		{
+			"check": "Wolf Scout 3 is in the sandbox",
+			"passed": true
+		},
+		{
+			"check": "Exactly four clips",
+			"passed": true
+		},
+		{
+			"check": "Imported clip: idle",
+			"passed": true
+		},
+		{
+			"check": "Imported clip: sneak",
+			"passed": true
+		},
+		{
+			"check": "Imported clip: attack",
+			"passed": true
+		},
+		{
+			"check": "Imported clip: death",
+			"passed": true
+		},
+		{
+			"check": "Sneak playback uses the authored travel speed",
+			"passed": true
+		},
+		{
+			"check": "She is on the Amberfeld side",
+			"passed": true
+		},
+		{
+			"check": "sneak keeps Wolf Scout 2's duration",
+			"passed": true
+		},
+		{
+			"check": "attack keeps Wolf Scout 2's duration",
+			"passed": true
+		},
+		{
+			"check": "death keeps Wolf Scout 2's duration",
+			"passed": true
+		},
+		{
+			"check": "Crouch idle loops over 4 s",
+			"passed": true
+		},
+		{
+			"check": "Move enters sneak",
+			"passed": true
+		},
+		{
+			"check": "Controller moves while sneak plays",
+			"passed": true
+		},
+		{
+			"check": "Stop returns to idle",
+			"passed": true
+		},
+		{
+			"check": "Both hit events dispatch once",
+			"passed": true
+		},
+		{
+			"check": "Attack finishes into idle",
+			"passed": true
+		},
+		{
+			"check": "Death plays and holds its last pose",
+			"passed": true
+		},
+		{
+			"check": "Revive returns to idle",
+			"passed": true
+		}
+	],
+	"errors": []
+}

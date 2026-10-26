@@ -76,8 +76,14 @@ Chrome (`studio.tripo3d.ai`). Ask before every paid action and give its cost
   Several texture jobs can run at once; each took about one minute.
 - The Assets panel mixes older models with new ones, such as a textured knife
   from 01:01. Check the task ID in the URL before charging.
-- With Chrome's "Ask where to save" on, every export waits for the user to
-  click Save. Find the file by its exact name, not by recency.
+- The owner's browser is Brave with "Ask where to save" on, so every export
+  opens a Save dialog. Do not leave it for the owner: give the export a unique
+  name in Tripo's export box, start
+  `scripts/asset-delivery/accept-save-dialog.ps1 -Dir <FBX folder> -Expect
+  <name>.zip` in the background, then press Export. It accepts only a dialog
+  that suggests that exact name. Since 26 October 2026 the zip's entries may
+  carry Tripo's `tripo_convert_<id>` name instead of the export name; pass the
+  observed entry to `collect-tripo.ps1`, and check the faces in Blender.
 - Exported models are normalised to 1 unit on their longest side.
 - Receipts: `projects/meridius/references/characters/goblin_rabble/jobs.json`.
 

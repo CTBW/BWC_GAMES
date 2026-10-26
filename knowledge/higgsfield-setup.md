@@ -16,6 +16,30 @@ Blender 5.2.2 LTS. Every result below comes from real command output.
 | Higgsfield MCP in Claude Code | Connected (local scope); read-only tools verified. |
 | Official skills plugin for Claude Code | Not installed (user's choice). |
 
+## Paying for a generation
+
+The user's rule (25 October 2026): **use Unlimited when it is available for
+the model; otherwise ask the user before spending credits.** It applies to
+every route and extends the image-generation line in `context/preferences.md`.
+
+- **MCP:** right before each job, call `models_explore` with `get` for the
+  model and read its `unlim` block.
+  - With `available: true`, send `use_unlim: true`. It caps `count` at 1, so
+    send one job per image.
+  - With `available: false`, tell the user the model, the number of images and
+    the estimated credits (`get_cost: true` preflights without submitting), and
+    send `use_unlim: false` only after a yes.
+- Leaving `use_unlim` out lets the server decide: it submits nothing and
+  returns `unlim_choice` only when an allowance covers the model. Check
+  `unlim` yourself instead of relying on that.
+- **Website:** check that the Unlimited switch is on (green) before every
+  submission.
+- On 24 October 2026 the MCP reported `supports_unlim: true` but
+  `unlim: {available: false}` for `nano_banana_pro` at four checks. The 3D
+  battlefields paintings (24–25 October) were paid from credits. Unlimited
+  bought for the web app has not been usable from the MCP or the CLI (see
+  "All squads" below).
+
 ## CLI
 
 Install (the README's Windows route):

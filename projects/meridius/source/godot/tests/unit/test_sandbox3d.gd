@@ -2,15 +2,16 @@ extends "res://tests/test_case.gd"
 
 ## The 3D unit sandbox (prototypes/sandbox3d): its map and routes, its fog,
 ## every rigged unit of the roster with the clips the sandbox plays, the
-## footman squad's formation and fight, and every kind's squad: its size,
-## home and drill, how it fights, and how a squad set upon answers (on
-## stand-in men and ground).
+## succubus's kiss heart, the footman squad's formation and fight, and every
+## kind's squad: its size, home and drill, how it fights, and how a squad set
+## upon answers (on stand-in men and ground).
 
 const Field3D = preload("res://prototypes/sandbox3d/scripts/field3d.gd")
 const Fog3D = preload("res://prototypes/sandbox3d/scripts/fog3d.gd")
 const Roster = preload("res://prototypes/sandbox3d/scripts/roster.gd")
 const Squad3D = preload("res://prototypes/sandbox3d/scripts/squad3d.gd")
 const Unit3D = preload("res://prototypes/sandbox3d/scripts/unit3d.gd")
+const KissFX = preload("res://prototypes/sandbox3d/scripts/kiss_fx3d.gd")
 const Relief = preload("res://scripts/render/relief.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
 
@@ -150,6 +151,59 @@ func test_every_rigged_unit_loads_with_its_clips() -> void:
 						"%s %s leaves within arm's reach" % [id, atk.clip])
 		assert_true(attacks > 0, id + " has an attack")
 		u.free()
+
+
+## A stand-in caster for the kiss heart: casting, at her own playback.
+class Caster extends Node3D:
+	var state := "attack"
+	var playback := 1.0
+
+
+## The kiss heart reaches a target 5 m away about half a second after the
+## release (as in the Blender study) and calls `land` once; the heart, its
+## puffs and the veil are gone by 2 s, the mark holds over the target until
+## MARK_HOLD and every card goes back to the pool. A cast cut short before
+## the release lets the heart go and lands nothing.
+func test_kiss_heart_lands_once_and_its_cards_return() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var fx: Node3D = KissFX.new()
+	tree.root.add_child(fx)
+	if not fx.is_node_ready():
+		fx._ready()
+	var caster := Caster.new()
+	var target := Node3D.new()
+	target.position = Vector3(0, 0, 5)
+	tree.root.add_child(caster)
+	tree.root.add_child(target)
+	var landed := []
+	var t := [0.0]
+	fx.launch(caster, target, func(who): landed.append([who, t[0]]))
+	var step := 1.0 / 60.0
+	while t[0] < 2.0:
+		fx._process(step)
+		t[0] += step
+	assert_eq(landed.size(), 1, "the kiss lands once")
+	if landed.size() == 1:
+		assert_true(landed[0][0] == target, "on its target")
+		assert_between(landed[0][1] - KissFX.BREATH, 0.45, 0.58, "seconds from the release to the contact")
+	assert_true(fx._kisses.is_empty() and fx._puffs.is_empty() and fx._veils.is_empty(), "the heart and its fog are gone")
+	assert_eq(fx._marks.size(), 1, "the mark holds")
+	while t[0] < 2.0 + KissFX.MARK_HOLD:
+		fx._process(step)
+		t[0] += step
+	assert_true(fx._marks.is_empty(), "the mark goes")
+	assert_eq(fx._spare.size(), fx._cards, "every card back in the pool")
+	# Cut short: struck before the release.
+	fx.launch(caster, target, func(who): landed.append([who, t[0]]))
+	fx._process(step)
+	caster.state = "hit"
+	for i in 60:
+		fx._process(step)
+	assert_eq(landed.size(), 1, "a cut cast lands nothing")
+	assert_true(fx._kisses.is_empty(), "and its heart goes")
+	assert_eq(fx._spare.size(), fx._cards, "every card back in the pool after the cut")
+	for n in [fx, caster, target]:
+		n.free()
 
 
 ## The brutes' faces and kit: no two men of the squad share a face, each wears

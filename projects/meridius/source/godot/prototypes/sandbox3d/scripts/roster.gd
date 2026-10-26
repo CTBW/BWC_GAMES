@@ -60,10 +60,14 @@ const UNITS := [
 		"blurb": "Revised shoulders and cape, with the new sneak walk. Shares Wolf Scout's idle, twin-dagger attack and death motion.",
 		"attacks": [{"clip": "attack", "label": "Twin daggers", "reach": 1.3, "hits": ["strike_left", "strike_right"]}],
 		"two_sided": ["Cloak", "Hood"], "no_outline": ["Cloak", "Hood"]},
+	# The Sovereign Kiss is made from a Mixamo clip: it stays in local/ and is
+	# offered where it is on disk (local_clips.gd). Its fog heart is fx3d.gd's "kiss".
 	{"id": "succubus", "title": "Succubus", "faction": "enemy",
 		"model": FOOTMAN + "succubus.fbx", "meta": FOOTMAN + "succubus.json", "reach": 2.3,
-		"blurb": "Whip lash with its slash effects, and an idle flourish now and then.",
-		"attacks": [{"clip": "attack", "label": "Whip lash", "reach": 2.3, "hits": ["strikes"]}],
+		"local_clips": "local/succubus_3d/godot/succubus_kiss",
+		"blurb": "Whip lash with its slash effects, an idle flourish now and then, and the Sovereign Kiss's fog heart where its clip is on disk.",
+		"attacks": [{"clip": "attack", "label": "Whip lash", "reach": 2.3, "hits": ["strikes"]},
+			{"clip": "sovereign_kiss", "label": "Sovereign Kiss", "missile": "kiss", "reach": 6.0, "hits": ["kiss_breath"]}],
 		"fx": "whip", "full_detail": ["Lash"], "thin_outline": ["Lash"]},
 	{"id": "goblin_rabble_knife", "title": "Goblin Rabble · knife", "faction": "enemy",
 		"model": GOBLIN + "goblin_rabble_knife.glb", "meta": GOBLIN + "goblin_rabble_knife.json", "reach": 1.0,

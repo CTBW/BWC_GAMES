@@ -8,8 +8,10 @@
 ##   lightning  a jagged bolt flickering from the hand to the target
 ##   frost      a ring of frost swelling from the caster's feet
 ##   earth      a fist of rock bursting from the ground under the target
+##   kiss       the succubus's Sovereign Kiss: a fog heart through the target (kiss_fx3d.gd)
 extends Node3D
 
+const KissFX = preload("res://prototypes/sandbox3d/scripts/kiss_fx3d.gd")
 const GLOW_TEX_SIZE := 64
 
 ## (x, z) -> ground height; set by the sandbox.
@@ -18,10 +20,14 @@ var _glow: Texture2D
 var _ring: Texture2D
 var _live: Array = []
 var _rng := RandomNumberGenerator.new()
+var _kiss: Node3D
 
 
 func _ready() -> void:
 	_rng.seed = 9091
+	_kiss = KissFX.new()
+	_kiss.name = "Kiss"
+	add_child(_kiss)
 	var g := Gradient.new()
 	g.set_color(0, Color(1, 1, 1, 1))
 	g.set_color(1, Color(1, 1, 1, 0))
@@ -100,6 +106,9 @@ func _flat(tex: Texture2D, color: Color, size: float) -> MeshInstance3D:
 ## Loose a missile of `kind` from `who` at `target`; `land` is called with the
 ## target when it strikes (at once for the frost, which strikes all round).
 func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
+	if kind == "kiss":
+		_kiss.launch(who, target, land)
+		return
 	var h: float = who.height_m() if who.has_method("height_m") else 1.8
 	var from := who.global_position + Vector3(0, h * 0.72, 0) + _facing(who) * 0.45
 	# A unit whose sidecar says where its missile leaves (the archer's arrow, at the bow).
@@ -225,6 +234,7 @@ func clear() -> void:
 		for n in e.nodes:
 			n.queue_free()
 	_live.clear()
+	_kiss.clear()
 
 
 func _process(dt: float) -> void:

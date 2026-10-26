@@ -20,7 +20,8 @@ brings an open one to the front).
 The roster: footman (his own controller: start and stop, turns on the planted
 foot, block, lane step, shield charge), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
-stealth stance), succubus (whip lash with its slash effects), the goblin
+stealth stance), succubus (whip lash with its slash effects, and the
+Sovereign Kiss where its clip is on disk), the goblin
 rabble in its three loadouts (knife, hatchet, cleaver: one chop each, with the
 barrel-bottom or plank shield), the goblin archer (horn bow, arrows), the
 goblin spearman (a two-handed spear thrust) and the orc brute (a spiked club,
@@ -88,6 +89,28 @@ one to each man, shuffled: jaw, beard, scar, beard and scar, jaw and scar, and
 one bare; its `kit`, shuffled on its own, takes the left pauldron off one man
 and the right off another. Its `units` make two of the six men two-club
 brutes. The brutes on the bench are bare, in full kit.
+
+The **Succubus** has a second attack, the **Sovereign Kiss** (key 2): she
+blows a kiss and a pink fog heart flies from her lips through the target,
+the Blender study's (`art/succubus_3d/README.md`, "Sovereign Kiss (fog
+heart)") in the game. Its clip is made from a Mixamo clip, so it is not in
+Git: `art/succubus_3d/tools/export_kiss_godot.py` exports her rig with the
+one clip to `local/succubus_3d/godot/succubus_kiss.fbx` and its sidecar
+beside it, and `scripts/local_clips.gd` adds it to her model at run time
+where it is on disk (the profile's `local_clips`). Without it she has her
+whip only. The heart (`scripts/kiss_fx3d.gd`, `shaders/fog_heart.gdshader`
+and the two shapes in `art3d/kiss_*_sdf.png`) starts at the clip's
+`kiss_breath` (0.533 s): the breath gathers at her lips and the heart forms
+there, leaves at `kiss_release` (0.7 s) 0.25 m wide, flies at 10 m/s at the
+target's chest, following it, and is 1.2 m wide when its middle reaches it,
+about 0.5 s later from 5 m (her reach is 6 m). A veil of fog washes over the
+target, an enthrall mark fades in over its head and follows it for 4 s (a
+placeholder for the status; it goes if the target dies), and the heart flies
+on, eroding into wisps, gone 0.5 s after the contact. It keeps her playback,
+so the time scale slows it with her, and a cast cut short before the release
+lets it go. It does nothing to the target yet (the sandbox only says it
+reached it), and only the target it was cast at is marked. The succubi's
+squad keeps to the whip (its drill's `attacks`).
 
 The footman's model (`footman.glb`), the wolf scout's export and the goblins'
 GLBs, the archer's, the spearman's and the orc brute's too (their sidecars are in Git), are not in Git. Where they are missing, the
@@ -239,13 +262,18 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   footman's own controller (`prototypes/footman_anim/scripts/footman3d.gd`)
   behind the same interface.
 - `scripts/fx3d.gd`: sparks, the bolt, the arrow, fireball, chain lightning,
-  frost nova and earth fist. A missile leaves from its unit's
-  `missile_from()` where the sidecar gives the attack a `shot_from`.
-- `shaders/`: the ground (relief bake, fog, grid, route marks, hover) and the
-  painted cards.
+  frost nova and earth fist, and the succubus's kiss (`scripts/kiss_fx3d.gd`).
+  A missile leaves from its unit's `missile_from()` where the sidecar gives
+  the attack a `shot_from`.
+- `scripts/local_clips.gd`: clips kept out of Git (the succubus's kiss),
+  loaded from `local/` at run time onto a unit's model.
+- `shaders/`: the ground (relief bake, fog, grid, route marks, hover), the
+  painted cards and the kiss's fog (`fog_heart.gdshader`).
 - `art3d/`: the spearman, crossbowman and battle mage exports with their
-  sidecars. The footman and succubus are read from `prototypes/footman_anim/art3d`,
-  the wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble
+  sidecars, and the kiss heart's two shapes (`kiss_heart_sdf.png`,
+  `kiss_puff_sdf.png`: distance from the edge, imported lossless). The
+  footman and succubus are read from `prototypes/footman_anim/art3d`, the
+  wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble
   from `prototypes/goblin_rabble_anim/art3d`, the archer from
   `prototypes/goblin_archer_anim/art3d`, the goblin spearman from
   `prototypes/goblin_spear_anim/art3d` and the orc brute from
@@ -277,7 +305,9 @@ roles and attacks itself. A profile whose files are missing is left out.
   the foe nearest him; both ranks of spears strike from their places; two
   volleys of six; a wedge closes round its foe; a squad set upon answers, each
   man struck strikes back and the fight ends; a squad at rest strikes back
-  from its places).
+  from its places), and the kiss heart's course on a stand-in caster (it
+  lands once, about 0.5 s after the release from 5 m, its cards go back to
+  the pool, and a cast cut short lands nothing).
 - Review captures in a real window (all shots, or those starting with a prefix):
   ```
   tools/godot.sh --path . --audio-driver Dummy res://prototypes/sandbox3d/scenes/sandbox3d.tscn -- --capture=res://tests/visual/out/sandbox3d [--shots=strike]
@@ -285,10 +315,15 @@ roles and attacks itself. A profile whose files are missing is left out.
   The field, the yard at game zoom and close, every unit (and a close
   portrait), a march over the hill, the fog by day and night, the night, the
   pond, every unit's strike at its blow, a duel (footman and wolf scout, who
-  strikes back), a lethal thrust and the mage's four spells. `--shots=squad`
+  strikes back), a lethal thrust, the mage's four spells and the succubus's
+  kiss. `--shots=squad`
   takes the squad's: the start view, its ranks, the march to the drill line,
   the front rank's blows, the re-formed ranks, the line of six, a march north
-  and a lone foe, and prints who struck when (`SQUAD` lines). `--shots=army`
+  and a lone foe, and prints who struck when (`SQUAD` lines). `--shots=kiss`
+  takes only the Sovereign Kiss's (where its clip is on disk), cast from 5 m
+  at a quarter of the speed: close, the breath, the flight, the contact, the
+  dissolve and the mark; at the game's zoom, the flight and the contact with
+  the effect and without it; then at the spearman. `--shots=army`
   takes only the squads' shots: every squad at home (a squad with faces also
   close up, turned to the camera), the bench, then a battle
   and a battle with lethal blows (the advance, the clash, each squad close in
@@ -320,5 +355,9 @@ roles and attacks itself. A profile whose files are missing is left out.
 - The crossbowman's walk speed (1.19 m/s) comes from local Mixamo sources.
 - The wolf scout, the goblins and the orc brute have no hit clip; they flinch
   procedurally.
+- The Sovereign Kiss is a view only: no status, no effect on the target, and
+  only the target it was cast at is marked. Her Godot model has no face shape
+  keys yet, so the kiss's pucker and exhale (`Kiss_Pucker`, `Exhale`) do not
+  show.
 - The goblins' walk is in place; its planted foot slides about 4% slower than
   the walk's root speed (`speed_footlock_mps` 0.8197 against 0.8555 m/s).

@@ -24,6 +24,7 @@ signal clip_event(name: String)
 
 const OUTLINE := preload("res://prototypes/footman_anim/shaders/outline3d.gdshader")
 const WhipFX = preload("res://prototypes/footman_anim/scripts/whip_fx.gd")
+const LocalClips = preload("res://prototypes/sandbox3d/scripts/local_clips.gd")
 const BLEND := 0.2
 ## Turning on the spot and on the march (radians a second).
 const TURN_RATE := deg_to_rad(420.0)
@@ -82,6 +83,9 @@ func _ready() -> void:
 	player = model.find_children("*", "AnimationPlayer", true, false)[0]
 	var sks := model.find_children("*", "Skeleton3D", true, false)
 	skeleton = sks[0] if not sks.is_empty() else null
+	# Clips kept out of Git (the succubus's kiss), where they are on disk.
+	if profile.has("local_clips") and skeleton:
+		meta.clips.merge(LocalClips.add(player, skeleton, String(profile.local_clips)))
 	_read_clips()
 	# Roles the sidecar names (the spearman's and crossbowman's exports) fill
 	# what the profile leaves open.

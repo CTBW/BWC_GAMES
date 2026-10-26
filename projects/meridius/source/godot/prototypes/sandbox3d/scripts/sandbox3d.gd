@@ -1204,6 +1204,11 @@ func _on_release(target: Node3D, kind: String, who: Node3D) -> void:
 
 
 func _missile_land(target: Node3D, who: Node3D, kind: String) -> void:
+	# The kiss is a view only for now: it marks the target and does nothing to it.
+	if kind == "kiss":
+		var whom: String = target.title() if target and target.has_method("title") else String(target.name) if target else "no one"
+		_flash("%s: the Sovereign Kiss reaches %s (no effect yet)" % [who.title(), whom])
+		return
 	if kind == "frost":
 		for n in units + dummies:
 			if _hostile(who, n) and _alive(n) and n.position.distance_to(who.position) < 3.4:
@@ -1669,8 +1674,8 @@ func _hud() -> void:
 # --- Captures ------------------------------------------------------------------------------
 
 ## Review shots of the field, every unit, a march over the hill, the fog and
-## the night, every unit's strike caught at its blow, a duel and the mage's
-## spells, then quit:
+## the night, every unit's strike caught at its blow, a duel, the mage's
+## spells and the succubus's kiss, then quit:
 ##   tools/godot.sh --path . <this scene> -- --capture=<dir> [--shots=<prefix>]
 ## With --shots only the shots whose names start with the prefix are saved
 ## (the scenes before them still play, so the state is the same).
@@ -1685,6 +1690,10 @@ func _capture(dir: String, only := "") -> void:
 	if only.begins_with("army"):
 		# The squads' shots start from a reset field: no need to play the rest first.
 		await _army_shots()
+		get_tree().quit()
+		return
+	if only.begins_with("kiss"):
+		await _kiss_shots()
 		get_tree().quit()
 		return
 	var yard: Vector3 = field.on_ground(Field3D.YARD) + Vector3(0, 0.8, 0)
@@ -1776,7 +1785,55 @@ func _capture(dir: String, only := "") -> void:
 			await _await_blow(mage, 8.0)
 			var kind := String(mage.attack_info(i).get("missile", "spell"))
 			await _shot("spell_" + kind, 2.0, Vector3.INF, 0.18 if kind != "earth" else 0.45)
+	await _kiss_shots()
 	get_tree().quit()
+
+
+## The succubus's Sovereign Kiss (--shots=kiss plays only these), where her
+## kiss clip is on disk: cast from 5 m at a dummy at a quarter of the speed,
+## so each moment is caught on time (seconds from kiss_breath): close, the
+## breath and the forming heart, the flight, the contact, the dissolve and the
+## enthrall mark; at the game's zoom, the flight and the contact with the
+## effect and without it; then at the spearman, whom the mark follows.
+func _kiss_shots() -> void:
+	var succ := _unit("succubus")
+	var i := -1
+	if succ:
+		for a in succ.actions():
+			var j := int(String(a.id).get_slice(":", 1))
+			if String(a.id).begins_with("attack:") and succ.attack_info(j).get("missile", "") == "kiss":
+				i = j
+	if i < 0:
+		print("CAPTURE no Sovereign Kiss: her clip is not on disk")
+		return
+	_set_speed(0.25)
+	var close := [["form", 0.14], ["flight", 0.42], ["contact", 0.69], ["dissolve", 0.95], ["mark", 1.6]]
+	var game := [["flight", 0.42], ["contact", 0.69]]
+	var casts := [["kiss_", dummies[0], 3.2, close, true], ["kiss_game_", dummies[0], 1.0, game, true],
+		["kiss_game_off_", dummies[0], 1.0, game, false]]
+	var spear := _unit("spearman")
+	if spear:
+		casts.append(["kiss_unit_", spear, 3.2, [["contact", 0.69], ["mark", 1.6]], true])
+	for c in casts:
+		reset_field()
+		var d: Node3D = c[1]
+		succ.position = d.position + Vector3(-1, 0, 0.35).normalized() * 5.0
+		succ.rotation.y = atan2(d.position.x - succ.position.x, d.position.z - succ.position.z)
+		fx.visible = c[4]
+		_select([succ])
+		await _shot("", c[2], succ.position.lerp(d.position, 0.6) + Vector3(0, 1.0, 0), 0.4)
+		order_attack(succ, d, i)
+		await _await_blow(succ, 12.0)
+		# Her time (the kiss keeps her playback), not the clock's: saving a
+		# shot holds the game back.
+		var t := 0.0
+		for m in c[3]:
+			while t < m[1]:
+				await get_tree().process_frame
+				t += get_process_delta_time() * succ.playback
+			await _shot(c[0] + m[0], c[2], Vector3.INF, 0.0)
+	fx.visible = true
+	_set_speed(1.0)
 
 
 ## The squad's shots: its ranks at rest, the march to the drill line, the

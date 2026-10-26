@@ -101,7 +101,8 @@ The cast for the Sovereign Kiss ability (26 October 2026), to the handoff in
 `workspace/2026-10-20_meridius/sovereign-kiss/blender-handoff-fog.md` ("Character and
 cast"), from the user's "Blow A Kiss - Succubus-German Shepherd girl" Mixamo clip (137
 frames, 4.5 s). It lives in the local blend (see Files), not in `succubus_anim.blend`, and
-is not exported yet. Its fog heart is under "Sovereign Kiss (fog heart)" below.
+is exported only for the 3D sandbox, into `local/` (see Delivery). Its fog heart is under
+"Sovereign Kiss (fog heart)" below.
 
 - **Her right hand.** The source blows the kiss with its left hand, her whip hand, so the
   clip is mirrored (`mirror`); her left arm is held in `idle`'s first pose, relative to her
@@ -283,9 +284,28 @@ black haze over the whole frame (alpha 1–20 of 255); the sandbox takes that le
 a shock ring and streaks at each crack, a short flare behind it and a trail behind the tip);
 `-- --capture=<dir> --shots=fx_` captures them at held clip times, with and without.
 
+**Sovereign Kiss in the 3D sandbox.** From the local blend, after `kiss_heart.py`
+(`L` as under Rebuild; the second path is the sandbox's `art3d/`):
+
+```sh
+"$B" -b "$L" --python tools/export_kiss_godot.py -- "E:/ProjektM/BWC_GAMES-godot/local/succubus_3d/godot/succubus_kiss.fbx" ../../prototypes/sandbox3d/art3d
+```
+
+`export_kiss_godot.py` saves nothing. It bakes the forearm twist bones into
+`sovereign_kiss` and exports `SuccubusRig` alone (its deforming bones, no meshes) with that
+one clip, as `export_godot.py` exports her, to `local/` (the clip is made from a Mixamo
+clip), with its sidecar beside it: length, frames, the events `kiss_breath` (0.533 s, where
+the heart's breath starts gathering, five frames before the release) and `kiss_release`
+(0.7 s), `shot_from` (where the heart leaves: `KissSocket`'s tail at the release, in the
+model's axes) and `socket` (that point at every frame). It also writes the heart's and the
+puff's shapes (`kiss_heart_sdf.png`, `kiss_puff_sdf.png`, 256 px) into the sandbox's
+`art3d/`. The sandbox adds the clip to her model at run time where it is on disk and flies
+the heart from it (`prototypes/sandbox3d/README.md`, the Succubus). The face's shape keys
+are not in her Godot model yet.
+
 ## Not done yet
 
 - Nothing is wired into the game; the FBX plays only in the prototype sandbox.
-- The Sovereign Kiss is not exported, and its fog heart is a Blender study only (no Godot
-  version, one caster, study range and speed).
+- The Sovereign Kiss is exported only for the 3D sandbox (from `local/`, without its face
+  shape keys), where its fog heart plays as a view only: no status, one target marked.
 - The lash's strikes are stored as events but nothing in the game uses them yet.

@@ -25,6 +25,7 @@
 # So do the spearman's rig and the spearman's, crossbowman's and battle mage's
 # GLBs (their sidecars and textures are in Git).
 /art/spearman_3d/spearman_rig.blend
+/art/crossbowman_3d/crossbowman_rig.blend
 /prototypes/sandbox3d/art3d/spearman.glb
 /prototypes/sandbox3d/art3d/spearman.glb.import
 /prototypes/sandbox3d/art3d/crossbowman.glb

@@ -21,6 +21,14 @@ Options per clip:
   ground     lift the hips wherever her skinned body dips below the ground, smoothed (the
              death sank her 15-27 cm in: she is bulkier than Mixamo's mannequin); the paws
              may still sink GROUND_PAW_SINK
+  mirror     left for right: each bone takes its mirror twin's motion, mirrored across her
+             middle (the kiss: the source blows it with the left hand, her whip hand)
+  retime     ((frame, source frame), ...): the clip's frames sampled from the source at
+             those times, linearly between them (fractions allowed)
+  lower      a clip name: her hips and legs held in its first pose for the whole clip, the
+             rest following the source in world space (feet planted, no slide)
+  local      built only when named on the command line, never by default: the clip goes
+             into a local blend, not succubus_anim.blend (see README, Sovereign Kiss)
 Clips that keep their travel (walk_start, walk_stop) store it in the hips' location.
 """
 import math
@@ -48,12 +56,25 @@ CLIPS = {
     "attack": ("Attack - Succubus-German Shepherd.fbx", {}),
     "hit": ("Hit - Succubus-German Shepherd.fbx", {"blend_in": ("idle", 8), "blend_out": ("idle", 10), "yaw": 38}),
     "death": ("Death - Succubus-German Shepherd.fbx", {"blend_in": ("idle", 8), "ground": True}),
+    # The Sovereign Kiss cast (26 Oct 2026). The source blows the kiss with her left hand;
+    # the handoff wants the free right one, so it is mirrored. sovereign_kiss is retimed to
+    # the handoff's beats (48 frames: hand up 1-12, at the lips 13-21, kiss_release at 22,
+    # open palm 29-36, back to idle by 48); sovereign_kiss_source keeps the source's own
+    # timing (the hand leaves the lips at source frame 60), for comparison.
+    "sovereign_kiss": ("Blow A Kiss - Succubus-German Shepherd girl.fbx",
+                       {"mirror": True, "lower": "idle", "blend_in": ("idle", 8), "blend_out": ("idle", 10),
+                        "retime": ((1, 7), (12, 28), (18, 37), (21, 40), (22, 60), (28, 72), (36, 85), (48, 119)),
+                        "loop": False, "local": True}),
+    "sovereign_kiss_source": ("Blow A Kiss - Succubus-German Shepherd girl.fbx",
+                              {"mirror": True, "lower": "idle", "blend_in": ("idle", 8), "blend_out": ("idle", 10),
+                               "range": (7, 125), "loop": False, "local": True}),
 }
+MIRROR = Matrix.Scale(-1, 3, (1, 0, 0))
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 anim_dir = Path(argv[0])
 out_blend = Path(argv[1]) if len(argv) > 1 and argv[1] else None
-only = argv[2].split(",") if len(argv) > 2 and argv[2] else list(CLIPS)
+only = argv[2].split(",") if len(argv) > 2 and argv[2] else [c for c in CLIPS if not CLIPS[c][1].get("local")]
 sc = bpy.context.scene
 sc.render.fps = 30
 rig = bpy.data.objects["SuccubusRig"]
@@ -116,20 +137,44 @@ for clip in only:
     s_hips_rest = smw @ src.data.bones["mixamorig:Hips"].head_local
     ratio = T_head["mixamorig:Hips"].z / s_hips_rest.z
     frames = list(range(f0, f1 + 1))
+    if "retime" in opt:
+        tk = opt["retime"]
+        frames = [float(np.interp(i, [a for a, _ in tk], [b for _, b in tk])) for i in range(tk[0][0], tk[-1][0] + 1)]
+        f0, f1 = tk[0][1], tk[-1][1]
+    twin = (lambda n: n.replace("Left", "\0").replace("Right", "Left").replace("\0", "Right")) if opt.get("mirror") else (lambda n: n)
+    if opt.get("mirror"):
+        s_hips_rest = MIRROR @ s_hips_rest
     samples = []
     for f in frames:
-        sc.frame_set(f)
-        R = {n: (smw.to_3x3() @ src.pose.bones[n].matrix.to_3x3()).normalized() for n in names if n in S_rest}
-        samples.append((R, (smw @ src.pose.bones["mixamorig:Hips"].head).copy()))
+        sc.frame_set(int(math.floor(f)), subframe=f - math.floor(f))
+        # each bone's turn from its rest pose, in world space (mirrored: its twin's, mirrored)
+        D = {n: (smw.to_3x3() @ src.pose.bones[twin(n)].matrix.to_3x3()).normalized() @ S_rest[twin(n)].inverted()
+             for n in names if n in S_rest and twin(n) in S_rest}
+        h = (smw @ src.pose.bones["mixamorig:Hips"].head).copy()
+        if opt.get("mirror"):
+            D = {n: MIRROR @ d @ MIRROR for n, d in D.items()}
+            h = MIRROR @ h
+        samples.append((D, h))
     drift = samples[-1][1] - samples[0][1] if opt.get("in_place") else Vector()
     drift.z = 0.0
+    held = {}
+    if opt.get("lower") in bpy.data.actions:
+        # her hips and legs as in that clip's first frame (world rotations), the hips there too
+        rig.animation_data_create()
+        rig.animation_data.action = bpy.data.actions[opt["lower"]]
+        sc.frame_set(1)
+        held = {n: (rig.matrix_world.to_3x3() @ rig.pose.bones[n].matrix.to_3x3()).normalized() for n in names
+                if n == "mixamorig:Hips" or any(k in n for k in ("UpLeg", "Leg", "Foot", "Toe"))}
+        held_h = T_rest["mixamorig:Hips"] @ rig.pose.bones["mixamorig:Hips"].location
     local = []
     for R, _ in samples:
         Rt, q_of = {}, {}
         for n in order:
             par = rig.data.bones[n].parent
-            if n in R:
-                Rt[n] = R[n] @ S_rest[n].inverted() @ A[n] @ T_rest[n]
+            if n in held:
+                Rt[n] = held[n]
+            elif n in R:
+                Rt[n] = R[n] @ A[n] @ T_rest[n]
             else:
                 Rt[n] = (Rt[par.name] @ T_rest[par.name].inverted() @ T_rest[n]) if par else T_rest[n]
             if par is None:
@@ -139,6 +184,8 @@ for clip in only:
             q_of[n] = basis.to_quaternion()
         local.append(q_of)
     hips_off = [(h - s_hips_rest - drift * (i / max(1, len(frames) - 1))) * ratio for i, (_, h) in enumerate(samples)]
+    if held:
+        hips_off = [held_h.copy() for _ in samples]
     if opt.get("yaw"):
         Rz = Matrix.Rotation(math.radians(opt["yaw"]), 3, "Z")
         hn = "mixamorig:Hips"
@@ -214,8 +261,12 @@ for clip in only:
     if opt.get("in_place") and act["loop"]:
         dur = max(1, len(frames) - 1) / 30.0
         act["root_vel"] = [drift.x * ratio / dur, drift.y * ratio / dur]
-    elif not opt.get("in_place"):
+    elif not opt.get("in_place") and not held:
         act["root_motion"] = True
+    if "retime" in opt:
+        act["retime"] = [list(k) for k in opt["retime"]]
+    if opt.get("mirror"):
+        act["mirrored"] = True
     for o in new_objs:
         bpy.data.objects.remove(o, do_unlink=True)
     for a in set(bpy.data.actions) - acts_before:

@@ -18,6 +18,11 @@ alongside the wing's arm; HALF is part of the way from the spread rest pose to F
   death:  from HALF they open fully as she falls back and sweep forward, so they lie open
           beside her; the tail's sway dies out and it is dragged by her hips. Afterwards a
           ground pass turns up any tail bone or lifts any wing that would go under the ground.
+  sovereign_kiss (and _source): from idle's first pose they pull back towards FOLD as her
+          hand rises, hold through the kiss, give one restrained pulse open after the release
+          and settle back into idle's first pose (KISS_WINGS, in source frames, so both
+          timings share it); the outer bones trail the root by KISS_WING_LAG frames. The
+          tail sways as at idle, dragged by her chest's turn 3-5 frames later.
 Tail. The reference wags once a second, the whole tail about +-30 degrees at the tip; hers
 swings once per stride (1.2 s, about 20 % slower), 9, 8, 7, 6, 5, 4 degrees per bone, each
 22 degrees later than the one before (the reference shows no lag; the lag makes it flow),
@@ -60,6 +65,10 @@ LOIN_FOLLOW = (1.0, 0.3, 0.3)           # bend towards the late swing (follow-th
 # Folded: the finger chain turned to hang alongside the arm, down and back.
 FOLD_FINGER = {"Left": Vector((0.18, 0.40, -0.90)), "Right": Vector((-0.18, 0.40, -0.90))}
 FOLD_SWEEP = 15.0              # and the whole wing swept further back (degrees)
+# The kiss's wings: (source frame, how far folded), eased between; from and back to HALF
+KISS_WINGS = ((7, 1 - HALF), (26, 0.85), (62, 0.85), (79, 0.42), (92, 0.6), (105, 1 - HALF))
+KISS_WING_LAG = (0, 0, 2, 4)   # root, 1, 2, 3: frames behind the root
+KISS_DRAG = 0.5                # the tail follows her chest's turn (x, degrees)
 
 
 def rest_frame(name):
@@ -110,13 +119,13 @@ def gait_phase(act, n):
     return phase, np.array(lz), np.array(rz)
 
 
-def hips_yaw(act, n):
+def hips_yaw(act, n, bone="mixamorig:Hips"):
     rig.animation_data.action = act
     ys = []
     for f in range(1, n + 1):
         sc.frame_set(f)
-        m = (rig.matrix_world @ rig.pose.bones["mixamorig:Hips"].matrix).to_3x3()
-        fwd = m @ Vector((0, 0, 1))   # the hips bone's Z points forward-ish; yaw of its projection
+        m = (rig.matrix_world @ rig.pose.bones[bone].matrix).to_3x3()
+        fwd = m @ Vector((0, 0, 1))   # the bone's Z points forward-ish; yaw of its projection
         ys.append(math.atan2(fwd.x, -fwd.y))
     return np.unwrap(np.array(ys))
 
@@ -177,6 +186,25 @@ def env(t, a, b):
     return k * k * (3 - 2 * k)
 
 
+def eased(knots, x):
+    """Knots (x, value), eased between them, held beyond the ends."""
+    if x <= knots[0][0]:
+        return knots[0][1]
+    for (a, va), (b, vb) in zip(knots, knots[1:]):
+        if x <= b:
+            k = (x - a) / (b - a)
+            return va + (vb - va) * k * k * (3 - 2 * k)
+    return knots[-1][1]
+
+
+def source_frames(act, n):
+    """Each frame's source frame (retarget_clips.py's retime, or its range)."""
+    if "retime" in act:
+        tk = [tuple(k) for k in act["retime"]]
+        return [float(np.interp(f, [a for a, _ in tk], [b for _, b in tk])) for f in range(1, n + 1)]
+    return [f + act["source_range"][0] - 1.0 for f in range(1, n + 1)]
+
+
 def animate(clip):
     act = bpy.data.actions[clip]
     n = int(act["frames"])
@@ -190,6 +218,11 @@ def animate(clip):
     # times, so it starts and ends where the idle loop starts
     idle_like = clip in ("idle", "idle_flourish")
     idle_cycles = max(1, round(cyc / IDLE_PERIOD))   # whole sways per loop, so it loops
+    kiss = clip.startswith("sovereign_kiss")
+    if kiss:
+        src = source_frames(act, n)
+        chest = hips_yaw(act, n, "mixamorig:Spine2")
+        rig.animation_data.action = act
     # contacts: a foot at its lowest; the bob is lowest there (two per stride)
     for f in range(1, n + 1):
         t = (f - 1) / cyc * 2 * math.pi
@@ -209,6 +242,8 @@ def animate(clip):
             amp, base = 0.4, t * idle_cycles
         elif clip == "death":
             amp, base = 0.4 * env(f, 30, 8), 2 * math.pi * sec / 1.6    # dies out as she falls
+        elif kiss:
+            amp, base = 0.4, t * idle_cycles        # as idle, so it starts and ends there
         else:
             amp, base = 0.25, 2 * math.pi * sec / 1.6
         for i, nme in enumerate(TAIL):
@@ -217,6 +252,10 @@ def animate(clip):
             if clip in ("attack", "hit", "death"):
                 lagf = max(0, f - 1 - 3 * (i + 1))
                 d = math.degrees(-(yaw[lagf] - yaw[0])) * DRAG
+                ang += max(-DRAG_MAX, min(DRAG_MAX, d)) * (1 if i == 0 else 0.5)
+            elif kiss:
+                lagf = max(0, f - 1 - (3 + i * 2 // 5))      # 3 frames at the root, 5 at the tip
+                d = math.degrees(-(chest[lagf] - chest[0])) * KISS_DRAG * env(f, n, n - 6)
                 ang += max(-DRAG_MAX, min(DRAG_MAX, d)) * (1 if i == 0 else 0.5)
             q = Quaternion((0, 0, 1), math.radians(ang * ssign))
             if i >= 3:
@@ -238,7 +277,14 @@ def animate(clip):
         for side, s in (("Left", 1), ("Right", -1)):
             root, w1, w2, w3 = (f"Wing{side}_{k}" for k in ("Root", "1", "2", "3"))
             extra = {root: Quaternion(), w1: Quaternion(), w2: Quaternion(), w3: Quaternion()}
-            if idle_like:
+            if kiss:
+                # idle's slow sway goes on under the fold, each bone folded as the root was
+                # a few frames before
+                pose = {nme: blend_pose(eased(KISS_WINGS, src[max(0, f - 1 - lag)]))[nme]
+                        for nme, lag in zip((root, w1, w2, w3), KISS_WING_LAG)}
+                for j, (nme, a_) in enumerate(((root, 3.0), (w2, 2.5), (w3, 2.0))):
+                    extra[nme] = world_rot(nme, (0, 0, 1), s * a_ * math.sin(t * idle_cycles - j * math.radians(28)))
+            elif idle_like:
                 for j, (nme, a_) in enumerate(((root, 3.0), (w2, 2.5), (w3, 2.0))):
                     extra[nme] = world_rot(nme, (0, 0, 1), s * a_ * math.sin(t * idle_cycles - j * math.radians(28)))
             elif walking:

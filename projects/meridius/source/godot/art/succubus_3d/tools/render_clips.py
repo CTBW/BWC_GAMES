@@ -5,7 +5,8 @@
 For each clip, every `step` frames, from each view: "se" / "sw" / "ne" / "nw" are the game's
 camera (orthographic, 30 degrees down) with her turned to that facing; "side", "front"
 and "back" are level. Flat-lit textures with an outline, close to the game's look. Writes one PNG per
-frame (<clip>_<view>_<frame>.png).
+frame (<clip>_<view>_<frame>.png). A clip with a face action (kiss_motion.py) plays it on her
+shape keys.
 """
 import math
 import sys
@@ -56,9 +57,13 @@ def aim(view, target):
     cam_d.ortho_scale = 3.2
 
 
+keys = bpy.data.objects["Succubus"].data.shape_keys
 for clip in clips:
     act = bpy.data.actions[clip]
     rig.animation_data.action = act
+    if keys is not None:
+        keys.animation_data_create()
+        keys.animation_data.action = bpy.data.actions.get(act.get("face_action", ""))
     n = int(act["frames"])
     for view in views:
         paths = []

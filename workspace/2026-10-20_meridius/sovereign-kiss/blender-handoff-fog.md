@@ -6,6 +6,8 @@ The squad blows a large **heart made of pink fog** from their lips. It passes th
 
 This replaces the earlier solid core, amber rim and split-on-impact treatment. The painted sheet defines the look; this document and the editable SVG define the blockout. No animated Blender asset or runtime implementation is included.
 
+**Revised 26 October 2026, from the user's reference.** The heart starts small and grows as it flies. It forms at the release point over F19–22 and is 0.25 m wide at `kiss_release`, 1.2 m when it passes through the target and 1.8 m while it dissolves. It stays dense and clear until the target and flies at 10 m/s: its middle crosses a target 5 m away 0.51 s after the release. It is gone 0.5 s after that, and its last wisps fade by F67. Where the sizes, density and dissolve values below differ, these replace them. The Blender study is in the card's "Fog heart" section, built by `kiss_heart.py` in `projects/meridius/source/godot/art/succubus_3d/tools/`.
+
 ## Character and cast
 
 Work in a separate copy of `projects/meridius/source/godot/art/succubus_3d/succubus_anim.blend`, preserving existing actions. Reviewed rig scripts specify a 1.95 m character, Z up, front toward -Y, `mixamorig:*` body bones, six `Tail_*` bones, wing chains and a left-hand whip. Confirm names and scale in the actual scene before authoring; this pass inspected scripts, not the live file.

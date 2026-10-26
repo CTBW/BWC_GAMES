@@ -11,8 +11,8 @@ Started 23 October 2026. Concept, Higgsfield receipts and the Tripo task IDs are
 | `succubus_base.blend` | Body (spike removed, hips and legs adjusted, paw pads, fur tufts), wings, tail and whip, textures packed. From `tools/build_succubus.py`. |
 | `succubus_rig.blend` | The rigged character: `SuccubusRig` (Mixamo names, no fingers) with tail, wing and loincloth bones, the whip's handle (`WhipGrip`) and coil (`WhipCoil`) bones, and the attack's lash (`WhipLash`, 2 m on `Lash_1`..`Lash_16`). From `tools/rig_succubus.py`; `tools/kiss_rig.py` adds the Sovereign Kiss's `Kiss_Pucker` and `Exhale` shape keys and `KissSocket`. No actions. |
 | `succubus_anim.blend` | The rig with the clips as actions: tail, wing and loincloth motion, the whip arm and coil kept out of her body, the attack's lash. From `tools/retarget_clips.py`, `tools/secondary_motion.py`, then `tools/whip_motion.py`. |
-| `review/` | Review renders: `clip_<name>.gif` (game camera and from behind), paw pads, fur, hips and legs; `clip_sovereign_kiss*.gif` (see Sovereign Kiss). |
-| `local/succubus_3d/succubus_sovereign_kiss_fog.blend` (repository root, not in git) | `succubus_anim.blend` plus the Sovereign Kiss cast (`sovereign_kiss`, `sovereign_kiss_source` and their face actions). Local because the clip is made from a Mixamo clip; rebuilt by the commands under Rebuild. |
+| `review/` | Review renders: `clip_<name>.gif` (game camera and from behind), paw pads, fur, hips and legs; `clip_sovereign_kiss*.gif` and `kiss_heart.gif` (see Sovereign Kiss). |
+| `local/succubus_3d/succubus_sovereign_kiss_fog.blend` (repository root, not in git) | `succubus_anim.blend` plus the Sovereign Kiss cast (`sovereign_kiss`, `sovereign_kiss_source` and their face actions) and its fog heart (`SK_FogHeart`). Local because the clip is made from a Mixamo clip; rebuilt by the commands under Rebuild. |
 
 ## Clips
 
@@ -101,7 +101,7 @@ The cast for the Sovereign Kiss ability (26 October 2026), to the handoff in
 `workspace/2026-10-20_meridius/sovereign-kiss/blender-handoff-fog.md` ("Character and
 cast"), from the user's "Blow A Kiss - Succubus-German Shepherd girl" Mixamo clip (137
 frames, 4.5 s). It lives in the local blend (see Files), not in `succubus_anim.blend`, and
-is not exported yet. The fog heart itself is the next step.
+is not exported yet. Its fog heart is under "Sovereign Kiss (fog heart)" below.
 
 - **Her right hand.** The source blows the kiss with its left hand, her whip hand, so the
   clip is mirrored (`mirror`); her left arm is held in `idle`'s first pose, relative to her
@@ -151,6 +151,41 @@ her head; facing the camera (`sw`) it reads clearly. Review: `review/clip_sovere
 When `succubus_anim.blend` is next rebuilt from the rig, it and the export gain
 `KissSocket` (60 deforming bones) and the two shape keys, at rest in every other clip.
 
+## Sovereign Kiss (fog heart)
+
+A study of the heart the cast releases (26 October 2026), in the same local blend, built by
+`tools/kiss_heart.py` and rendered by `tools/render_kiss_heart.py`. The handoff's pink fog
+look, with the motion of the user's reference (a pink charm heart in a League of Legends
+clip): it starts small at her lips, grows as it flies, passes through the target and
+dissolves beyond it. The reference frames stay in `local/video-refs/` (third-party
+footage).
+
+- **Path.** `SK_Heart` forms at `KissSocket`'s tail over frames 19-22, leaves at
+  `kiss_release` at 4 m/s, reaches 10 m/s within 0.12 s and flies straight to the chest
+  (1.2 m up) of a target 5 m ahead (`SK_Target`; the distance is the script's argument).
+  Its middle crosses the target at frame 37.4, 0.51 s after the release, over 4.75 m. It
+  flies on, slowing to 1.5 m/s, and is gone 0.5 s later (frame 52); the last wisps fade
+  by 67.
+- **Size.** 0.06 m wide as it forms, 0.25 m at the release, 1.2 m at the target and 1.8 m
+  at the end; at the game's zoom 1 (27 px per metre) about 7, 32 and 49 px.
+- **Cards.** Everything faces the camera (`SK_Camera`): the heart is five cards a few
+  centimetres apart in depth, so it passes partly in front of the target and partly behind
+  it; 95 puffs make the breath at her lips, the wake and the wisps it sheds as it
+  dissolves; `SK_ContactVeil` washes over the target's chest and `SK_EnthrallMark` fades
+  in over its head and pulses.
+- **Material.** Two generated, packed textures (a heart and a puff, as distance from the
+  edge) and two materials, `SK_Heart` and `SK_Puff`. Each card's object colour carries its
+  density, erosion and noise seed (R, G, B); the material thresholds the distance plus
+  moving noise, so the shape stays crisp while dense and is eaten from the edge into holes
+  as it erodes. Colour bands from the handoff's palette.
+- **Timing.** The frames and seconds are stored on the collection (`timing`), for the game.
+
+`render_kiss_heart.py` renders it from the game's camera in EEVEE on grass, with a stand-in
+target at `SK_Target`: the footman's GLB by default, imported for the render only and not
+saved (it stays local; without it the target is left empty). Review: `review/kiss_heart.gif` (facing up-right, down-left and down-right). The
+Workspace card's "Fog heart" section has the videos, the beats and the heart at the game's
+zoom.
+
 ## Rebuild
 
 Background Blender 5.2, with `BLENDER_USER_RESOURCES` pointing at a scratch folder (see
@@ -183,11 +218,14 @@ cp succubus_anim.blend "$L"
 "$B" -b "$L" --python tools/whip_motion.py -- $K
 "$B" -b "$L" --python tools/kiss_motion.py -- bind
 "$B" -b "$L" --python tools/render_clips.py -- <out dir> $K 1 sw,se,ne
+"$B" -b "$L" --python tools/kiss_heart.py
+"$B" -b "$L" --python tools/render_kiss_heart.py -- <out dir> ne,sw,se
 ```
 
 Local clips (`local` in `retarget_clips.py`) are built only when named. `kiss_motion.py`
 refuses a clip it has already done; `bind` makes the file open on `sovereign_kiss` with its
-face action (the motion passes leave `idle` bound).
+face action (the motion passes leave `idle` bound). `kiss_heart.py` replaces its
+collection when run again; `render_kiss_heart.py` saves nothing.
 
 `build_succubus.py` takes `HIP_WIDEN`, `BUTT_FULL`, `LEG_STRETCH` and `FUR` from the
 environment. `render_rig.py` renders the skeleton and deformation tests. `whip_motion.py`
@@ -248,5 +286,6 @@ a shock ring and streaks at each crack, a short flare behind it and a trail behi
 ## Not done yet
 
 - Nothing is wired into the game; the FBX plays only in the prototype sandbox.
-- The Sovereign Kiss is not exported and has no fog heart yet.
+- The Sovereign Kiss is not exported, and its fog heart is a Blender study only (no Godot
+  version, one caster, study range and speed).
 - The lash's strikes are stored as events but nothing in the game uses them yet.

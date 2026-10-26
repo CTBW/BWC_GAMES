@@ -1,4 +1,5 @@
-"""Render review images of goblin_shaman_base.blend (run in a background Blender).
+"""Render review images of goblin_shaman_base.blend or goblin_shaman_beak_base.blend (run in a
+background Blender).
 
   blender -b goblin_shaman_base.blend --python render_check.py -- <out dir>
 

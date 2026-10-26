@@ -1,4 +1,5 @@
-"""Review images and measurements of goblin_shaman_rig.blend (run in a background Blender).
+"""Review images and measurements of goblin_shaman_rig.blend or goblin_shaman_beak_rig.blend
+(run in a background Blender).
 
   blender -b goblin_shaman_rig.blend --python render_rig.py -- <out dir>
 

@@ -2,7 +2,8 @@
 
   blender -b goblin_shaman_base.blend --factory-startup --python rig_goblin_shaman.py -- <out.blend>
 
-Starts from goblin_shaman_base.blend (build_goblin_shaman.py) and follows the goblin
+Starts from goblin_shaman_base.blend or goblin_shaman_beak_base.blend (build_goblin_shaman.py,
+the horned and the beak mask) and follows the goblin
 archer's rig_goblin_archer.py, with the spearman's skirt flaps (rig_goblin_spear.py):
 1. A Mixamo-named armature with finger bones placed on each hand's mesh: three fingers
    and a thumb (Thumb, Index, Middle and Ring 1-4). Forearm twist bones, two bones down

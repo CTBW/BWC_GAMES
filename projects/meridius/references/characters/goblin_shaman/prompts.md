@@ -176,6 +176,25 @@ have the same body (they differ by under 0.5%), with the same arm angle and the 
 skull on the necklace. The earlier review of v3 was wrong: v3 was never heavier than v2, so
 sections 8 to 10 were not needed. v3 and v6 are interchangeable.
 
+## 11. Bird skull mask with feather crest, front
+
+The user chose the beak mask, no. 4 of the sheet (the bird skull from his original sprite
+under a crest of feathers on a red band), for the rig, keeping the horned skull as an option.
+Later they asked for one shaman in each mask, so both are rigged.
+Inputs: image A `skull_masks_v1.png` (from Generations), image B `mask_bird_source.png`. 1:1.
+
+```text
+Use Image A only for the design of one mask: the bird skull mask with the feather crest worn by the goblin at the bottom left of the sheet. Image B shows the same mask on a goblin of a small pixel-art sprite, from the front and from the back; use it only to see how the crest of feathers stands up from the red band. Do not copy its pixel-art style.
+
+Draw this mask on its own, with no goblin and no head inside it, as a reference for modelling it in 3D and fitting it on a goblin's bald head: the bleached, bone-white skull of a large bird without its lower jaw, its cranium rounded over the brow, with fine cracks; two big, round, dark, empty eye sockets, one on each side; and a long, slender, slightly curved beak of bone running straight down the middle from between the sockets, where the wearer's nose and mouth would be, with a small nostril slit on each side near its base. A band of faded blood-red cloth runs across the top of the skull above the eye sockets, and a fanned crest of long brown-and-white barred feathers stands up from behind the band, spread evenly to the left and the right.
+
+Strict flat front view: the mask faces the viewer straight on, perfectly symmetrical, with the beak on the vertical centre line, no three-quarter turn, no tilt and no perspective. Centred, filling most of the image, with white space all round; nothing touches the image edges, not even the feather tips. The same painterly illustration with crisp dark outlines as Image A, even, soft, flat lighting with very light shadows, and a plain empty white background. One mask only: no head, no goblin, no stand, no text.
+```
+
+Result `mask_bird_front.png` (hf_20261026_203800_48748fd1): strict front and symmetric, as
+asked. The red band and the crest are drawn on the skull; on the goblin the band is built round
+his head in Blender.
+
 ## Delivered (26 October 2026)
 
 Each image is a 2K PNG, fully opaque, with clear margins.

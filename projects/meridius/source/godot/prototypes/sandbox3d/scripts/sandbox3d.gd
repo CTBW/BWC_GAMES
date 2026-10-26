@@ -184,6 +184,7 @@ func _ready() -> void:
 	fx = Fx3D.new()
 	fx.name = "Fx"
 	fx.ground = field.ground_y
+	fx.friends = func(who: Node3D) -> Array: return units.filter(func(n): return n != who and n.faction == who.faction and _alive(n))
 	add_child(fx)
 	_ring_mesh = ImmediateMesh.new()
 	_rings = MeshInstance3D.new()

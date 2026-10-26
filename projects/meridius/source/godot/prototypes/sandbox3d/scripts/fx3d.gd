@@ -3,7 +3,9 @@
 ## meshes, made and freed here; `land` is called when a missile arrives (the
 ## sandbox resolves the blow), with the target it was loosed at.
 ##   bolt       a quarrel on a flat arc
-##   arrow      a red-fletched arrow on a higher arc, slower than the bolt
+##   arrow      a red-fletched arrow on a higher arc, slower than the bolt; it
+##              lobs over the men of its own side in the way (the archers behind
+##              their spears)
 ##   fireball   a ball of fire with embers behind, a burst where it lands
 ##   lightning  a jagged bolt flickering from the hand to the target
 ##   frost      a ring of frost swelling from the caster's feet
@@ -16,6 +18,8 @@ const GLOW_TEX_SIZE := 64
 
 ## (x, z) -> ground height; set by the sandbox.
 var ground: Callable
+## who -> the standing men of his side, whom an arrow lobs over; set by the sandbox.
+var friends: Callable
 var _glow: Texture2D
 var _ring: Texture2D
 var _live: Array = []
@@ -110,15 +114,24 @@ func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
 		_kiss.launch(who, target, land)
 		return
 	var h: float = who.height_m() if who.has_method("height_m") else 1.8
-	var from := who.global_position + Vector3(0, h * 0.72, 0) + _facing(who) * 0.45
+	var from := _at(who) + Vector3(0, h * 0.72, 0) + _facing(who) * 0.45
 	# A unit whose sidecar says where its missile leaves (the archer's arrow, at the bow).
 	var own: Variant = who.call("missile_from") if who.has_method("missile_from") else Vector3.INF
 	if own != Vector3.INF:
 		from = own
-	var to := (target.global_position + Vector3(0, h * 0.55, 0)) if target else from + _facing(who) * 8.0
+	var to := (_at(target) + Vector3(0, h * 0.55, 0)) if target else from + _facing(who) * 8.0
 	match kind:
 		"bolt", "arrow":
 			var arrow := kind == "arrow"
+			if arrow and target:
+				# At the target's chest, as in flight, for the lob over the men in the way.
+				to = _at(target) + Vector3(0, (target.height_m() if target.has_method("height_m") else 1.6) * 0.55, 0)
+			var d := from.distance_to(to)
+			var arc := d * (0.05 if arrow else 0.04)
+			if arrow:
+				arc = maxf(arc, _over_friends(who, from, to))
+			# Flight time by the length of the path (a lob's is longer).
+			var path := d * (1.0 + 8.0 / 3.0 * pow(arc / maxf(d, 0.01), 2.0)) if arrow else d
 			var shaft := MeshInstance3D.new()
 			var bm := BoxMesh.new()
 			bm.size = Vector3(0.025, 0.025, 0.62) if arrow else Vector3(0.035, 0.035, 0.62)
@@ -143,8 +156,8 @@ func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
 					vane.position = Vector3(0, 0, 0.24)
 					shaft.add_child(vane)
 			var streak := _card(Color(1.0, 0.92, 0.7, 0.35), 0.35)
-			_live.append({"kind": kind, "t": 0.0, "dur": maxf(from.distance_to(to) / (30.0 if arrow else 38.0), 0.08), "from": from, "to": to,
-				"arc": from.distance_to(to) * (0.05 if arrow else 0.04), "nodes": [shaft, streak], "target": target, "land": land})
+			_live.append({"kind": kind, "t": 0.0, "dur": maxf(path / (30.0 if arrow else 38.0), 0.08), "from": from, "to": to,
+				"arc": arc, "nodes": [shaft, streak], "target": target, "land": land})
 		"fireball":
 			var core := _card(Color(1.0, 0.62, 0.2), 0.9)
 			var halo := _card(Color(1.0, 0.3, 0.05, 0.6), 2.0)
@@ -203,6 +216,31 @@ func launch(kind: String, who: Node3D, target: Node3D, land: Callable) -> void:
 				"target": target, "land": land, "landed": false})
 
 
+## The arc (the height at mid-flight over the straight line) an arrow from
+## `from` to `to` needs to pass 0.25 m over the head of every man of `who`'s
+## side within 0.4 m of its path, all the way over him (0.25 m before and
+## behind his axis); 0 with none in the way, at most half the shot's length.
+func _over_friends(who: Node3D, from: Vector3, to: Vector3) -> float:
+	if not friends.is_valid():
+		return 0.0
+	var line := Vector2(to.x - from.x, to.z - from.z)
+	var d := line.length()
+	if d < 0.5:
+		return 0.0
+	var need := 0.0
+	for m in friends.call(who):
+		var g: Vector3 = _at(m)
+		var rel := Vector2(g.x - from.x, g.z - from.z)
+		var k := rel.dot(line) / (d * d)
+		if k <= 0.0 or k >= 1.0 or absf(rel.cross(line)) / d > 0.4:
+			continue
+		var head: float = g.y + (m.height_m() if m.has_method("height_m") else 1.6) + 0.25
+		for kk in [k - 0.25 / d, k, k + 0.25 / d]:
+			if kk > 0.0 and kk < 1.0:
+				need = maxf(need, (head - lerpf(from.y, to.y, kk)) / (4.0 * kk * (1.0 - kk)))
+	return minf(need, d * 0.5)
+
+
 ## Sparks where a blow lands (warm), or dust where it misses.
 func spark(at: Vector3, landed := true) -> void:
 	var nodes := []
@@ -225,8 +263,14 @@ func _burst(at: Vector3, color: Color, size: float, dur := 0.45) -> void:
 	_live.append({"kind": "burst", "t": 0.0, "dur": dur, "nodes": [c], "size": size})
 
 
+## Where a unit stands (its own position outside the tree, as in the tests).
+func _at(n: Node3D) -> Vector3:
+	return n.global_position if n.is_inside_tree() else n.position
+
+
 func _facing(n: Node3D) -> Vector3:
-	return Vector3(sin(n.global_rotation.y), 0, cos(n.global_rotation.y))
+	var y := n.global_rotation.y if n.is_inside_tree() else n.rotation.y
+	return Vector3(sin(y), 0, cos(y))
 
 
 func clear() -> void:
@@ -246,12 +290,12 @@ func _process(dt: float) -> void:
 				var target: Node3D = e.target
 				if target and is_instance_valid(target):
 					var h: float = target.height_m() if target.has_method("height_m") else 1.6
-					e.to = target.global_position + Vector3(0, h * 0.55, 0)
+					e.to = _at(target) + Vector3(0, h * 0.55, 0)
 				var p: Vector3 = e.from.lerp(e.to, k) + Vector3.UP * e.arc * 4.0 * k * (1.0 - k)
 				var ahead: Vector3 = e.from.lerp(e.to, minf(k + 0.02, 1.0)) + Vector3.UP * e.arc * 4.0 * minf(k + 0.02, 1.0) * (1.0 - minf(k + 0.02, 1.0))
 				for n in e.nodes:
 					n.position = p
-				if e.kind != "fireball" and ahead.distance_to(p) > 1e-4:
+				if e.kind != "fireball" and ahead.distance_to(p) > 1e-4 and e.nodes[0].is_inside_tree():
 					e.nodes[0].look_at(ahead, Vector3.UP)
 				if e.kind == "fireball":
 					e.nodes[0].scale = Vector3.ONE * (0.9 + 0.15 * sin(e.t * 40.0))

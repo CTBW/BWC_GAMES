@@ -12,6 +12,7 @@ const Roster = preload("res://prototypes/sandbox3d/scripts/roster.gd")
 const Squad3D = preload("res://prototypes/sandbox3d/scripts/squad3d.gd")
 const Unit3D = preload("res://prototypes/sandbox3d/scripts/unit3d.gd")
 const KissFX = preload("res://prototypes/sandbox3d/scripts/kiss_fx3d.gd")
+const Fx3D = preload("res://prototypes/sandbox3d/scripts/fx3d.gd")
 const Relief = preload("res://scripts/render/relief.gd")
 const Grid = preload("res://scripts/rules/grid.gd")
 
@@ -341,6 +342,63 @@ func test_kiss_heart_lands_once_and_its_cards_return() -> void:
 	assert_true(fx._kisses.is_empty(), "and its heart goes")
 	assert_eq(fx._spare.size(), fx._cards, "every card back in the pool after the cut")
 	for n in [fx, caster, target]:
+		n.free()
+
+
+## A stand-in man of a given height.
+class Tall extends Node3D:
+	var h := 1.49
+
+	func height_m() -> float:
+		return h
+
+
+## An arrow flies its flat arc where its way is clear, a man of its own side
+## beside the way included, and lobs over a man of its own side in the way
+## (the goblin archers behind their spears), at least 0.2 m over his head all
+## the way over him; either way it lands once, on its target.
+func test_an_arrow_lobs_over_its_own_side() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var fx: Node3D = Fx3D.new()
+	tree.root.add_child(fx)
+	if not fx.is_node_ready():
+		fx._ready()
+	var archer := Tall.new()
+	var target := Tall.new()
+	target.h = 1.82
+	target.position = Vector3(0, 0, 6)
+	var mate := Tall.new()
+	mate.position = Vector3(0.1, 0, 4.8)
+	var aside := Tall.new()
+	aside.position = Vector3(1.2, 0, 3.0)
+	for n in [archer, target, mate, aside]:
+		tree.root.add_child(n)
+	var mates := []
+	fx.friends = func(_who): return mates
+	var step := 1.0 / 60.0
+	for case in [[], [aside], [mate, aside]]:
+		mates.clear()
+		mates.append_array(case)
+		var landed := []
+		fx.launch("arrow", archer, target, func(t): landed.append(t))
+		var e: Dictionary = fx._live[-1]
+		var d: float = e.from.distance_to(e.to)
+		var over := INF
+		for i in 120:
+			fx._process(step)
+			var p: Vector3 = e.nodes[0].position
+			if Vector2(p.x - mate.position.x, p.z - mate.position.z).length() < 0.25:
+				over = minf(over, p.y - mate.h)
+			if not landed.is_empty():
+				break
+		assert_eq(landed.size(), 1, "it lands once (%d in the way)" % case.size())
+		assert_true(not landed.is_empty() and landed[0] == target, "on its target")
+		if mate in case:
+			assert_true(e.arc > d * 0.05 + 0.3, "it lobs: %.2f m over the line at mid-flight" % e.arc)
+			assert_true(over >= 0.2, "%.2f m over the head of the man in the way" % over)
+		else:
+			assert_almost(e.arc, d * 0.05, 1e-4, "the flat arc with %d beside the way" % case.size())
+	for n in [fx, archer, target, mate, aside]:
 		n.free()
 
 

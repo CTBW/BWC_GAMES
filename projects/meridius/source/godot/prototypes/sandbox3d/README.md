@@ -49,7 +49,9 @@ The **Goblin Archer** stands beside them, the hooded goblin with the horn bow.
 He walks into range (10 m) and a clear line, draws an arrow over his shoulder,
 nocks it and looses at 1.033 s: the sandbox's `arrow` missile leaves from the
 arrow's middle at that frame (the sidecar's `shot_from`), so it takes the drawn
-arrow's place and flies on a gentle arc. Struck, he raises the bow to block
+arrow's place and flies on a gentle arc, or lobs over the men of his own side
+in the way (the goblin spearmen in front of the archers), 0.25 m over their
+heads all the way over them. Struck, he raises the bow to block
 (his `block` clip is the hit role); in his death he drops the bow. His run is
 in the clip list. Exported by
 `references/characters/blender/goblin_archer/tools/export_godot.py`.
@@ -276,7 +278,8 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
 - `scripts/fx3d.gd`: sparks, the bolt, the arrow, fireball, chain lightning,
   frost nova and earth fist, and the succubus's kiss (`scripts/kiss_fx3d.gd`).
   A missile leaves from its unit's `missile_from()` where the sidecar gives
-  the attack a `shot_from`.
+  the attack a `shot_from`; an arrow lobs over the men of its side that
+  `friends` (set by the sandbox) gives it, a bolt does not.
 - `scripts/local_clips.gd`: clips kept out of Git (the succubus's kiss),
   loaded from `local/` at run time onto a unit's model.
 - `shaders/`: the ground (relief bake, fog, grid, route marks, hover), the

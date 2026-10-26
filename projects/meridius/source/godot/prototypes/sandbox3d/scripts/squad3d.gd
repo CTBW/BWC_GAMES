@@ -769,9 +769,11 @@ func swung(m: Node3D) -> void:
 ## Man m is struck, before his hit reaction. A hit that cuts his swing short
 ## (his blow had not left) gives him the blow back, else a man struck often
 ## enough would spend all his blows on swings that never land and never
-## answer his foes. A hit while he turns to strike only delays his swing.
+## answer his foes. So does a hit in a footman's step turn to strike (state
+## "turn"): it ends the turn and the blow that was to follow it. A unit that
+## turns while idle (unit3d.gd) swings after the hit, so that only delays it.
 func struck(m: Node3D) -> void:
-	if not _men.has(m) or m.state != "attack":
+	if not _men.has(m) or m.state not in ["attack", "turn"]:
 		return
 	var b: Dictionary = _men[m]
 	if b.swing and mode == "fight":

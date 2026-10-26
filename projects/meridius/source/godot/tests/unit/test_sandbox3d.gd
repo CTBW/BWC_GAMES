@@ -689,6 +689,12 @@ func test_a_swing_cut_short_by_a_hit_is_given_back() -> void:
 	sq.struck(m)
 	assert_eq(int(b.blows), left, "a hit while he turns only delays his swing")
 	assert_true(b.swing, "his swing is still to come")
+	# A footman's step turn to strike: the hit ends it and the blow after it.
+	m.state = "turn"
+	sq.struck(m)
+	m.state = "idle"
+	assert_eq(int(b.blows), left + 1, "a blow lost with the footman's turn is given back")
+	assert_false(b.swing, "and no swing is left to come")
 	_run(r, 90.0)
 	assert_eq(sq.mode, "idle", "the fight ends")
 	_free_squad(r)

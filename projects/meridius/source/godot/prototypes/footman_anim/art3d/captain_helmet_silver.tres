@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://prototypes/footman_anim/shaders/captain_helmet.gdshader" id="1"]
+
+[resource]
+shader = ExtResource("1")
+shader_parameter/band = Color(0.22, 0.24, 0.3, 1)
+shader_parameter/deep = Color(0.52, 0.55, 0.62, 1)
+shader_parameter/metal = Color(0.72, 0.75, 0.82, 1)
+shader_parameter/bright = Color(0.88, 0.9, 0.95, 1)
+shader_parameter/spec = 0.6
+shader_parameter/gloss = 0.18
+metadata/outline = true

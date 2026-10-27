@@ -14,6 +14,15 @@ working. Ask for missing personal preferences; do not invent a biography.
   touch controls, mobile variants or phone/tablet checks. Verify at desktop
   window sizes only. The existing Mobile Access feature stays as it is; do not
   extend or test it unless asked.
+- Meridius testing (2026-10-27, important): run and review changes only in
+  the 3D sandbox (`prototypes/sandbox3d`) or on Ashby farm, either the
+  turn-based 3D battle (March Out, `tests/visual/battle3d_flow.gd`) or the Ashby
+  field of `prototypes/battlefields3d` (`--fields=ashby`). Do not test in the
+  other small simulators: the per-unit `prototypes/*_anim` scenes,
+  `squad_looks`, the Unit Playground, the Terrain Test Fields, `footman_lab` or
+  a new one-off lab. If a change cannot be seen in either place yet, bring it
+  there, coordinating with the coordinator chat if needed. The headless
+  `tools/test.sh` suite still runs as usual.
 - Check `processes/` for an existing workflow and `knowledge/` for prior decisions.
 - Use the project skills in `.agents/skills/`. Claude entries in
   `.claude/skills/` are complete distribution copies. After editing a shared skill,

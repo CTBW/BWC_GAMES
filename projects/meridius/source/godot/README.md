@@ -60,6 +60,14 @@ screenshots. It uses its own save file, restores the prefs afterwards, and
 drops real mouse/key events while it runs (do not type into the window).
 Run it windowed (not `--headless`).
 
+## Where to test
+
+Run and review changes only in the **3D unit sandbox** or on **Ashby farm**
+(the turn-based 3D battle, or the Ashby field of the 3D battlefields with
+`--fields=ashby`). The other small simulators below and in `prototypes/`
+(Unit Playground, Terrain Test Fields, `footman_lab`, the per-unit `*_anim`
+scenes, `squad_looks`) are not used for testing. See `AGENTS.md`.
+
 ## Woodland camp
 
 The campaign's starting garrison now uses the selected `camp_small_woodland`

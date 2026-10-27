@@ -35,4 +35,7 @@ Read `ARCHITECTURE.md` before changing code; `README.md` for commands.
   not checked.
 - Verify visual changes in a real window: capture scripts in `tests/visual/`
   save PNGs to `tests/visual/out/` (gitignored); look at them.
+- Test only in the 3D sandbox (`prototypes/sandbox3d`) or on Ashby farm (the
+  3D battle, or `prototypes/battlefields3d` with `--fields=ashby`), never in
+  the other small simulators (the owner, 27 October 2026). See `../../../../AGENTS.md`.
 - Ship: `tools/export.sh`, then `build/windows/Meridius.console.exe -- --smoke`.

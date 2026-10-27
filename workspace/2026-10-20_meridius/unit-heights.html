@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius · Unit roster · Height chart</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <link rel="stylesheet" href="unit-heights/heights.css">
+  <script defer src="../_shared/report.js"></script>
+</head>
+<body>
+  <main class="container">
+    <p class="eyebrow">Meridius · Unit roster</p>
+    <h1>Height chart</h1>
+    <p class="lead">Every 3D unit in the sandbox at the same scale, from the front and from the side, with its height, width and depth.
+      Click a unit to try a new height or width. The chart, its card and the table update, and the change is written out for you to send on.</p>
+    <p class="meta">Each unit is in its idle at the first frame, drawn in Godot in the game's toon look and measured from the picture
+      (2.5 mm a pixel). Height is the top of the head (helmet, hood, ears or horns) above the ground. Width and depth are the
+      body's, without the weapons and shields it holds. Measured 26 October 2026.</p>
+
+    <div class="callout">
+      <strong>At a glance</strong>
+      <ul style="margin:6px 0 0;padding-left:20px">
+        <li>The tallest are the <strong>Wolf Scout</strong> (1.95 m to the ear tips), the <strong>Orc Brute</strong> (1.93 m) and the
+          <strong>Succubus</strong> (1.91 m to the horns). The <strong>Goblin Rabble</strong> is the smallest at 1.24 m. The goblin archers and spearmen are 1.46 m.</li>
+        <li>The garrison's men run from the <strong>Battle Mage</strong> (1.70 m, stooped under his hood) and the <strong>Footman</strong> (1.74 m in his helmet)
+          to the <strong>Spearman</strong> (1.80 m) and the <strong>Crossbowman</strong> (1.87 m).</li>
+        <li>The <strong>Footman</strong> no longer sinks into the ground. Every clip of his export stood 10.4 cm too low; it has been re-exported standing on the ground,
+          in the sandbox as well.</li>
+        <li>The game's own height value (what places effects and markers) is off by more than 5 cm for the <strong>Spearman</strong>,
+          the <strong>Battle Mage</strong> and the <strong>Wolf Scout 2</strong>. Each card says by how much.</li>
+      </ul>
+    </div>
+
+    <div class="hc" id="hc" data-paper="paper">
+      <h2>All units side by side</h2>
+      <div class="hc-wide">
+        <div class="hc-bar">
+          <span class="grp" id="viewChips"><span>View</span></span>
+          <span class="grp" id="gearChips"><span>Weapons</span></span>
+          <span class="grp" id="sortChips"><span>Order</span></span>
+          <span class="grp" id="paperChips"><span>Backdrop</span></span>
+          <label class="grp"><span>Scale</span>
+            <select id="size">
+              <option value="0">Fit to width</option>
+              <option value="80">1 m = 80 px</option>
+              <option value="120">1 m = 120 px</option>
+              <option value="160">1 m = 160 px</option>
+              <option value="220">1 m = 220 px</option>
+            </select>
+          </label>
+        </div>
+        <div class="hc-lineup" id="lineup" aria-label="All units standing side by side on one ground line, to one scale"></div>
+        <div class="hc-legend" id="legend"></div>
+
+        <div class="hc-adjust" id="adjust">
+          <section class="card" aria-labelledby="adjName">
+            <h3 id="adjName">Click a unit in the chart</h3>
+            <p class="hint" id="adjHint"></p>
+            <div class="hc-row">
+              <label for="hRange">Height</label>
+              <input type="range" id="hRange" min="0.8" max="2.6" step="0.01">
+              <input type="number" id="hNum" min="0.5" max="3" step="0.01" aria-label="Height in metres">
+              <output id="hOut" for="hRange"></output>
+            </div>
+            <div class="hc-row">
+              <label for="wRange">Width</label>
+              <input type="range" id="wRange" min="0.3" max="2" step="0.01">
+              <input type="number" id="wNum" min="0.2" max="3" step="0.01" aria-label="Width in metres">
+              <output id="wOut" for="wRange"></output>
+            </div>
+            <p class="hc-facts" id="adjFacts"></p>
+            <div class="hc-btns"><button class="hc-btn" type="button" id="adjReset">Reset this unit</button></div>
+          </section>
+          <section class="card" aria-labelledby="changesTitle">
+            <h3 id="changesTitle">Your changes</h3>
+            <p class="hint">Copy this list and send it on to have the sizes set in the game.</p>
+            <pre id="changes"></pre>
+            <div class="hc-btns">
+              <button class="hc-btn" type="button" id="copy">Copy</button>
+              <button class="hc-btn" type="button" id="resetAll">Reset all</button>
+              <span class="hc-copied" id="copied" hidden>Copied</span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <h2>Each unit, front and side</h2>
+      <p class="meta">The same scale in every card. Click a picture to see it at full size and download it.</p>
+      <div class="hc-cards" id="cards"></div>
+    </div>
+
+    <h2>All the numbers</h2>
+    <p class="meta">Click a heading to sort. <em>On screen</em> is the height in pixels at the sandbox's zoom 1, where the footman's game height
+      (1.70 m) is 49 px. <em>Room between men</em> is the squad's spacing in a rank less the body's width.</p>
+    <table class="hc-table" id="table"></table>
+
+    <h2>How it is measured</h2>
+    <ul>
+      <li>The units are the sandbox's own (<code>prototypes/sandbox3d/scripts/roster.gd</code>), loaded as the sandbox loads them. The footman
+        wears his squad's dress and helmet. Each is held on the first frame of his idle, the pose he stands in on the field.</li>
+      <li>An orthographic camera draws each one at 400 pixels a metre, from the front and from his right side. The opaque pixels give the
+        extent: once with everything, once with the held weapons and shields hidden. The ink outline is left out of the measurement.</li>
+      <li>Squad spacing and size spread come from the squads' drills (<code>squad3d.gd</code> <code>DRILLS</code>). The game height is the
+        sidecar's <code>height_m</code>.</li>
+      <li>Trying a size changes nothing in the game. Height scales the whole unit evenly (the profile's <code>scale</code>). Width is an
+        extra widening on top of it, applied to width and depth together.</li>
+      <li>To measure again after a model changes, run this from <code>projects/meridius/source/godot</code> (it needs a window):
+        <pre>tools/godot.sh --path . --audio-driver Dummy -s res://tests/visual/unit_heights.gd</pre></li>
+    </ul>
+  </main>
+  <script src="unit-heights/units.js"></script>
+  <script src="unit-heights/heights.js"></script>
+</body>
+</html>

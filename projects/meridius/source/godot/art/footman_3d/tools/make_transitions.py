@@ -10,7 +10,10 @@ From `stop_src` (Mixamo "Stop Walking - Footmen", retargeted with its travel):
          he ends in his guard stance. Hips, body and both arms ease into idle's
          first frame, which then follows with no blend. The sword and shield
          arms carry on from the walk (the sword's rocking dies away) instead of
-         the source's own swing.
+         the source's own swing. The source walks square to the front, the walk
+         turned into his guard: its hips and body are turned onto the walk's
+         where it takes over (its own motion kept on top), so the stop's first
+         frame is the walk's, and hold that turn until they ease into idle.
   start  the stop's settle played backwards (the weight shift out of the
          guard), then the walk from the stride that matches. Each planted foot
          is held where it lands while the root gathers speed from rest, so his
@@ -26,11 +29,11 @@ import math
 
 import bpy
 import numpy as np
-from mathutils import Matrix, Quaternion, Vector
+from mathutils import Matrix, Vector
 
 FPS = 30.0
-UPRIGHT = 9.0  # the walk's chest straightening (firm_walk.py), faded out over the stop
 RAMP = 20  # frames for the start to reach the walk's speed
+LEG_IN = 6  # frames for the stop's legs to ease in from the walk's
 sc = bpy.context.scene
 rig = bpy.data.objects["FootmanRig"]
 rig.location = (0, 0, 0)
@@ -95,19 +98,6 @@ def set_matrix(pb, m):
     pb.matrix = m
     pb.scale = (1.0, 1.0, 1.0)  # a shear leaves scale on the bone; no clip keys it, so it would hold in every clip
     bpy.context.view_layer.update()
-
-
-def upright(deg):
-    # As firm_walk.py: the chest and (less) the chin turned up about the body's side axis.
-    for bn, k in (("Spine1", 1.0), ("Head", 0.8)):
-        if abs(deg * k) < 1e-4:
-            continue
-        pb = b(bn)
-        m = pb.matrix.copy()
-        r = Quaternion(Vector((1, 0, 0)), -math.radians(deg * k)).to_matrix() @ m.to_3x3()
-        m2 = r.to_4x4()
-        m2.translation = m.translation
-        set_matrix(pb, m2)
 
 
 def ik_leg(side, want, foot_rot):
@@ -213,6 +203,9 @@ def plant(P, mask, spots, toe=None):
     rs = runs(mask)
     D = [spots.get(i, spots.get(i - len(rs), P[a])) for i, (a, _) in enumerate(rs)]
     off = [D[i] - P[a] for i, (a, _) in enumerate(rs)]
+    # The offset a stance leaves with: its spot across the ground, and the height
+    # offset it held (the heel has risen since it landed; it must not drop back).
+    lv = [Vector((D[i].x - P[e].x, D[i].y - P[e].y, off[i].z)) for i, (_, e) in enumerate(rs)]
     tgt = []
     for k in range(len(P)):
         t = None
@@ -228,14 +221,14 @@ def plant(P, mask, spots, toe=None):
             elif prev is None:
                 t = P[k] + off[nxt] * smooth(k, 0, rs[nxt][0])
             elif nxt is None:
-                t = P[k] + (D[prev] - P[rs[prev][1]])
+                t = P[k] + lv[prev]
             else:
                 lift = rs[prev][1]
                 if toe is not None:
                     while lift < rs[nxt][0] - 2 and toe[lift]:
                         lift += 1
                 u = smooth(k, lift, rs[nxt][0])
-                t = P[k] + (D[prev] - P[rs[prev][1]]) * (1 - u) + off[nxt] * u
+                t = P[k] + lv[prev] * (1 - u) + off[nxt] * u
         tgt.append(t)
     return tgt, rs
 
@@ -306,6 +299,13 @@ TL, _ = plant(AL, gl, {len(rl) - 1: Q_L.copy()}, TOE_L)
 TR, _ = plant(AR, gr, {}, TOE_R)
 print("STOP_PLAN feet moved to idle's stance: left %.1f cm, right %.1f cm" % (100 * (Q_L - P_L).length, 100 * (Q_R - P_R).length))
 
+# The source's hips and body turned onto the walk's where it takes over (its
+# hips by some 40 degrees: the walk is turned into his guard). This also carries
+# the walk's straightened chest (firm_walk.py's upright) into the stop.
+TURN_H = W[WK]["m"]["mixamorig:Hips"].to_quaternion() @ SRC[K0]["m"]["mixamorig:Hips"].to_quaternion().inverted()
+TURN = {n: W[WK]["q"][n] @ SRC[K0]["q"][n].inverted() for n in BODY}
+print("STOP_PLAN hips turned %.1f deg onto the walk's" % math.degrees(TURN_H.angle))
+
 stop = new_action("stop", "Stop Walking - Footmen.fbx: joins the walk, ends in idle's guard")
 HXY = []
 for i, k in enumerate(range(K0, E + 1)):
@@ -319,13 +319,23 @@ for i, k in enumerate(range(K0, E + 1)):
         if n in ARM:
             q[n] = wk["q"][n].slerp(IDLE["q"][n], w_arm)
         elif n in BODY:
-            q[n] = s["q"][n].slerp(IDLE["q"][n], w_body)
+            q[n] = (TURN[n] @ s["q"][n]).slerp(IDLE["q"][n], w_body)
         else:
             q[n] = s["q"][n].copy()
     put(q, s["loc"])
     hips_src = s["m"]["mixamorig:Hips"]
-    set_matrix(b("Hips"), mblend(hips_src, Matrix.Translation(F) @ IH, w_body))
-    upright(UPRIGHT * (1.0 - smooth(k, K0, LL - 6)))
+    hips_on = (TURN_H @ hips_src.to_quaternion()).to_matrix().to_4x4()
+    hips_on.translation = hips_src.translation
+    m_h = mblend(hips_on, Matrix.Translation(F) @ IH, w_body)
+    set_matrix(b("Hips"), m_h)
+    # The legs keep the source's line (square to the front, as the walk's are):
+    # the turn is taken back out at the thighs.
+    back = (mblend(hips_src, Matrix.Translation(F) @ IH, w_body).to_quaternion() @ m_h.to_quaternion().inverted()).to_matrix()
+    for side in ("Left", "Right"):
+        up = b(side + "UpLeg")
+        m = (back @ up.matrix.to_3x3()).to_4x4()
+        m.translation = up.head.copy()
+        set_matrix(up, m)
     # Feet: the last left step lands at idle's left; the right takes a settling step to idle's right.
     w_l = smooth(k, next((x for x in range(LS, LL) if not TOE_L[x]), LS), LL + 4)
     t_l = TL[k]
@@ -337,6 +347,13 @@ for i, k in enumerate(range(K0, E + 1)):
     r_r = s["m"]["mixamorig:RightFoot"].to_quaternion().slerp(RR_IDLE, smooth(k, RS0, RS1))
     ik_leg("Left", t_l, r_l)
     ik_leg("Right", t_r, r_r)
+    # The source's stride is only the nearest to the walk's (its toes up to 18 cm
+    # off): the legs ease in from the walk's, so the first frame is the walk's.
+    w_in = smooth(i, 0, LEG_IN)
+    if w_in < 1.0:
+        for n in LEG:
+            PB[n].rotation_quaternion = wk["q"][n].slerp(PB[n].rotation_quaternion, w_in)
+        bpy.context.view_layer.update()
     if w_end > 0:
         for n in LEG:
             PB[n].rotation_quaternion = PB[n].rotation_quaternion.slerp(IDLE["q"][n], w_end)

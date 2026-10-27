@@ -8,7 +8,9 @@
 ## A Soldier is a Dictionary with the original keys: id, name, typeId, level, xp,
 ## hp, men, morale, fatigue, injuries, weaponTier, armorTier, armorCondition
 ## (0..1 multiplier on armour), promoted, ammo, portrait, variant, kills, battles,
-## expeditions, recruitedOn, and the optional recovering / drilled / volunteer.
+## expeditions, recruitedOn, and the optional recovering / drilled / volunteer,
+## and wounded (soldiers who went down in its last fight) / injured (it was cut
+## down to the last): the penalty it carries into its next fight (Squad.wound_of).
 ## Use through `const Soldier = preload("res://scripts/meta/soldier.gd")`.
 extends RefCounted
 
@@ -203,6 +205,11 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 		eff.melee -= 5
 		eff.ranged -= 5
 		eff.move = max(2, eff.move - 1)
+	# Wounds from its last fight: less defense and morale here, less damage in Battle.preview.
+	var wound: Variant = Squad.wound_of(s)
+	if wound != null:
+		eff.defense = JS.rnd(eff.defense * (1 - wound.defense))
+		eff.rangedDefense = JS.rnd(eff.rangedDefense * (1 - wound.defense))
 	# The squad marches out with the soldiers its HP can carry.
 	var size: int = DB.squad_size(s.typeId)
 	var men: int = maxi(1, mini(size, JS.get_or(s, "men", size)))
@@ -222,7 +229,7 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 		"size": size,
 		"alive": Squad.alive_for(hp, st.hp, men),
 		"hpPer": st.hp,
-		"morale": maxi(1, mini(s.morale, st.morale)),
+		"morale": maxi(1, mini(s.morale, st.morale) - (wound.morale if wound != null else 0)),
 		"maxMorale": st.morale,
 		"stats": eff,
 		"melee": dmg.melee,
@@ -250,6 +257,12 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 	u.struck = []
 	u.startMorale = s.morale
 	u.statuses = []
+	if wound != null:
+		# Of the soldiers who march, those still hurt: if that is every one of
+		# them, cut down to the last the squad is gone for good (Battle._fall).
+		wound.hurt = mini(wound.hurt, u.alive)
+		wound.marched = u.alive
+		u.wound = wound
 	return u
 
 

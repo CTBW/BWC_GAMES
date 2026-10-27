@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-24",
+  "visualApproval": "User: That looks really good, I like it — approved the generated pink fog schematic.",
+  "recommendedIcon": "sovereign-kiss-icon-fog-b.png; 2048x2048 PNG; reviewed at full resolution and 26/32/48/64/128 px in the report; icon acceptance pending.",
+  "completedHiggsfieldAttempts": "Rejected v1 with unwanted annotation; clean painted Warcraft A; recommended pink-fog B. Draft C was not submitted.",
+  "requestedChange": "More pink; heart made of fog; progressively translucent; evaporates after passing its targets.",
+  "schematic": "Built-in ImageGen edit of the first schematic; same character identity, revised vapor lifecycle.",
+  "icons": "Higgsfield website, Nano Banana Pro, 2K, square, Unlimited enabled, one sequential generation at a time.",
+  "priorIconAttempt": "Warcraft A was already running when the fog rework arrived. Preserve as superseded exploration, not the revised ability master.",
+  "behavior": "Pass through eligible opponents, apply enthrall on confirmed overlap, continue beyond the target zone, fade into detached wisps. No impact destruction. Per-target deduplication is required.",
+  "implementationStatus": "Concept and handoff only; no gameplay, Blender scene, or UI binding modified."
+}

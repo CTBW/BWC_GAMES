@@ -1,0 +1,33 @@
+Audio correction — 2026-10-24
+
+Native audio capture: 12 checks passed; clean shutdown.
+Sound defaults ON and saved sound ON. Both MP4s: native 1600x900 / 24 fps with stereo AAC 48 kHz.
+Quick suite: 408 passed, 0 failed, 11 skipped.
+See audio-review.json for measured levels and hashes.
+
+Historical atmosphere pass follows:
+
+Camp atmosphere detail pass — 2026-10-24
+
+Native review: 90 checks; 0 failures; 0 runtime errors.
+Day 288 frames / 12 seconds; night 144 frames / 6 seconds; native 1920x1080 at fixed 1/24-second updates.
+All three bird roosts captured; matched OFF/ON state; save unchanged; preferences restored.
+
+Focused: tools/test.sh --quick test_woodland_camp test_screens test_boot_warm test_base_view
+35 passed, 0 failed, 0 skipped.
+
+Quick suite: tools/test.sh --quick
+388 passed, 1 failed, 10 skipped.
+Known remaining failure: test_audio::test_a_marching_squad_is_one_tread, existing headless battlefield custom_samplers shader compiler error.
+
+Atmosphere observations (whole scene; not isolated GPU cost):
+{
+  "birdsMax": 5,
+  "dayFrames": 288,
+  "meanEngineProcessMs": 5.4546,
+  "meanSceneDrawCalls": 538,
+  "nightFrames": 144,
+  "nodesBefore": 2,
+  "performanceScope": "90 native frames, whole scene including UI; no readback/encoding; not isolated GPU effect timing",
+  "realTimeFrames": 90
+}

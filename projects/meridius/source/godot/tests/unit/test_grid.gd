@@ -69,7 +69,7 @@ func test_passability_cost_and_steps() -> void:
 	m.tiles[2 * 14 + 2].terrain = "water"
 	assert_false(Grid.tile_passable(m, 2, 2))
 	m.tiles[2 * 14 + 3]["prop"] = "tree_oak"
-	assert_false(Grid.tile_passable(m, 3, 2))
+	assert_true(Grid.tile_passable(m, 3, 2), "woodland is traversable")
 	m.tiles[2 * 14 + 4]["prop"] = "gate"
 	assert_true(Grid.tile_passable(m, 4, 2), "a gateway can be walked through")
 	m.tiles[2 * 14 + 5].terrain = "forest"

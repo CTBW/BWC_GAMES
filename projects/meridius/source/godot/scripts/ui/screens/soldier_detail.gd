@@ -1,7 +1,7 @@
 ## Port of Roster.tsx `SoldierDetail`: one squad in full — portrait, the
 ## sergeant's name (editable; saved on close), rank/type/strength/CP, blurb,
 ## experience / squad HP / morale bars, the stat grid, equipment, abilities,
-## lasting injuries, reinforcement of empty places (at home), Discharge
+## lasting injuries, wounds from the last fight, reinforcement of empty places (at home), Discharge
 ## (asks first, at home) and Close. Used by the base screen and the campaign HUD.
 ##
 ##   const SoldierDetail = preload("res://scripts/ui/screens/soldier_detail.gd")
@@ -221,6 +221,33 @@ func refresh() -> void:
 			ic.add_child(UI.rich("[b]%s[/b]: %s (%s)" % [I.name, UI.esc(I.description), ", ".join(effs)], "SmallText"))
 		col.add_child(inj)
 
+	# Wounds carried from the last fight.
+	var wound: Variant = Deps.squad().wound_of(so)
+	if wound != null:
+		col.add_child(UI.gap(0, 8))
+		var wc := UI.panel("ParchmentCard")
+		wc.name = "Wound"
+		var wcol := UI.vbox(0)
+		wc.add_child(wcol)
+		var injured: bool = wound.kind == "injured"
+		wcol.add_child(UI.label("Injured" if injured else "Wounded", "H4Label"))
+		var why := "Cut down to the last in its last fight." if injured else ("%s still hurt from its last fight." % ("One soldier is" if wound.hurt == 1 else "%d soldiers are" % wound.hurt))
+		var wr := UI.hbox(8)
+		wcol.add_child(wr)
+		var wt := UI.rich("%s In its next fight: %s. %s." % [why, Deps.squad().wound_text(wound), Deps.squad().hurt_text(wound)], "SmallText")
+		wt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		wt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		wr.add_child(wt)
+		if g.get("expedition") == null:
+			var dc: int = Game.dress_cost(g, so)
+			var db := RichButton.make(["Dress wounds", {"icon": "silver", "size": 13}, str(dc)], "GoldSmallButton", _dress_wounds)
+			db.name = "DressWounds"
+			db.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			db.disabled = g.resources.silver < dc
+			Tip.attach(db, "The Infirmary dresses the wounds: the squad marches with the next expedition at full strength, and its soldiers who go down rise again (%d silver; new soldiers for the hurt would cost %d)." % [dc, Game.reinforce_cost(g, so) * wound.hurt])
+			wr.add_child(db)
+		col.add_child(wc)
+
 	# Empty places in the ranks.
 	if missing > 0:
 		col.add_child(UI.gap(0, 8))
@@ -305,6 +332,15 @@ func _icon_line(icon: String, bbcode: String) -> HBoxContainer:
 func _reinforce(count: int) -> void:
 	var Game = Deps.game()
 	if Game.reinforce(App.game, soldier_id, count):
+		App.sfx("coin")
+		App.commit()
+	else:
+		App.sfx("deny")
+
+
+func _dress_wounds() -> void:
+	var Game = Deps.game()
+	if Game.dress_wounds(App.game, soldier_id):
 		App.sfx("coin")
 		App.commit()
 	else:

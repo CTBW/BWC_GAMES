@@ -1,7 +1,8 @@
 ## Live-tree integration check of the UI shell: runs scenes/main.tscn with real
 ## frames and clicks through the game by pressing the actual buttons —
 ## title → New Company → welcome → manual → roster → soldier → Esc menu →
-## each building → prep → March Out → campaign → home → report → base →
+## each building → prep → March Out → the 3D battle → Begin Battle → Retreat →
+## Withdraw → report → base →
 ## a test battle. Logged errors are collected and listed by file. Works headless:
 ##   tools/godot.sh --headless --path . -s res://tests/visual/ui_flow_check.gd
 ## Exit code 0 when every step passed and no error came from the UI shell
@@ -162,12 +163,24 @@ func _run() -> void:
 	await _frames()
 	press("MarchOut")
 	await _frames(6)
-	check(app.screen == "campaign" and app.game.expedition != null, "March Out starts the expedition")
+	check(app.screen == "battle" and app.game.expedition != null, "March Out takes the company onto the field")
 	var hud := main.get_node("UI/Root/Screen").get_child(0)
-	check(hud.name == "Screen_campaign", "campaign screen node")
-	print("     campaign view: ", app.campaign_view, "  hud: ", hud.get_script().resource_path if hud.get_script() else "(none)")
-	app.go_home("retreat")
-	await _frames(4)
+	check(hud.name == "Screen_battle", "battle screen node")
+	print("     battle view: ", app.battle_view, "  hud: ", hud.get_script().resource_path if hud.get_script() else "(none)")
+	check(press("Begin"), "Begin Battle")
+	var v: Node = app.battle_view
+	for i in 900:
+		if v.b.phase == "player" and not v.ui.busy:
+			break
+		await _frames(1)
+	check(v.b.phase == "player" and not v.ui.busy, "the company's turn")
+	check(press("Retreat"), "Retreat")
+	await _frames()
+	check(press("Withdraw"), "Withdraw")
+	for i in 600:
+		if app.screen == "report":
+			break
+		await _frames(1)
 	check(app.screen == "report" and _find("BackToAmberfeld") != null, "report after the return")
 	press("BackToAmberfeld")
 	await _frames(4)
@@ -178,7 +191,7 @@ func _run() -> void:
 	press("Continue")
 	await _frames(4)
 	check(app.screen == "base", "Continue")
-	app.debug_test_battle("raiding_party", {"seed": 3})
+	app.debug_test_battle({"seed": 3})
 	await _frames(8)
 	check(app.screen == "battle", "a test battle")
 	var bh := main.get_node("UI/Root/Screen").get_child(0)
@@ -192,7 +205,7 @@ func _run() -> void:
 	for e in catcher.errors:
 		var f: String = e.file
 		by_file[f] = by_file.get(f, 0) + 1
-		var hud_file := f.contains("/ui/hud_") or f.contains("battle_hud") or f.contains("campaign_hud")
+		var hud_file := f.contains("/ui/hud_") or f.contains("battle_hud")
 		if (f.contains("res://scripts/ui/") and not hud_file) or f.contains("res://scripts/app/"):
 			mine += 1
 			print("UI ERROR %s:%d %s" % [f, e.line, e.msg])

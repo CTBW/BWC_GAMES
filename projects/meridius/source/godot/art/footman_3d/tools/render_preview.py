@@ -1,6 +1,6 @@
 """Preview renders of the rigged footman (background Mixar / Blender).
 
-  mixar.exe --background <rig.blend> --python render_preview.py -- <out dir> <mode> [action] [step] [facings]
+  mixar.exe --background <rig.blend> --python render_preview.py -- <out dir> <mode> [action] [step] [facings] [travel|wide]
 
 mode "stress": rest pose with the skeleton drawn in, then deformation tests
                (arms down, arm overhead, deep knee bend, head turn), front and 3/4.
@@ -125,6 +125,11 @@ else:
     step = int(argv[3]) if len(argv) > 3 else 2
     facings = (argv[4] if len(argv) > 4 else "se,sw,ne,nw").split(",")
     travel = len(argv) > 5 and argv[5] == "travel"
+    # "wide": a bigger frame with the same centre and pixels per metre, for clips that
+    # carry him out of the usual one (the lunges, the stab, death).
+    if len(argv) > 5 and argv[5] == "wide":
+        sc.render.resolution_x, sc.render.resolution_y = 1000, 960
+    size = 2.6 * max(sc.render.resolution_x, sc.render.resolution_y) / 560
     rig.animation_data_create()
     rig.animation_data.action = action
     f0, f1 = (int(v) for v in action.frame_range)
@@ -141,7 +146,7 @@ else:
             path = R @ (vel * dur)
             aim(0, 30, 2.6 + path.length * 0.9, Vector((0, 0, 0.9)) + path * 0.5)
         else:
-            aim(0, 30, 2.6, Vector((0, 0, 0.9)))
+            aim(0, 30, size, Vector((0, 0, 0.9)))
         d = out / f"{argv[2]}_{fk}"
         d.mkdir(parents=True, exist_ok=True)
         for i, f in enumerate(range(f0, f1 + 1, step)):

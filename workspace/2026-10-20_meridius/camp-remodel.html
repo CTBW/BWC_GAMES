@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meridius — Woodland camp remodel</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="../_shared/examples.css">
+  <script defer src="../_shared/report.js"></script>
+  <style>
+    .camp-hero,.camp-evidence figure{margin:20px 0;padding:12px;border:1px solid var(--mak-border);border-radius:12px;background:var(--mak-surface)}
+    .camp-hero img,.camp-evidence img{display:block;width:100%;border-radius:7px}
+    .camp-evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .camp-evidence figure{margin:0;min-width:0}
+    figcaption{padding:10px 2px 2px;color:var(--mak-muted);font-size:13px;line-height:1.7}
+    .camp-note{padding:16px 20px;border-left:2px solid var(--mak-accent);background:var(--mak-surface);margin:20px 0}
+    .camp-table{overflow-x:auto}.camp-table table{display:table;min-width:620px}
+    .camp-sources li{margin-bottom:8px}
+    @media(max-width:1050px){.camp-evidence{grid-template-columns:1fr}}
+  </style>
+</head>
+<body><main class="container">
+  <p class="meta">MERIDIUS / AMBERFELD GARRISON / 24 OCTOBER 2026</p>
+  <h1>A home in the woodland</h1>
+  <p class="lead">The first native implementation of the woodland camp turns the selected painting into the campaign’s starting place: a sheltered garrison, living company figures, quiet forest atmosphere and six working services.</p>
+  <p>The scene uses a painted stage at a fixed isometric angle. Pan and zoom explore the composition; daylight and moonlight are two views of the same camp. The existing roster, building panels and expedition flow remain connected to the game.</p>
+
+  <figure class="camp-hero">
+    <img src="camp-remodel/day.webp" alt="Native daylight view of Amberfeld Garrison, with the woodland painting and compact camp controls" loading="lazy">
+    <figcaption><strong>Daylight.</strong> The selected woodland composition becomes the playable camp backdrop. <a href="camp-remodel/day.webp" download>Download</a>.</figcaption>
+  </figure>
+  <figure class="camp-hero">
+    <img src="camp-remodel/night.webp" alt="Native night view of the same woodland camp, with cool forest shadows and warm tent interiors" loading="lazy">
+    <figcaption><strong>Firelight.</strong> A smooth lighting preview blends to the matching night painting, with restrained movement in the existing warm tent pixels. It does not advance campaign time. <a href="camp-remodel/night.webp" download>Download</a>.</figcaption>
+  </figure>
+
+  <figure class="camp-hero">
+    <video controls loop preload="metadata" poster="camp-remodel/atmosphere-on.webp" style="display:block;width:100%;border-radius:7px">
+      <source src="camp-remodel/woodland-atmosphere-day.mp4" type="video/mp4">
+    </video>
+    <figcaption><strong>The woodland wakes — with game audio.</strong> Twelve seconds from the production Godot scene: rolling mist, gusts through the trees and a small flock lifting off from the right-hand birch, with the actual forest ambience. Bird takeoff begins about three seconds into this clip. Native picture and mixer capture at 24 fps; this demonstrates motion and sound, not rendering performance. Press Play to hear it. <a href="camp-remodel/woodland-atmosphere-day.mp4" download>Download MP4</a>.</figcaption>
+  </figure>
+  <figure class="camp-hero">
+    <video controls loop preload="metadata" poster="camp-remodel/night.webp" style="display:block;width:100%;border-radius:7px">
+      <source src="camp-remodel/woodland-atmosphere-night.mp4" type="video/mp4">
+    </video>
+    <figcaption><strong>After dusk — with game audio.</strong> Six seconds of cool drifting fog, swaying foliage and warm tent light, with the actual nighttime wind and crickets. Daytime birds settle at night. Native picture and mixer capture at 24 fps. Press Play to hear it. <a href="camp-remodel/woodland-atmosphere-night.mp4" download>Download MP4</a>.</figcaption>
+  </figure>
+
+  <h2>Atmosphere in motion</h2>
+  <p>Two layers of uneven mist travel at different speeds through the existing forest fog. Local wind masks bend tree crowns above fixed roots, with quicker leaf flutter over the slower gusts. The palisade and occupied camp remain stable. Three surveyed treetops release small flocks, with staggered wingbeats, short glides and long quiet intervals between flights.</p>
+  <div class="camp-evidence">
+    <figure><img src="camp-remodel/atmosphere-off.webp" alt="Native camp with the ambient animation disabled" loading="lazy"><figcaption><strong>Atmosphere off.</strong> Same camera, lighting, soldiers and presentation clock as the adjacent capture. <a href="camp-remodel/atmosphere-off.webp" download>Download</a>.</figcaption></figure>
+    <figure><img src="camp-remodel/atmosphere-on.webp" alt="Native camp with rolling fog, tree wind and a flock above the right forest" loading="lazy"><figcaption><strong>Atmosphere on.</strong> Motion remains in the woodland and leaves the services readable. <a href="camp-remodel/atmosphere-on.webp" download>Download</a>.</figcaption></figure>
+  </div>
+
+  <h2>What is built</h2>
+  <p>The new renderer preserves the painting’s architecture and ground. Shader mist moves through the woodland, soft light passes through the upper canopy, and warm tent light gently breathes at night. Existing roster figures follow authored routes across visible open ground. These routes are presentation paths, separate from battlefield navigation.</p>
+  <p>Six painted areas open the existing service panels. A compact service strip offers the same actions through keyboard-focusable buttons, with real building names and levels in their tooltips. The Chronicle starts with its latest entry; Roster and Plan Expedition remain the main company actions.</p>
+  <div class="camp-evidence">
+    <figure>
+      <img src="camp-remodel/hover.webp" alt="Native camp view with one service hovered and its building information visible" loading="lazy">
+      <figcaption><strong>Find a service.</strong> Hover information identifies the live building without placing large permanent labels across the painting. <a href="camp-remodel/hover.webp" download>Download</a>.</figcaption>
+    </figure>
+    <figure>
+      <img src="camp-remodel/barracks.webp" alt="Existing Barracks service panel opened over the remodeled woodland camp" loading="lazy">
+      <figcaption><strong>Manage the company.</strong> The artwork leads into the existing Barracks panel and its authoritative roster data. <a href="camp-remodel/barracks.webp" download>Download</a>.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Six places to prepare</h2>
+  <div class="camp-table"><table>
+    <thead><tr><th>Service</th><th>Place in the painting</th><th>Existing action</th></tr></thead>
+    <tbody>
+      <tr><td>Command</td><td>Central command tent</td><td>Review command upgrades and army capacity.</td></tr>
+      <tr><td>Barracks</td><td>Western tent lines</td><td>Recruit, reinforce and grant leave.</td></tr>
+      <tr><td>Training</td><td>Eastern training ground</td><td>Drill squads and promote veterans.</td></tr>
+      <tr><td>Quartermaster</td><td>Rear-left supply area</td><td>Buy supplies and improve supply capacity.</td></tr>
+      <tr><td>Armoury</td><td>Rear-right service area</td><td>Buy and repair arms and armour.</td></tr>
+      <tr><td>Infirmary</td><td>Front tent group</td><td>Treat lasting injuries and review medical upgrades.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Armoury and Infirmary placement interpret the unlabeled artwork. The service IDs and gameplay functions come from the existing game.</p>
+
+  <h2>Framing the camp</h2>
+  <p>Use the mouse wheel to zoom and the existing camera controls to pan. The camera is bounded by the painting so it does not reveal empty space. Frame camp restores the opening composition; Day and Night select the lighting preview.</p>
+  <div class="camp-evidence">
+    <figure>
+      <img src="camp-remodel/before.webp" alt="Baseline native garrison before the woodland camp remodel" loading="lazy">
+      <figcaption><strong>Before.</strong> The original garrison's world-only fixture capture. New captures include the production HUD and use the remodeled opening composition. <a href="camp-remodel/before.webp" download>Download</a>.</figcaption>
+    </figure>
+    <figure>
+      <img src="camp-remodel/wide.webp" alt="Native remodeled camp in a wide desktop viewport, with the scene and HUD framed together" loading="lazy">
+      <figcaption><strong>Desktop framing.</strong> A wide view for reviewing the composition, camera bounds and HUD together. <a href="camp-remodel/wide.webp" download>Download</a>.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Selected artwork and editable sources</h2>
+  <p>Day uses <strong>camp_small_woodland, take 02</strong>; night uses <strong>camp_small_woodland_night, take 01</strong>. Both originals are 2752 × 1536 PNGs, copied byte-for-byte into the Godot camp asset folder. SHA-256 checks match each engine asset to its selected original. This pass reuses the existing artwork; it adds no new generation.</p>
+  <ul class="camp-sources">
+    <li><a href="../../projects/meridius/source/godot/scripts/render/camp_wildlife.gd">Bird roosts, flight paths and wing animation</a>. The original paintings remain unchanged; all new motion is drawn by the engine.</li>
+    <li><a href="terrain/originals/camp_small_woodland__take-02.webp">Selected day original (WebP copy)</a> · <a href="terrain/originals/camp_small_woodland__take-02.webp" download>Download</a> · <a href="../../projects/meridius/source/godot/assets/camp/woodland_day.png">Engine copy</a>.</li>
+    <li><a href="terrain/originals/camp_small_woodland_night__take-01.webp">Selected night original (WebP copy)</a> · <a href="terrain/originals/camp_small_woodland_night__take-01.webp" download>Download</a> · <a href="../../projects/meridius/source/godot/assets/camp/woodland_night.png">Engine copy</a>.</li>
+    <li><a href="../../projects/meridius/source/godot/scripts/render/woodland_camp.gd">Camp renderer, hit areas and ground routes</a> · <a href="../../projects/meridius/source/godot/assets/shaders/camp_woodland.gdshader">Atmosphere shader</a> · <a href="../../projects/meridius/source/godot/scripts/ui/screens/base_screen.gd">Camp HUD</a>.</li>
+    <li><a href="../../projects/meridius/review/camp-remodel/README.md">Implementation notes</a> · <a href="../../projects/meridius/review/camp-remodel/manifest.json">Provenance manifest</a> · <a href="../../projects/meridius/source/godot/tests/visual/camp_remodel_review.gd">Native review source</a>.</li>
+  </ul>
+  <details><summary>Coordinate and source contract</summary>
+    <p>Authored facility anchors, hit polygons and figure routes use normalized image coordinates, starting at the top-left: x runs right, y runs down. The renderer multiplies them by the 2752 × 1536 image size. Engine world coordinates for this stage are source-image pixels. The renderer is the editable geometry source; the manifest links to it rather than duplicating its coordinates.</p>
+    <p>The previous <a href="../../projects/meridius/source/godot/scripts/render/base_view.gd">base renderer</a> is retained. Its baseline SHA-256 is <code>EE2E97C7B67D6FAB3E50642E1C5ED60B9F58D37D237D76D7992FBD66CF79F825</code>.</p>
+  </details>
+
+  <h2>Verification and current limits</h2>
+  <div id="verification-status" class="camp-note" data-verification="verified-with-suite-limitation">
+    <p><strong>Audio capture corrected.</strong> Sound defaults to ON in the game and is ON in the saved preferences used for this recording. Both replacement MP4s contain stereo audio from Godot's Master bus; the players start unmuted. The earlier videos had no audio track. <a href="camp-remodel/audio-review.json">Audio verification</a>.</p>
+    <p><strong>Native review: 90 checks passed, no runtime errors, clean shutdown.</strong> All six painted facilities and their service buttons open the existing panels. The review also exercises hover, modal blocking, day/night, zoom, camera reset, Roster, Plan Expedition and return, plus a 2560 × 1080 desktop. The player's save is unchanged and preferences are restored. <a href="camp-remodel/review.txt">Interaction log</a> · <a href="camp-remodel/review.json">Capture record</a>.</p>
+    <p><strong>Latest quick suite: 408 passed, 0 failed, 11 skipped.</strong> Rerun for the audio correction. The earlier camp pass also recorded 35 focused regressions. <a href="camp-remodel/tests.txt">Test summary</a>.</p>
+    <p id="report-check"><strong>Report checked at 1440 and 1000 desktop pixels, in dark and light themes.</strong> All eight image previews and downloads, source links, both videos and seeking work; no horizontal overflow or browser errors were found. <a href="camp-remodel/report-check.json">Browser check record</a>.</p>
+  </div>
+  <p>The buildings are painted into the stage and do not change appearance when upgraded. Actual building levels, costs and benefits remain visible through the live panels and tooltips. The fixed isometric painting does not provide rotating geometry or battlefield terrain. Armoury and Infirmary placement are interpretations of the concept; the game’s authoritative rules are unchanged.</p>
+  <p class="meta">The user accepted the first camp appearance. The new atmospheric detail pass is ready for visual review. Editable report: <a href="camp-remodel.html" download>camp-remodel.html</a>.</p>
+</main></body></html>

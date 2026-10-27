@@ -33,7 +33,7 @@ func _with_waves(units: Array, waves: Array, objective: Dictionary, seed := 3) -
 		setup_waves.append(sw)
 	var all := units.duplicate()
 	all.append_array(reserve)
-	var b = Battle.new({"seed": seed, "map": map, "units": all, "survivalBonus": 0, "title": "t", "objective": objective, "waves": setup_waves})
+	var b = Battle.new({"seed": seed, "map": map, "units": all, "title": "t", "objective": objective, "waves": setup_waves})
 	b.phase = "player"
 	return b
 
@@ -121,7 +121,7 @@ func _hold_battle() -> Variant:
 	map["zoneName"] = "The yard"
 	var a := enemy_h("goblin_spear", "a", 6, 6)
 	var c := enemy_h("goblin_spear", "c", 7, 7)
-	var b = Battle.new({"seed": 5, "map": map, "units": [f, a, c], "survivalBonus": 0, "title": "t",
+	var b = Battle.new({"seed": 5, "map": map, "units": [f, a, c], "title": "t",
 		"objective": {"kind": "hold", "turns": 9, "title": "Hold", "brief": ""}})
 	b.phase = "player"
 	return b

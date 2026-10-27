@@ -1,0 +1,355 @@
+{
+  "fps": 30,
+  "bone_count": 75,
+  "staff_hand": "Left",
+  "source_preserved": true,
+  "clips": {
+    "Idle": {
+      "source": "Standing Idle.fbx",
+      "source_frames": [
+        1,
+        56
+      ],
+      "frames": 56,
+      "fps": 30,
+      "duration_seconds": 1.8333333333333333,
+      "loop": true,
+      "events": [],
+      "heading_correction_degrees": 50.09067300422939,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.04911958426237106,
+      "walk_speed_m_s": 0
+    },
+    "Walk": {
+      "source": "Standing Walk Forward.fbx",
+      "source_frames": [
+        1,
+        41
+      ],
+      "frames": 41,
+      "fps": 30,
+      "duration_seconds": 1.3333333333333333,
+      "loop": true,
+      "events": [],
+      "heading_correction_degrees": 33.08993988372191,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.043144017457962036,
+      "walk_speed_m_s": 0.9538339104743699
+    },
+    "ChainLightning": {
+      "source": "Chain lightning - Mage.fbx",
+      "source_frames": [
+        1,
+        130
+      ],
+      "frames": 130,
+      "fps": 30,
+      "duration_seconds": 4.3,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 32,
+          "seconds": 1.0333333333333334,
+          "status": "visual marker; gameplay binding pending"
+        }
+      ],
+      "heading_correction_degrees": 58.30685759209075,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.06529346108436584,
+      "walk_speed_m_s": 0
+    },
+    "Fireball": {
+      "source": "Fireball - Mage.fbx",
+      "source_frames": [
+        1,
+        225
+      ],
+      "frames": 225,
+      "fps": 30,
+      "duration_seconds": 7.466666666666667,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 146,
+          "seconds": 4.833333333333333,
+          "status": "visual marker; gameplay binding pending"
+        }
+      ],
+      "heading_correction_degrees": 58.30688221318138,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.09615607559680939,
+      "walk_speed_m_s": 0
+    },
+    "FrostNova": {
+      "source": "Frost nova - Mage.fbx",
+      "source_frames": [
+        1,
+        99
+      ],
+      "frames": 99,
+      "fps": 30,
+      "duration_seconds": 3.2666666666666666,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 55,
+          "seconds": 1.8,
+          "status": "visual marker; gameplay binding pending"
+        }
+      ],
+      "heading_correction_degrees": 58.30685759209075,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.11886020004749298,
+      "walk_speed_m_s": 0
+    },
+    "EarthFist": {
+      "source": "Earth Fist - Mage.fbx",
+      "source_frames": [
+        1,
+        90
+      ],
+      "frames": 90,
+      "fps": 30,
+      "duration_seconds": 2.966666666666667,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 40,
+          "seconds": 1.3,
+          "status": "visual marker; gameplay binding pending"
+        }
+      ],
+      "heading_correction_degrees": 58.30685759209075,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.2095361351966858,
+      "walk_speed_m_s": 0
+    },
+    "Hit": {
+      "source": "Hit - Mage.fbx",
+      "source_frames": [
+        1,
+        40
+      ],
+      "frames": 40,
+      "fps": 30,
+      "duration_seconds": 1.3,
+      "loop": false,
+      "events": [
+        {
+          "name": "reaction",
+          "frame": 9,
+          "seconds": 0.26666666666666666,
+          "status": "visual marker; gameplay binding pending"
+        }
+      ],
+      "heading_correction_degrees": 8.555070820404294,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.0581543855369091,
+      "walk_speed_m_s": 0
+    },
+    "Death": {
+      "source": "Death - Mage.fbx",
+      "source_frames": [
+        1,
+        109
+      ],
+      "frames": 109,
+      "fps": 30,
+      "duration_seconds": 3.6,
+      "loop": false,
+      "events": [
+        {
+          "name": "body_contact",
+          "frame": 50,
+          "seconds": 1.6333333333333333,
+          "status": "visual marker; gameplay binding pending"
+        },
+        {
+          "name": "staff_release",
+          "frame": 38,
+          "seconds": 1.2333333333333334
+        }
+      ],
+      "heading_correction_degrees": 58.30687751137452,
+      "source_hip_scale": 0.9110536388174058,
+      "maximum_ground_lift_m": 0.708889901638031,
+      "walk_speed_m_s": 0
+    },
+    "ChainLightningCast": {
+      "source": "ChainLightning",
+      "time_map_seconds_to_source_frame": [
+        [
+          0,
+          1
+        ],
+        [
+          0.25,
+          18
+        ],
+        [
+          0.533333,
+          32
+        ],
+        [
+          0.8,
+          53
+        ],
+        [
+          1.15,
+          88
+        ],
+        [
+          1.666667,
+          130
+        ]
+      ],
+      "frames": 51,
+      "fps": 30,
+      "duration_seconds": 1.6666666666666667,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 17,
+          "seconds": 0.5333333333333333,
+          "status": "candidate visual timing; gameplay binding pending"
+        }
+      ],
+      "variant": "compact combat candidate; full-length action preserved"
+    },
+    "FireballCast": {
+      "source": "Fireball",
+      "time_map_seconds_to_source_frame": [
+        [
+          0,
+          1
+        ],
+        [
+          0.233333,
+          100
+        ],
+        [
+          0.566667,
+          130
+        ],
+        [
+          0.766667,
+          146
+        ],
+        [
+          1.1,
+          168
+        ],
+        [
+          1.5,
+          200
+        ],
+        [
+          1.833333,
+          225
+        ]
+      ],
+      "frames": 56,
+      "fps": 30,
+      "duration_seconds": 1.8333333333333333,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 24,
+          "seconds": 0.7666666666666667,
+          "status": "candidate visual timing; gameplay binding pending"
+        }
+      ],
+      "variant": "compact combat candidate; full-length action preserved"
+    },
+    "FrostNovaCast": {
+      "source": "FrostNova",
+      "time_map_seconds_to_source_frame": [
+        [
+          0,
+          1
+        ],
+        [
+          0.266667,
+          25
+        ],
+        [
+          0.6,
+          45
+        ],
+        [
+          0.8,
+          55
+        ],
+        [
+          1.1,
+          70
+        ],
+        [
+          1.6,
+          99
+        ]
+      ],
+      "frames": 49,
+      "fps": 30,
+      "duration_seconds": 1.6,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 25,
+          "seconds": 0.8,
+          "status": "candidate visual timing; gameplay binding pending"
+        }
+      ],
+      "variant": "compact combat candidate; full-length action preserved"
+    },
+    "EarthFistCast": {
+      "source": "EarthFist",
+      "time_map_seconds_to_source_frame": [
+        [
+          0,
+          1
+        ],
+        [
+          0.266667,
+          20
+        ],
+        [
+          0.433333,
+          32
+        ],
+        [
+          0.6,
+          40
+        ],
+        [
+          0.866667,
+          58
+        ],
+        [
+          1.433333,
+          90
+        ]
+      ],
+      "frames": 44,
+      "fps": 30,
+      "duration_seconds": 1.4333333333333333,
+      "loop": false,
+      "events": [
+        {
+          "name": "release",
+          "frame": 19,
+          "seconds": 0.6,
+          "status": "candidate visual timing; gameplay binding pending"
+        }
+      ],
+      "variant": "compact combat candidate; full-length action preserved"
+    }
+  }
+}

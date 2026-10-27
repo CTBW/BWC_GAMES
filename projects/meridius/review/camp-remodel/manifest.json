@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "id": "meridius-camp-small-woodland-remodel",
+  "title": "Amberfeld woodland camp — atmospheric detail pass",
+  "created": "2026-10-23",
+  "pathBase": "repository-root",
+  "report": "workspace/2026-10-20_meridius/camp-remodel.html",
+  "implementation": {
+    "kind": "painted-fixed-isometric-stage",
+    "scope": "campaign-starting-camp-presentation",
+    "renderer": "projects/meridius/source/godot/scripts/render/woodland_camp.gd",
+    "shader": "projects/meridius/source/godot/assets/shaders/camp_woodland.gdshader",
+    "hud": "projects/meridius/source/godot/scripts/ui/screens/base_screen.gd",
+    "scene": "projects/meridius/source/godot/scenes/base/base_view.tscn",
+    "nativeReview": "projects/meridius/source/godot/tests/visual/camp_remodel_review.gd",
+    "features": [
+      "exact selected day and night paintings",
+      "smooth local lighting preview",
+      "woodland shader mist and canopy light",
+      "restrained breathing of painted night tent light",
+      "existing roster figures on authored ground routes",
+      "six live service hit areas and keyboard-focusable HUD actions",
+      "bounded pan and zoom with frame-camp control",
+      "compact HUD and latest-only Chronicle",
+      "rolling two-layer woodland mist",
+      "root-anchored canopy sway and leaf flutter",
+      "three treetop roosts with bounded daytime bird flights"
+    ],
+    "authoritativeGameplayRulesChanged": false,
+    "generationJobsSubmitted": 0,
+    "wildlife": "projects/meridius/source/godot/scripts/render/camp_wildlife.gd"
+  },
+  "assets": [
+    {
+      "id": "camp-woodland-day",
+      "subject": "camp_small_woodland",
+      "selectedTake": 2,
+      "source": "local/workspace-originals/2026-10-20_meridius/terrain/originals/camp_small_woodland__take-02.png",
+      "webpCopy": "workspace/2026-10-20_meridius/terrain/originals/camp_small_woodland__take-02.webp",
+      "engineCopy": "projects/meridius/source/godot/assets/camp/woodland_day.png",
+      "format": "PNG",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "C200EE9B1B3A2182DA3F1EA0CCCAAF9C3933EB1DD13C860226FBDCF527734E14",
+      "transformation": "byte-for-byte copy",
+      "sourceAndCopyHashVerified": "2026-10-23"
+    },
+    {
+      "id": "camp-woodland-night",
+      "subject": "camp_small_woodland_night",
+      "selectedTake": 1,
+      "source": "local/workspace-originals/2026-10-20_meridius/terrain/originals/camp_small_woodland_night__take-01.png",
+      "webpCopy": "workspace/2026-10-20_meridius/terrain/originals/camp_small_woodland_night__take-01.webp",
+      "engineCopy": "projects/meridius/source/godot/assets/camp/woodland_night.png",
+      "format": "PNG",
+      "width": 2752,
+      "height": 1536,
+      "sha256": "D90365E2BBB29576D3AE222041DBEA46AEF6F7D0FEAE77BE6BA0FCA88C56170E",
+      "transformation": "byte-for-byte copy",
+      "sourceAndCopyHashVerified": "2026-10-23"
+    }
+  ],
+  "baseline": {
+    "source": "projects/meridius/source/godot/scripts/render/base_view.gd",
+    "sha256": "EE2E97C7B67D6FAB3E50642E1C5ED60B9F58D37D237D76D7992FBD66CF79F825",
+    "hashVerified": "2026-10-23",
+    "capture": "workspace/2026-10-20_meridius/camp-remodel/before.webp"
+  },
+  "geometry": {
+    "source": "projects/meridius/source/godot/scripts/render/woodland_camp.gd",
+    "constants": [
+      "ART_SIZE",
+      "ANCHORS",
+      "ZONES",
+      "ROUTES"
+    ],
+    "authoringCoordinates": "normalized image coordinates",
+    "origin": "top-left",
+    "xDirection": "right",
+    "yDirection": "down",
+    "engineCoordinates": "source-image pixels",
+    "sourceImageSize": [
+      2752,
+      1536
+    ],
+    "conversion": "normalized coordinate multiplied component-wise by ART_SIZE",
+    "routeScope": "presentation only; not battlefield navigation"
+  },
+  "services": [
+    {
+      "id": "command",
+      "placement": "central command tent",
+      "action": "App.open_panel(command)"
+    },
+    {
+      "id": "barracks",
+      "placement": "western tent lines",
+      "action": "App.open_panel(barracks)"
+    },
+    {
+      "id": "training",
+      "placement": "eastern training ground",
+      "action": "App.open_panel(training)"
+    },
+    {
+      "id": "quartermaster",
+      "placement": "rear-left supply area",
+      "action": "App.open_panel(quartermaster)"
+    },
+    {
+      "id": "armoury",
+      "placement": "rear-right service area",
+      "action": "App.open_panel(armoury)",
+      "assignment": "interpretation of unlabeled source artwork"
+    },
+    {
+      "id": "infirmary",
+      "placement": "front tent group",
+      "action": "App.open_panel(infirmary)",
+      "assignment": "interpretation of unlabeled source artwork"
+    }
+  ],
+  "evidence": {
+    "directory": "workspace/2026-10-20_meridius/camp-remodel",
+    "status": "native-captured-and-reviewed",
+    "images": [
+      {
+        "file": "before.webp",
+        "purpose": "original camp baseline"
+      },
+      {
+        "file": "day.webp",
+        "purpose": "daylight scene and HUD"
+      },
+      {
+        "file": "night.webp",
+        "purpose": "matching night preview"
+      },
+      {
+        "file": "hover.webp",
+        "purpose": "live service hover"
+      },
+      {
+        "file": "wide.webp",
+        "purpose": "wide desktop framing"
+      },
+      {
+        "file": "barracks.webp",
+        "purpose": "existing building panel integration"
+      }
+    ],
+    "video": {
+      "file": "woodland-night.mp4",
+      "seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "fps": 24,
+      "frames": 120,
+      "source": "fixed-step native Godot frame sequence",
+      "performanceMeasurement": false
+    },
+    "atmosphere": {
+      "birdsMax": 5,
+      "dayFrames": 288,
+      "meanEngineProcessMs": 5.4546,
+      "meanSceneDrawCalls": 538,
+      "nightFrames": 144,
+      "nodesBefore": 2,
+      "performanceScope": "90 native frames, whole scene including UI; no readback/encoding; not isolated GPU effect timing",
+      "realTimeFrames": 90,
+      "comparison": [
+        "atmosphere-off.webp",
+        "atmosphere-on.webp"
+      ],
+      "additionalRoosts": [
+        "bird-roost-2.webp",
+        "bird-roost-3.webp"
+      ],
+      "videos": [
+        {
+          "file": "woodland-atmosphere-day.mp4",
+          "frames": 288,
+          "seconds": 12,
+          "width": 1600,
+          "height": 900,
+          "audio": {
+            "codec": "aac",
+            "channels": 2,
+            "sampleRate": 48000,
+            "meanDb": -39.1,
+            "peakDb": -13.8,
+            "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+          }
+        },
+        {
+          "file": "woodland-atmosphere-night.mp4",
+          "frames": 144,
+          "seconds": 6,
+          "width": 1600,
+          "height": 900,
+          "audio": {
+            "codec": "aac",
+            "channels": 2,
+            "sampleRate": 48000,
+            "meanDb": -34.6,
+            "peakDb": -11.3,
+            "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+          }
+        }
+      ],
+      "width": 1600,
+      "height": 900,
+      "fps": 24,
+      "type": "Godot Movie Maker picture and Master-bus audio at 24 fps; not a performance benchmark"
+    },
+    "audioRecordings": {
+      "capture": "Godot Movie Maker: native picture and Master-bus audio at 24 fps",
+      "checks": [
+        "fresh game defaults to sound on",
+        "saved game starts with sound on",
+        "Master output is unmuted",
+        "Master and Ambience volumes are audible",
+        "production game booted",
+        "welcome dismissed before recording",
+        "production woodland camp loaded",
+        "day has live ambience beds",
+        "night has live ambience beds",
+        "capture leaves campaign state unchanged",
+        "player save unchanged",
+        "player preferences unchanged"
+      ],
+      "clips": [
+        {
+          "ambience": "camp",
+          "beds": [
+            "wind|res://assets/audio/bank/local/ambience/camp_forest_01.ogg"
+          ],
+          "frames": 288,
+          "lighting": "day",
+          "seconds": 12,
+          "shotsAfter": 2,
+          "shotsBefore": 0,
+          "startFrame": 118,
+          "width": 1600,
+          "height": 900,
+          "audio": {
+            "codec": "aac",
+            "channels": 2,
+            "sampleRate": 48000,
+            "meanDb": -39.1,
+            "peakDb": -13.8,
+            "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+          },
+          "file": "woodland-atmosphere-day.mp4",
+          "sha256": "c303f7c47d0331a97d7b883876e272fc436e1df275be26d73f1233a48b6dcc0c"
+        },
+        {
+          "ambience": "camp_night",
+          "beds": [
+            "wind|res://assets/audio/bank/local/ambience/camp_night_wind_01.ogg",
+            "crickets|res://assets/audio/bank/local/ambience/night_crickets_01.ogg"
+          ],
+          "frames": 144,
+          "lighting": "night",
+          "seconds": 6,
+          "shotsAfter": 3,
+          "shotsBefore": 2,
+          "startFrame": 575,
+          "width": 1600,
+          "height": 900,
+          "audio": {
+            "codec": "aac",
+            "channels": 2,
+            "sampleRate": 48000,
+            "meanDb": -34.6,
+            "peakDb": -11.3,
+            "source": "Godot Master bus, original game mix; no added soundtrack or gain"
+          },
+          "file": "woodland-atmosphere-night.mp4",
+          "sha256": "0ad7c6efcbad90b013114e3cca422f03c59faf255fc117de468501ceb15efa12"
+        }
+      ],
+      "failures": [],
+      "fps": 24,
+      "savedSoundOn": true,
+      "soundDefault": true,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "record": "workspace/2026-10-20_meridius/camp-remodel/audio-review.json"
+    }
+  },
+  "verification": {
+    "status": "camp-verified-existing-suite-failure",
+    "assetHashComparisons": "passed: both engine PNGs match selected originals",
+    "nativeVisualReview": "Day/night, matched atmosphere OFF/ON, all three bird roosts, normal-speed sequence frames, hover, panel and wide desktop inspected",
+    "nativeInteractionReview": {
+      "checks": 90,
+      "failed": 0,
+      "runtimeErrors": 0,
+      "exitCode": 0,
+      "saveUnchanged": true,
+      "preferencesRestored": true
+    },
+    "projectTests": {
+      "focused": {
+        "passed": 35,
+        "failed": 0
+      },
+      "quickSuite": {
+        "passed": 408,
+        "failed": 0,
+        "skipped": 11,
+        "run": "2026-10-24 audio correction"
+      }
+    },
+    "reportReview": {
+      "status": "passed",
+      "desktopWidths": [
+        1440,
+        1000
+      ],
+      "themes": [
+        "dark",
+        "light"
+      ],
+      "imagePreviewsAndDownloads": 8,
+      "links": "all local targets returned200",
+      "videos": [
+        {
+          "seconds": 12,
+          "width": 1600,
+          "height": 900,
+          "playback": true,
+          "seek": true,
+          "audioDecoded": true,
+          "muted": false
+        },
+        {
+          "seconds": 6,
+          "width": 1600,
+          "height": 900,
+          "playback": true,
+          "seek": true,
+          "audioDecoded": true,
+          "muted": false
+        }
+      ],
+      "horizontalOverflow": false,
+      "pageErrors": [],
+      "registry": "one camp step in Meridius"
+    },
+    "reportDesktopWidths": [
+      1440,
+      1000
+    ],
+    "reportThemes": [
+      "dark",
+      "light"
+    ],
+    "mobileChecks": "out of scope",
+    "userVisualAcceptance": "First camp appearance accepted by user; new atmospheric detail pass ready for review",
+    "independentVisualReview": "Passed sampled OFF/ON, all three roosts and day/night frames: no architecture distortion, readable fog and appropriately small birds. Continuous motion is provided for user review.",
+    "audioReview": {
+      "checks": 12,
+      "failures": [],
+      "soundDefault": "on",
+      "savedSound": "on",
+      "audioTracks": "stereo AAC, non-silent and no clipping",
+      "reportPlayers": "unmuted by default"
+    }
+  },
+  "limitations": [
+    "Painted buildings do not change appearance when upgraded; real levels remain in panels and tooltips.",
+    "Armoury and Infirmary placements interpret the unlabeled concept artwork.",
+    "The fixed painted stage is not rotating 3D geometry or battlefield terrain.",
+    "Authored figure routes are presentation only and do not alter authoritative gameplay rules."
+  ],
+  "sourceRevision": {
+    "baseCommit": "eef0047",
+    "workingTree": "uncommitted; other task changes preserved",
+    "sourceHashes": {
+      "projects/meridius/source/godot/scripts/render/woodland_camp.gd": "ac2be5a5934ac13ffec977f2ec8c8eb136f88d251c6b32e42031589df5d69873",
+      "projects/meridius/source/godot/assets/shaders/camp_woodland.gdshader": "3c127d4fc72986dda6d5a370ccf3c9501b473c45dba2b84f63e6623b20f954c7",
+      "projects/meridius/source/godot/scripts/ui/screens/base_screen.gd": "7881b7e572263285abee11d982803bee7015342350f1023cfef2119974c8240d",
+      "projects/meridius/source/godot/scenes/base/base_view.tscn": "d2be80ed116b0d1155cf6bc1f31fa9811e7b8bdfb2b6e4621caad9f8f8ce53ab",
+      "projects/meridius/source/godot/tests/visual/camp_remodel_review.gd": "d6f900696a596f01263de2adb4ec5789d8525502f106b480dc9c62b6f3169e60",
+      "projects/meridius/source/godot/scripts/render/camp_wildlife.gd": "b25a0a1182aee5229d6021189cdd229f11c594c8f275cfd7f2974c8f45cc2a07",
+      "projects/meridius/source/godot/tests/visual/camp_audio_review.gd": "36d62ef1c4b1fdd764ab6c5e6414a7433e71a97b1c3d730ce38f6f64e4b2294e"
+    }
+  },
+  "updated": "2026-10-24"
+}

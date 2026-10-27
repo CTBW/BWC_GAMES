@@ -1,0 +1,2376 @@
+# Meridius terrain and town art prompts
+
+Prepared 23 October 2026. 101 requested object and scene prompts, plus 8 optional ground materials. Day prompts use the two supplied style references; night prompts use the matching reviewed daytime image alone for a strict lighting edit. Generation uses Nano Banana Pro through the Higgsfield website in Brave, with Unlimited on under the latest user instruction.
+
+## Reference images and art direction
+
+1. [Lush battlefield reference](../../../workspace/2026-10-20_meridius/terrain/references/style-lush.png): primary camera, vegetation, materials and colour balance.
+2. [Golden battlefield reference](../../../workspace/2026-10-20_meridius/terrain/references/style-golden.png): warmer grass, weathered rock and rounded slope detail.
+
+Match the supplied terrain art: detailed painted shapes, clustered foliage, warm lit planes, cool green-blue shade, readable silhouettes and continuous hills. Exclude soldiers, creatures, health bars and movement overlays from both references. The environment style is more detailed than the 32-pixel ability icons.
+
+The earlier terrain conversation identified [Drova — Forsaken Kin](https://store.steampowered.com/app/1585180/) and [Age of Empires II: Definitive Edition](https://store.steampowered.com/app/813780/) as inspiration. Use these as secondary reference sources for woodland atmosphere and legible settlement construction; the two user-supplied images govern this pack. The game pages were checked on 23 October 2026. No third-party screenshots are copied into the pack.
+
+## Brave execution contract
+
+- Use the dedicated terrain tab in the logged-in Brave session. The user updated the instruction on 23 October: keep Unlimited ON (green), check before each submission and re-enable if it changes. Leave the icon tab and its Unlimited workflow untouched.
+- Use the Higgsfield website, Nano Banana Pro, 2K, one image per submission. Check the aspect ratio, references, exact prompt, quantity one and Unlimited ON before each submission. Earlier 59 regular-mode submissions displayed an estimated 2 credits each; this is not a billing reconciliation. New submissions use Unlimited as now requested. Do not buy credits or change plans.
+- Night edits now use only the matching reviewed daytime original, preserving its exact layout while changing lighting. Earlier three-reference jobs retain their submitted prompts in the ignored receipts. Wider road scenes use the original two style references.
+- For day concepts, attach reference 1 then reference 2 from the local reference folder. Night edits use the matching reviewed daytime original alone. The full prompt states each image's role. Do not reuse the ability-icon references. Start with the six pilot prompts below and visually check their match to the supplied art; the supplied references already establish the requested direction, so routine matching corrections do not need a new user decision.
+- Save originals inside workspace/2026-10-20_meridius/terrain/originals/. Use PROMPT_ID__take-01.png, then increment the take number. Keep every original. This destination is inside the writable workspace; do not change global browser download or security settings.
+- Record the submitted asset ID and status immediately in .cache/terrain-art/jobs.json. Record any original download URL only in that ignored file. On a timeout, inspect that same job. Never resubmit solely because a wait expired. If submission may have succeeded but its ID was not captured, reconcile the website history before retrying.
+- The fixed local downloader validates known original-image URLs, PNG dimensions and destination names. Local writes stay inside the workspace. Restricted network access may still require a narrowly scoped download-command approval; no script can remove platform approval requirements.
+- Check each original at full size and at a reduced game-like size. Accept only after reviewing camera, silhouette, complete framing, material style, lighting, unwanted reference fragments and requested content. For cutouts, inspect every gap and the background edge. For scenes, inspect movement space and continuous slopes. For materials, inspect a 3-by-3 repeat before acceptance.
+- Make targeted correction takes using the failed image as an additional explicitly assigned reference, preserving everything except the named defect. After three failed takes on one item, preserve the evidence and move on to the next independent item; report the unresolved item.
+- No additional user approvals are needed for already-authorized prompts, reference uploads, visual corrections or workspace saves. If the tool cannot identify the page, authentication is required, or an actual permission boundary is reached, stop the dependent action and retain progress. Do not buy credits, change account settings or bypass a blocked UI tool.
+- This is an agent-run queue, not an installed unattended browser service. Generation started with regular credits and now continues in Unlimited mode; the reviewed local originals are listed in this report. Recover recorded jobs before submitting new takes.
+
+## Generation order
+
+First: Mature green oak, Sunlit meadow battlefield, Timber and thatch cottage, Broken stone arch, Orc war pit, Ancient dragon lair. Then the remaining required prompts in catalogue order. The eight ground materials are optional companions after the requested objects and scenes; existing terrain textures remain intact.
+
+## Delivery checks
+
+Preserve editable prompt sources and original images. Generated art is not yet a Godot-ready sprite, seamless texture or playable map. Cutouts still require extraction, scale and anchor checks; scene designs require layout and navigation work; texture seams require verification. Keep game integration as a separate step and do not edit the frozen TypeScript game.
+
+## Prompt catalogue
+
+Each item lists its filename, aspect ratio and image role. Day concepts use both local style references in order; night edits use only the matching reviewed daytime image. Set 2K in the website UI; prompt text alone does not set the model, resolution or Unlimited mode.
+
+### Trees
+
+#### Mature green oak
+
+ID: `tree_oak` · 3:4 · 2K · object
+
+Save as `tree_oak__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MATURE GREEN OAK
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One mature broadleaf oak with an asymmetrical rounded crown built from large overlapping leaf masses. Yellow-green sunlit tips, olive middle planes, deep blue-green inner foliage, a branching warm-brown trunk and a few exposed roots. The trunk remains visible below the crown. Natural mature proportions, a strong readable silhouette, no fruit or face.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Tall beech
+
+ID: `tree_beech` · 3:4 · 2K · object
+
+Save as `tree_beech__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TALL BEECH
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One tall woodland beech with a pale grey-brown branching trunk, an upright irregular crown and layered fresh-green foliage. A narrow gap between major branches reveals its construction. Keep its silhouette distinctly taller and more slender than a broad oak. Small moss accents at the root flare only.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Layered evergreen pine
+
+ID: `tree_pine` · 3:4 · 2K · object
+
+Save as `tree_pine__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LAYERED EVERGREEN PINE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One mature pine with a visible reddish-brown trunk and uneven tiered boughs. Each bough is a dense painted mass of needles; cool deep-green undersides and warm olive sunlit edges. A slightly irregular conical silhouette with heavy lower branches and a thin natural apex. Avoid a perfect triangular Christmas-tree silhouette.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Golden autumn oak
+
+ID: `tree_autumn` · 3:4 · 2K · object
+
+Save as `tree_autumn__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — GOLDEN AUTUMN OAK
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One broad autumn oak, a gnarled brown trunk supporting irregular clusters of ochre, mustard yellow, muted amber and a little remaining olive foliage. Preserve the subdued warm woodland palette of image 2. A few attached dry leaves and exposed roots; no falling-leaf particle cloud.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Snow-laden pine
+
+ID: `tree_snow_pine` · 3:4 · 2K · object
+
+Save as `tree_snow_pine__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SNOW-LADEN PINE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One winter pine with broad irregular snow pillows resting on the upper surfaces of separate dark evergreen boughs. Snow has warm ivory lit edges and cool blue-grey shaded planes. Expose parts of the trunk and lower needles so the tree reads clearly. No falling snow, fog or surrounding winter landscape.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Dead wasteland tree
+
+ID: `tree_dead` · 3:4 · 2K · object
+
+Save as `tree_dead__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — DEAD WASTELAND TREE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One old leafless tree with a thick twisted trunk, two broken major limbs and several tapered surviving branches. Ash-grey outer bark, dark brown splits, a few pale exposed wood scars and dry roots. A memorable asymmetrical silhouette that remains readable from the battlefield camera. No hanging bodies, faces, magical glow or attached birds.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Ancient dark-forest tree
+
+ID: `tree_dark` · 3:4 · 2K · object
+
+Save as `tree_dark__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ANCIENT DARK-FOREST TREE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One ancient broadleaf tree with a wide twisted trunk, arching roots and a heavy irregular crown of dark moss-green foliage. Deep teal recesses, restrained olive highlights, small lichen patches and a hollow between roots. Ominous through age and dense growth; retain visible surface detail instead of making a black silhouette. No monster face or glowing eyes.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+### Bushes and undergrowth
+
+#### Rounded woodland bush
+
+ID: `bush_green` · 1:1 · 2K · object
+
+Save as `bush_green__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ROUNDED WOODLAND BUSH
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One waist-high woodland bush, an irregular low mound of overlapping leaf clusters with two unequal lobes. Fresh yellow-green highlights and dark olive interiors, a few short woody stems visible at its base. Keep the silhouette compact and clearly different from a miniature tree.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Wild bramble
+
+ID: `bush_bramble` · 1:1 · 2K · object
+
+Save as `bush_bramble__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WILD BRAMBLE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One spreading bramble thicket with arching brown stems, tangled muted-green leaves and a very small number of dark red berries. Dense in the middle, open at the outer tips, with readable individual thorny branches at the perimeter. Its footprint is low and wider than it is tall.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Fern and grass clump
+
+ID: `undergrowth_ferns` · 1:1 · 2K · object
+
+Save as `undergrowth_ferns__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FERN AND GRASS CLUMP
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One connected clump of three broad fern fronds and short woodland grasses. Layered olive fronds with clear serrated silhouettes, a few curled dry brown stems and a tiny mossy root base. Use bold frond shapes that remain readable when reduced; avoid a noisy carpet of hundreds of blades.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Snow-covered shrub
+
+ID: `bush_snow` · 1:1 · 2K · object
+
+Save as `bush_snow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SNOW-COVERED SHRUB
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One low winter shrub with bent brown twigs and a few muted evergreen leaves emerging from irregular caps of fresh snow. Ivory lit snow planes and cool slate-blue recesses. Several gaps between branches remain visible. Keep the entire shrub and its tiny base isolated.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+### Ruins and wagons
+
+#### Broken stone arch
+
+ID: `ruin_arch` · 1:1 · 2K · object
+
+Save as `ruin_arch__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BROKEN STONE ARCH
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One abandoned medieval stone archway with one intact pier and a partly collapsed second pier. Uneven warm-grey masonry, chipped corners, missing upper stones, moss in joints and a few connected rubble pieces at its foot. The opening must be a real visible gap. Show wall thickness and plausible load-bearing construction.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Ruined watchtower
+
+ID: `ruin_tower` · 3:4 · 2K · object
+
+Save as `ruin_tower__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — RUINED WATCHTOWER
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One squat ruined circular watchtower, only its lower two storeys surviving. A broken crenellated rim, an exposed interior through one collapsed wall, a narrow arrow slit and a dark empty doorway. Heavy weathered grey-brown stone, moss and sparse ivy. Keep the rubble close to the foundation and preserve the complete footprint.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Crumbling wall section
+
+ID: `ruin_wall` · 3:2 · 2K · object
+
+Save as `ruin_wall__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — CRUMBLING WALL SECTION
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One short freestanding ruined stone wall aligned along an isometric ground axis. Its uneven broken top descends from one standing end to a low collapsed end. Weathered blocks, earth in joints, small moss pockets and a restrained pile of fallen stones. A useful low obstacle with a readable top and two visible faces.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Abandoned wooden wagon
+
+ID: `wagon_old` · 3:2 · 2K · object
+
+Save as `wagon_old__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ABANDONED WOODEN WAGON
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One old four-wheel wooden farm wagon with a weathered open plank bed, iron-rimmed spoked wheels, exposed axles and two forward shafts. One wheel leans slightly but remains attached. Grey-brown timber, worn rusty iron fittings, a little moss and one folded faded canvas scrap inside the bed. No horse, driver or cargo pile.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Broken roadside wagon
+
+ID: `wagon_wreck` · 3:2 · 2K · object
+
+Save as `wagon_wreck__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BROKEN ROADSIDE WAGON
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One collapsed old wagon with a cracked plank bed, one broken axle, two remaining attached wheels and one detached wheel resting directly beside the chassis. Splintered wood and rusted iron hoops tell a clear mechanical story. Keep every fragment within one compact connected wreck footprint. No fire, smoke, corpses or surrounding road.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+### Orc pits and dragon lairs
+
+#### Orc war pit
+
+ID: `orc_pit` · 3:2 · 2K · site
+
+Save as `orc_pit__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ORC WAR PIT
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One crude sunken orc mustering pit cut into a low earthen bank. An oval excavated floor, a broad descending dirt ramp, rough timber revetments and unequal sharpened stakes around the rear rim. Add a tattered dark-red cloth on one post, crude iron brackets and a small cold fire ring. Show a practical entrance and believable depth. No orcs, captive figures, text or giant skull ornament.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Fortified orc pit entrance
+
+ID: `orc_pit_fortified` · 3:2 · 2K · site
+
+Save as `orc_pit_fortified__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FORTIFIED ORC PIT ENTRANCE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One fortified orc pit built into an earthen hollow. A rough log gate over a wide descending ramp, heavy irregular timber braces, sharpened rear palisades, patched hide awnings and a small heap of empty barrels. Dark timber, ochre earth, rusted iron and restrained oxblood-red cloth. The ramp must visibly connect surface level to the pit floor. No troops or active battle.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Ancient dragon lair
+
+ID: `dragon_lair` · 3:2 · 2K · site
+
+Save as `dragon_lair__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ANCIENT DRAGON LAIR
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One imposing cave mouth in a weathered rocky outcrop, with a broad low entrance and deep shaded interior. Scorched stone near the threshold, claw-worn rock, a few old animal bones and a very restrained glint of dull treasure far inside imply a dragon. Moss and hardy grass grow on the cooler exterior. Keep the whole outcrop visible. No dragon, lava river or exaggerated glowing portal.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Frozen dragon lair
+
+ID: `dragon_lair_snow` · 3:2 · 2K · site
+
+Save as `dragon_lair_snow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FROZEN DRAGON LAIR
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One dragon cave entrance in a rugged grey rock outcrop under heavy snow. A wide dark entrance, wind-sculpted snowbanks, a few irregular icicles and claw-scraped stone at the threshold. A small trail of disturbed snow leads into the cave. Warm ivory highlights, blue-grey snow shadows and subdued dark rock. No creature, blizzard particles or luminous magical doorway.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+### Battlefields
+
+#### Sunlit meadow battlefield
+
+ID: `battlefield_meadow` · 16:9 · 2K · scene
+
+Save as `battlefield_meadow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SUNLIT MEADOW BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: An inviting late-spring meadow battlefield among broad rounded hills. A pale worn dirt track curves diagonally across the open centre and rises gently onto higher ground. Yellow-green grasses, scattered white and violet flowers, mossy rock groups and mixed woodland along the outer edges. One low earthen bank exposes roots and crumbling stones. Keep the central fighting ground broad, quiet and readable. Use image 1 for the main palette.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Open grassland battlefield
+
+ID: `battlefield_grassland` · 16:9 · 2K · scene
+
+Save as `battlefield_grassland__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — OPEN GRASSLAND BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A broad windswept grassland battlefield with long gentle rolling slopes, irregular patches of straw-gold dry grass and olive-green short turf. A shallow dry drainage channel and a low rounded ridge create readable elevation. Only two small distant tree groups at the outer edges, a few isolated rocks and faint intersecting cart tracks. Preserve long open sightlines and large deployment areas.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Snow battlefield
+
+ID: `battlefield_snow` · 16:9 · 2K · scene
+
+Save as `battlefield_snow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SNOW BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A winter battlefield with rounded snow-covered hills and a broad partly cleared path through the centre. Dark evergreen groups frame the upper corners; low rock outcrops and brown grass tips break the snow near the edges. Warm ivory sunlit snow and cool blue-grey hollows, shallow wind-sculpted drifts and restrained track marks. Keep elevation and traversable ground readable without a blizzard or a flat white field.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Forest clearing battlefield
+
+ID: `battlefield_forest` · 16:9 · 2K · scene
+
+Save as `battlefield_forest__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FOREST CLEARING BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A generous woodland clearing encircled by layered oaks, beeches and pines. A winding dirt track links two broad openings in the forest. Rounded low hills, one mossy rock outcrop, fern beds and leaf litter provide natural transitions into the tree line. The trees form an irregular dense border, while the clearing retains several wide routes for formations. Warm green highlights over cool shaded undergrowth.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Dead-tree wasteland battlefield
+
+ID: `battlefield_wasteland` · 16:9 · 2K · scene
+
+Save as `battlefield_wasteland__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — DEAD-TREE WASTELAND BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A desolate battlefield of worn grey-brown earth, muted ochre dry grass and shallow eroded gullies. Scattered twisted dead trees, a small collapsed wagon and blackened stone fragments sit mostly at the perimeter. A low rounded rise and broad cracked dirt approach provide useful terrain shapes. Subdued ash, umber and dusty olive colours with readable warm sunlight. No active fires, smoke curtain, gore or perfectly uniform cracked texture.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Dark forest battlefield
+
+ID: `battlefield_dark_forest` · 16:9 · 2K · scene
+
+Save as `battlefield_dark_forest__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — DARK FOREST BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: An old shaded forest battlefield with massive twisted trunks and dense deep-green canopies enclosing a broad irregular clearing. Moss-covered roots, ferns, damp earth and weathered stones line the boundaries. Small shafts of warm upper-left light reveal the main route and hilltops without obscuring detail. Deep teal shadows stay legible. A low earth ridge divides two connected clearings; each has enough open space for formations. No luminous fantasy mushrooms or impenetrable black areas.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Lakeside battlefield
+
+ID: `battlefield_lakeside` · 16:9 · 2K · scene
+
+Save as `battlefield_lakeside__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LAKESIDE BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A calm lake borders the right side of a broad grassy battlefield. An irregular shore moves through wet sand, small stones, reeds and short meadow grass. Shallow transparent green-blue water reveals submerged stones near the edge; deeper water is a muted blue-green. A low hill and sparse woodland frame the landward side. Keep most of the image as connected dry ground and preserve a wide shoreline route.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Ruined village battlefield
+
+ID: `battlefield_ruined_village` · 16:9 · 2K · scene
+
+Save as `battlefield_ruined_village__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — RUINED VILLAGE BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A deserted medieval village battlefield with two damaged cottages and one broken stone shell arranged around an open dirt crossroads. Partial roof collapses, exposed timber frames, low garden walls and small controlled rubble piles suggest long abandonment. Grass and moss reclaim the edges. Rounded natural ground continues beneath the village. Preserve broad traversable lanes and a generous centre; no people, corpses, active fires or smoke.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Town street battlefield
+
+ID: `battlefield_town` · 16:9 · 2K · scene
+
+Save as `battlefield_town__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TOWN STREET BATTLEFIELD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A modest medieval market-town battlefield with timber-and-plaster houses, grey stone ground floors and varied muted clay or slate roofs. Two wide cobbled streets meet at an open market square. Empty market stalls, a stone well and low walls are placed near the edges, leaving the crossing and several side approaches open. Natural worn paving, small grass seams, warm upper-left daylight and calm building silhouettes. No citizens or army.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+### Terrain and lakeshore objects
+
+#### Mossy rock outcrop
+
+ID: `rock_moss` · 3:2 · 2K · object
+
+Save as `rock_moss__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MOSSY ROCK OUTCROP
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One connected low rock outcrop with three unequal weathered grey-brown rock masses. Broad irregular stone planes, believable fractures, ochre-lit upper edges and dark moss in sheltered crevices. Small green moss caps soften the silhouette without covering every rock. Keep the complete base and avoid a pile of identical polygonal cubes.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Crumbling grass bank
+
+ID: `terrain_bank` · 3:2 · 2K · site
+
+Save as `terrain_bank__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — CRUMBLING GRASS BANK
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One low natural earthen bank with a rounded grass-covered upper slope and an irregular exposed face of brown soil, embedded stones and a few roots. Its height tapers gradually to ground level at both ends; one side provides a walkable grassy incline. Vary the silhouette and exposed layers naturally. No vertical square tile sides, cutaway display base or stacked blocks.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Rounded grassy hill study
+
+ID: `terrain_hill` · 3:2 · 2K · site
+
+Save as `terrain_hill__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ROUNDED GRASSY HILL STUDY
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One small low rounded grassy hill with a broad shallow approach on the near side, a gently curving crest and a slightly steeper eroded shoulder on the far side. Olive turf, straw-yellow grass patches and a few embedded stones show the landform. Its ground perimeter fades into a thin irregular apron. The slope must look continuous and walkable, never a raised square platform.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Reed and rush clump
+
+ID: `lakeshore_reeds` · 1:1 · 2K · object
+
+Save as `lakeshore_reeds__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — REED AND RUSH CLUMP
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One compact lakeside clump of reeds and rushes, with muted green long leaves, several ochre seed heads and a few bent dry stems. Heights vary naturally and the stems meet in one tiny muddy root base. Keep gaps between the outer stalks readable and the entire plant silhouette inside the frame. No water surface or background landscape.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Natural lakeshore segment
+
+ID: `lakeshore_bank` · 3:2 · 2K · site
+
+Save as `lakeshore_bank__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — NATURAL LAKESHORE SEGMENT
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One gently curved lakeshore segment with a low grassy bank transitioning through damp earth, pebbles and a narrow strip of clear shallow green-blue water. Two small reed clumps and one half-submerged stone define scale. Make the transition soft and irregular with no raised tile frame. Show enough land width to read as a walkable bank. This is a modular composition reference, not a seamless texture.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+### Houses and town buildings
+
+#### Timber and thatch cottage
+
+ID: `house_cottage` · 3:2 · 2K · object
+
+Save as `house_cottage__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TIMBER AND THATCH COTTAGE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One modest one-storey medieval cottage with cream limewashed walls, exposed dark-brown timber posts, a steep weathered thatched roof and a short stone chimney. A wooden front door, two small shuttered windows and a simple stone threshold. Realistic human-scale construction with a readable roof silhouette. Show the front and right side, the whole roof and the entire foundation. No surrounding garden or people.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Two-storey town house
+
+ID: `house_town` · 3:4 · 2K · object
+
+Save as `house_town__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TWO-STOREY TOWN HOUSE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One narrow two-storey medieval town house with a rough grey-stone ground floor, cream plaster and dark timber upper storey, a slightly projecting upper front and a steep muted red-brown tiled roof. Small wooden shutters, one heavy front door and a short chimney. Show front and right side. Consistent human-scale doors and windows, functional timber framing and restrained weathering.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Wayside tavern
+
+ID: `house_tavern` · 3:2 · 2K · object
+
+Save as `house_tavern__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WAYSIDE TAVERN
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One medium-sized medieval tavern with a stone lower storey, timber-and-cream-plaster upper walls, a broad weathered slate roof and a small covered entrance porch. A plain hanging wooden sign with no lettering or emblem, closed barrels beside the door and two warm but subtle window panes. Show front and right side; preserve clear doors, roof planes and structural beams.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Village smithy
+
+ID: `house_smithy` · 3:2 · 2K · object
+
+Save as `house_smithy__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — VILLAGE SMITHY
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One small stone-and-timber smithy with a low clay-tile roof and a covered open work bay. A visible anvil, orderly tool rack, cold forge opening and stout stone chimney identify its purpose. Dark iron, worn oak, warm grey stone and muted terracotta. Show the front and right side with an unobstructed opening. No worker, sparks, active smoke or fire plume.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Ruined cottage
+
+ID: `house_ruined_cottage` · 3:2 · 2K · object
+
+Save as `house_ruined_cottage__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — RUINED COTTAGE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One abandoned medieval cottage with half of its thatched roof collapsed, cracked cream plaster, exposed dark timber framing and one intact stone chimney. Show a believable roof opening with surviving rafters and a small rubble pile within the original foundation. A little moss and climbing ivy mark age. Preserve the front door opening and full footprint. No active destruction or smoke.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Ruined town house
+
+ID: `house_ruined_town` · 3:4 · 2K · object
+
+Save as `house_ruined_town__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — RUINED TOWN HOUSE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One ruined two-storey medieval town house. Its grey-stone ground floor remains standing while part of the timber upper storey and tiled roof have collapsed inward. Visible floor joists, broken plaster panels and a remaining shutter make the old structure understandable. Keep loose rubble tightly around the foundation. Show front and right side, no flames, occupants or floating structural fragments.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+### Streets and town props
+
+#### Straight cobbled street module
+
+ID: `street_straight` · 3:2 · 2K · site
+
+Save as `street_straight__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — STRAIGHT COBBLED STREET MODULE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One straight strip of medieval cobbled street aligned lower-left to upper-right in the isometric view. Worn irregular grey-brown cobbles, modest earth shoulders, a shallow drainage gutter on one side and a few grass tufts at the edges. The road width remains constant and both ends terminate cleanly for later matching. No houses, carts or pavement text. It is a perspective module reference, not a seamless texture.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+```
+
+#### Cobbled street corner module
+
+ID: `street_corner` · 3:2 · 2K · site
+
+Save as `street_corner__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — COBBLED STREET CORNER MODULE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One right-angle bend of a medieval cobbled street following the two isometric ground axes. Worn warm-grey cobbles with subtle wheel wear, earth shoulders and a narrow continuous gutter following the outside bend. Both arms have equal width and clean open ends. No surrounding buildings or decorative display plinth.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+```
+
+#### Cobbled crossroads module
+
+ID: `street_crossroads` · 3:2 · 2K · site
+
+Save as `street_crossroads__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — COBBLED CROSSROADS MODULE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One four-way medieval cobbled crossroads following the two isometric ground axes. Four equal-width approaches meet in a slightly worn central patch. Muted grey-brown stones, occasional dirt-filled joints, a restrained drainage channel and soft irregular earth shoulders. All four ends are clear for matching to street segments. No structures or street furniture.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+```
+
+#### Empty market-square paving
+
+ID: `town_square` · 3:2 · 2K · site
+
+Save as `town_square__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — EMPTY MARKET-SQUARE PAVING
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One broad modest medieval market-square paving area seen from the common isometric camera. Worn grey-brown flagstones in loosely ordered rows, a slightly darker central wear area and irregular earth shoulders. Four short street openings connect to the paving. Keep the middle empty for placing props later. No well, stalls, buildings or border frame.
+
+FORMAT: One isolated environmental site or ground module, one elevated three-quarter isometric view matching the references. Include the complete site and its necessary thin irregular ground footprint with at least 10% clear padding. Use continuous natural slopes, rounded landforms and eroded transitions; avoid vertical square tile sides and stacked terrain blocks. Uniform solid magenta (#FF00FF) around the entire footprint and through open gaps, with no magenta spill. Self-shading only; no detached cast shadow on the background. No horizon, display plinth, grid, border, people, text, watermark or reference inset. This is a modular visual reference; exact engine dimensions and edge joins will be verified separately.
+```
+
+#### Stone village well
+
+ID: `town_well` · 1:1 · 2K · object
+
+Save as `town_well__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — STONE VILLAGE WELL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One round village well built from weathered warm-grey stone, with two stout timber uprights, a simple small pitched shingle roof, a wooden crank and one suspended bucket. The dark open shaft is visible from above. Clear physical rope and support construction, small moss accents and a complete base. No people or broad ground platform.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Empty market stall
+
+ID: `town_market_stall` · 3:2 · 2K · object
+
+Save as `town_market_stall__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — EMPTY MARKET STALL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One modest wooden market stall with a patched muted ochre canvas canopy, four supports and a broad plank counter. Two empty baskets and a small closed crate remain neatly under the counter. Weathered brown wood, restrained fabric folds and practical construction. No vendor, goods labels, lettering or brightly striped circus colours.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Town stone wall
+
+ID: `town_wall` · 3:2 · 2K · object
+
+Save as `town_wall__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TOWN STONE WALL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One short intact medieval defensive wall section with a sturdy grey-brown stone body, simple crenellations and a narrow visible wall walk. Slightly uneven weathered masonry and restrained moss at the foot. Align it along one isometric ground axis and show both complete end faces. No attached tower, soldiers or long shadow on the background.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Timber town gate
+
+ID: `town_gate` · 3:2 · 2K · object
+
+Save as `town_gate__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TIMBER TOWN GATE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One modest fortified town gateway with two short square stone piers, a heavy timber lintel and a pair of open wooden gates reinforced by dark iron bands. The opening is wide enough for a wagon and remains fully visible. A tiny weathered shingle canopy covers the lintel. No crest, guards, lettering or surrounding town.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Small stone bridge
+
+ID: `town_bridge` · 3:2 · 2K · object
+
+Save as `town_bridge__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SMALL STONE BRIDGE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One short medieval single-arch stone bridge with a gently raised worn deck, low parapets and a clearly open arch. Grey-brown masonry, subtle moss along the lower stones and complete abutments at both ends. A practical small bridge sized for a wagon, aligned along an isometric ground axis. No river, landscape or people.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+#### Weathered timber fence
+
+ID: `town_fence` · 3:2 · 2K · object
+
+Save as `town_fence__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WEATHERED TIMBER FENCE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: One short rustic timber fence with four irregular posts and two horizontal rails, slightly sagging but structurally intact. Weathered grey-brown wood, a few split ends and tiny moss marks at the bases. Align along one isometric ground axis. Keep every post and rail fully visible; no attached hedge or large ground patch.
+
+FORMAT: One isolated game-object illustration, one view only. Use the elevated three-quarter isometric camera of the references, with a clearly readable top and side surfaces and parallel ground axes. Put the complete silhouette, roots or foundation and every protruding tip inside the central 80% of the canvas. Maintain at least 10% clear padding on all sides. Background must be one perfectly uniform solid magenta (#FF00FF) for later extraction, including every gap. No magenta reflected onto the object. Retain self-shading but cast no shadow onto the background. No environment, horizon, pedestal, detached accessories, grid, collage, border, swatches, text, watermark or reference inset. This is an image source for later asset preparation, not an already validated engine sprite.
+```
+
+### Optional ground material companions
+
+#### Meadow grass material
+
+ID: `material_grass` · 1:1 · 2K · texture · optional
+
+Save as `material_grass__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEADOW GRASS MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless meadow ground material: predominantly short olive and yellow-green turf, irregular restrained straw-yellow patches, tiny exposed earth gaps and a very few small wildflower flecks. Broad colour variation with small painted grass clusters, no large landmarks or recognisable repeating motifs.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Worn dirt material
+
+ID: `material_dirt` · 1:1 · 2K · texture · optional
+
+Save as `material_dirt__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WORN DIRT MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless warm-brown packed earth material with subdued ochre patches, small grey pebbles and irregular fine dry cracks. Gentle painterly tonal variation and readable small details. No directional road, deep rut, footprint sequence or large rock.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Settled snow material
+
+ID: `material_snow` · 1:1 · 2K · texture · optional
+
+Save as `material_snow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SETTLED SNOW MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless settled snow material with muted ivory and pale cool blue-grey variations, very shallow wind-shaped ripples and tiny occasional embedded brown grass tips. Even overall value, no glitter, cast shadows, tracks or large drifts.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Forest floor material
+
+ID: `material_forest_floor` · 1:1 · 2K · texture · optional
+
+Save as `material_forest_floor__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FOREST FLOOR MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless woodland floor material combining dark umber soil, moss-green patches, muted ochre leaf litter and a few tiny broken twigs. Small clustered painted detail and broad quiet areas. No trees, large roots, mushrooms or directional sunlight.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Wasteland earth material
+
+ID: `material_wasteland` · 1:1 · 2K · texture · optional
+
+Save as `material_wasteland__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WASTELAND EARTH MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless desolate ground material with ash-grey dust, dry brown earth, restrained ochre stains and irregular shallow cracks. A few tiny charcoal fragments and sparse dry grass flecks. No lava, glowing cracks, bones, giant fissures or landmarks.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Weathered stone material
+
+ID: `material_rock` · 1:1 · 2K · texture · optional
+
+Save as `material_rock__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WEATHERED STONE MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless warm-grey natural rock material with subtle brown mineral variation, restrained hairline fractures and a few small moss stains. Broad painted tonal planes with low contrast microdetail. No individual boulders or lighting gradients.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Worn cobblestone material
+
+ID: `material_cobble` · 1:1 · 2K · texture · optional
+
+Save as `material_cobble__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WORN COBBLESTONE MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless medieval street material of worn uneven grey-brown cobblestones in loosely organised rows, with dark earth joints and occasional muted green moss. Consistent stone scale and restrained variation. No road edges, drains, special central medallion, lane markings or cast shadows.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+#### Wet lakeshore earth material
+
+ID: `material_lakeshore` · 1:1 · 2K · texture · optional
+
+Save as `material_lakeshore__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WET LAKESHORE EARTH MATERIAL
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A seamless damp shoreline ground material with muted sandy brown silt, small rounded grey pebbles and subtle darker wet patches. Quiet painterly surface texture, no waterline, reflections, reeds, shells of exaggerated size or large stones.
+
+FORMAT: One square seamless repeating ground-material image, viewed exactly straight down, with no perspective. Match the references' painted palette and surface mark-making only; override their camera and directional light for this material. Flat diffuse albedo-like lighting with no baked cast shadows, ambient-occlusion darkening, highlights or directional gradient. Match colours and features across opposite edges in both axes. Fill the whole canvas, no magenta, border, text, 3D objects or central focal point. The result will need a repeated 3-by-3 seam review; generation alone does not prove tileability.
+```
+
+### Wider forest roads
+
+#### Wide mixed-forest road
+
+ID: `road_forest_wide` · 16:9 · 2K · scene
+
+Save as `road_forest_wide__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE MIXED-FOREST ROAD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A long winding packed-earth cart road through mixed green oaks, beeches and pine woodland on BOTH sides. Pull the isometric camera back to reveal roughly three times the ground area of the references. Mature trees occupy only 6 to 10 percent of image height. Show several bends, generous road shoulders, two small passing clearings, subtle wheel ruts, ferns, mossy rocks and continuous shallow rolling slopes. The road enters lower-left and leaves upper-right; both exits remain open. No prominent central rock, village or huge foreground tree.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Wide snowy forest road
+
+ID: `road_snow_wide` · 16:9 · 2K · scene
+
+Save as `road_snow_wide__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE SNOWY FOREST ROAD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A long snow-covered cart road meandering between deep evergreen forests on BOTH sides. A pulled-back elevated isometric view shows roughly three times the ground area of the references, with trees only 6 to 10 percent of the image height. The open road travels from lower-right through two gentle curves to upper-left. Snow pillows, shallow tracks, a small roadside turnout and low rounded drifts. Muted ivory snow and blue-grey shade, no blizzard or impassable wall of trees.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Wide ancient-forest road
+
+ID: `road_dark_forest_wide` · 16:9 · 2K · scene
+
+Save as `road_dark_forest_wide__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE ANCIENT-FOREST ROAD
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A long old dirt road through dense ancient mixed woodland on BOTH sides, with many small twisted trunks and deep moss-green crowns. Pull the elevated isometric camera back to reveal roughly three times the ground area of the references; each mature tree is only 6 to 10 percent of image height. A connected diagonal route, one gentle fork that rejoins, broad passing space, damp earth, modest exposed roots and fern banks. Keep a clear traversable road; no giant foreground trunk, cavern, creature, glowing fungus or blacked-out forest.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Natural forest crossroads with signpost
+
+ID: `road_crossroads_wide` · 16:9 · 2K · scene
+
+Save as `road_crossroads_wide__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — NATURAL FOREST CROSSROADS WITH SIGNPOST
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A pulled-back elevated isometric view of a four-way country-road junction in mixed woodland. A well-used broad packed-earth main road curves from lower-left toward upper-right, and two narrower minor tracks approach at slightly unequal angles from the other sides. A modest weathered wooden directional signpost with four arrow boards stands on the grassy shoulder immediately beside the crossing, outside wagon turning paths, clearly visible without becoming monumental. No readable lettering. Smooth turning arcs, scuffed inner corners, gravel repairs in low spots, shallow roadside drainage, muddy wheel ruts and little grass on the busiest travelled surfaces. Soft irregular verges and convincing continuous ground; trees line both sides farther back. The junction looks grown from years of travel rather than a perfect geometric X.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+### Deforested river landscapes
+
+#### Logged valley and dry river
+
+ID: `deforested_river_valley` · 16:9 · 2K · scene
+
+Save as `deforested_river_valley__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LOGGED VALLEY AND DRY RIVER
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: An expansive once-forested valley carved by a beautiful sweeping S-shaped DRY riverbed. Bare rounded river stones, cracked silt, exposed interwoven roots and eroded natural banks reveal the vanished watercourse. Chopped tree stumps with visible pale growth rings and axe marks, several old felled logs, scattered bark and woodchips, and a few tall dead leafless trees tell the history of logging. Surviving mixed forest frames the far sides, contrasting with the devastated open valley. A worn logging track follows the contour, then crosses the dry bed at a shallow natural ford. Large coherent landforms, exceptionally rich painted rock and timber detail, quiet open ground between clusters, memorable diagonal composition. No water, people, machines, fire, smoke or gore.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Clear-cut basin and braided dry channels
+
+ID: `deforested_river_basin` · 16:9 · 2K · scene
+
+Save as `deforested_river_basin__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — CLEAR-CUT BASIN AND BRAIDED DRY CHANNELS
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A dramatic broad clear-cut basin where a river once split around low gravel bars. Three shallow DRY channels reconnect naturally downstream, lined with rounded stones, sun-bleached driftwood and bands of dried sediment. Many irregularly spaced chopped stumps, exposed roots and a few leaning dead trees stand on the low terraces; felled trunks lie in small believable logging groups with cut ends and branch scars. A surviving woodland edge at the upper perimeter shows what was lost. The terrain has continuous rounded approaches, no square cliffs. Deep olive-blue shade in the banks, warm muted earth and detailed pale timber. Powerful sweeping shapes and restrained small detail make the open routes legible. No standing water, people, vehicles, active fires or smoke.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Felled ancient forest and dry ravine
+
+ID: `deforested_old_growth` · 16:9 · 2K · scene
+
+Save as `deforested_old_growth__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FELLED ANCIENT FOREST AND DRY RAVINE
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A haunting majestic ancient woodland that has been heavily felled: enormous chopped stumps with age rings and old mossy roots, several fallen weathered trunks, a handful of tall skeletal dead trees and only small remnants of living forest at the edges. An entirely DRY winding river ravine cuts diagonally through the open land, its floor worn smooth with rounded boulders, dusty gravel and curled dried mud. Make the river geology flow continuously and provide two shallow ramps into the dry bed. Old wagon tracks bend around the largest stump instead of running through it. Rich layered bark, eroded stone, twisted roots and restrained ochre grasses; wide elevated isometric composition with a striking silhouette rhythm and calm usable ground. No water, people, monsters, machinery, burning trees, smoke or magical glow.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+### Army camps inspired by Roman castra
+
+#### Small marching camp
+
+ID: `camp_small_march` · 16:9 · 2K · scene
+
+Save as `camp_small_march__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SMALL MARCHING CAMP
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. SMALL SIZE, variation A: a compact overnight camp with 12 low ridge tents in three short rows, one slightly larger command tent, two opposed palisade gates, one modest open drill yard and a tiny wagon/supply corner. Grassy rolling meadow and a narrow approach road. Show the full compact enclosure, without overcrowding.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Small woodland outpost
+
+ID: `camp_small_woodland` · 16:9 · 2K · scene
+
+Save as `camp_small_woodland__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SMALL WOODLAND OUTPOST
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. SMALL SIZE, variation B: a compact woodland-edge outpost with 12 tents in two offset groups, one command tent, two gates on adjacent sides, a drill yard along the eastern inner wall and stores opposite. A low continuous hill shoulder and surrounding mixed forest, with the defensive perimeter on firm dry ground and clear sightlines immediately outside.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Medium meadow castra
+
+ID: `camp_medium_meadow` · 16:9 · 2K · scene
+
+Save as `camp_medium_meadow__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEDIUM MEADOW CASTRA
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. MEDIUM SIZE, variation A: about 30 soldier tents in six orderly blocks, a larger central command pavilion, four defended gates, a generous rectangular drill ground occupying one internal quarter, separate supply and stable yards, and wide patrol space inside the entire palisade. Open rolling meadow around the enclosure, several natural approach tracks joining the gate roads.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Medium camp above a riverbank
+
+ID: `camp_medium_river` · 16:9 · 2K · scene
+
+Save as `camp_medium_river__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEDIUM CAMP ABOVE A RIVERBANK
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. MEDIUM SIZE, variation B: about 30 soldier tents in six blocks and a command pavilion, four gates, a drill yard in the southern quarter and a supply court in the north. The entire camp stands on a broad dry terrace above a narrow natural river OUTSIDE the palisade; one gate road descends gently toward a simple timber crossing. Show a complete defensible enclosure, softly sloping banks, reeds and woodland beyond. No water crossing through the camp.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Large legion camp
+
+ID: `camp_large_legion` · 16:9 · 2K · scene
+
+Save as `camp_large_legion__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LARGE LEGION CAMP
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. LARGE SIZE, variation A: an impressive broad legion-scale castra with about 70 small soldier tents in twelve well-separated blocks, several command and officer pavilions, four substantial defended gateways, a very large central drill field, distinct supply, stable and workshop courts, and broad internal perimeter patrol lanes. Show the entire palisade with consistent tent scale, restrained watch platforms, sweeping natural grassland and branching worn approach roads.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+#### Large frontier castra
+
+ID: `camp_large_frontier` · 16:9 · 2K · scene
+
+Save as `camp_large_frontier__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LARGE FRONTIER CASTRA
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A Roman castra-inspired fantasy army encampment, empty of people. A complete continuous sharpened timber palisade on a low earth rampart encloses a practical rectangular plan with gently rounded corners. A shallow exterior defensive ditch is crossed only at defended gate causeways. Two principal gravel-and-earth roads intersect near a command tent; secondary lanes separate orderly tent blocks. Show functional tent entrances, ropes and pegs, clear access, drainage, a broad drill ground with training posts at its edge, a supply area with barrels and covered stores, and a water well. Modest timber gate platforms, no monumental castle. Warm cream, weathered ochre and muted red canvas, dark timber, worn natural ground, rich painted surfaces. No army figures, torches, active fires, smoke, flags with text, UI or floating diorama base. Pull the elevated isometric camera back enough to show the WHOLE perimeter, all gates and an apron of surrounding landscape with at least 8 percent margin; no sky or horizon. Keep army scale consistent and routes visibly practical. The regular camp plan contrasts with natural, worn, slightly winding approach roads outside. LARGE SIZE, variation B: about 70 soldier tents in twelve blocks around offset intersecting main streets, command pavilions near the centre, an immense drill ground on one side, and separate stores, wagon and stable courts on the other. Four gate causeways with timber guard platforms. Set the complete enclosure in a dramatic cleared valley between low wooded ridges, with a few chopped stumps outside the defensive ditch, practical gently sloping approach roads and room for arriving reinforcements.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+```
+
+### Corrupted lands
+
+#### Blood-fungus corrupted valley
+
+ID: `corruption_blood_fungus` · 16:9 · 2K · scene
+
+Save as `corruption_blood_fungus__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BLOOD-FUNGUS CORRUPTED VALLEY
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A visibly sick, grey, dying woodland valley overtaken by a spreading crimson fungal blight, inspired by the oppressive corrupted-nature atmosphere of Drova while keeping the supplied Meridius painting and elevated battlefield camera. Broad asymmetrical shelves of dark wine-red fungus climb dead trunks; smaller rust-red caps and pale branching mycelium spread across earth and exposed roots. A shallow winding stream is polluted with muted reddish-brown fungal runoff, dark silt and a few oily-looking patches; this is stained water, not literal blood. The entire valley looks poisoned: exhausted ash-grey soil, charcoal-grey wet rot, sparse collapsed grey grass, withered bushes and stripped pallid dying trees. Keep crimson and wine-red fungus as the only strong colour. Remove healthy golden meadow, lush green foliage and pleasant warm sunlight. Use dim cold overcast light, readable shadow and thin dirty-grey mist. Water is murky opaque grey-green with dark silt and rust-red fungal scum, never clean bright blue. Collapsed rotten logs, cracked pallid bark and shrivelled dead grey vegetation tell the history of the infestation. The land itself is visibly dying, rather than a healthy forest with decorative mushrooms. Keep two wide dry routes and a shallow crossing legible between fungal colonies. Rich tactile detail in strong grouped shapes, beautiful ominous colour contrast, no giant central mushroom blocking the whole image. No people, corpses, gore, organs, monsters, neon glow, fog curtain or UI.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+
+FINAL CORRUPTION ATMOSPHERE: The land itself is visibly unhealthy, decaying and poisoned. Follow this corruption type's specific materials and colours over the healthy golden grass or sunlight of the style references. Use subdued overcast lighting and exhausted vegetation around the infection; healthy woodland is confined to any explicitly described far boundary. No pleasant golden meadow or warm scenic glow. Preserve readable terrain, detailed painting and the original elevated camera.
+```
+
+#### Black root-rot marsh
+
+ID: `corruption_root_rot` · 16:9 · 2K · scene
+
+Save as `corruption_root_rot__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BLACK ROOT-ROT MARSH
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A once-green woodland hollow corrupted by black root rot. Great twisted charcoal-brown roots break through damp peat and wrap around dead stumps, while low shelves of ivory-grey fungus grow from split bark. Small stagnant pools of dark green-brown water have restrained ochre films and collapsed reeds; branching drainage channels connect them naturally. Surviving mossy forest at one far edge gives way to leafless trees, pale dying grass and exposed rotten wood. A raised but naturally rounded dry bank and an old worn cart track provide two clear crossing routes. Ominous through physical decay and beautiful layered painting rather than neon magical effects. Keep the complete elevated no-horizon battlefield composition, continuous ground, rich texture and readable shadows. No people, skeletons, monsters, literal blood, active smoke, flames or UI.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+
+FINAL CORRUPTION ATMOSPHERE: The land itself is visibly unhealthy, decaying and poisoned. Follow this corruption type's specific materials and colours over the healthy golden grass or sunlight of the style references. Use subdued overcast lighting and exhausted vegetation around the infection; healthy woodland is confined to any explicitly described far boundary. No pleasant golden meadow or warm scenic glow. Preserve readable terrain, detailed painting and the original elevated camera.
+```
+
+#### Violet crystal blight
+
+ID: `corruption_crystal` · 16:9 · 2K · scene
+
+Save as `corruption_crystal__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — VIOLET CRYSTAL BLIGHT
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A natural rocky meadow slowly poisoned by an invasive mineral blight. Unequal clusters of dull amethyst and smoky-violet crystals grow from existing rock fractures and thread through exposed tree roots, with fine pale mineral crusts staining soil along connected shallow seep channels. Nearby trees have bleached bark, sparse dusty-purple leaves and broken dead limbs; healthy olive woodland survives at the far boundary. Strong organic rounded hills contrast with angular crystal growths. Keep crystals mostly at the edges and on one low ridge, leaving a broad winding dirt route and open central ground for formations. Rich painted stone and timber detail, restrained purple-versus-ochre palette, readable physical terrain. Crystals reflect ordinary light with no neon emission or magical beam. No floating islands, huge central crystal tower, people, creatures, explosions, fog curtain or UI.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+
+FINAL CORRUPTION ATMOSPHERE: The land itself is visibly unhealthy, decaying and poisoned. Follow this corruption type's specific materials and colours over the healthy golden grass or sunlight of the style references. Use subdued overcast lighting and exhausted vegetation around the infection; healthy woodland is confined to any explicitly described far boundary. No pleasant golden meadow or warm scenic glow. Preserve readable terrain, detailed painting and the original elevated camera.
+```
+
+#### Ash-choked corrupted forest
+
+ID: `corruption_ash` · 16:9 · 2K · scene
+
+Save as `corruption_ash__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ASH-CHOKED CORRUPTED FOREST
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A haunting forest valley exhausted by a creeping grey blight: ash-coloured dust settles in shallow gullies, mature trees stand as twisted pale skeletal silhouettes, dead roots cross eroded banks and dry blackened trunks lie among cracked earth. Rounded islands of sickly straw grass and small chalk-white fungal crusts interrupt the grey soil. A former stream is completely dry, showing dusty sediment rings and smooth dark stones. At the upper perimeter a small remaining green woodland patch reveals the advancing corruption boundary. An abandoned worn road bends around the largest fallen trunk and crosses the dry channel at a shallow ford; keep routes wide and believable. Powerful layered shapes, detailed weathered wood, muted bone-grey, charcoal, ochre and deep cool shadow, clear elevated isometric no-horizon view. This is old quiet devastation: no burning trees, active fire, smoke, lava, people, creatures or UI.
+
+FORMAT: One continuous landscape illustration filling a 16:9 canvas. Use the same elevated isometric battlefield camera as the references, with no sky or visible horizon. Broad connected walkable ground occupies roughly two-thirds of the image; put the tallest objects mainly around the perimeter. Use rounded hills, continuous shallow approaches and occasional eroded banks with believable connections between elevations. Keep detail quieter in the main movement areas. Consistent scale and upper-left lighting throughout. No detached floating island, cutaway diorama base, stacked tile platforms, visible grid, soldiers, creatures, health bars, UI, labels, text, watermark or border. This is an empty battlefield art concept, not a navigation-validated map.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+
+FINAL CORRUPTION ATMOSPHERE: The land itself is visibly unhealthy, decaying and poisoned. Follow this corruption type's specific materials and colours over the healthy golden grass or sunlight of the style references. Use subdued overcast lighting and exhausted vegetation around the infection; healthy woodland is confined to any explicitly described far boundary. No pleasant golden meadow or warm scenic glow. Preserve readable terrain, detailed painting and the original elevated camera.
+```
+
+### Northern European forest comparisons
+
+#### Thick northern forest — clear daylight
+
+ID: `road_forest_northern_clear` · 16:9 · 2K · scene
+
+Save as `road_forest_northern_clear__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — THICK NORTHERN FOREST — CLEAR DAYLIGHT
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: A deeply wooded northern European landscape with a naturally worn cart road winding between imposing mature Norway spruce and Scots pine, a few silver birches, and occasional old broadleaf trees in the lower moist ground. Tall irregular canopies overlap in several layers; massive textured trunks and hanging boughs make the forest feel old and extensive. Dense moss, fern colonies, tangled bilberry-like low shrubs, exposed roots, fallen branches and decaying nurse logs occupy the forest floor, with pockets of rock and damp earth. Thick wild woodland continues on both sides and into the distance, never isolated decorative tree clumps around a manicured lawn. Keep the road and a few natural clearings legible at the established elevated isometric camera, with believable ruts, turning arcs, soft drainage and grass only where traffic is light. This is the CLEAR DAYLIGHT comparison requested by the user: natural neutral daylight, deep green foliage, readable cool shadows, no fog, no mist and no dramatic darkening. Show the richer northern forest character through tree species, height, density and untamed ground. No people, creatures, camps, torches, UI or horizon.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+FINAL CLEAR-DAY OVERRIDE: This particular comparison has denser, taller northern European forest under neutral natural daylight. No fog, no mist, no gloomy weather treatment; forest character and density are the only intended atmospheric changes.
+```
+
+#### Imposing northern forest — dark and foggy
+
+ID: `road_forest_northern_fog` · 16:9 · 2K · scene
+
+Save as `road_forest_northern_fog__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — IMPOSING NORTHERN FOREST — DARK AND FOGGY
+
+REFERENCE ROLES: Attach the two supplied Meridius battlefield images in the listed order. Image 1 controls the lush painted vegetation, materials, proportions and elevated isometric camera. Image 2 supplies the warmer golden grass, weathered rocks and natural slope detail. Follow these images closely. Use their terrain and object rendering only; exclude their soldiers, creatures, health bars, movement grids and overlays.
+
+ART DIRECTION: Rich hand-painted fantasy strategy-game environment art with carefully grouped, crisp, pixel-like brush shapes. Large readable foliage masses, textured brown timber, warm grey stone, olive and yellow-green vegetation, ochre grass, and deep cool green-blue shadows. Detailed within strong silhouettes, with restrained dark edge accents. Preserve the references' painterly detail; do not turn this into a 32-pixel ability icon, photorealism, glossy 3D, low-poly geometry, thick cartoon outlines or a pixelation filter. Adapt the palette naturally for the requested biome.
+
+LIGHT: One coherent soft upper-left daylight source. Warm lit planes and cooler shadows. Preserve material texture in shade. No dramatic rim lights, lens effects or depth-of-field blur.
+
+SUBJECT: An imposing old northern European forest with a winding natural cart road, towering Norway spruce and Scots pine, scattered pale birch trunks and a few immense gnarled broadleaf trees. Dense uneven layers of overlapping crowns and great trunks rise above tangled undergrowth, mossy boulders, exposed roots and fallen decaying timber. The forest feels vast and self-grown, with no clipped lawns, ornamental clumps or regular tree spacing. Dark moss-green, bottle-green and cool blue-green shadows, restrained natural highlights under overcast daylight. Drifting low grey fog winds among trunks and gathers in hollows; layered atmospheric mist gives depth to the far forest, while the nearest road, roots and branches remain sharply readable. Preserve a believable quiet cart road with worn paired ruts, irregular soft verges, modest drainage and natural turns around terrain. Make the trees imposing in scale without blocking the entire route. The elevated isometric camera looks down into a continuous forest landscape with no sky or horizon. No figures, creatures, torches, neon glow, UI or floating diorama.
+
+FORMAT: One continuous 16:9 landscape. Elevated isometric camera, zoomed well out, parallel axes, no visible sky or horizon. Long connected roads and verges occupy about 40 percent of the image with forest on both sides. Quiet details on the movement lanes, natural continuous terrain, no square tile edges, floating base, border, troops, creatures, labels, grid or UI.
+
+LANDSCAPE REFINEMENT: Take secondary inspiration from World of Warcraft environment concept art: bold organic landforms, layered woodland silhouettes, purposeful paths, rich painted surfaces and convincing natural places. The two supplied Meridius images still govern camera, materials and rendering. Where roads appear, make them follow practical gradients and contours, show subtle camber and drainage, irregular soft verges, worn paired wheel routes, compacted busy ground and grass returning only where travel is light. Avoid perfect equal-width geometric paths, identical repeated trees, ornamental paving everywhere, arbitrary sharp turns and oversized road furniture.
+
+LATEST WOODLAND DIRECTION: Wherever this location contains forest, make it imposing, thick and northern European: tall irregular spruce and Scots pine, silver birch and occasional mature broadleaf trees, overlapping woodland layers, dark natural greens, mossy stones, ferns, tangled low growth, fallen timber and uneven self-grown edges. Keep nature wild and extensive rather than park-like, neatly spaced or clipped. Use subdued cool daylight and drifting low fog between trunks and in hollows, keeping nearby routes and structures readable. This woodland atmosphere supersedes earlier golden park-like vegetation or a blanket ban on mist. Preserve the requested biome and open areas; do not fill camp interiors, drill grounds, roads or deforested clearings with new trees. Camp layouts and buildings remain as approved. Keep the original painterly rendering and elevated camera.
+
+FINAL DENSITY OVERRIDE: This is a forest-dominated composition. Dense mature woodland occupies about 80 percent of the image; the modest road and its irregular verges occupy the remaining 20 percent, overriding the earlier generic road-space percentage. Tall interlocking crowns, trunks at several depths, tight understory and low drifting fog enclose the route. No broad meadow, large sunny lawn, isolated decorative groves, golden sunset or empty park clearing. Keep the road readable as it bends through this immense forest.
+```
+
+### Night locations
+
+#### Orc war pit — night
+
+ID: `orc_pit_night` · 3:2 · 2K · site
+
+Save as `orc_pit_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ORC WAR PIT — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 3:2 canvas, elevated isometric camera, exact crop and complete framing. Keep the perfectly uniform magenta extraction background unchanged; only the site itself receives night lighting. Do not add a horizon, terrain outside the isolated footprint or a shadow on the background. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Fortified orc pit entrance — night
+
+ID: `orc_pit_fortified_night` · 3:2 · 2K · site
+
+Save as `orc_pit_fortified_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FORTIFIED ORC PIT ENTRANCE — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 3:2 canvas, elevated isometric camera, exact crop and complete framing. Keep the perfectly uniform magenta extraction background unchanged; only the site itself receives night lighting. Do not add a horizon, terrain outside the isolated footprint or a shadow on the background. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Ancient dragon lair — night
+
+ID: `dragon_lair_night` · 3:2 · 2K · site
+
+Save as `dragon_lair_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ANCIENT DRAGON LAIR — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 3:2 canvas, elevated isometric camera, exact crop and complete framing. Keep the perfectly uniform magenta extraction background unchanged; only the site itself receives night lighting. Do not add a horizon, terrain outside the isolated footprint or a shadow on the background. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Frozen dragon lair — night
+
+ID: `dragon_lair_snow_night` · 3:2 · 2K · site
+
+Save as `dragon_lair_snow_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FROZEN DRAGON LAIR — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 3:2 canvas, elevated isometric camera, exact crop and complete framing. Keep the perfectly uniform magenta extraction background unchanged; only the site itself receives night lighting. Do not add a horizon, terrain outside the isolated footprint or a shadow on the background. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### meadow battlefield — night
+
+ID: `battlefield_meadow_night` · 16:9 · 2K · scene
+
+Save as `battlefield_meadow_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEADOW BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Open grassland battlefield — night
+
+ID: `battlefield_grassland_night` · 16:9 · 2K · scene
+
+Save as `battlefield_grassland_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — OPEN GRASSLAND BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Snow battlefield — night
+
+ID: `battlefield_snow_night` · 16:9 · 2K · scene
+
+Save as `battlefield_snow_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SNOW BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Forest clearing battlefield — night
+
+ID: `battlefield_forest_night` · 16:9 · 2K · scene
+
+Save as `battlefield_forest_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FOREST CLEARING BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Dead-tree wasteland battlefield — night
+
+ID: `battlefield_wasteland_night` · 16:9 · 2K · scene
+
+Save as `battlefield_wasteland_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — DEAD-TREE WASTELAND BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Dark forest battlefield — night
+
+ID: `battlefield_dark_forest_night` · 16:9 · 2K · scene
+
+Save as `battlefield_dark_forest_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — DARK FOREST BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Lakeside battlefield — night
+
+ID: `battlefield_lakeside_night` · 16:9 · 2K · scene
+
+Save as `battlefield_lakeside_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LAKESIDE BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Ruined village battlefield — night
+
+ID: `battlefield_ruined_village_night` · 16:9 · 2K · scene
+
+Save as `battlefield_ruined_village_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — RUINED VILLAGE BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Town street battlefield — night
+
+ID: `battlefield_town_night` · 16:9 · 2K · scene
+
+Save as `battlefield_town_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — TOWN STREET BATTLEFIELD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Wide mixed-forest road — night
+
+ID: `road_forest_wide_night` · 16:9 · 2K · scene
+
+Save as `road_forest_wide_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE MIXED-FOREST ROAD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Wide snowy forest road — night
+
+ID: `road_snow_wide_night` · 16:9 · 2K · scene
+
+Save as `road_snow_wide_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE SNOWY FOREST ROAD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Wide ancient-forest road — night
+
+ID: `road_dark_forest_wide_night` · 16:9 · 2K · scene
+
+Save as `road_dark_forest_wide_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — WIDE ANCIENT-FOREST ROAD — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Natural forest crossroads with signpost — night
+
+ID: `road_crossroads_wide_night` · 16:9 · 2K · scene
+
+Save as `road_crossroads_wide_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — NATURAL FOREST CROSSROADS WITH SIGNPOST — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Logged valley and dry river — night
+
+ID: `deforested_river_valley_night` · 16:9 · 2K · scene
+
+Save as `deforested_river_valley_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LOGGED VALLEY AND DRY RIVER — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Clear-cut basin and braided dry channels — night
+
+ID: `deforested_river_basin_night` · 16:9 · 2K · scene
+
+Save as `deforested_river_basin_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — CLEAR-CUT BASIN AND BRAIDED DRY CHANNELS — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Felled ancient forest and dry ravine — night
+
+ID: `deforested_old_growth_night` · 16:9 · 2K · scene
+
+Save as `deforested_old_growth_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — FELLED ANCIENT FOREST AND DRY RAVINE — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Small marching camp — night
+
+ID: `camp_small_march_night` · 16:9 · 2K · scene
+
+Save as `camp_small_march_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SMALL MARCHING CAMP — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Small woodland outpost — night
+
+ID: `camp_small_woodland_night` · 16:9 · 2K · scene
+
+Save as `camp_small_woodland_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — SMALL WOODLAND OUTPOST — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Medium meadow castra — night
+
+ID: `camp_medium_meadow_night` · 16:9 · 2K · scene
+
+Save as `camp_medium_meadow_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEDIUM MEADOW CASTRA — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Medium camp above a riverbank — night
+
+ID: `camp_medium_river_night` · 16:9 · 2K · scene
+
+Save as `camp_medium_river_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — MEDIUM CAMP ABOVE A RIVERBANK — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Large legion camp — night
+
+ID: `camp_large_legion_night` · 16:9 · 2K · scene
+
+Save as `camp_large_legion_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LARGE LEGION CAMP — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Large frontier castra — night
+
+ID: `camp_large_frontier_night` · 16:9 · 2K · scene
+
+Save as `camp_large_frontier_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — LARGE FRONTIER CASTRA — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Only windows or tent openings ALREADY PRESENT in the attached daytime source may have restrained warm interior light. Do not add any building, tent, window or light fixture. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Blood-fungus corrupted valley — night
+
+ID: `corruption_blood_fungus_night` · 16:9 · 2K · scene
+
+Save as `corruption_blood_fungus_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BLOOD-FUNGUS CORRUPTED VALLEY — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Black root-rot marsh — night
+
+ID: `corruption_root_rot_night` · 16:9 · 2K · scene
+
+Save as `corruption_root_rot_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — BLACK ROOT-ROT MARSH — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Violet crystal blight — night
+
+ID: `corruption_crystal_night` · 16:9 · 2K · scene
+
+Save as `corruption_crystal_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — VIOLET CRYSTAL BLIGHT — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Ash-choked corrupted forest — night
+
+ID: `corruption_ash_night` · 16:9 · 2K · scene
+
+Save as `corruption_ash_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — ASH-CHOKED CORRUPTED FOREST — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Thick northern forest — clear daylight — night
+
+ID: `road_forest_northern_clear_night` · 16:9 · 2K · scene
+
+Save as `road_forest_northern_clear_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — THICK NORTHERN FOREST — CLEAR DAYLIGHT — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```
+
+#### Imposing northern forest — dark and foggy — night
+
+ID: `road_forest_northern_fog_night` · 16:9 · 2K · scene
+
+Save as `road_forest_northern_fog_night__take-01.png`.
+
+```text
+MERIDIUS TERRAIN ART — IMPOSING NORTHERN FOREST — DARK AND FOGGY — NIGHT
+
+REFERENCE ROLES: Attach ONLY the matching reviewed daytime image. It is the exact source to edit, including its geometry, camera, framing, scale, structures, paths, object placement and painted material style. Make a faithful NIGHT LIGHTING EDIT of this single image. The supplied Meridius style references are already embodied in this accepted source; do not introduce elements from other images.
+
+ART DIRECTION: Keep layered painted foliage, textured worn timber and stone, restrained crisp brush shapes and all local details. No glossy 3D, photorealism, low-poly simplification, thick cartoon outlines or pixelation filter.
+
+NIGHT LIGHT: Remove warm sunlight and daytime light shafts. Illuminate from upper left with gentle cool silver-blue moonlight and soft blue-green ambient fill. The scene must clearly read as night while every route, slope, entrance and material stays legible. Preserve hue differences between grass, stone, timber and snow; do not apply a flat blue filter or crush shadows to black. No visible sky, moon disc, stars, fog curtain, magical glow, fires, torches, troops or added objects. Do not add buildings, cabins, shelters, tents, windows, lamps or warm lights. Keep every wilderness area free of settlement and artificial lighting. Preserve only structures that already exist in the attached daytime source. Preserve existing empty site entrances and roads.
+
+PRESERVATION: Keep this exact accepted composition. Preserve every road bend, tree, stump, rock, bank, building, tent, gate and empty entrance in its current position and size. Preserve existing fog or clear conditions, dry channels and water boundaries. Change lighting only; do not add, remove or redesign objects.
+
+FORMAT: Keep the original 16:9 canvas, elevated isometric camera, exact crop and complete framing. Preserve continuous terrain to all four image edges, with no sky, horizon, border or floating base. No figures, creatures, torches, UI, text or watermark.
+```

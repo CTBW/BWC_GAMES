@@ -5,10 +5,12 @@
 ##   SoldierCard.make(so: Dictionary, on_click := Callable(), selected := false, disabled := false, extra: Array = []) -> PanelContainer
 ##       Portrait 52, name + command-point tag, type line (+ ★ when promoted),
 ##       segmented squad HP bar with pips, morale bar, status tags (injuries,
-##       Recovering, Worn armour, "N short") and `extra` tag Controls.
+##       Wounded / Injured, Recovering, Worn armour, "N short") and `extra` tag Controls.
 ##   SoldierCard.row(so: Dictionary, trailing: Array = [], on_click := Callable(), name_w := 190, bars_w := 104) -> PanelContainer
 ##       SoldierRow: Portrait 42 | name / type (name_w px) | pips, HP, morale (bars_w px) | tags | trailing controls.
 ##       (CSS lets the 190/104 columns shrink when the trailing buttons are wide; pass smaller widths there.)
+##   SoldierCard.wound_tag(so, font_size := 0) -> Control|null   the penalty the squad carries into its next fight
+##   SoldierCard.wound_chip(wound, font_size := 0) -> Control     the same for a Squad.wound_of result
 ##   SoldierCard.squad_order(type_id) -> int      line first, then spears, missiles, mages and war machines
 ##   SoldierCard.sort_roster(list) -> Array       by squad_order, then level (high first); a sorted copy
 extends RefCounted
@@ -27,6 +29,21 @@ const MenPips = preload("res://scripts/ui/widgets/men_pips.gd")
 
 ## Order squads are listed in: the line first, then spears, then missiles.
 const SQUAD_ORDER := ["collie_guard", "footman", "spearman", "crossbowman", "battle_mage", "ballista", "mangonel"]
+
+
+## "Wounded (2)" or "Injured", with what it costs in the squad's next fight; null when it carries none.
+static func wound_tag(so: Dictionary, font_size := 0) -> Control:
+	var w: Variant = Deps.squad().wound_of(so)
+	return wound_chip(w, font_size) if w != null else null
+
+
+static func wound_chip(w: Dictionary, font_size := 0) -> Control:
+	var effect: String = Deps.squad().wound_text(w)
+	var then: String = Deps.squad().hurt_text(w)
+	if w.kind == "injured":
+		return Tag.make("Injured", "red", "", font_size, "Cut down to the last in its last fight. Next fight: %s. %s." % [effect, then])
+	var n: int = w.get("hurt", w.fell)
+	return Tag.make("Wounded (%d)" % n, "gold", "", font_size, "%s still hurt from its last fight. Next fight: %s. %s." % ["One soldier is" if n == 1 else "%d soldiers are" % n, effect, then])
 
 
 static func squad_order(type_id: String) -> int:
@@ -89,6 +106,9 @@ static func make(so: Dictionary, on_click := Callable(), selected := false, disa
 	tags.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for i in so.injuries:
 		tags.add_child(Tag.make(DB.INJURIES[i].name, "red", "", 10))
+	var wt := wound_tag(so, 10)
+	if wt != null:
+		tags.add_child(wt)
 	if so.get("recovering"):
 		tags.add_child(Tag.make("Recovering", "blue", "", 10))
 	if so.armorCondition < 0.7:
@@ -147,6 +167,9 @@ static func row(so: Dictionary, trailing: Array = [], on_click := Callable(), na
 		tags.add_child(Tag.make("Recovering", "blue"))
 	for i in so.injuries:
 		tags.add_child(Tag.make(DB.INJURIES[i].name, "red"))
+	var wt := wound_tag(so)
+	if wt != null:
+		tags.add_child(wt)
 	r.add_child(tags)
 	for t in trailing:
 		if t != null:

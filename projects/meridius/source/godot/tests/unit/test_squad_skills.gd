@@ -385,7 +385,7 @@ func test_the_company_automation_uses_the_new_skills() -> void:
 			k += 1
 		for enc in DB.ENCOUNTERS:
 			var roll := Setup.roll_encounter(enc.id, Rng.new(seed * 131 + 7), 1)
-			var b = auto_battle(Battle.new(Setup.build_battle(roll, army.duplicate(true), {"survivalBonus": 0, "title": enc.id, "darkness": false})))
+			var b = auto_battle(Battle.new(Setup.build_battle(roll, army.duplicate(true), {"title": enc.id, "darkness": false})))
 			for e in b.drain():
 				if e.t == "attack" and e.get("ability") != null:
 					used[e.ability] = true

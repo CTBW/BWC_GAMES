@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-24",
+  "references": [
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/boss_giant_troll__take-01.png",
+      "role": "Existing huge troll: full-body scale, club and encounter presentation only; redesign his face, age and back."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/ancient-troll-user-reference.png",
+      "role": "User troll anatomy, long hooked nose, old face, long hair and beard, moss, roots and trinkets."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/shoulder-ruins-user-markup.png",
+      "role": "Placement of ruins across both shoulders and upper back only. Red circles are annotations; no crown, giant fortress or buried pose."
+    },
+    {
+      "file": "projects/meridius/references/characters/bosses/concepts/references/terrain-ruined-cottage.png",
+      "role": "Meridius terrain architecture and painted materials: small timber-and-thatch cottages, pale plaster, stone footings and chimney, broken rafters. Ignore magenta."
+    }
+  ],
+  "additionalTerrainInspected": "projects/meridius/references/style/terrain/house_cottage/house_cottage__take-02.png"
+}

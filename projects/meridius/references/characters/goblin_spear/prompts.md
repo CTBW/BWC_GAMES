@@ -77,3 +77,9 @@ Keep everything in Image A identical: the goblin spearman's face, nose, eyes, mo
 
 Delivered: `spear_tpose_front_v2.png` replaces `spear_tpose_front.png`. It passes: bald,
 with his ears free and no paint.
+
+## Chosen for 3D (25 October 2026)
+
+The user picked `spear_tpose_front_v2.png` and the first spear, `spear_front.png` (job
+`892d33eb-2575-4f52-9395-1062bc0d7dad`), with its narrower head, over `spear_front_v2.png`.
+These two go to Tripo.

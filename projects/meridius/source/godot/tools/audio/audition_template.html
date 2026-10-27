@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius Sound Audition</title>
+<style>
+  :root {
+    --bg: #15120e; --panel: #1f1a14; --line: #3a3128; --text: #eadfcc; --muted: #a8987f;
+    --gold: #d9b45a; --like: #5fae6a; --reject: #b5534a; --accent: #8fb3d9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 "Segoe UI", system-ui, sans-serif; }
+  header { position: sticky; top: 0; z-index: 2; background: #100d0aee; border-bottom: 1px solid var(--line); padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+  header h1 { font-size: 18px; margin: 0 12px 0 0; color: var(--gold); letter-spacing: .02em; }
+  header label { color: var(--muted); font-size: 14px; display: flex; gap: 6px; align-items: center; }
+  header .count { color: var(--muted); font-size: 14px; }
+  button { background: #2a231b; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 11px; font: inherit; font-size: 13px; cursor: pointer; }
+  button:hover { border-color: var(--gold); }
+  main { max-width: 1100px; margin: 0 auto; padding: 8px 20px 60px; }
+  .intro { color: var(--muted); margin: 14px 0 4px; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 18px; }
+  nav a { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+  h2 { color: var(--gold); font-size: 20px; margin: 30px 0 6px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  h2 .star { font-size: 12px; color: var(--bg); background: var(--gold); border-radius: 4px; padding: 1px 6px; margin-left: 8px; vertical-align: middle; }
+  h3 { font-size: 15px; margin: 18px 0 6px; color: var(--text); font-family: Consolas, monospace; }
+  h3 small { color: var(--muted); font-family: "Segoe UI", sans-serif; font-weight: normal; margin-left: 8px; }
+  .take { display: grid; grid-template-columns: 170px 1fr auto; gap: 4px 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 6px; padding: 8px 12px; margin: 6px 0; }
+  .take.like { border-left-color: var(--like); }
+  .take.reject { border-left-color: var(--reject); opacity: .55; }
+  .take .id { font-family: Consolas, monospace; font-size: 13px; }
+  .take .meta { color: var(--muted); font-size: 12.5px; grid-column: 1 / 3; }
+  .take .meta a { color: var(--accent); }
+  .take audio { width: 100%; height: 34px; }
+  .take .btns { display: flex; gap: 6px; }
+  .take .btns .on-like { background: var(--like); border-color: var(--like); color: #fff; }
+  .take .btns .on-reject { background: var(--reject); border-color: var(--reject); color: #fff; }
+  .take input.note { grid-column: 3; background: #15110d; border: 1px solid var(--line); color: var(--text); border-radius: 5px; padding: 4px 8px; font: inherit; font-size: 13px; width: 220px; }
+  .preview { color: #e0a85c; }
+  .verdict { font-family: "Segoe UI", sans-serif; font-size: 11.5px; font-weight: 600; }
+  .v-liked { color: #9fe0a8; } .v-saved { color: #8fb3d9; } .v-rejected { color: #e08a80; }
+  .ingame { color: #7fd08a; font-family: "Segoe UI", sans-serif; font-size: 11.5px; }
+  body.hide-rejected .take.reject { display: none; }
+  body.hide-reviewed .take.reviewed, body.hide-reviewed .all-reviewed { display: none; }
+  body.first-only section:not(.first) { display: none; }
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #1a140d; padding: 8px 16px; border-radius: 6px; display: none; }
+  @media (max-width: 760px) { .take { grid-template-columns: 1fr; } .take .meta, .take input.note { grid-column: 1; width: 100%; } }
+</style>
+</head>
+<body class="hide-reviewed">
+<header>
+  <h1>Meridius Sound Audition</h1>
+  <label><input type="checkbox" id="firstOnly"> New voices only</label>
+  <label><input type="checkbox" id="hideReviewed" checked> Hide what you reviewed on 24 Oct</label>
+  <label><input type="checkbox" id="hideRejected"> Hide rejected</label>
+  <span class="count" id="count"></span>
+  <button id="save">Save picks…</button>
+  <button id="copy">Copy picks</button>
+</header>
+<main>
+  <p class="intro">Play a take and mark it <b>Like</b> or <b>Reject</b>; add a short note if you want, such as "too thin" or "perfect for trolls". Your marks are kept in this browser. When you're done, press <b>Save picks…</b> and save <code>picks.json</code> into this folder. The <b>new voices</b> come first: Knox's commands grouped by what they are for, a victory cheer from six men, and goblins made a new way (a described voice, a voice from a goblin picture, a rough voice pitched up with a smaller throat). The sounds you reviewed on 24 Oct are hidden; untick <b>Hide what you reviewed</b> to see them. <span class="preview">Orange "preview"</span> means a Freesound MP3 preview: if you like it, we'll download the original. Earlier verdicts show as <span class="verdict v-liked">liked</span>, <span class="verdict v-saved">saved for…</span> and <span class="verdict v-rejected">rejected</span> (full list: projects/meridius/docs/audio-picks.md). <span class="ingame">Green "in game"</span> marks the takes in the game now (chosen from descriptions and measurements, not by ear): Reject any you dislike and I'll swap them.</p>
+  <nav id="nav"></nav>
+  <div id="groups"></div>
+</main>
+<div id="toast"></div>
+<script>
+const GROUPS = /*DATA*/[];
+const KEY = "meridius-audition-picks-v1";
+let picks = {};
+try { picks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { picks = {}; }
+function store() { try { localStorage.setItem(KEY, JSON.stringify(picks)); } catch (e) {} updateCount(); }
+
+function el(tag, cls, text) { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+
+const nav = document.getElementById("nav"), root = document.getElementById("groups");
+GROUPS.forEach((g, gi) => {
+  const open = g.events.reduce((n, ev) => n + ev.takes.filter(t => !t.verdict).length, 0);
+  const sec = el("section", (g.badge ? "first" : "") + (open ? "" : " all-reviewed")); sec.id = "g" + gi;
+  const h = el("h2", null, g.title); if (g.badge) h.appendChild(el("span", "star", g.badge));
+  sec.appendChild(h);
+  const a = el("a", null, g.title); a.href = "#g" + gi; a.dataset.first = g.badge ? "1" : ""; if (!open) a.className = "all-reviewed"; nav.appendChild(a);
+  g.events.forEach(ev => {
+    const left = ev.takes.filter(t => !t.verdict).length;
+    const h3 = el("h3", left ? null : "all-reviewed", ev.event);
+    h3.appendChild(el("small", null, ev.takes.length + " takes" + (left < ev.takes.length ? ", " + left + " not reviewed" : ""))); sec.appendChild(h3);
+    ev.takes.forEach(t => {
+      const row = el("div", "take" + (t.verdict ? " reviewed" : "")); row.dataset.id = t.id; row.dataset.event = ev.event;
+      const id = el("div", "id", t.id.replace(/^hf_round\d+_/, "")); id.title = t.id;
+      if (t.kind === "preview") { id.appendChild(document.createElement("br")); id.appendChild(el("span", "preview", "preview")); }
+      if (t.verdict) { id.appendChild(document.createElement("br")); id.appendChild(el("span", "verdict v-" + t.verdict, (t.verdict === "saved" ? "saved for: " : t.verdict + ": ") + t.vnote)); }
+      if (t.ingame) { id.appendChild(document.createElement("br")); id.appendChild(el("span", "ingame", "in game: " + t.ingame)); }
+      if (t.kind === "pitched") { id.appendChild(document.createElement("br")); id.appendChild(el("span", "preview", "pitched edit")); }
+      const audio = document.createElement("audio"); audio.controls = true; audio.preload = "none"; audio.src = t.url;
+      audio.addEventListener("play", () => document.querySelectorAll("audio").forEach(o => { if (o !== audio) o.pause(); }));
+      const btns = el("div", "btns");
+      const like = el("button", null, "Like"), rej = el("button", null, "Reject");
+      btns.append(like, rej);
+      const meta = el("div", "meta");
+      const bits = [t.notes, t.source, t.license, t.dur ? t.dur.toFixed(1) + " s" : ""].filter(Boolean).join(" · ");
+      meta.appendChild(document.createTextNode(bits + " "));
+      if (t.page) { const l = el("a", null, "source"); l.href = t.page; l.target = "_blank"; l.rel = "noopener"; meta.appendChild(l); }
+      const note = el("input", "note"); note.placeholder = "note"; note.value = (picks[t.id] && picks[t.id].note) || "";
+      function paint() {
+        const s = picks[t.id] && picks[t.id].state;
+        row.classList.toggle("like", s === "like"); row.classList.toggle("reject", s === "reject");
+        like.classList.toggle("on-like", s === "like"); rej.classList.toggle("on-reject", s === "reject");
+      }
+      function set(state) {
+        const cur = picks[t.id] || { event: ev.event, file: t.url };
+        cur.state = cur.state === state ? null : state;
+        if (!cur.state && !cur.note) delete picks[t.id]; else picks[t.id] = cur;
+        paint(); store();
+      }
+      like.onclick = () => set("like"); rej.onclick = () => set("reject");
+      note.oninput = () => { const cur = picks[t.id] || { event: ev.event, file: t.url, state: null }; cur.note = note.value; picks[t.id] = cur; store(); };
+      row.append(id, audio, btns, meta, note); paint();
+      sec.appendChild(row);
+    });
+  });
+  root.appendChild(sec);
+});
+
+function updateCount() {
+  const v = Object.values(picks);
+  document.getElementById("count").textContent = v.filter(p => p.state === "like").length + " liked · " + v.filter(p => p.state === "reject").length + " rejected";
+}
+updateCount();
+function exportText() { return JSON.stringify({ saved: new Date().toISOString(), picks }, null, 1); }
+function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2200); }
+document.getElementById("save").onclick = () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([exportText()], { type: "application/json" }));
+  a.download = "picks.json"; a.click(); toast("picks.json downloaded: move it into the audio-library folder");
+};
+document.getElementById("copy").onclick = () => navigator.clipboard.writeText(exportText()).then(() => toast("Copied: paste it in the chat"), () => toast("Copy failed: use Save picks"));
+const firstOnly = document.getElementById("firstOnly"), hideRej = document.getElementById("hideRejected"), hideRev = document.getElementById("hideReviewed");
+hideRev.onchange = () => document.body.classList.toggle("hide-reviewed", hideRev.checked);
+firstOnly.onchange = () => { document.body.classList.toggle("first-only", firstOnly.checked); document.querySelectorAll("nav a").forEach(a => a.style.display = firstOnly.checked && !a.dataset.first ? "none" : ""); };
+hideRej.onchange = () => document.body.classList.toggle("hide-rejected", hideRej.checked);
+firstOnly.onchange();
+</script>
+</body>
+</html>

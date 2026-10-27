@@ -1,0 +1,1 @@
+Mixar MCP installation verification only. Two editable test meshes, metre scale, +Y up. This is a setup test asset, not production game art. Import the GLB into Godot; the accompanying blend retains an editable source.

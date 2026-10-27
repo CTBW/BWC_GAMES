@@ -1,0 +1,191 @@
+{
+  "audit_hz": 240,
+  "capture_fps": 30,
+  "clips": {
+    "attack": {
+      "arm_length_m": 0.59,
+      "contact_frame_at_30fps": 24.6,
+      "contact_s": 0.82,
+      "duration_s": 2.4,
+      "flight_duration_s": 0.0,
+      "footsteps": [],
+      "frames_at_30fps": 72,
+      "leg_length_m": 0.89,
+      "loop": false,
+      "max_hip_ankle_distance_m": 0.828278839588165,
+      "max_planted_foot_speed_m_s": 0.0,
+      "max_shoulder_hand_distance_m": 0.441728085279465,
+      "min_body_centre_gap_m": 1.76004707813263,
+      "root_translation": "authored world-space; never add to controller displacement"
+    },
+    "charge": {
+      "arm_length_m": 0.59,
+      "contact_frame_at_30fps": 102.0,
+      "contact_s": 3.4,
+      "duration_s": 4.8,
+      "flight_duration_s": 0.25,
+      "footsteps": [
+        [
+          "right",
+          0.73,
+          1.13,
+          -2.35891089108911,
+          0.19
+        ],
+        [
+          "left",
+          1.08,
+          1.48,
+          -1.84430693069307,
+          0.19
+        ],
+        [
+          "right",
+          1.43,
+          1.83,
+          -1.32970297029703,
+          0.19
+        ],
+        [
+          "left",
+          1.78,
+          2.18,
+          -0.81509900990099,
+          0.19
+        ],
+        [
+          "right",
+          2.13,
+          2.53,
+          -0.30049504950495,
+          0.19
+        ],
+        [
+          "left",
+          2.48,
+          2.72,
+          -0.0353195141235494,
+          0.1
+        ],
+        [
+          "right",
+          2.83,
+          3.07,
+          -0.09,
+          0.1
+        ],
+        [
+          "left",
+          3.08,
+          3.29,
+          0.49,
+          0.08
+        ]
+      ],
+      "frames_at_30fps": 144,
+      "leg_length_m": 0.89,
+      "loop": false,
+      "max_hip_ankle_distance_m": 0.830668807029724,
+      "max_planted_foot_speed_m_s": 0.0,
+      "max_shoulder_hand_distance_m": 0.575667858123779,
+      "min_body_centre_gap_m": 1.22196435928345,
+      "root_translation": "authored world-space; never add to controller displacement"
+    },
+    "move": {
+      "arm_length_m": 0.59,
+      "contact_frame_at_30fps": null,
+      "contact_s": null,
+      "duration_s": 5.6,
+      "flight_duration_s": 0.0,
+      "footsteps": [
+        [
+          "right",
+          0.5,
+          0.84,
+          -1.18156424581006,
+          0.12
+        ],
+        [
+          "left",
+          1.0,
+          1.34,
+          -0.762569832402235,
+          0.12
+        ],
+        [
+          "right",
+          1.5,
+          1.84,
+          -0.343575418994413,
+          0.12
+        ],
+        [
+          "left",
+          2.0,
+          2.34,
+          0.0754189944134078,
+          0.12
+        ],
+        [
+          "right",
+          2.5,
+          2.84,
+          0.494413407821229,
+          0.12
+        ],
+        [
+          "left",
+          3.0,
+          3.34,
+          0.91340782122905,
+          0.12
+        ],
+        [
+          "right",
+          3.5,
+          3.84,
+          1.34,
+          0.12
+        ],
+        [
+          "left",
+          4.0,
+          4.34,
+          1.66,
+          0.12
+        ]
+      ],
+      "frames_at_30fps": 168,
+      "leg_length_m": 0.89,
+      "loop": false,
+      "max_hip_ankle_distance_m": 0.842495620250702,
+      "max_planted_foot_speed_m_s": 0.0,
+      "max_shoulder_hand_distance_m": 0.439427137374878,
+      "min_body_centre_gap_m": null,
+      "root_translation": "authored world-space; never add to controller displacement"
+    },
+    "shield_bash": {
+      "arm_length_m": 0.59,
+      "contact_frame_at_30fps": 25.8,
+      "contact_s": 0.86,
+      "duration_s": 2.5,
+      "flight_duration_s": 0.0,
+      "footsteps": [],
+      "frames_at_30fps": 75,
+      "leg_length_m": 0.89,
+      "loop": false,
+      "max_hip_ankle_distance_m": 0.869090378284454,
+      "max_planted_foot_speed_m_s": 0.0,
+      "max_shoulder_hand_distance_m": 0.573459088802338,
+      "min_body_centre_gap_m": 1.22197532653809,
+      "root_translation": "authored world-space; never add to controller displacement"
+    }
+  },
+  "engine": "4.7.2-stable (official)",
+  "forward": "+X",
+  "left": "-Z",
+  "status": "authored proposal; not integrated or user-approved",
+  "units": "metres, seconds",
+  "up": "+Y",
+  "version": 1
+}

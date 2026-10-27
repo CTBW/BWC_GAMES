@@ -1,0 +1,50 @@
+{
+  "WolfScout3_Body": {
+    "verts": 5435,
+    "faces": 6274,
+    "unweighted_or_short": 0,
+    "max_influences": 4,
+    "bones_used": 60
+  },
+  "WolfScout3_Cloak": {
+    "verts": 2004,
+    "faces": 2316,
+    "unweighted_or_short": 0,
+    "max_influences": 4,
+    "bones_used": 22
+  },
+  "WolfScout3_Dagger.Left": {
+    "verts": 554,
+    "faces": 613,
+    "unweighted_or_short": 0,
+    "max_influences": 1,
+    "bones_used": 1
+  },
+  "WolfScout3_Dagger.Right": {
+    "verts": 554,
+    "faces": 613,
+    "unweighted_or_short": 0,
+    "max_influences": 1,
+    "bones_used": 1
+  },
+  "bones": 78,
+  "daggers": {
+    "WolfScout3_Dagger.Left": {
+      "signed_volume": 0.000884,
+      "tip_dir": [
+        0.06,
+        1.0,
+        0.0
+      ]
+    },
+    "WolfScout3_Dagger.Right": {
+      "signed_volume": 0.000884,
+      "tip_dir": [
+        -0.06,
+        1.0,
+        -0.0
+      ]
+    }
+  },
+  "deform_bones": 75
+}

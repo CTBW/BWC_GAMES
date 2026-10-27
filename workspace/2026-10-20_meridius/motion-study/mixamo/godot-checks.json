@@ -1,0 +1,18 @@
+{
+  "slash": {
+    "bone_count": 65,
+    "duration": 2.03333330154419,
+    "max_ankle_export_error_m": 0.000000641615713448118,
+    "max_sword_tip_export_error_m": 0.000000303925247635561,
+    "production_integration": false,
+    "samples_checked": 62
+  },
+  "stab": {
+    "bone_count": 65,
+    "duration": 2.36666655540466,
+    "max_ankle_export_error_m": 0.00000079081519288593,
+    "max_sword_tip_export_error_m": 0.000000329177396451996,
+    "production_integration": false,
+    "samples_checked": 72
+  }
+}

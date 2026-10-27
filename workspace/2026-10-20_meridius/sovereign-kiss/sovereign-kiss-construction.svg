@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+<title id="title">Sovereign Kiss — Blender construction and animation schematic</title>
+<desc id="desc">Proposed dimensions for a heart projectile, material layers, a 48-frame cast animation, squad convergence and event-driven contact lifecycle. Editable vector source.</desc>
+<defs>
+  <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff77bd"/><stop offset=".46" stop-color="#bf165a"/><stop offset="1" stop-color="#481645"/></linearGradient>
+  <linearGradient id="rim" x2="0" y2="1"><stop stop-color="#fff0d2"/><stop offset="1" stop-color="#ffb15c"/></linearGradient>
+  <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#86718d" stroke-opacity=".08"/></pattern>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="none" stroke="#d3b27d" stroke-width="1.5"/></marker>
+  <path id="heart" d="M0 82C-30 56-100 5-100-42C-100-99-28-112 0-60C28-112 100-99 100-42C100 5 30 56 0 82Z"/>
+  <style>text{font-family:'Segoe UI',Arial,sans-serif;fill:#f3e8f1} .title{font-family:Georgia,serif;font-size:48px;letter-spacing:3px;fill:#f4dfb7}.sub{font-size:18px;letter-spacing:3px;fill:#c6abbf}.head{font-size:23px;font-weight:600}.label{font-size:18px;fill:#ceb9cd}.note{font-size:17px;fill:#b49bb4}.small{font-size:15px;fill:#b49bb4}.gold{fill:#e7c38b}.panel{fill:#1c1724;stroke:#514052;stroke-width:1}.rule{fill:none;stroke:#d3b27d;stroke-width:1.3}.guide{fill:none;stroke:#76647c;stroke-width:1;stroke-dasharray:5 6}</style>
+</defs>
+<rect width="1800" height="1200" fill="#120f19"/><rect width="1800" height="1200" fill="url(#grid)"/>
+<text x="56" y="70" class="title">SOVEREIGN KISS</text><text x="58" y="106" class="sub">BLENDER CONSTRUCTION / SUCCUBUS–GERMAN SQUAD</text>
+<text x="1742" y="63" text-anchor="end" class="sub">02 / TECHNICAL SHEET</text><text x="1742" y="100" text-anchor="end" class="note">Proposed blockout · Z up · front −Y · 30 fps</text><path d="M56 127H1744" class="rule"/>
+
+<rect x="56" y="154" width="650" height="434" rx="12" class="panel"/><text x="80" y="195" class="head">01 / HEART GEOMETRY</text><text x="80" y="226" class="note">Broad face in XZ · tip stays downward</text>
+<path d="M359 245V548M140 384H580" class="guide"/>
+<g transform="translate(359 391) scale(1.5 1.7)"><use href="#heart" fill="url(#core)" stroke="url(#rim)" stroke-width="2.6"/><use href="#heart" transform="scale(.87)" fill="none" stroke="#ff80b4" stroke-width="1" opacity=".7"/></g>
+<path d="M209 552H509" class="rule" marker-start="url(#arrow)" marker-end="url(#arrow)"/><text x="359" y="579" text-anchor="middle" class="label gold">0.90 m width</text>
+<path d="M552 239V530" class="rule" marker-start="url(#arrow)" marker-end="url(#arrow)"/><text x="579" y="367" class="label gold">0.92 m</text><text x="579" y="395" class="small">height</text>
+<circle cx="359" cy="391" r="5" fill="#fff0d2"/><path d="M364 391H535" class="guide"/><text x="80" y="510" class="small">Origin at visual center</text>
+
+<rect x="726" y="154" width="330" height="434" rx="12" class="panel"/><text x="750" y="195" class="head">02 / DEPTH</text><text x="750" y="226" class="note">Soft, shallow lens</text>
+<path d="M891 241C938 262 942 466 891 530C846 466 844 262 891 241Z" fill="url(#core)" stroke="#ffb15c" stroke-width="3"/><path d="M891 241V530" class="guide"/>
+<path d="M855 554H927" class="rule" marker-start="url(#arrow)" marker-end="url(#arrow)"/><text x="891" y="580" text-anchor="middle" class="label gold">0.22 m</text>
+<path d="M838 388H766" class="rule" marker-end="url(#arrow)"/><text x="755" y="421" class="small">−Y flight</text>
+
+<rect x="1076" y="154" width="668" height="434" rx="12" class="panel"/><text x="1100" y="195" class="head">03 / MATERIAL &amp; LAYER STACK</text>
+<g transform="translate(1151 274) scale(.29)"><use href="#heart" fill="url(#core)"/></g><text x="1212" y="268" class="label">Rose core · filled, bevelled mesh</text><text x="1212" y="295" class="small">Dark magenta center preserves the heart silhouette.</text>
+<g transform="translate(1151 355) scale(.29)"><use href="#heart" fill="none" stroke="#ffb15c" stroke-width="7"/></g><text x="1212" y="349" class="label">Amber rim · separate emissive outline</text><text x="1212" y="376" class="small">Control glow; it must also read with bloom disabled.</text>
+<path d="M1114 439C1144 398 1157 472 1186 431M1114 448C1140 469 1160 402 1186 423" fill="none" stroke="#b968dc" stroke-width="7"/><text x="1212" y="435" class="label">Two ribbons · world-space trail history</text><text x="1212" y="462" class="small">About 1.4 m maximum length; 0.25 s tail fade.</text>
+<g transform="translate(1110 510)"><rect width="76" height="25" fill="#bf165a"/><rect x="86" width="76" height="25" fill="#ff4fa4"/><rect x="172" width="76" height="25" fill="#fff0d2"/><rect x="258" width="76" height="25" fill="#ffb15c"/><rect x="344" width="76" height="25" fill="#7835bc"/><rect x="430" width="76" height="25" fill="#24122f"/></g><text x="1110" y="563" class="small">ROSE → PINK → IVORY → AMBER → VIOLET → PLUM</text>
+
+<rect x="56" y="612" width="1688" height="254" rx="12" class="panel"/><text x="80" y="653" class="head">04 / CAST ACTION — 48 FRAMES</text><text x="1720" y="653" text-anchor="end" class="note">Frame 1 = 0.00 s · planted feet · right hand casts, left hand holds whip</text>
+<g transform="translate(80 677)"><rect width="392" height="9" rx="4" fill="#7835bc"/><rect x="404" width="292" height="9" rx="4" fill="#bf165a"/><rect x="708" width="225" height="9" rx="4" fill="#ffb15c"/><rect x="945" width="260" height="9" rx="4" fill="#ff4fa4"/><rect x="1217" width="421" height="9" rx="4" fill="#614d78"/>
+<text y="48" class="head">GATHER</text><text y="79" class="label gold">F01–12 / 0.00–0.37 s</text><text y="111" class="note">Free hand rises; wings draw back.</text><text y="140" class="note">Small mouth-local spark.</text>
+<text x="404" y="48" class="head">KISS</text><text x="404" y="79" class="label gold">F13–21 / 0.40–0.67 s</text><text x="404" y="111" class="note">Pucker, focus, hold.</text><text x="404" y="140" class="note">No projectile yet.</text>
+<text x="708" y="48" class="head">RELEASE</text><text x="708" y="79" class="label gold">F22 / 0.70 s</text><text x="708" y="111" class="note">Detach at lips.</text><text x="708" y="140" class="note">Grow through F28.</text>
+<text x="945" y="48" class="head">FOLLOW</text><text x="945" y="79" class="label gold">F29–36 / 0.93–1.17 s</text><text x="945" y="111" class="note">Open palm; wing pulse.</text><text x="945" y="140" class="note">Projectile independent.</text>
+<text x="1217" y="48" class="head">RECOVER</text><text x="1217" y="79" class="label gold">F37–48 / 1.20–1.57 s</text><text x="1217" y="111" class="note">Hand lowers; tail and wings settle.</text><text x="1217" y="140" class="note">Blend back into idle.</text></g>
+
+<rect x="56" y="890" width="820" height="237" rx="12" class="panel"/><text x="80" y="930" class="head">05 / SQUAD RELEASE</text><text x="80" y="959" class="note">Small lip wisps converge into one large heart.</text>
+<g fill="none" stroke="#b968dc" stroke-width="2"><circle cx="119" cy="995" r="8"/><circle cx="119" cy="1039" r="8"/><circle cx="119" cy="1083" r="8"/><path d="M129 995C207 995 196 1039 269 1039M129 1039H269M129 1083C207 1083 196 1039 269 1039"/></g>
+<g transform="translate(315 1044) scale(.39)"><use href="#heart" fill="url(#core)" stroke="#ffb15c" stroke-width="4"/></g><path d="M374 1039H473" class="rule" marker-end="url(#arrow)"/><text x="500" y="1026" class="label">ONE projectile owner</text><text x="500" y="1057" class="note">One contact resolution.</text><text x="500" y="1088" class="note">Crowns only on affected targets.</text>
+
+<rect x="896" y="890" width="848" height="237" rx="12" class="panel"/><text x="920" y="930" class="head">06 / CONTACT IS AN EVENT</text><text x="920" y="965" class="label gold">H+0.00  Hit → H+0.10  Split → H+0.30  Crown</text><text x="920" y="1000" class="note">Contact timing follows distance and the actual confirmed hit.</text><text x="920" y="1032" class="note">Crown follows the head until status expiry, dispel or death.</text><text x="920" y="1064" class="note">Cancelled windup: no projectile. Miss: no enthrall crown.</text><text x="920" y="1096" class="note">Refresh updates the existing crown; never duplicates it.</text>
+<path d="M56 1153H1744" class="rule"/><text x="56" y="1182" class="small">EDITABLE SVG · All sizes and timings are proposed authoring values. See blender-handoff.md for rig, export and cleanup details.</text><text x="1744" y="1182" text-anchor="end" class="small">MERIDIUS / 23 OCT 2026</text>
+</svg>

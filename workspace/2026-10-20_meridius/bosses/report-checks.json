@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-24T19:35:20.802Z",
+  "bossCount": 6,
+  "promptCount": 6,
+  "verifiedOriginals": 19,
+  "localLinks": true,
+  "canonicalPathsAndHashes": true,
+  "webpPreviews": true,
+  "latestTrollTake": 4,
+  "latestColossusTake": 4,
+  "originalTakesPreserved": true,
+  "exactPrompt": true,
+  "correctReferences": true,
+  "referenceCount": 2,
+  "historicalReferencesPreserved": true,
+  "registry": true,
+  "removedDesignsAbsent": true,
+  "pendingJobs": 0,
+  "errors": [],
+  "visualReview": true,
+  "viewports": [
+    {
+      "width": 1718,
+      "height": 1254,
+      "overflow": false
+    }
+  ],
+  "fullSizePreview": {
+    "width": 2048,
+    "height": 1143
+  },
+  "originalResolution": {
+    "width": 2752,
+    "height": 1536
+  },
+  "imagePreviewControls": true,
+  "previewClosed": true,
+  "downloadLinkVerified": true,
+  "currentGalleryTake": 4,
+  "screenshot": "giant-troll-take-04-preview.jpg",
+  "scope": "giant-troll-take-04",
+  "productionState": "revised_concepts_ready",
+  "confirmedJobs": 19,
+  "productionStatusVerified": true,
+  "previousFullReportCheck": "2026-10-24T15:06:48.859Z",
+  "gameplayTested": false
+}

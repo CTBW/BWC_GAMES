@@ -78,9 +78,16 @@ static func tile_passable(map: Dictionary, x: int, y: int) -> bool:
 	if not DB.TERRAIN[t.terrain].passable:
 		return false
 	var p: Variant = t.get("prop")
-	if p and DB.PROPS[p].blocksMove:
+	if p and DB.PROPS[p].blocksMove and not (woodland_prop(p) and not map.get("solidWoods", false)):
 		return false
 	return true
+
+
+## Woodland represents a stand of trees at squad scale, with room between trunks.
+## A map with `solidWoods` (the 3D battlefields, where a tree or a bush is one
+## thing on its tile) has none: its trees and bushes block a move as well.
+static func woodland_prop(prop: String) -> bool:
+	return prop.begins_with("tree_") or prop == "bush"
 
 
 static func move_cost(map: Dictionary, x: int, y: int) -> int:

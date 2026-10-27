@@ -687,15 +687,22 @@ static func camp_rest(g: Dictionary) -> void:
 	var fed: int = mini(need, ex.supplies.rations)
 	ex.supplies.rations -= fed
 	var ratio: float = float(fed) / need if need > 0 else NAN
+	var tended := 0
 	for s in army:
 		var st := Soldier.soldier_stats(s)
 		# 30% of every surviving soldier's share; the dead stay dead.
 		Soldier.heal_soldier(s, Soldier.squad_hp_cap(s) * 0.3 * ratio)
 		s.morale = mini(st.morale, s.morale + JS.rnd(15 * ratio))
 		s.fatigue = maxi(0, s.fatigue - JS.rnd(45 * ratio))
+		# A full night's rest dresses the wounds of the last fight.
+		if ratio >= 1 and Squad.wound_of(s) != null:
+			Squad.tend_wounds(s)
+			tended += 1
 	p.done.append("rest")
 	if ratio >= 1:
 		p.messages.append("The army eats a hot meal and sleeps (-%d rations): +30%% HP, +15 morale, -45 fatigue." % fed)
+		if tended > 0:
+			p.messages.append("The wounds of the last fight are dressed: %s fit to fight again." % ("one squad is" if tended == 1 else "%s squads are" % Game.number_word(tended)))
 	else:
 		p.messages.append("There is not enough food for everyone (-%d rations). The rest is poor." % fed)
 	# Night raid unless a watch is kept with torches.
@@ -739,6 +746,7 @@ static func camp_repair(g: Dictionary) -> void:
 	p.messages.append("The army mends straps and hammers out dents (-1 tools): +40% armour condition.")
 
 
+## A bandage heals a squad's survivors and dresses the wounds of its last fight.
 static func use_bandage(g: Dictionary, soldier_id: String) -> bool:
 	var ex: Variant = g.expedition
 	if ex == null or ex.supplies.bandages < 1:
@@ -750,11 +758,16 @@ static func use_bandage(g: Dictionary, soldier_id: String) -> bool:
 			break
 	if s == null:
 		return false
-	if s.hp >= Soldier.squad_hp_cap(s):
+	var wound: Variant = Squad.wound_of(s)
+	if s.hp >= Soldier.squad_hp_cap(s) and wound == null:
 		return false
 	ex.supplies.bandages -= 1
 	var healed := Soldier.heal_soldier(s, bandage_heal(s))
-	_add_log(ex, "%s are bandaged (+%d HP)." % [Squad.squad_name(s), healed])
+	if wound != null:
+		Squad.tend_wounds(s)
+		_add_log(ex, "%s are bandaged (+%d HP); the wounds of their last fight are dressed." % [Squad.squad_name(s), healed])
+	else:
+		_add_log(ex, "%s are bandaged (+%d HP)." % [Squad.squad_name(s), healed])
 	return true
 
 
@@ -847,11 +860,6 @@ static func prepare_night(g: Dictionary) -> Dictionary:
 	return {"night": true, "darkness": true, "torchUsed": false}
 
 
-static func survival_bonus(g: Dictionary) -> float:
-	var ex: Variant = g.expedition
-	return Game.effect(g, "infirmary", "survival") + (0.12 if ex != null and ex.supplies.bandages > 0 else 0.0)
-
-
 ## Apply a finished battle (a Battle instance) to the roster and expedition.
 static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective: bool) -> Dictionary:
 	var ex: Dictionary = g.expedition
@@ -874,7 +882,7 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		"objective": objective,
 		"loot": {},
 		"fallen": [],
-		"wounded": [],
+		"injured": [],
 		"routed": [],
 		"levelUps": [],
 		"xp": [],
@@ -882,26 +890,14 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		"enemiesFled": enemies_fled,
 		"enemySoldiersSlain": slain,
 		"losses": [],
-		"bandagesUsed": 0,
 		"boltsUsed": 0,
 	}
-	# Field triage: once the fighting is over, every soldier who fell gets the
-	# same chance to have been only wounded that a single soldier always had.
-	# In battle the fallen stay down; this is the one way some of them return,
-	# badly hurt. Fewer are found when the field is lost.
-	var outcome_factor := 1.25 if result == "victory" else (0.9 if result == "retreat" else 0.4)
-	var survival_b: float = b.setup.survivalBonus
-	var triage := func(s: Dictionary, fell: int) -> int:
-		if fell <= 0:
-			return 0
-		var p := minf(0.85, (Battle.FALL_SURVIVAL_BASE + 0.05 * (s.level - 1) + survival_b) * outcome_factor)
-		return ex_rng(ex, func(r: RefCounted) -> int:
-			var n := 0
-			for i in fell:
-				if r.chance(p):
-					n += 1
-			return n
-		)
+	# The soldiers who went down rise again once the fighting is over, hurt.
+	# Their wounds weaken the squad in its next fight (Squad.wound_of); the
+	# penalty it carried into this one is spent. Soldiers still hurt from the
+	# last fight die if they go down again: the first of the squad to go down
+	# are the hurt ones (Squad.hurt_of). A squad cut down to the last rises
+	# Injured, all hurt; cut down again while Injured, it is gone for good.
 	for u in b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player" and x.get("soldierId") != null):
 		var s: Variant = null
 		for r in g.roster:
@@ -917,9 +913,18 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		# Soldiers who marched into the battle (as soldier_to_unit fielded them).
 		var men0: int = maxi(1, mini(size, s.men))
 		var marched: int = Squad.alive_for(maxi(1, mini(s.hp, st.hp * men0)), st.hp, men0)
-		if u.status == "dead":
+		var hurt: int = mini(Squad.hurt_of(s), marched)
+		s.erase("wounded")
+		s.erase("injured")
+		var status: String = u.status
+		var died := 0
+		if status == "downed":
+			died = hurt
+			if men0 - died <= 0:
+				status = "dead"
+		if status == "dead":
 			report.fallen.append({"name": s.name, "typeId": s.typeId, "level": s.level})
-			report.losses.append({"name": s.name, "typeId": s.typeId, "lost": s.men, "men": 0, "size": size, "fate": "dead"})
+			report.losses.append({"name": s.name, "typeId": s.typeId, "fell": marched, "lost": s.men, "men": 0, "size": size, "fate": "gone"})
 			ex.menLost = JS.get_or(ex, "menLost", 0) + s.men
 			g.fallen.push_front({"name": s.name, "typeId": s.typeId, "level": s.level, "kills": s.kills, "battles": s.battles, "cause": "Fell at %s" % title, "cycle": g.cycle})
 			var sid: String = s.id
@@ -927,42 +932,37 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 			ex.army = ex.army.filter(func(id: String) -> bool: return id != sid)
 			Game.chronicle(g, "%s and his %s fell at %s." % [s.name, String(DB.UNIT_TYPES[s.typeId].plural).to_lower(), title], "bad")
 			continue
-		if u.status == "downed":
-			# The squad was cut down; its sergeant was carried off alive, badly hurt.
-			var have: Array = s.injuries
-			var inj: Variant = ex_rng(ex, func(r: RefCounted) -> Variant:
-				return _pick(r, DB.INJURIES.keys().filter(func(k: String) -> bool: return not have.has(k)))
-			)
-			if inj != null:
-				s.injuries.append(inj)
-			var fell: int = maxi(0, s.men - 1)
-			var saved: int = triage.call(s, fell)
-			var lost: int = fell - saved
-			s.men = 1 + saved
-			s.hp = maxi(1, JS.rnd(Soldier.soldier_stats(s).hp * (0.5 + 0.3 * saved)))
-			s.morale = maxi(1, JS.rnd(st.morale * 0.3))
-			report.wounded.append({"name": s.name, "injury": DB.INJURIES[inj].name if inj != null else "Grievous wounds"})
-			report.losses.append({"name": s.name, "typeId": s.typeId, "lost": lost, "men": s.men, "size": size, "fate": "downed", "saved": saved})
-			ex.menLost = JS.get_or(ex, "menLost", 0) + lost
-			if ex.supplies.bandages > 0:
-				ex.supplies.bandages -= 1
-				report.bandagesUsed += 1
+		if status == "downed":
+			# Cut down to the last: the hurt die, the rest rise whole, Injured.
+			# The penalty, not the pool or its spirit, carries the blow into the
+			# next fight.
+			s.men = men0 - died
+			s.hp = Soldier.squad_hp_cap(s)
+			s.morale = st.morale
+			s.injured = true
+			report.injured.append(s.name)
+			report.losses.append({"name": s.name, "typeId": s.typeId, "fell": marched, "lost": died, "men": s.men, "size": size, "fate": "injured"})
 		else:
-			# Survivors keep the squad's pool and the soldiers still standing. (Men too
-			# hurt to march, which only an old save can have, are not counted as slain.)
+			# The survivors keep their scratches; of the fallen, the hurt die and
+			# the rest get up with their full share, wounded. (Men too hurt to
+			# march, which only an old save can have, stay as they were.)
 			var fell: int = maxi(0, marched - maxi(1, JS.get_or(u, "alive", marched)))
-			var saved: int = triage.call(s, fell)
-			var lost: int = fell - saved
-			s.men = maxi(1, mini(size, men0 - lost))
-			# Those carried back arrive with a sliver of their strength.
-			s.hp = maxi(1, mini(u.hp + saved * JS.rnd(st.hp * 0.3), Soldier.squad_hp_cap(s)))
+			died = mini(hurt, fell)
+			var rose := fell - died
+			s.men = men0 - died
+			s.hp = maxi(1, mini(int(u.hp) + rose * st.hp, Soldier.squad_hp_cap(s)))
+			if rose > 0:
+				s.wounded = rose
 			if fell > 0:
-				report.losses.append({"name": s.name, "typeId": s.typeId, "lost": lost, "men": s.men, "size": size, "fate": "fought", "saved": saved})
-				ex.menLost = JS.get_or(ex, "menLost", 0) + lost
+				report.losses.append({"name": s.name, "typeId": s.typeId, "fell": fell, "lost": died, "men": s.men, "size": size, "fate": "wounded" if rose > 0 else "died"})
 			s.morale = maxi(1, u.morale + (12 if result == "victory" else -5))
 			if u.status == "fled":
 				s.morale = maxi(1, JS.rnd(st.morale * 0.25))
 				report.routed.append(s.name)
+		if died > 0:
+			ex.menLost = JS.get_or(ex, "menLost", 0) + died
+			Game.chronicle(g, "%s of %s's %s, still hurt from the last fight, fell for good at %s." % [
+				Game.number_word(died).capitalize(), s.name, String(DB.UNIT_TYPES[s.typeId].plural).to_lower(), title], "bad")
 		s.morale = mini(st.morale, s.morale)
 		s.fatigue = mini(100, s.fatigue + 6)
 		var hits: int = JS.get_or(b.hits_taken, u.uid, 0)
@@ -1070,7 +1070,7 @@ static func return_home(g: Dictionary, outcome: String) -> Dictionary:
 		"stipend": stipend,
 		"fallen": fallen_now,
 		"survivors": survivors.map(func(s: Dictionary) -> String: return s.name),
-		"strength": survivors.map(func(s: Dictionary) -> Dictionary: return {"name": s.name, "typeId": s.typeId, "men": s.men, "size": DB.squad_size(s.typeId)}),
+		"strength": survivors.map(func(s: Dictionary) -> Dictionary: return {"name": s.name, "typeId": s.typeId, "men": s.men, "size": DB.squad_size(s.typeId), "wound": Squad.wound_of(s)}),
 		"menLost": JS.get_or(ex, "menLost", 0),
 		"marches": ex.marches,
 		"battles": ex.battles,

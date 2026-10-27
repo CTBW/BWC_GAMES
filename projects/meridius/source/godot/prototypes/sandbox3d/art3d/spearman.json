@@ -1,0 +1,538 @@
+{
+ "fps": 30.0,
+ "source": "art/spearman_3d/spearman_rig.blend",
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.641,
+ "height_rest_m": 1.82,
+ "roles": {
+  "idle": "idle_rest",
+  "ready": "idle",
+  "walk": "walk",
+  "attack": [
+   "attack"
+  ],
+  "hit": "hit",
+  "death": [
+   "death",
+   "death_2",
+   "death_3"
+  ],
+  "extra": [
+   "idle",
+   "step_lane",
+   "turn_90",
+   "turn_90_r",
+   "turn_180"
+  ]
+ },
+ "variants": {
+  "idle": {
+   "clips": [
+    "idle"
+   ],
+   "every_s": [
+    10.0,
+    20.0
+   ],
+   "hold_s": [
+    1.4,
+    2.8
+   ],
+   "blend_s": 0.6
+  }
+ },
+ "notes": [
+  "Cape: glTF cannot carry the cloth's PC2 caches, so the baked cloth of every clip is fitted with 24 cape bones (6 columns round his back x 4 rows, Cape_<row>_<col>, row 0 at the hem, children of mixamorig:Spine2; bilinear weights; the pinned rows under the hood keep their spine weights). Their keys reproduce cape_cache/<clip>.pc2 (errors per clip in clips.<clip>.cape_fit; spine_only_mean_cm is the error of the cape skinned to the spine alone). No new cloth bake. Solidify (1 cm, inwards) is applied.",
+  "Spear: the per-clip object actions (<clip>__spear) are baked onto the bones 'SpearGrip' (child of mixamorig:RightHand, at the point of the shaft nearest the right fist's centre) and 'SpearBone' (its child, the butt; it only slides along the shaft), so cross-fades turn the spear about the fist and slide it through; the spear mesh is skinned to SpearBone. In the deaths it leaves the hand at spear_release.",
+  "Locomotion is in place. walk and step_lane move the figure by root_vel (m/s, Godot axes); idle, idle_rest and the turns stand still (their small source drift was removed by retarget_clips.py). Deaths keep their authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "turn_90, turn_90_r (turn_90 played backwards) and turn_180 start and end in idle's first pose, turned. The turn is moved to the root as in the footman's export: the body stays at idle's heading and root_yaw (degrees per frame from the first frame) turns the figure about pivot ([x, z] in Godot axes: the guard's hips), so the hips end where idle has them.",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "Cape",
+  "Spear",
+  "Spearman"
+ ],
+ "bones": 53,
+ "triangles": 17890,
+ "texture_px": 1024,
+ "cape_bones": [
+  "Cape_0_0",
+  "Cape_0_1",
+  "Cape_0_2",
+  "Cape_0_3",
+  "Cape_0_4",
+  "Cape_0_5",
+  "Cape_1_0",
+  "Cape_1_1",
+  "Cape_1_2",
+  "Cape_1_3",
+  "Cape_1_4",
+  "Cape_1_5",
+  "Cape_2_0",
+  "Cape_2_1",
+  "Cape_2_2",
+  "Cape_2_3",
+  "Cape_2_4",
+  "Cape_2_5",
+  "Cape_3_0",
+  "Cape_3_1",
+  "Cape_3_2",
+  "Cape_3_3",
+  "Cape_3_4",
+  "Cape_3_5"
+ ],
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 1.4,
+   "loop": true,
+   "frames": 43,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0,
+   "cape_fit": {
+    "mean_cm": 0.65,
+    "p95_cm": 1.54,
+    "max_cm": 6.42,
+    "spine_only_mean_cm": 3.41
+   }
+  },
+  "idle_rest": {
+   "anim": "idle_rest",
+   "length": 8.5667,
+   "loop": true,
+   "frames": 258,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0,
+   "cape_fit": {
+    "mean_cm": 0.3,
+    "p95_cm": 0.83,
+    "max_cm": 5.02,
+    "spine_only_mean_cm": 0.91
+   }
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.3667,
+   "loop": true,
+   "frames": 42,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.9232
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    -0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.2667,
+      "Left"
+     ],
+     [
+      0.9333,
+      "Right"
+     ]
+    ]
+   },
+   "speed_mps": 0.9232,
+   "speed_footlock_mps": 0.9171,
+   "loop_seam_cm": 0.0,
+   "cape_fit": {
+    "mean_cm": 0.76,
+    "p95_cm": 1.72,
+    "max_cm": 4.68,
+    "spine_only_mean_cm": 5.19
+   }
+  },
+  "step_lane": {
+   "anim": "step_lane",
+   "length": 1.2667,
+   "loop": true,
+   "frames": 39,
+   "root_vel": [
+    -0.9929,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    -0.0,
+    -0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.2667,
+      "Left"
+     ],
+     [
+      0.9,
+      "Right"
+     ]
+    ]
+   },
+   "speed_mps": 0.9929,
+   "loop_seam_cm": 0.0,
+   "cape_fit": {
+    "mean_cm": 0.76,
+    "p95_cm": 1.74,
+    "max_cm": 7.39,
+    "spine_only_mean_cm": 12.56
+   }
+  },
+  "turn_90": {
+   "anim": "turn_90",
+   "length": 0.9333,
+   "loop": false,
+   "frames": 29,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 67.6,
+   "hips_drift": [
+    -0.0016,
+    0.0001,
+    0.0014
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 0.92,
+    "p95_cm": 1.97,
+    "max_cm": 7.31,
+    "spine_only_mean_cm": 6.41
+   },
+   "root_yaw": [
+    0.0,
+    -4.14,
+    -8.65,
+    -12.18,
+    -13.83,
+    -13.2,
+    -10.41,
+    -6.69,
+    -2.93,
+    0.9,
+    4.77,
+    8.68,
+    12.61,
+    16.54,
+    20.46,
+    24.38,
+    28.28,
+    32.13,
+    35.92,
+    39.59,
+    43.16,
+    46.66,
+    50.07,
+    53.22,
+    56.07,
+    58.96,
+    61.86,
+    64.76,
+    67.64
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
+   ]
+  },
+  "turn_90_r": {
+   "anim": "turn_90_r",
+   "length": 0.9333,
+   "loop": false,
+   "frames": 29,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -67.6,
+   "hips_drift": [
+    0.0016,
+    -0.0001,
+    -0.0014
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 0.85,
+    "p95_cm": 1.87,
+    "max_cm": 4.93,
+    "spine_only_mean_cm": 7.09
+   },
+   "root_yaw": [
+    0.0,
+    -2.88,
+    -5.77,
+    -8.68,
+    -11.57,
+    -14.42,
+    -17.57,
+    -20.98,
+    -24.48,
+    -28.04,
+    -31.71,
+    -35.51,
+    -39.36,
+    -43.26,
+    -47.18,
+    -51.1,
+    -55.02,
+    -58.95,
+    -62.87,
+    -66.74,
+    -70.57,
+    -74.33,
+    -78.05,
+    -80.84,
+    -81.47,
+    -79.81,
+    -76.29,
+    -71.77,
+    -67.64
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
+   ]
+  },
+  "turn_180": {
+   "anim": "turn_180",
+   "length": 0.8,
+   "loop": false,
+   "frames": 25,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -162.9,
+   "hips_drift": [
+    -0.0018,
+    -0.0022,
+    0.0014
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 1.09,
+    "p95_cm": 2.32,
+    "max_cm": 6.61,
+    "spine_only_mean_cm": 9.83
+   },
+   "root_yaw": [
+    0.0,
+    0.9,
+    -2.63,
+    -12.39,
+    -27.37,
+    -44.56,
+    -57.6,
+    -63.46,
+    -69.17,
+    -75.71,
+    -82.49,
+    -89.52,
+    -97.19,
+    -105.44,
+    -113.71,
+    -121.3,
+    -128.24,
+    -134.15,
+    -139.2,
+    -143.92,
+    -147.99,
+    -151.88,
+    -155.81,
+    -159.68,
+    -162.91
+   ],
+   "pivot": [
+    -0.0839,
+    0.0952
+   ]
+  },
+  "attack": {
+   "anim": "attack",
+   "length": 2.1,
+   "loop": false,
+   "frames": 64,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 1.8,
+   "hips_drift": [
+    -0.0256,
+    -0.0002,
+    0.0036
+   ],
+   "events": {
+    "contact": 1.1667,
+    "swing": [
+     0.2333,
+     1.7
+    ]
+   },
+   "tip_reach_m": 3.108,
+   "lead_m": 1.106,
+   "cape_fit": {
+    "mean_cm": 0.75,
+    "p95_cm": 1.75,
+    "max_cm": 8.34,
+    "spine_only_mean_cm": 4.1
+   }
+  },
+  "hit": {
+   "anim": "hit",
+   "length": 2.0,
+   "loop": false,
+   "frames": 61,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.5,
+   "hips_drift": [
+    -0.0009,
+    -0.0005,
+    0.0008
+   ],
+   "events": {},
+   "cape_fit": {
+    "mean_cm": 0.78,
+    "p95_cm": 1.82,
+    "max_cm": 6.24,
+    "spine_only_mean_cm": 4.96
+   }
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.3667,
+   "loop": false,
+   "frames": 72,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 36.6,
+   "hips_drift": [
+    -0.1132,
+    -0.5057,
+    1.1799
+   ],
+   "events": {
+    "settled": 2.2333,
+    "spear_release": 1.1667
+   },
+   "cape_fit": {
+    "mean_cm": 1.0,
+    "p95_cm": 2.13,
+    "max_cm": 6.26,
+    "spine_only_mean_cm": 11.06
+   }
+  },
+  "death_2": {
+   "anim": "death_2",
+   "length": 2.2667,
+   "loop": false,
+   "frames": 69,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "turn_deg": -73.8,
+   "hips_drift": [
+    1.1462,
+    -0.5683,
+    -0.1292
+   ],
+   "events": {
+    "settled": 1.6667,
+    "spear_release": 0.8
+   },
+   "cape_fit": {
+    "mean_cm": 1.18,
+    "p95_cm": 2.39,
+    "max_cm": 9.15,
+    "spine_only_mean_cm": 19.54
+   }
+  },
+  "death_3": {
+   "anim": "death_3",
+   "length": 3.9,
+   "loop": false,
+   "frames": 118,
+   "root_vel": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 27.2,
+   "hips_drift": [
+    -0.1518,
+    -0.5588,
+    0.8538
+   ],
+   "events": {
+    "settled": 3.6667,
+    "spear_release": 1.5333
+   },
+   "cape_fit": {
+    "mean_cm": 0.82,
+    "p95_cm": 1.81,
+    "max_cm": 7.41,
+    "spine_only_mean_cm": 7.65
+   }
+  }
+ }
+}

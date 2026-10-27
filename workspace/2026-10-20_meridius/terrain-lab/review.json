@@ -1,0 +1,19 @@
+{
+	"checks": [
+		"PASS test_surface_projection_round_trip_and_shader_height_data",
+		"PASS test_paths_cross_each_field_and_ford_without_climbing_illegal_steps",
+		"PASS test_real_pointer_move_patrol_height_and_repeat_movement",
+		"PASS boot to title",
+		"PASS terrain button on title",
+		"PASS title click opens terrain lab",
+		"PASS native field click moves patrol",
+		"PASS native night toggle",
+		"PASS native height toggle",
+		"PASS field switching with contours active",
+		"PASS Escape returns to title",
+		"PASS company and save untouched"
+	],
+	"errors": [],
+	"fields": 3,
+	"renderer": "gl_compatibility"
+}

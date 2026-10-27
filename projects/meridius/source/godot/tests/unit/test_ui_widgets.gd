@@ -64,6 +64,18 @@ func test_bar() -> void:
 	z.free()
 
 
+## A decorated control often receives its padding before entering the scene.
+## Reading the style for a later decoration must retain that local override.
+func test_unparented_panel_preserves_explicit_padding() -> void:
+	var panel := UI.panel("DarkPanel", [28, 40])
+	var style: StyleBox = UI.theme_stylebox(panel).duplicate()
+	assert_eq(style.content_margin_top, 28.0)
+	assert_eq(style.content_margin_left, 40.0)
+	panel.add_theme_stylebox_override("panel", style)
+	assert_eq(UI.theme_stylebox(panel).content_margin_bottom, 28.0)
+	panel.free()
+
+
 func test_squad_bar() -> void:
 	var b := SquadBar.make(100, 32, 6, 4, 9)
 	host.add_child(b)
@@ -220,6 +232,18 @@ func test_soldier_card() -> void:
 	assert_true(texts.has(g.roster[0].name), "name")
 	assert_true(texts.has("2 short"), "short tag: %s" % [texts])
 	assert_true(texts.has(DB.INJURIES.gashed_arm.name), "injury tag")
+	# The penalty a squad carries into its next fight, with what it costs.
+	g.roster[1].wounded = 2
+	var wt: Control = SoldierCard.wound_tag(g.roster[1])
+	host.add_child(wt)
+	assert_eq((wt.find_children("*", "Label", true, false)[0] as Label).text, "Wounded (2)", "wounded tag")
+	assert_true(wt.tooltip_text.contains("−10% damage and defense, −10 morale"), "wounded tip: " + wt.tooltip_text)
+	g.roster[1].injured = true
+	var it: Control = SoldierCard.wound_tag(g.roster[1])
+	host.add_child(it)
+	assert_eq((it.find_children("*", "Label", true, false)[0] as Label).text, "Injured", "injured tag")
+	assert_true(it.tooltip_text.contains("gone for good"), "injured tip: " + it.tooltip_text)
+	assert_eq(SoldierCard.wound_tag(g.roster[2]), null, "no tag without a wound")
 	var sorted := SoldierCard.sort_roster(g.roster)
 	assert_eq(sorted[0].typeId, "footman", "line first")
 	assert_eq(sorted[sorted.size() - 1].typeId, "crossbowman", "missiles last")

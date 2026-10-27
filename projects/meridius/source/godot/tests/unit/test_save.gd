@@ -47,7 +47,7 @@ func test_round_trip_through_the_whole_loop() -> void:
 			Expedition.march(g, nxt[nxt.size() - 1].id)
 		elif p.kind == "battle":
 			var night := Expedition.prepare_night(g)
-			var setup := preload("res://scripts/rules/setup.gd").build_battle(p.roll, Expedition.battle_army(g), {"survivalBonus": Expedition.survival_bonus(g), "title": p.title, "darkness": night.darkness})
+			var setup := preload("res://scripts/rules/setup.gd").build_battle(p.roll, Expedition.battle_army(g), {"title": p.title, "darkness": night.darkness})
 			var b = preload("res://scripts/rules/battle.gd").new(setup)
 			Autoplay.auto_battle(b)
 			Expedition.apply_battle(g, b, p.title, p.objective)

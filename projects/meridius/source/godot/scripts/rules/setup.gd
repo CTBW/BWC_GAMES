@@ -3,7 +3,7 @@
 ## An EncounterRoll is a Dictionary {encounterId, mapId, seed, enemies:
 ## [{typeId, level}], ambush, waves: [Wave], allies: [{typeId, level}]}; waves
 ## keep edges in the map template's own terms. A BattleSetup is the Dictionary
-## Battle.new() takes: {seed, map, units, survivalBonus, ambush, enemyFirst,
+## Battle.new() takes: {seed, map, units, ambush, enemyFirst,
 ## darkness?, title, encounterId, kind, objective, waves}. Every wave's squads
 ## are in `units` from the start, as reserves staged off the field.
 ## Use through `const Setup = preload("res://scripts/rules/setup.gd")`.
@@ -134,13 +134,13 @@ static func deploy_player(map: Dictionary, units: Array, ambush: bool) -> void:
 		var narrow := func(q: Dictionary, dx: int, dy: int) -> bool:
 			var open := 0
 			for s in range(-2, 3):
-				if Grid.tile_passable(map, q.x + dy * s, q.y + dx * s):
+				if MapGen._clear_ground(map, q.x + dy * s, q.y + dx * s):
 					open += 1
 			return open <= 2
 		var ways: Array = zone.filter(func(p: Dictionary) -> bool:
 			for d in [[1, 0], [-1, 0], [0, 1], [0, -1]]:
 				var q := {"x": p.x + d[0], "y": p.y + d[1]}
-				if not inside.has(_pk(q)) and Grid.tile_passable(map, q.x, q.y) and narrow.call(q, d[0], d[1]):
+				if not inside.has(_pk(q)) and MapGen._clear_ground(map, q.x, q.y) and narrow.call(q, d[0], d[1]):
 					return true
 			return false
 		)
@@ -283,7 +283,8 @@ static func _stage(map: Dictionary, waves: Array, by_uid: Dictionary) -> void:
 
 
 ## The battle for an encounter roll and the company's squads (BattleUnit
-## dictionaries; they are deployed in place). opts: {survivalBonus, darkness?, title?}.
+## dictionaries; they are deployed in place). opts: {darkness?, title?,
+## map? (a ready battle map with its deployment zones, instead of the roll's)}.
 static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dictionary:
 	var enc := DB.encounter_by_id(roll.encounterId)
 	var rng := Rng.new(JS.to_i32(roll.seed) ^ 0x5bd1e995)
@@ -298,7 +299,8 @@ static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dic
 	for w in waves:
 		if not approaches.has(w.edge):
 			approaches.append(w.edge)
-	var map := MapGen.generate_map(roll.mapId, roll.seed, {"ambush": roll.ambush, "approaches": approaches})
+	# opts.map: a battle map ready to fight on (a 3D battlefield, Battlefields.battle_map).
+	var map: Dictionary = opts.map if opts.get("map") != null else MapGen.generate_map(roll.mapId, roll.seed, {"ambush": roll.ambush, "approaches": approaches})
 	var to_grid := func(e: String) -> String: return MapGen.TRANSPOSED[e] if map.get("transposed", false) else e
 	var enemies: Array = []
 	for i in roll.enemies.size():
@@ -375,9 +377,9 @@ static func build_battle(roll: Dictionary, army: Array, opts: Dictionary) -> Dic
 		objective = {"kind": "rout", "title": "Rout the enemy", "brief": "Destroy or drive off every enemy squad."}
 	var setup := {
 		"seed": roll.seed,
+		"fogOfWar": opts.get("fogOfWar", true),
 		"map": map,
 		"units": army + allies + enemies + reserve,
-		"survivalBonus": opts.survivalBonus,
 		"ambush": roll.ambush,
 		"enemyFirst": roll.ambush,
 	}

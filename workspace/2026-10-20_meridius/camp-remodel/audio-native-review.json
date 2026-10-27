@@ -1,0 +1,52 @@
+{
+	"capture": "Godot Movie Maker: native picture and Master-bus audio at 24 fps",
+	"checks": [
+		"fresh game defaults to sound on",
+		"saved game starts with sound on",
+		"Master output is unmuted",
+		"Master and Ambience volumes are audible",
+		"production game booted",
+		"welcome dismissed before recording",
+		"production woodland camp loaded",
+		"day has live ambience beds",
+		"night has live ambience beds",
+		"capture leaves campaign state unchanged",
+		"player save unchanged",
+		"player preferences unchanged"
+	],
+	"clips": [
+		{
+			"ambience": "camp",
+			"beds": [
+				"wind|res://assets/audio/bank/local/ambience/camp_forest_01.ogg"
+			],
+			"frames": 288,
+			"lighting": "day",
+			"seconds": 12.0,
+			"shotsAfter": 2,
+			"shotsBefore": 0,
+			"startFrame": 118
+		},
+		{
+			"ambience": "camp_night",
+			"beds": [
+				"wind|res://assets/audio/bank/local/ambience/camp_night_wind_01.ogg",
+				"crickets|res://assets/audio/bank/local/ambience/night_crickets_01.ogg"
+			],
+			"frames": 144,
+			"lighting": "night",
+			"seconds": 6.0,
+			"shotsAfter": 3,
+			"shotsBefore": 2,
+			"startFrame": 575
+		}
+	],
+	"failures": [],
+	"fps": 24,
+	"savedSoundOn": true,
+	"soundDefault": true,
+	"viewport": [
+		1920,
+		1080
+	]
+}

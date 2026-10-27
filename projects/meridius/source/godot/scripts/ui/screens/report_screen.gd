@@ -9,6 +9,7 @@ const Deps = preload("res://scripts/ui/deps.gd")
 const Modal = preload("res://scripts/ui/widgets/modal.gd")
 const ResList = preload("res://scripts/ui/widgets/res_list.gd")
 const MenPips = preload("res://scripts/ui/widgets/men_pips.gd")
+const SoldierCard = preload("res://scripts/ui/widgets/soldier_card.gd")
 
 
 func _ready() -> void:
@@ -37,11 +38,14 @@ func refresh() -> void:
 	var Soldier = Deps.soldier()
 	var c := DB.campaign_by_id(r.campaignId)
 	var roster: Array = g.roster if g != null else []
+	var injured := 0
 	var wounded := 0
 	var worn := 0
 	var thin := 0
 	for so in roster:
 		if so.injuries.size() > 0:
+			injured += 1
+		if Deps.squad().wound_of(so) != null:
 			wounded += 1
 		if so.morale < Soldier.soldier_stats(so).morale * 0.5:
 			worn += 1
@@ -51,7 +55,9 @@ func refresh() -> void:
 	if thin:
 		advice_parts.append("%s below strength; the Barracks can refill the ranks." % ("One squad is" if thin == 1 else "%d squads are" % thin))
 	if wounded:
-		advice_parts.append("%s the surgeon." % ("One sergeant needs" if wounded == 1 else "%d sergeants need" % wounded))
+		advice_parts.append("%s the wounds of the fight, and the hurt die if they go down again; the Infirmary can dress them." % ("One squad carries" if wounded == 1 else "%d squads carry" % wounded))
+	if injured:
+		advice_parts.append("%s the surgeon." % ("One sergeant needs" if injured == 1 else "%d sergeants need" % injured))
 	if worn:
 		advice_parts.append("%s worn down and may want leave." % ("One is" if worn == 1 else "%d are" % worn))
 	var advice := " ".join(advice_parts)
@@ -124,6 +130,8 @@ func refresh() -> void:
 			var nl := UI.label(nm, "SmallLabel")
 			nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			row.add_child(nl)
+			if q.get("wound") != null:
+				row.add_child(SoldierCard.wound_chip(q.wound, 10))
 			row.add_child(MenPips.make(q.men, q.size))
 			losses.add_child(row)
 	else:

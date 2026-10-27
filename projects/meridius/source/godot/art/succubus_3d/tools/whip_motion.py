@@ -83,8 +83,8 @@ GROUND = LASH_R
 HIDDEN = 0.001              # Lash_1's scale when the lash is put away
 # Clips that start (and end) in idle's first pose (retarget_clips.py blend_in / blend_out):
 # their arm turn and whip roll are pinned there to idle's own, so switching never jumps.
-FROM_IDLE = ("idle_flourish", "hit", "death")
-TO_IDLE = ("idle_flourish", "hit")
+FROM_IDLE = ("idle_flourish", "hit", "death", "sovereign_kiss", "sovereign_kiss_source")
+TO_IDLE = ("idle_flourish", "hit", "sovereign_kiss", "sovereign_kiss_source")
 PIN = {}                    # idle's first-frame arm angle index and whip state
 # Her legs, body and head for the lash: (from, to, radius); to None = a sphere at from.
 CAPSULES = [("mixamorig:Hips", "mixamorig:Neck", 0.17), ("mixamorig:Head", "mixamorig:HeadTop_End", 0.12)] + [
@@ -778,6 +778,16 @@ if argv and argv[0] == "probe":   # -- probe <clip> <frame,frame...>: cut-in bef
     sys.exit(0)
 clips = argv[0].split(",") if argv and argv[0] else [a.name for a in bpy.data.actions if "frames" in a]
 clips.sort(key=lambda c: c != "idle")   # idle first: the others pin to it
+if "idle" not in clips and "idle" in bpy.data.actions and bpy.data.actions["idle"].get("whip_motion"):
+    # idle was finished earlier (the kiss blend starts as a copy of the finished
+    # succubus_anim.blend): clips retargeted since blend from its finished first pose, its arm
+    # turn already in it, so they pin to no further turn and to its whip roll
+    rig.animation_data.action = bpy.data.actions["idle"]
+    sc.frame_set(1)
+    q0 = PB["WhipGrip"].rotation_quaternion.copy()
+    PIN["arm"] = 0
+    PIN["whip"] = int(np.argmin([min(a, 2 * math.pi - a) for a in
+                                 (q0.rotation_difference(Matrix(m.tolist()).to_quaternion()).angle for m in STATE_M)]))
 for c in clips:
     run(c)
 rig.animation_data.action = bpy.data.actions.get("idle")

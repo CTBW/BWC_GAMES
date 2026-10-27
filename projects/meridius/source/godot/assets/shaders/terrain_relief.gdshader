@@ -27,6 +27,11 @@ uniform bool camp;
 uniform bool height_view = false;
 // Highest surface level on the map (relief.gd max_h): the height tint's range.
 uniform float hmax = 4.0;
+// How many of the battle's tiles a tile of this ground spans (the 3D
+// battlefields lay their fields out in fewer, bigger tiles). The painting is
+// measured in the battle's tiles: its textures and noise, and the slopes and
+// curvature that make the banks, so the ground looks as it does in battle.
+uniform float tile_k = 1.0;
 
 uniform sampler2D tex_grass : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D tex_dry : repeat_enable, filter_linear_mipmap_anisotropic;
@@ -35,6 +40,17 @@ uniform sampler2D tex_forest : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D tex_rock : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D tex_mud : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D tex_stone : repeat_enable, filter_linear_mipmap_anisotropic;
+// The season of the ground, for the 3D battlefields (prototypes/battlefields3d):
+// 0 summer, the battle's own ground; 1 autumn (leaf-strewn meadow, more dry
+// grass), 2 winter (snow, trodden roads, snow on the banks' ledges), 3 spring
+// (lusher grass, wild flowers). `frozen` turns the water to ice. Each texture
+// below is read only in its season.
+uniform int season = 0;
+uniform bool frozen = false;
+uniform sampler2D tex_snow : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D tex_snow_road : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D tex_ice : repeat_enable, filter_linear_mipmap_anisotropic;
+uniform sampler2D tex_autumn : repeat_enable, filter_linear_mipmap_anisotropic;
 
 const float LH = 26.0;
 const float WARP = 0.0;
@@ -177,9 +193,10 @@ vec3 saturate_by(vec3 c, float k) {
 
 // A block fallen from a bank, in its own frame q (x right, y down, about
 // -1..1), cut like the slabs in concept A: a flat top turned to the sky over
-// a lit left face and a shaded right face, its outline broken, moss on top.
-// Returns the colour and the coverage.
-vec4 fallen_block(vec2 q, ivec2 id, uint k, vec3 stone, vec3 moss) {
+// a lit left face and a shaded right face, its outline broken, moss on top
+// (snow, 0..1: a cap of snow over it instead). Returns the colour and the
+// coverage.
+vec4 fallen_block(vec2 q, ivec2 id, uint k, vec3 stone, vec3 moss, float snow) {
 	float d = pow(pow(abs(q.x), 3.2) + pow(abs(q.y), 3.2), 1.0 / 3.2) + (fbm(q * 2.4 + vec2(id) * 3.7, k) - 0.5) * 0.22;
 	if (d >= 1.0) {
 		return vec4(0.0);
@@ -204,20 +221,40 @@ vec4 fallen_block(vec2 q, ivec2 id, uint k, vec3 stone, vec3 moss) {
 	float m = wTop * smoothstep(0.0, 0.3, ty - q.y) * smoothstep(0.56, 0.68, fbm(q * 2.2 + vec2(id) * 1.9, k + 7u));
 	col = mix(col, moss * mix(0.9, 1.1, lum - 0.6), m * 0.75);
 	col *= 1.0 - smoothstep(0.84, 1.0, d) * mix(0.45, 0.15, wTop);
+	if (snow > 0.0) {
+		// A soft cap over the whole top, lapping a little over its edge onto
+		// the faces, cream in the sun and blue on the shaded side, with the
+		// shade of its lip just under it.
+		float over = 0.07 + (fbm(q * 5.0 + vec2(id) * 2.3, k + 8u) - 0.5) * 0.08;
+		float cap = smoothstep(-0.02, 0.04, ty - q.y + over) * (1.0 - smoothstep(0.88, 0.98, d));
+		float under = smoothstep(-0.09, -0.02, ty - q.y + over) * (1.0 - cap);
+		col *= 1.0 - under * 0.22 * snow;
+		float lit = mix(0.8, 1.0, max(wLeft, wTop * 0.7)) * (0.92 + 0.1 * smoothstep(0.0, 0.3, ty - q.y));
+		// Rounded: cooler toward the shaded right, broken by the brush.
+		lit += -0.16 * smoothstep(-0.4, 0.9, q.x) + (fbm(q * 3.5 + vec2(id), k + 9u) - 0.5) * 0.12;
+		vec3 snowC = mix(vec3(0.72, 0.78, 0.93), vec3(1.0, 0.98, 0.94), smoothstep(0.62, 1.0, lit));
+		col = mix(col, snowC, cap * snow);
+	}
 	return vec4(col, 1.0 - smoothstep(0.94, 1.0, d));
 }
 
+// The surface at p in the battle's tiles (tile_k).
+float surf_at(vec2 p) {
+	return surf(p / tile_k);
+}
+
 void fragment() {
-	vec2 p = grid;
+	// p in the battle's tiles; grid in this ground's (its heights and categories).
+	vec2 p = grid * tile_k;
 	uint s = uint(seed) % 9973u;
 
 	// Shape: height, slope and curvature of the surface here.
 	float e = 0.08;
-	float hC = surf(p);
-	float hxp = surf(p + vec2(e, 0.0));
-	float hxm = surf(p - vec2(e, 0.0));
-	float hyp = surf(p + vec2(0.0, e));
-	float hym = surf(p - vec2(0.0, e));
+	float hC = surf_at(p);
+	float hxp = surf_at(p + vec2(e, 0.0));
+	float hxm = surf_at(p - vec2(e, 0.0));
+	float hyp = surf_at(p + vec2(0.0, e));
+	float hym = surf_at(p - vec2(0.0, e));
 	vec2 grad = vec2(hxp - hxm, hyp - hym) / (2.0 * e);
 	float lap = (hxp + hxm + hyp + hym - 4.0 * hC) / (e * e);
 	float slope = length(grad);
@@ -240,10 +277,10 @@ void fragment() {
 	vec2 pj = p + (vec2(fbm(p * 1.4, s + 5u), fbm(p * 1.4, s + 77u)) - 0.5) * 0.9;
 	ivec4 cj;
 	vec2 tj;
-	corners(pj, cj, tj);
+	corners(pj / tile_k, cj, tj);
 	ivec4 cp;
 	vec2 tp;
-	corners(p, cp, tp);
+	corners(grid, cp, tp);
 	float wDirt = wcat(cj, tj, 1);
 	float wBrush = wcat(cj, tj, 2);
 	float wForest = wcat(cj, tj, 3);
@@ -265,8 +302,30 @@ void fragment() {
 	grass *= mix(vec3(1.12, 1.18, 1.0), vec3(1.42, 1.36, 0.98), smoothstep(0.25, 0.75, nMacro * 0.7 + hn * 0.3));
 	grass = mix(grass, grass * vec3(0.82, 0.94, 0.9), hollow * 0.6);
 	vec3 dry = saturate_by(soft2(tex_dry, p, 5.0, nSwap, 0.75), 0.82) * vec3(1.04, 1.1, 1.2);
+	// The seasons: snow stands in for the grass (and everything grown from it
+	// below: turf, tufts, moss); autumn strews leaves through a browner meadow.
+	vec3 snow = vec3(0.0);
+	if (season == 1) {
+		vec3 fall = saturate_by(soft2(tex_autumn, p, 5.0, nSwap, 0.7), 1.12);
+		fall *= mix(vec3(0.98, 0.98, 1.0), vec3(1.14, 1.04, 0.88), smoothstep(0.25, 0.75, nMacro * 0.7 + hn * 0.3));
+		grass = mix(grass, fall, 0.85);
+		// Drifts of fallen leaves, russet and orange.
+		float drift = smoothstep(0.55, 0.72, fbm(p * 0.8, s + 119u) * 0.8 + nEdge * 0.2);
+		grass = mix(grass, grass * vec3(1.16, 0.78, 0.5) + vec3(0.04, 0.0, 0.0), drift * 0.55);
+		dry *= vec3(1.05, 0.97, 0.84);
+	} else if (season == 2) {
+		snow = soft2(tex_snow, p, 4.0, nSwap, 0.7);
+		// The painted drifts' ripples, softened: they read as water when strong.
+		snow = mix(snow, vec3(0.87, 0.88, 0.92), 0.4);
+		snow *=mix(vec3(0.97, 0.98, 1.02), vec3(1.03, 1.01, 0.97), smoothstep(0.3, 0.7, nMacro));
+		grass = snow;
+		dry = snow * vec3(1.02, 0.99, 0.94);
+	} else if (season == 3) {
+		grass = saturate_by(grass, 1.1) * vec3(0.97, 1.04, 0.98);
+	}
 	// Dry golden grass on crests, sunny slopes and high ground, in patches.
 	float dryness = nMid * 0.75 + crest * 0.3 + (sunny - 1.0) * 0.4 + hn * 0.12 + (nMacro - 0.5) * 0.3;
+	dryness += season == 1 ? 0.1 : (season == 3 ? -0.22 : 0.0);
 	float dryMask = smoothstep(0.54, 0.64, dryness + (nEdge - 0.5) * 0.28 + (nFine - 0.5) * 0.12);
 	vec3 col = mix(grass, dry, dryMask * 0.9);
 	// A wash of warm straw through the green where it is only half dry.
@@ -274,6 +333,9 @@ void fragment() {
 	// Worn earth even on grass (camps are trampled everywhere).
 	vec3 dirt = tex2(tex_dirt, p, 4.0, nSwap);
 	dirt = saturate_by(dirt, 0.72) * vec3(0.98, 0.96, 0.98);
+	if (season == 2) {
+		dirt = saturate_by(tex2(tex_snow_road, p, 4.0, nSwap), 0.9);
+	}
 	float wear = max(0.0, fbm(p * 0.6, s + 31u) - (camp ? 0.5 : 0.62)) * 4.0;
 	if (camp) {
 		wDirt = min(1.0, wDirt * 1.15 + 0.15 * nMid);
@@ -281,17 +343,49 @@ void fragment() {
 	col = mix(col, dirt, patchy(min(1.0, wDirt * 1.2 + wear * 0.5), nEdge, 0.1));
 	// Thickets: dark lush grass over leaf litter.
 	vec3 floorTex = tex2(tex_forest, p, 3.2, nSwap) * vec3(1.05, 1.08, 1.0);
-	vec3 thicket = mix(grass * vec3(0.7, 0.84, 0.7), floorTex, smoothstep(0.45, 0.6, nEdge) * 0.55);
+	// Under the trees the snow lies thinner and the needles show through;
+	// autumn's litter is fresh and orange.
+	vec3 brushGreen = vec3(0.7, 0.84, 0.7);
+	vec3 shadeGreen = vec3(0.66, 0.8, 0.62);
+	vec3 floorShade = vec3(0.8, 0.84, 0.76);
+	if (season == 2) {
+		floorTex = mix(snow * vec3(0.9, 0.92, 0.98), floorTex, smoothstep(0.6, 0.78, nEdge) * 0.55);
+		brushGreen = vec3(0.9, 0.92, 0.97);
+		shadeGreen = vec3(0.88, 0.9, 0.95);
+		floorShade = vec3(0.86, 0.88, 0.94);
+	} else if (season == 1) {
+		floorTex = mix(floorTex, floorTex * vec3(1.12, 0.92, 0.7), 0.6);
+	}
+	vec3 thicket = mix(grass * brushGreen, floorTex, smoothstep(0.45, 0.6, nEdge) * 0.55);
 	col = mix(col, thicket, patchy(wBrush, nEdge, 0.16));
 	// Woods: leaf litter, needles and moss, with green where light falls through.
-	vec3 woods = mix(floorTex, grass * vec3(0.66, 0.8, 0.62), smoothstep(0.5, 0.7, nMid) * 0.5);
+	vec3 woods = mix(floorTex, grass * shadeGreen, smoothstep(0.5, 0.7, nMid) * 0.5);
 	col = mix(col, woods, patchy(wForest, nEdge, 0.16));
 	// Beyond the field: the forest floor under the ring of trees.
-	col = mix(col, floorTex * vec3(0.8, 0.84, 0.76), patchy(wFloor, nEdge, 0.2));
+	col = mix(col, floorTex * floorShade, patchy(wFloor, nEdge, 0.2));
 	vec3 mud = soft2(tex_mud, p, 3.4, nSwap, 0.7) * vec3(1.14, 1.05, 0.92);
+	if (season == 2) {
+		mud = mix(saturate_by(tex2(tex_snow_road, p, 3.4, nSwap), 0.9) * 0.9, mud, 0.35);
+	}
 	col = mix(col, mud, patchy(wMud, nEdge, 0.12));
+	// Spring: wild flowers in the open meadow, white, yellow and a little blue,
+	// in drifts rather than evenly.
+	if (season == 3) {
+		vec2 fc = floor(p * 9.0);
+		float fh = hash(ivec2(fc), s + 111u);
+		float fd = length(fract(p * 9.0) - 0.5 - (vec2(hash(ivec2(fc), s + 112u), hash(ivec2(fc), s + 113u)) - 0.5) * 0.5);
+		float drift = smoothstep(0.45, 0.7, fbm(p * 0.7, s + 114u));
+		float open = (1.0 - wDirt) * (1.0 - wForest) * (1.0 - wFloor) * (1.0 - wStone) * (1.0 - wWater) * (1.0 - wMud);
+		float bloom = step(1.0 - 0.3 * drift, fh) * (1.0 - smoothstep(0.1, 0.17, fd)) * open;
+		float kind = hash(ivec2(fc), s + 115u);
+		vec3 petal = kind < 0.5 ? vec3(1.0, 0.98, 0.9) : (kind < 0.85 ? vec3(1.0, 0.86, 0.3) : vec3(0.62, 0.7, 1.0));
+		col = mix(col, petal, bloom * 0.9);
+	}
 	if (wStone > 0.02) {
 		vec3 stone = texture(tex_stone, p / 1.6, TEX_BIAS).rgb * vec3(0.86, 0.85, 0.82);
+		if (season == 2) {
+			stone = mix(stone, snow, clamp(0.2 + smoothstep(0.45, 0.62, nEdge) * 0.6, 0.0, 1.0));
+		}
 		col = mix(col, stone, clamp(wStone * 1.3 * (0.75 + nEdge * 0.4), 0.0, 1.0));
 	}
 
@@ -350,7 +444,21 @@ void fragment() {
 	float stones = smoothstep(0.6, 0.72, fbm(vec2(fq.x * 2.0, hC * 2.6), s + 71u));
 	earth = mix(earth, faceRock * vec3(1.08, 1.06, 1.02), stones * 0.9);
 	float tufts = smoothstep(0.66, 0.76, fbm(p * 3.6, s + 75u)) * (1.0 - stones);
-	earth = mix(earth, grass * vec3(0.9, 1.0, 0.8), tufts * 0.85);
+	vec3 tuftTint = vec3(0.9, 1.0, 0.8);
+	vec3 turfDark = vec3(0.62, 0.74, 0.5);
+	vec3 turfLit = vec3(1.1, 1.12, 0.9);
+	vec3 rimTint = vec3(1.3, 1.3, 0.95);
+	if (season == 2) {
+		// Snow caught on every ledge and clinging in clumps; the turf above is
+		// a cornice of snow, blue in its own shade.
+		tuftTint = vec3(0.96, 0.98, 1.02);
+		turfDark = vec3(0.72, 0.8, 0.94);
+		turfLit = vec3(1.04, 1.04, 1.02);
+		rimTint = vec3(1.1, 1.1, 1.08);
+		float ledge = smoothstep(0.72, 0.9, bed) * strata * smoothstep(0.35, 0.55, fbm(vec2(fq.x * 1.3, bi * 3.1), s + 117u));
+		earth = mix(earth, snow * vec3(0.98, 1.0, 1.05), ledge * 0.9);
+	}
+	earth = mix(earth, grass * tuftTint, tufts * 0.85);
 	col = mix(col, earth, bankMask);
 	// The turf hangs over the top of the face in ragged tongues, a dark
 	// undercut beneath. r says how far down the face this is, whatever the
@@ -360,14 +468,14 @@ void fragment() {
 	float tongue = fbm(vec2(fq.x * 1.7, 0.5), s + 81u) * 0.8 + fbm(vec2(fq.x * 7.0, 1.5), s + 83u) * 0.4;
 	float dr = r - mix(4.0, 2.0, tongue);
 	float turfK = smoothstep(-0.05, 0.05, dr) * bankMask;
-	vec3 turf = mix(grass * vec3(0.62, 0.74, 0.5), grass * vec3(1.1, 1.12, 0.9), smoothstep(0.0, 0.6, dr));
+	vec3 turf = mix(grass * turfDark, grass * turfLit, smoothstep(0.0, 0.6, dr));
 	col = mix(col, turf, turfK);
 	col *= 1.0 - smoothstep(-0.45, -0.03, dr) * (1.0 - smoothstep(-0.05, 0.05, dr)) * bankMask * 0.5;
 	// The grass lip along the crest of a bank, with the shadow of its overhang
 	// on the face just under it; scree and shade at the bank's foot.
 	float edge = bankMask * (1.0 - bankMask) * 4.0;
 	float rim = smoothstep(0.35, 0.8, slope) * (1.0 - bankMask) * smoothstep(-0.5, -3.0, lap);
-	col = mix(col, grass * vec3(1.3, 1.3, 0.95), rim * 0.6);
+	col = mix(col, grass * rimTint, rim * 0.6);
 	col *= 1.0 - edge * smoothstep(-0.5, -3.0, lap) * 0.45 * (1.0 - smoothstep(-0.05, 0.05, dr));
 	float foot = smoothstep(0.3, 0.8, slope) * (1.0 - bankMask) * smoothstep(0.5, 3.0, lap);
 	col = mix(col, mix(rock, dirt * 0.7, 0.45) * 0.8, foot * smoothstep(0.35, 0.65, nFine) * 0.6);
@@ -389,11 +497,11 @@ void fragment() {
 			// The grid point under the centre, at this fragment's height.
 			vec2 dq = c - fq;
 			vec2 pc = p + vec2(dq.y + dq.x * 0.5, dq.y - dq.x * 0.5);
-			float c0 = surf(pc);
-			float cxp = surf(pc + vec2(e, 0.0));
-			float cxm = surf(pc - vec2(e, 0.0));
-			float cyp = surf(pc + vec2(0.0, e));
-			float cym = surf(pc - vec2(0.0, e));
+			float c0 = surf_at(pc);
+			float cxp = surf_at(pc + vec2(e, 0.0));
+			float cxm = surf_at(pc - vec2(e, 0.0));
+			float cyp = surf_at(pc + vec2(0.0, e));
+			float cym = surf_at(pc - vec2(0.0, e));
 			vec2 cg = vec2(cxp - cxm, cyp - cym) / (2.0 * e);
 			float cl = (cxp + cxm + cyp + cym - 4.0 * c0) / (e * e);
 			float csl = length(cg);
@@ -410,10 +518,11 @@ void fragment() {
 			col *= 1.0 - fallen * shB * 0.45;
 			if (fallen > 0.0) {
 				vec3 stoneC = mix(mix(vec3(0.74, 0.7, 0.62), faceRock, 0.35), soil * 1.1, hash(cell, s + 96u) * 0.3);
-				vec3 moss = grass * vec3(0.95, 1.05, 0.8);
-				vec4 b = fallen_block((fq - c) / rad, cell, s + 95u, stoneC, moss);
+				vec3 moss = grass * (season == 2 ? vec3(1.02) : vec3(0.95, 1.05, 0.8));
+				float bSnow = season == 2 ? 1.0 : 0.0;
+				vec4 b = fallen_block((fq - c) / rad, cell, s + 95u, stoneC, moss, bSnow);
 				if (pair) {
-					vec4 b2 = fallen_block((fq - c2) / rad2, cell + ivec2(17, 31), s + 95u, stoneC * 0.95, moss);
+					vec4 b2 = fallen_block((fq - c2) / rad2, cell + ivec2(17, 31), s + 95u, stoneC * 0.95, moss, bSnow);
 					b = vec4(mix(b.rgb, b2.rgb, b2.a), max(b.a, b2.a));
 				}
 				bCol = b.rgb;
@@ -442,13 +551,13 @@ void fragment() {
 	float sh = 1.0;
 	for (int i = 1; i <= 12; i++) {
 		float t = float(i) * 0.075;
-		float d = hC + rise * t - surf(p + ld * t);
+		float d = hC + rise * t - surf_at(p + ld * t);
 		sh = min(sh, smoothstep(-0.06, 0.1, d));
 	}
 	// Occlusion: hollows, slope feet, the trees' canopy, the forest ring.
 	float ao = 1.0 - clamp(lap * 0.03, 0.0, 0.24);
-	vec2 ouv = (p + float(border) + 0.5) / vec2(float(gw), float(gh));
-	float occ = texture(occ_tex, ouv + (vec2(nEdge, nMid) - 0.5) * 0.6 / vec2(float(gw), float(gh))).r;
+	vec2 ouv = (grid + float(border) + 0.5) / vec2(float(gw), float(gh));
+	float occ = texture(occ_tex, ouv + (vec2(nEdge, nMid) - 0.5) * 0.6 / tile_k / vec2(float(gw), float(gh))).r;
 	ao *= 1.0 - occ * 0.42;
 	ao *= 1.0 - wFloor * 0.12;
 	vec3 amb = vec3(0.4, 0.5, 0.62);
@@ -457,11 +566,13 @@ void fragment() {
 	vec3 lit = (amb * (0.75 + 0.25 * nl.z) * ao + sun * ndl2 * sh * mix(1.0, ao, 0.6)) / flat_light;
 	col *= lit;
 	// Warm light on high ground and along sunlit crests; the low ground cooler.
-	col *= mix(vec3(0.88, 0.94, 1.0), vec3(1.08, 1.04, 0.92), hn);
-	col += vec3(1.0, 0.84, 0.5) * crest * (1.0 - bankMask) * sh * clamp(sunny, 0.0, 1.3) * 0.07;
+	// Snow takes the sun's warmth faintly, or it turns to cream.
+	float warmK = season == 2 ? 0.3 : 1.0;
+	col *= mix(vec3(0.88, 0.94, 1.0), mix(vec3(1.0), vec3(1.08, 1.04, 0.92), warmK), hn);
+	col += vec3(1.0, 0.84, 0.5) * crest * (1.0 - bankMask) * sh * clamp(sunny, 0.0, 1.3) * 0.07 * warmK;
 	// As painted: a slope turned to the sun goes golden, one turned away goes
 	// cool teal, never grey; the hue tells the shape where the value is subtle.
-	float warm = smoothstep(1.02, 1.25, sunny) * sh * (1.0 - bankMask);
+	float warm = smoothstep(1.02, 1.25, sunny) * sh * (1.0 - bankMask) * warmK;
 	col = mix(col, col * vec3(1.12, 1.05, 0.78) + vec3(0.03, 0.02, 0.0), warm * 0.7);
 	float shade = clamp(1.0 - min(sh, ao) * clamp(sunny, 0.0, 1.0), 0.0, 1.0);
 	col = mix(col, col * vec3(0.72, 0.9, 1.2) + vec3(0.0, 0.02, 0.045), shade * mix(0.8, 0.15, bankMask));
@@ -473,6 +584,9 @@ void fragment() {
 	if (wShallow > 0.02) {
 		vec3 bed = mix(mud, rock, 0.45) * 0.85;
 		vec3 shallow = mix(bed, vec3(0.38, 0.6, 0.58), 0.55 + (nMid - 0.5) * 0.2);
+		if (frozen) {
+			shallow = mix(shallow, soft2(tex_ice, p, 4.5, nSwap, 0.7), 0.75);
+		}
 		col = mix(col, shallow, clamp(wShallow * 1.2, 0.0, 1.0));
 	}
 	if (wWater > 0.02) {
@@ -488,6 +602,15 @@ void fragment() {
 		// Foam where the water meets the bank.
 		float foam = (1.0 - smoothstep(0.0, 0.16, abs(bnk - 0.1))) * (0.5 + 0.5 * nEdge);
 		water = mix(water, vec3(0.86, 0.9, 0.86), foam * 0.45);
+		if (frozen) {
+			// Ice: pale where thick, the dark water showing through toward the
+			// middle, snow blown along its edge.
+			vec3 ice = soft2(tex_ice, p, 4.5, nSwap, 0.7);
+			ice = mix(ice, vec3(0.74, 0.86, 0.92), 0.42);
+			ice = mix(ice, ice * vec3(0.7, 0.84, 0.94), depth * 0.35 + (nMid - 0.5) * 0.2);
+			ice = mix(ice, snow * 1.02, (1.0 - smoothstep(0.0, 0.35, bnk)) * 0.7 + smoothstep(0.62, 0.8, nEdge) * 0.35);
+			water = ice;
+		}
 		col = mix(col, water, bnk);
 	}
 

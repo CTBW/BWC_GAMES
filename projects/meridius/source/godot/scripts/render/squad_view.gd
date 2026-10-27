@@ -14,6 +14,7 @@ const JS = preload("res://scripts/core/js.gd")
 const Rng = preload("res://scripts/core/rng.gd")
 const DB = preload("res://scripts/data/db.gd")
 const Formation = preload("res://scripts/render/formation.gd")
+const SoldierAnim = preload("res://scripts/render/soldier_anim.gd")
 
 
 class Member extends RefCounted:
@@ -42,6 +43,32 @@ class Member extends RefCounted:
 	var shake := 0.0
 	## "idle" or "atk".
 	var pose := "idle"
+	## Frame-animated figures (soldier_anim.gd): the key pose of the attack
+	## ("wind", "hit"; empty: the blow), and how far he trails the anchor.
+	var key := ""
+	var drift := Vector2.ZERO
+	## The drift's speed (the spring soldier_anim.step_drift follows the anchor on).
+	var drift_v := Vector2.ZERO
+	## SoldierAnim.pose's result for the frame at `pose_t` (one evaluation a frame).
+	var pose_t := -1.0
+	var pose_cache = null
+	## His gait (SoldierAnim.gait_values) and beat (SoldierAnim.rhythm), cached.
+	var gv := PackedFloat64Array()
+	var rh := Vector3.ZERO
+	## His idle constants (SoldierAnim.P_*), his type's frames by facing, and
+	## the roll of his current fidget interval (n, kind, length).
+	var pc := PackedFloat64Array()
+	var fb: Array = []
+	var fid := Vector3(-1, 0, 0)
+	## Seconds a fall takes.
+	var death_dur := 0.5
+	## The way he is turned when it is not the squad's facing (-1: the squad's):
+	## men turn toward the enemy they strike or shoot at, then back after `face_t` s.
+	var face := -1
+	var face_t := 0.0
+	## A turn ordered but not yet made: to `face_next` after `face_wait` s.
+	var face_next := -1
+	var face_wait := 0.0
 	## Personal rhythm so the ranks breathe and march out of lockstep.
 	var phase := 0.0
 	## Figure drawn for this soldier and its look.
@@ -69,7 +96,8 @@ static func member_height(type_id: String) -> float:
 	if type_id == "goblin_shaman":
 		return 44.0
 	if type_id == "troll":
-		return 66.0
+		# Twice the original figure (the pixel-art trolls are drawn at double size).
+		return 132.0
 	if type_id == "wolf_rider":
 		return 58.0
 	if type_id == "goblin_rabble":
@@ -126,6 +154,7 @@ static func make_members(u: Dictionary) -> Array:
 		m.t = 1.0
 		m.phase = Rng.hash2(i * 7 + 1, floorf(seed * 1000)) * PI * 2
 		m.type = escort if escort != null else u.typeId
+		m.death_dur = SoldierAnim.death_duration(m.type)
 		# Each soldier gets his own face; the champion keeps the squad's look.
 		m.variant = (int(u.variant) * 5 + i * 7 + floori(seed * 6)) % 6 if (escort != null or i > 0) else int(u.variant)
 		m.fall_flip = Rng.hash2(i, floorf(seed * 97)) > 0.5
@@ -226,6 +255,7 @@ static func kill_members(members: Array, count: int, from: Variant, champion: in
 		m.death_delay = k * gap
 		m.flash = 1.0
 		m.pose = "idle"
+		m.key = ""
 		# Knocked back from the blow before falling.
 		m.lunge = Vector2((-from.x / len) * 5, (-from.y / len) * 3)
 		m.fall_flip = from.x > 0
@@ -236,6 +266,14 @@ static func kill_members(members: Array, count: int, from: Variant, champion: in
 static func step_members(members: Array, dt: float, on_corpse: Callable) -> void:
 	for m: Member in members:
 		m.flash = maxf(0.0, m.flash - dt * 4)
+		if m.face_wait > 0:
+			m.face_wait -= dt
+			if m.face_wait <= 0:
+				m.face = m.face_next
+		elif m.face_t > 0:
+			m.face_t -= dt
+			if m.face_t <= 0:
+				m.face = -1
 		m.shake = maxf(0.0, m.shake - dt * 3)
 		if m.t < 1:
 			if m.delay > 0:
@@ -249,7 +287,7 @@ static func step_members(members: Array, dt: float, on_corpse: Callable) -> void
 			if m.death_delay > 0:
 				m.death_delay -= dt
 			else:
-				m.death_t = minf(1.0, m.death_t + dt / 0.5)
+				m.death_t = minf(1.0, m.death_t + dt / m.death_dur)
 				if m.death_t >= 1:
 					m.dying = false
 					on_corpse.call(m)

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-23",
+  "native": {
+    "checks": 17,
+    "failures": 0,
+    "renderer": "gl_compatibility",
+    "shutdownWarnings": "8 ObjectDB instances and 2 resources remain at exit"
+  },
+  "headless": {
+    "passed": 29,
+    "failed": 1,
+    "limitation": "Known shared unit-outline shader compiler failure"
+  },
+  "battleBaselines": {
+    "traces": 77,
+    "groups": 16,
+    "inputAudit": "All trace names, kinds, initial setups and scripted operations unchanged; expected output updated for woodland traversal."
+  },
+  "browser": {
+    "wideLight": true,
+    "narrowDark1000x800": true,
+    "noHorizontalOverflow": true,
+    "videoSeconds": 9.1,
+    "videoPlaybackVerified": true,
+    "imagePreviewOpenAndClose": true
+  },
+  "campaign": "Deferred at user request",
+  "minimap": "Decorative exterior terrain omitted under active fog"
+}

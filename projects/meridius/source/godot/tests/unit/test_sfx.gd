@@ -1,5 +1,9 @@
 ## The Sfx autoload (scripts/audio/sfx.gd, port of src/audio/sfx.ts) against
 ## the original's sound names, dumped by tools/bake to tests/fixtures/assets/sfx_names.json.
+## Since the sound bank (scripts/audio/bank.gd) the baked synth takes are the
+## fallback layer under the recorded ones: every original name must still
+## have its baked takes and sound, and Sfx may know more names (bank events
+## such as step_large). The engine itself is tested in test_audio.gd.
 extends "res://tests/test_case.gd"
 
 const Prefs = preload("res://scripts/core/prefs.gd")
@@ -17,19 +21,36 @@ func before_all() -> void:
 func test_autoload_present() -> void:
 	assert_not_null(sfx, "Sfx autoload")
 	assert_true(sfx.has_method("play") and sfx.has_method("set_muted") and sfx.has_method("is_muted"))
+	assert_true(sfx.has_method("play_at") and sfx.has_method("set_ambience") and sfx.has_method("set_music") and sfx.has_method("set_volume"))
 
 
-func test_every_original_sound_has_streams() -> void:
+func test_every_original_sound_has_baked_takes() -> void:
 	assert_eq(fx.names.size(), 42, "sfx.ts names")
-	assert_eq(Array(sfx.names()).size(), fx.names.size(), "no extra or missing names")
+	var names := Array(sfx.names())
+	var synth: Dictionary = sfx.bank.synth
+	assert_eq(synth.size(), fx.names.size(), "baked names: no extra or missing")
 	for n in fx.names:
+		assert_true(names.has(n), "%s can sound" % n)
 		var takes := int(fx.takes[n])
-		assert_eq(sfx.variant_count(n), takes, "%s takes" % n)
-		for i in takes:
-			var s: AudioStream = sfx.stream(n, i)
+		var files: Array = synth.get(n, [])
+		assert_eq(files.size(), takes, "%s baked takes" % n)
+		for i in files.size():
+			var s: AudioStream = sfx.load_stream(files[i])
 			if assert_true(s is AudioStreamWAV, "%s take %d is a WAV stream" % [n, i]):
 				assert_true(s.get_length() > 0.03, "%s take %d has sound" % [n, i])
 				assert_eq((s as AudioStreamWAV).format, AudioStreamWAV.FORMAT_16_BITS, "%s PCM" % n)
+		# What play() picks from: recorded takes once the bank lists them, the baked ones until then.
+		var r: Dictionary = sfx.bank.resolve(n)
+		if sfx.bank.events.get(n, {}).get("silent", false):
+			assert_eq(sfx.variant_count(n), 0, "%s is silenced" % n)
+			continue
+		assert_true(sfx.variant_count(n) >= 1, "%s resolves to takes" % n)
+		if r.source == "synth":
+			assert_eq(sfx.variant_count(n), takes, "%s plays its baked takes" % n)
+	# Extra names are bank events that resolve (e.g. step_large → step).
+	for n in names:
+		if not fx.names.has(n):
+			assert_true(sfx.bank.events.has(n), "%s is a bank event" % n)
 	assert_eq(sfx.variant_count("no_such_sound"), 0)
 
 
@@ -37,6 +58,9 @@ func test_master_and_gaps_match_original() -> void:
 	assert_almost(sfx.master_gain(), float(fx.master), 1e-12)
 	assert_eq(fx.minGapMs, {"step": 70})
 	assert_eq(int(fx.defaultGapMs), 25)
+	# The bank keeps the original's gaps for its names.
+	for n in fx.names:
+		assert_eq(sfx.bank.options(n).min_gap_ms, int(fx.minGapMs.get(n, fx.defaultGapMs)), "%s gap" % n)
 
 
 func test_play_every_sound() -> void:

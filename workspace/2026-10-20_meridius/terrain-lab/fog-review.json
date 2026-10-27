@@ -1,0 +1,31 @@
+{
+	"checks": [
+		"PASS test_sight_is_shared_symmetric_and_remembers_ground_not_enemies",
+		"PASS test_woodland_traversal_concealment_and_solid_obstacles",
+		"PASS test_combat_reveal_expires_and_ai_scouts_without_hidden_targets",
+		"PASS test_playback_hides_enemy_body_hover_and_keeps_canopy_solid_over_unseen_units",
+		"PASS sentry concealed at start",
+		"PASS real patrol route to (5, 8)",
+		"PASS real patrol route to (6, 7)",
+		"PASS sentry revealed on approach",
+		"PASS canopy fades around visible squads",
+		"PASS painted trees, shrubs and ground ferns share the production sorted pass",
+		"PASS painted foliage alpha masks remove the backdrop and retain interiors",
+		"PASS painted woodland toggle reaches the native renderer",
+		"PASS art toggle leaves all terrain and unit rules unchanged",
+		"PASS return route to (5, 8)",
+		"PASS return route to (5, 9)",
+		"PASS return route to (5, 10)",
+		"PASS sentry hidden after withdrawal",
+		"PASS explored ground remains in shroud",
+		"PASS classic ground retained for woodland comparison redraw",
+		"PASS classic woodland toggle preserves terrain rules",
+		"PASS visible enemy counted in native HUD",
+		"PASS hidden enemy excluded from HUD count",
+		"PASS hidden enemy log suppressed"
+	],
+	"errors": [],
+	"fps": 10,
+	"frames": 91,
+	"renderer": "gl_compatibility"
+}

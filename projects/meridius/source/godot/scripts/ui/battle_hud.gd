@@ -3,8 +3,16 @@
 ## grid / danger / speed / manual toggles, Retreat and Begin Battle / End Turn;
 ## the objective panel; the company column; turn banners; the spell forecast
 ## (ui.hover.spell, before the attack preview), the attack preview, hovered
-## squad and hovered tile panels; the selected squad's card; the battle log;
-## the retreat confirmation). The panels are built by hud_battle_panels.gd.
+## squad and hovered tile panels; the battle log; the retreat confirmation).
+## The panels are built by hud_battle_panels.gd. The selected squad is shown in
+## the unit bar in the bottom centre (scripts/ui/unit_bar/unit_info_bar.gd, read
+## by bar_data.gd), in place of the original's squad card; the log stands
+## above it while it is up. A foe can be shown there instead (`inspect`): a
+## right click on one, the selection and a chosen ability staying as they are,
+## or a left click on one while none of the company's squads is selected (the
+## view does nothing with that click). Esc, the foe card's Back, a right click
+## on the field, the selected squad's next order or the foe gone from sight
+## bring the selected squad back. A right drag from a foe stays the camera's.
 ##
 ## Hosting (scripts/app/main.gd on the battle screen):
 ##   var hud = preload("res://scripts/ui/battle_hud.gd").new()
@@ -12,8 +20,8 @@
 ##   ui_layer.add_child(hud)       # full rect; empty areas let clicks through to the field
 ## The HUD reads `view.b`, `view.ui`, `view.views`, `view.speed` and redraws when
 ## they change (signal `ui_changed`, and per frame for the playback values). Its
-## buttons call the view (`select`, `set_ability`, `redo`, `end_unit`, `begin`,
-## `end_turn`, `retreat`, `notify`) and the store (`App.open_manual("battle")`;
+## buttons call the view (`select`, `set_ability`, `redo`, `select_next`,
+## `end_unit`, `begin`, `end_turn`, `retreat`, `notify`) and the store (`App.open_manual("battle")`;
 ## the title comes from `App.battle_info.title` when set, else `b.setup.title`).
 ## Keyboard shortcuts are the view's input actions; while the retreat
 ## confirmation is open the HUD keeps keys from the field (Esc closes it).
@@ -38,6 +46,8 @@ const Modal = preload("res://scripts/ui/widgets/modal.gd")
 const ScrollBox = preload("res://scripts/ui/widgets/scroll_box.gd")
 const RichButton = preload("res://scripts/ui/widgets/rich_button.gd")
 const Panels = preload("res://scripts/ui/hud_battle_panels.gd")
+const UnitBar = preload("res://scripts/ui/unit_bar/unit_info_bar.gd")
+const BarData = preload("res://scripts/ui/unit_bar/bar_data.gd")
 
 const TOP_MUTED := Color("#cdb88a")
 const BANNER_COLOURS := {"player": Color("#cfe0ff"), "enemy": Color("#ffb8a8"), "neutral": Color("#f6e7c2")}
@@ -56,7 +66,7 @@ var _cards := {}
 var _banner: Control
 var _banner_tween: Tween
 var _info: Control
-var _unit: Control
+var _bar: Control
 var _log: Control
 var _confirm: Control = null
 var _end_turn: Button = null
@@ -64,6 +74,16 @@ var _pulse := false
 var _pulse_t := 0.0
 var _sigs := {}
 var _view_set := false
+## The foe shown in the bar in place of the selected squad (its uid, or null),
+## and the field as it was when it was asked for (`_context`).
+var _inspect: Variant = null
+var _inspect_ctx: Array = []
+## A right press the HUD took (over a foe, or while one is shown): where, and
+## the foe. Dragged further than DRAG, it is handed to the view as its own.
+var _press: Variant = null
+var _pass_press := false
+
+const DRAG := 6.0
 
 
 func setup(battle_view: Node) -> void:
@@ -89,6 +109,9 @@ func _init() -> void:
 	_company.custom_minimum_size.x = 230
 	H.place(_company, 0, 0, 12, 70)
 	add_child(_company)
+	# Under every other panel: the hover panels and the dialogs stand over it.
+	_bar = UnitBar.new()
+	add_child(_bar)
 
 
 func _ready() -> void:
@@ -111,6 +134,68 @@ func _input(e: InputEvent) -> void:
 		if e.pressed and not e.is_echo() and e.is_action("cancel"):
 			_close_confirm()
 		get_viewport().set_input_as_handled()
+		return
+	# Esc while a foe is shown: back to the selected squad (no menu, the ability stays chosen).
+	if _inspect != null and e is InputEventKey and e.pressed and not e.is_echo() and InputMap.event_is_action(e, "cancel", true):
+		inspect(null)
+		_handled()
+
+
+
+## The event used here (the field does not have it too).
+func _handled() -> void:
+	if get_viewport() != null:
+		get_viewport().set_input_as_handled()
+
+## The clicks that show a foe (the HUD stands after the field in the tree, so
+## it has them first; those over its panels are the GUI's).
+func _unhandled_input(e: InputEvent) -> void:
+	if not _ok() or _confirm != null:
+		return
+	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_RIGHT:
+		if e.pressed:
+			if _pass_press:
+				_pass_press = false
+				return
+			var foe: Variant = _foe_at_pointer()
+			if foe == null and _inspect == null:
+				return
+			_press = {"at": e.position, "foe": foe}
+			_handled()
+		elif _press != null:
+			var foe: Variant = _press.foe
+			_press = null
+			_handled()
+			inspect(foe)
+	elif e is InputEventMouseMotion and _press != null and not (e.button_mask & MOUSE_BUTTON_MASK_RIGHT):
+		# Released where the HUD did not see it (outside the window): nothing to finish.
+		_press = null
+	elif e is InputEventMouseMotion and _press != null and e.position.distance_to(_press.at) >= DRAG:
+		# A drag: the view's own, pressed where it began and moved here (the camera pans as it would have).
+		var down := InputEventMouseButton.new()
+		down.button_index = MOUSE_BUTTON_RIGHT
+		down.button_mask = e.button_mask
+		down.pressed = true
+		down.position = _press.at
+		down.global_position = _press.at
+		var move := e.duplicate() as InputEventMouseMotion
+		move.relative = e.position - _press.at
+		_press = null
+		_hand_over.call_deferred(down, move)
+	elif e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
+		if view.ui.selected == null or view.b.phase != "player":
+			inspect(_foe_at_pointer())
+
+
+## Gives the view a drag the HUD held back: its press (let through here) and the move so far.
+func _hand_over(down: InputEvent, move: InputEvent) -> void:
+	var vp := get_viewport()
+	if vp == null:
+		return
+	_pass_press = true
+	vp.push_input(down, true)
+	_pass_press = false
+	vp.push_input(move, true)
 
 
 # ---------------------------------------------------------------- state
@@ -132,6 +217,43 @@ func my_turn() -> bool:
 	return view.b.phase == "player" and not view.ui.busy
 
 
+## The foe shown in the bar in place of the selected squad (its uid), or null.
+func inspected() -> Variant:
+	return _inspect
+
+
+## Shows foe `uid` in the bar; the selected squad stays selected. Null, or a
+## squad that is not a foe in sight, shows the selected squad again.
+func inspect(uid: Variant) -> void:
+	var was: Variant = _inspect
+	_inspect = uid if uid != null and _ok() and _foe(uid) != null else null
+	_inspect_ctx = _context() if _ok() else []
+	if _inspect != was:
+		refresh()
+
+
+## A squad the bar can show as a foe: not the company's, on the field, in sight.
+func _foe(uid: Variant) -> Variant:
+	var u: Variant = view.b.unit(str(uid))
+	if u == null or u.faction == "player" or not (u.status in ["active", "routing"]):
+		return null
+	if view.has_method("unit_visible") and not view.unit_visible(u):
+		return null
+	return u
+
+
+func _foe_at_pointer() -> Variant:
+	var uid: Variant = view.ui.hover.get("unit")
+	return uid if uid != null and _foe(uid) != null else null
+
+
+## What ends a foe's showing when it changes: the selection, the chosen
+## ability, the selected squad's turn (it moved or acted) and the battle's phase.
+func _context() -> Array:
+	var sel: Variant = view.b.unit(view.ui.selected) if view.ui.selected != null else null
+	return [view.ui.selected, view.ui.ability, sel.hasMoved if sel != null else null, sel.hasActed if sel != null else null, view.b.phase]
+
+
 func _title() -> String:
 	var info: Variant = _app().get("battle_info") if _app() != null else null
 	if info is Dictionary and info.get("title") != null:
@@ -148,10 +270,12 @@ func enemy_counts() -> Vector2i:
 			continue
 		var v = _v(u.uid)
 		if v != null:
-			if not v.reserve and v.status == "active" and not v.routing:
+			if view.squad_visible(v) and not v.reserve and v.status == "active" and not v.routing:
 				left += 1
 		elif u.status == "active":
 			left += 1
+	if b.fog_enabled():
+		return Vector2i(left, 0)
 	var coming := 0
 	var waves: Array = b.waves
 	for i in waves.size():
@@ -191,14 +315,14 @@ func refresh() -> void:
 	_sync_view()
 	if not _ok():
 		# Nothing to show: drop the sections (they are rebuilt with the next battle).
-		for c in [_top, _objective, _banner, _info, _unit, _log]:
+		for c in [_top, _objective, _banner, _info, _log]:
 			_drop(c)
 		_top = null
 		_objective = null
 		_banner = null
 		_info = null
-		_unit = null
 		_log = null
+		_bar.hide_bar()
 		UI.clear(_company)
 		_cards.clear()
 		_sigs.clear()
@@ -215,7 +339,7 @@ func refresh() -> void:
 	_section("banner", [ui.banner.id if ui.banner is Dictionary else null], _build_banner)
 	_refresh_info()
 	_refresh_unit()
-	_section("log", ui.log.slice(0, 14), _build_log)
+	_section("log", [ui.log.slice(0, 14), _bar.shown()], _build_log)
 	if _confirm != null and is_instance_valid(_confirm):
 		move_child(_confirm, -1)
 
@@ -272,7 +396,9 @@ func _build_top(counts: Vector2i, mt: bool, fast: bool) -> void:
 	row.add_child(UI.spacer())
 	var en := UI.label("Enemy squads: %d on the field%s" % [counts.x, " · %d coming" % counts.y if counts.y > 0 else ""], "", 13, Color("#ffb0a0"))
 	en.name = "EnemyCount"
-	en.tooltip_text = "Enemy squads on the field, and squads still coming in waves"
+	if view.b.fog_enabled():
+		en.text = "Enemies in sight: %d" % counts.x
+	en.tooltip_text = "Visible enemy squads. Woodland conceals occupants until approached; fighting reveals their position." if view.b.fog_enabled() else "Enemy squads on the field, and squads still coming in waves"
 	en.mouse_filter = Control.MOUSE_FILTER_PASS
 	en.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(en)
@@ -405,7 +531,7 @@ func objective_lines() -> Array:
 				chief = u
 				break
 		var v = _v(chief.uid) if chief != null else null
-		if chief != null and v != null and not v.reserve and chief.status == "active":
+		if chief != null and view.squad_visible(v) and not v.reserve and v.status == "active":
 			lines.append({"text": "The warchief is on the field: slay %s to break the horde" % str(chief.name).split(",")[0], "tone": "warn"})
 		elif chief != null and chief.status == "reserve":
 			lines.append({"text": "Slay the warchief when he comes to break the horde", "tone": null})
@@ -537,7 +663,7 @@ func _mini_card(u: Dictionary, v, st: String, done: bool, selected: bool) -> Con
 		ring.draw_center = false
 		ring.border_color = UI.GOLD_BRIGHT
 		ring.set_border_width_all(2)
-		ring.set_corner_radius_all(9)
+		ring.set_corner_radius_all(1)
 		ring.anti_aliasing = true
 		p.draw.connect(func(): p.draw_style_box(ring, Rect2(Vector2(-2, -2), p.size + Vector2(4, 4))))
 	var row := UI.hbox(8)
@@ -589,19 +715,27 @@ func _build_banner() -> void:
 	if not (bn is Dictionary):
 		_banner = _swap(_banner, null)
 		return
-	var box := UI.vbox(0)
+	var box := UI.panel("BannerPanel", [16, 36])
 	box.name = "Banner"
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	var banner_style = UI.theme_stylebox(box).duplicate()
+	if bn.get("tone") == "enemy":
+		# Preserve the enemy's red surface under the painted metal binding.
+		banner_style.artwork = 4
+		banner_style.gradient = null
+		banner_style.bg_color = Color("#42282b")
+	box.add_theme_stylebox_override("panel", banner_style)
+	var content := UI.vbox(3)
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_child(content)
 	H.place(box, 0.5, 0.24, 0, 0, 0, 1)
-	box.add_child(_banner_rule())
-	var h1 := UI.label(str(bn.text), "BannerLabel", 0, BANNER_COLOURS.get(bn.get("tone"), BANNER_COLOURS.neutral))
+	var h1 := UI.label(str(bn.text), "BannerLabel", 36, BANNER_COLOURS.get(bn.get("tone"), BANNER_COLOURS.neutral))
 	h1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(h1)
-	box.add_child(_banner_rule())
+	content.add_child(h1)
+	content.add_child(_banner_rule())
 	if bn.get("sub") != null and str(bn.sub) != "":
 		var sub := UI.label(str(bn.sub), "BannerSubLabel")
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		box.add_child(sub)
+		content.add_child(sub)
 	_ignore_all(box)
 	_banner = _swap(_banner, box)
 	# CSS `banner` keyframes over 1.6 s: fade in and settle from 115 %, hold, fade out.
@@ -687,25 +821,45 @@ func _build_info(kind: String) -> void:
 
 func _refresh_unit() -> void:
 	var b = view.b
+	if _inspect != null and (b.phase == "over" or _foe(_inspect) == null or _context() != _inspect_ctx):
+		_inspect = null
 	var sel: Variant = b.unit(view.ui.selected) if view.ui.selected != null else null
-	var show: bool = sel != null and sel.status == "active" and b.phase != "over"
+	var u: Variant = _foe(_inspect) if _inspect != null else (sel if sel != null and sel.status == "active" and b.phase != "over" else null)
+	var show: bool = u != null
 	var sig: Array = [show]
 	if show:
-		var v = _v(sel.uid)
+		var mine: bool = u.faction == "player"
+		var v = _v(u.uid)
 		# A shout can hang on the field around the squad (Lick Wounds: no enemy beside it).
-		var shouts := Panels.abilities(sel).filter(func(a): return DB.ABILITIES.get(a, {}).get("kind") == "shout").map(func(a): return b.can_shout(sel, a).get("reason"))
-		sig = [show, sel.uid, sel.hasMoved, sel.hasActed, sel.get("movedTiles"), sel.get("cooldowns"), sel.get("ammo"), sel.get("stance"), sel.morale, sel.level,
-			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(sel.uid), sel.get("statuses"), shouts]
-	_section("unit", sig, _build_unit.bind(sel if show else null))
+		var shouts := Panels.abilities(u).filter(func(a): return DB.ABILITIES.get(a, {}).get("kind") == "shout").map(func(a): return b.can_shout(u, a).get("reason")) if mine else []
+		sig = [show, u.uid, u.hasMoved, u.hasActed, u.get("movedTiles"), u.get("cooldowns"), u.get("ammo"), u.get("stance"), u.morale, u.level,
+			[v.hp, v.alive, v.morale, v.facing] if v != null else null, view.ui.ability, view.ui.busy, b.phase, b.can_redo(u.uid) if mine else null, u.get("statuses"), shouts,
+			Panels.abilities(u), u.get("wound"), v.routing if v != null else null, u.status, view.ui.selected if not mine else null]
+	_section("unit", sig, _build_unit.bind(u))
 
 
-func _build_unit(sel: Variant) -> void:
-	if sel == null:
-		_unit = _swap(_unit, null)
+func _build_unit(u: Variant) -> void:
+	_bar.view = view
+	if u == null:
+		_bar.hide_bar()
 		return
-	var p := Panels.unit_panel(view, sel)
-	H.place(p, 0.5, 1, 0, -14, 0, -1)
-	_unit = _swap(_unit, p)
+	var d := BarData.squad(view, u, _app())
+	if u.uid == _inspect:
+		d.commands[BarData.SLOT_DONE] = _back_command()
+	_bar.show_squad(d)
+
+
+## A foe's card: the way back to the selected squad (or, with none, the bar down).
+func _back_command() -> Dictionary:
+	var sel: Variant = view.b.unit(view.ui.selected) if view.ui.selected != null else null
+	var c := {"id": "Back", "mark": "undo", "hotkey": "Esc", "enabled": true, "call": func(): inspect(null)}
+	if sel != null:
+		c.name = "Back to %s" % Panels.squad_title(sel)
+		c.desc = "Show the selected squad again. A right click on the field does the same."
+	else:
+		c.name = "Close"
+		c.desc = "Put the bar down. A right click on the field does the same."
+	return c
 
 
 # ---------------------------------------------------------------- log
@@ -715,7 +869,7 @@ func _build_log() -> void:
 	p.name = "Log"
 	var vw := get_viewport_rect().size.x if is_inside_tree() else 1920.0
 	p.custom_minimum_size.x = 260 if vw <= 1400 else 330
-	H.place(p, 1, 1, -12, -14, -1, -1)
+	H.place(p, 1, 1, -12, -14 - (UnitBar.HEIGHT if _bar.shown() else 0.0), -1, -1)
 	var col := UI.vbox(0)
 	var lines: Array = view.ui.log.slice(0, 14)
 	for i in lines.size():

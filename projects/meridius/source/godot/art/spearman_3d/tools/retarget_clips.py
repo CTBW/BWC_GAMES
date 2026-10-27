@@ -13,6 +13,11 @@ the hips' motion scaled by the hip-height ratio. Options per clip:
   blend_out  (clip, n): ease back into that clip's first pose over the last n frames
              (hit, deaths and the turn come from other units' clips, which start in another
              stance: blended from and to the guard, the game can cut between them without a jump)
+  turned     the blend_out's pose is turned with the hips (a turn ends in the guard facing
+             the new way), its hips where the guard has them: the sandbox turns the figure
+             about that point (export_godot.py `pivot`)
+  reverse    the clip played backwards, blends and all (turn_90_r: the left turn backwards
+             starts and ends in the guard; a mirror image would swap his staggered feet)
   yaw        turn the whole clip about the vertical (degrees, + = to his left), for a
              source whose main action is not aimed along -Y (none needs it now: the
              bayonet strike's thrust already goes straight ahead)
@@ -44,7 +49,11 @@ CLIPS = {
     "death": ("Death - Crossbowmen.fbx", {"blend_in": ("idle", 8), "ground": True}),
     "death_2": ("Death_2 - Crossbowmen.fbx", {"blend_in": ("idle", 8), "ground": True}),
     "death_3": ("Sword And Shield Death.fbx", {"blend_in": ("idle", 8), "ground": True}),
-    "turn_90": ("Turning - Footman.fbx", {"in_place": True, "blend_in": ("idle", 6)}),
+    "turn_90": ("Turning - Footman.fbx", {"in_place": True, "blend_in": ("idle", 6), "blend_out": ("idle", 8), "turned": True}),
+    "turn_90_r": ("Turning - Footman.fbx", {"in_place": True, "blend_in": ("idle", 6), "blend_out": ("idle", 8), "turned": True,
+                                            "reverse": True}),
+    "turn_180": ("Turning 180 degress - Footman.fbx", {"in_place": True, "blend_in": ("idle", 6), "blend_out": ("idle", 8),
+                                                      "turned": True}),
     "step_lane": ("Standing Walk Right.fbx", {"in_place": True}),
 }
 
@@ -165,14 +174,26 @@ for clip in only:
         sc.frame_set(1)
         ref_q = {n: rig.pose.bones[n].rotation_quaternion.copy() for n in order}
         ref_h = T_rest["mixamorig:Hips"] @ rig.pose.bones["mixamorig:Hips"].location
+        hn = "mixamorig:Hips"
+        ref_hw = T_rest[hn] @ ref_q[hn].to_matrix()            # the hips' world rotation in it
         for k in range(min(nbl, len(local))):
             i = k if at_start else len(local) - 1 - k
             w = smooth(1.0 - (k + 1) / (nbl + 1))       # 1 at the joint with the other clip, easing to 0
+            to = dict(ref_q)
+            if opt.get("turned") and not at_start:
+                # The pose turned about the vertical as far as the hips are turned from it.
+                R = T_rest[hn] @ local[i][hn].to_matrix() @ ref_hw.inverted()
+                Rz = Matrix.Rotation(math.atan2(R[1][0], R[0][0]), 3, "Z")
+                to[hn] = (T_rest[hn].inverted() @ Rz @ ref_hw).to_quaternion()
             for n in order:
-                b = ref_q[n].copy()
+                b = to[n].copy()
                 b.make_compatible(local[i][n])
                 local[i][n] = local[i][n].slerp(b, w)
             hips_off[i] = hips_off[i].lerp(ref_h, w)
+    if opt.get("reverse"):
+        local.reverse()
+        hips_off.reverse()
+        drift = -drift
     for a in [a for a in bpy.data.actions if a.name == clip or (a.name.startswith(clip + ".") and a.name[len(clip) + 1:].isdigit())]:
         bpy.data.actions.remove(a)
     act = bpy.data.actions.new(clip)
@@ -203,7 +224,7 @@ for clip in only:
     for fc in getattr(act, "fcurves", []):
         for kp in fc.keyframe_points:
             kp.interpolation = "LINEAR"
-    act["source"] = fbx
+    act["source"] = fbx + (" played backwards" if opt.get("reverse") else "")
     act["source_range"] = [f0, f1]
     act["frames"] = len(frames)
     if opt.get("in_place"):

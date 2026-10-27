@@ -199,6 +199,12 @@ for asset, (name, length) in PROPS.items():
     elif asset == "hatchet":
         # Held low on the haft, at the middle of its leather wrap.
         origin = Vector((0, 0, 0.17 * length))
+    if asset in ("knife", "cleaver", "hatchet"):
+        # On the handle's axis: the middle of its cross-section at the grip, which is
+        # not the middle of the whole prop when the head or blade sticks out to one side.
+        q = P[np.abs(P[:, 2] - origin.z) < 0.015]
+        origin.x = float((np.percentile(q[:, 0], 3) + np.percentile(q[:, 0], 97)) / 2)
+        origin.y = float((np.percentile(q[:, 1], 3) + np.percentile(q[:, 1], 97)) / 2)
     else:
         # Shields: the middle of the back, where the arm and the grip go.
         tree_p = BVHTree.FromPolygons([v.co.copy() for v in obj.data.vertices],
@@ -215,7 +221,23 @@ for asset, (name, length) in PROPS.items():
     print("RABBLE_PROP", name, "length", length, "width", round(float(np.ptp(P[:, 0])), 3),
           "depth", round(float(np.ptp(P[:, 1])), 3), "origin above the bottom", round(float(-P[:, 2].min()), 3))
 
-bpy.ops.file.make_paths_relative()
-bpy.ops.wm.save_as_mainfile(filepath=str(out_blend), relative_remap=True)
+# Each image's path is a fixed-size buffer too: fill it, then write the path relative
+# to the .blend (the textures are next to it), so neither the unzip folder nor the
+# absolute path stays behind it.
+for img in bpy.data.images:
+    if img.filepath_raw:
+        rel = "//" + Path(img.filepath_raw).resolve().relative_to(out_blend.parent).as_posix()
+        img.filepath_raw = "//" + "_" * 700
+        img.filepath_raw = rel
+# Every screen's File Browser keeps the folder it last showed (the user's Documents
+# folder by default) in a fixed-size buffer: fill it before shortening it, so no
+# bytes of the old path stay in the file.
+for screen in bpy.data.screens:
+    for area in screen.areas:
+        for space in area.spaces:
+            if space.type == "FILE_BROWSER" and space.params is not None:
+                space.params.directory = b"//" + b"_" * 700
+                space.params.directory = b"//"
+bpy.ops.wm.save_as_mainfile(filepath=str(out_blend), relative_remap=True, compress=True)
 shutil.rmtree(unzip, ignore_errors=True)
 print("RABBLE_SAVED", out_blend)

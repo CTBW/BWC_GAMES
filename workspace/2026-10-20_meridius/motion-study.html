@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Footmen motion study</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script><script defer src="motion-study/review.js"></script>
+<style>
+.intro{max-width:800px}.eyebrow{font-size:12px;letter-spacing:.13em;color:var(--mak-muted)}
+.clip-nav,.controls,.downloads{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.clip-nav{margin:28px 0}.clip-nav a,button,.downloads a{border:1px solid var(--mak-border);border-radius:7px;background:var(--mak-surface);color:var(--mak-text);padding:9px 14px;text-decoration:none;font:inherit;font-size:13px;cursor:pointer}
+.study{margin:28px 0;padding:24px;border:1px solid var(--mak-border);scroll-margin-top:20px}.study h2{margin:0 0 5px;padding:0}.study>p{margin:8px 0 20px;color:var(--mak-muted)}
+video{display:block;width:100%;aspect-ratio:16/9;background:#101820;border-radius:7px}.controls{margin:12px 0}.controls output{font-size:12px;color:var(--mak-muted);margin-left:auto}
+.beats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;border-top:1px solid var(--mak-border);padding-top:16px;margin-top:18px}.beats p{margin:0;font-size:13px}.beats strong{display:block;margin-bottom:4px}
+.notice{padding:18px 22px;border-left:3px solid var(--mak-accent);background:var(--mak-surface);font-size:14px}.checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}.checks div{padding:18px;border:1px solid var(--mak-border);border-radius:8px}.checks strong{font-size:22px;display:block}.checks span{font-size:12px;color:var(--mak-muted)}
+.evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.evidence figure{margin:0;padding:12px;border:1px solid var(--mak-border)}.evidence img{display:block;width:100%;border-radius:6px}.evidence figcaption{font-size:12px;color:var(--mak-muted);padding-top:10px}
+details{border:1px solid var(--mak-border);border-radius:8px;padding:16px 20px;margin:22px 0}summary{cursor:pointer;font-weight:600}.baseline{display:grid;grid-template-columns:1fr 1fr;gap:18px}.baseline video{aspect-ratio:5/4}
+@media(prefers-color-scheme:light){html[data-mak-report]{--mak-bg:#f5f3ef;--mak-surface:#fff;--mak-border:#292b3024;--mak-text:#272d35;--mak-muted:#626a74;--mak-accent:#91546b;color-scheme:light}html[data-mak-report=document] :is(h1,h2,h3,strong){color:#27313b}html[data-mak-report=document] body{--card2:#fff;background-image:none}html[data-mak-report=document] code{color:#73485d}}
+html[data-review-theme=dark]{--mak-bg:#101115;--mak-surface:#18191f;--mak-border:#ffffff13;--mak-text:#d3d0d9;--mak-muted:#a29baa;--mak-accent:#f0a0b0;color-scheme:dark}
+html[data-review-theme=dark][data-mak-report=document] :is(h1,h2,h3,strong){color:#eee8f0}
+html[data-review-theme=dark][data-mak-report=document] body{--card2:#1e1f27}
+@media(max-width:1000px){.study{padding:18px}.beats{gap:12px}.controls{gap:7px}.controls output{width:100%;margin:0}}
+</style>
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / AMBERFELD FOOTMEN / MOTION STUDY 01 / 23 OCT 2026</p>
+<h1>Move. Cut. Bash. Charge.</h1>
+<p>Four original motion studies, built around planted feet, readable weight transfer and contact at the weapon or shield. Simple articulated footmen keep the movement easy to judge before your reference pass.</p>
+</header>
+<div class="notice"><strong>Reviewable proposals.</strong> These are native Godot 3D blocking studies, with editable motion and a paired defender. The live game still uses its existing sprite animations. This delivery does not claim to fix the game's sliding or squad overlap.</div>
+<nav class="clip-nav" aria-label="Motion studies"><a href="#move">01 Move</a><a href="#attack">02 Sword attack</a><a href="#shield_bash">03 Shield bash</a><a href="#charge">04 Charge</a><a href="#findings">Current-game findings</a><a href="#sources">Sources &amp; checks</a></nav>
+<p class="meta">Watch at 1× first. Then use ½×, contact markers or frame stepping. Teal ground markers show a planted foot; amber marks a swinging foot. The cameras stay fixed. These are start-to-finish actions; replay resets their positions.</p>
+
+<section class="study" id="move" data-clip="move">
+<h2>01 / Move</h2><p>5.60 s · eight steps · 3.00 m of travel · start, walk, settle</p>
+<video controls preload="metadata" playsinline poster="motion-study/move.png" aria-label="Footman movement study"><source src="motion-study/move.mp4" type="video/mp4"></video>
+<div class="controls"><button data-action="replay">Replay</button><button data-rate="1">1×</button><button data-rate="0.5">½×</button><button data-step="-1">← Frame</button><button data-step="1">Frame →</button><button data-seek="1.34">Foot plant</button><output aria-live="off"></output></div>
+<div class="beats"><p><strong>Support</strong>The stance foot stays in world space while the pelvis travels over it.</p><p><strong>Transfer</strong>The other knee bends and the boot clears the ground. The shield remains quiet.</p><p><strong>Halt</strong>Short final placements receive the body. The root settles without a spring overshoot.</p></div>
+</section>
+
+<section class="study" id="attack" data-clip="attack">
+<h2>02 / Sword attack</h2><p>2.40 s · lead foot planted at 0.65 s · sword contact at 0.82 s</p>
+<video controls preload="metadata" playsinline poster="motion-study/attack.png" aria-label="Footman sword attack study"><source src="motion-study/attack.mp4" type="video/mp4"></video>
+<div class="controls"><button data-action="replay">Replay</button><button data-rate="1">1×</button><button data-rate="0.5">½×</button><button data-step="-1">← Frame</button><button data-step="1">Frame →</button><button data-seek="0.82">Sword contact</button><output aria-live="off"></output></div>
+<div class="beats"><p><strong>Load</strong>A small lead step and rearward shoulder turn create preparation without a long slide.</p><p><strong>Cut</strong>The feet plant before the descending cut. The sword reaches the defender's shield.</p><p><strong>Recover</strong>The hand retracts on the weapon side, then the lead foot steps back into guard.</p></div>
+</section>
+
+<section class="study" id="shield_bash" data-clip="shield_bash">
+<h2>03 / Shield bash</h2><p>2.50 s · lead foot planted at 0.69 s · shield contact at 0.86 s</p>
+<video controls preload="metadata" playsinline poster="motion-study/shield_bash.png" aria-label="Footman shield bash study"><source src="motion-study/shield_bash.mp4" type="video/mp4"></video>
+<div class="controls"><button data-action="replay">Replay</button><button data-rate="1">1×</button><button data-rate="0.5">½×</button><button data-step="-1">← Frame</button><button data-step="1">Frame →</button><button data-seek="0.86">Shield contact</button><output aria-live="off"></output></div>
+<div class="beats"><p><strong>Load</strong>The hips compress over the rear leg and the elbow folds. The sword stays guarded.</p><p><strong>Drive</strong>The shield travels ahead of the chest. Its front plane meets the opposing shield.</p><p><strong>Absorb</strong>The defender yields after contact. A rear-foot catch-up supports the new forward guard.</p></div>
+</section>
+
+<section class="study" id="charge" data-clip="charge">
+<h2>04 / Charge</h2><p>4.80 s · running and braking steps · root stops at 3.30 s · contact at 3.40 s</p>
+<video controls preload="metadata" playsinline poster="motion-study/charge.png" aria-label="Footman charge study"><source src="motion-study/charge.mp4" type="video/mp4"></video>
+<div class="controls"><button data-action="replay">Replay</button><button data-rate="1">1×</button><button data-rate="0.5">½×</button><button data-step="-1">← Frame</button><button data-step="1">Frame →</button><button data-seek="2.60">Braking</button><button data-seek="3.40">Contact</button><output aria-live="off"></output></div>
+<div class="beats"><p><strong>Commit</strong>Lower hips, forward lean and a short flight phase distinguish the run from walking.</p><p><strong>Brake</strong>The last placements restore double support. The body stops advancing before the shield lands.</p><p><strong>Brace</strong>Shield extension supplies the final reach. The attacker holds ground while the defender takes a recovery step.</p></div>
+</section>
+
+<section id="findings">
+<h2>Why the current footmen feel floaty</h2>
+<p>The source inspection identifies specific presentation mechanisms consistent with your observation. The accompanying captures show the existing game, not the new study rig.</p>
+<table><thead><tr><th>Current implementation</th><th>Consequence to address</th><th>Motion contract demonstrated here</th></tr></thead><tbody>
+<tr><td>Attack selects two sprite poses, then offsets the entire figure.</td><td>The boots translate with the lunge; no planted attack foot stays behind.</td><td>Plant the lead foot, move the hips between supports, animate the weapon independently.</td></tr>
+<tr><td>Front and rear ranks receive fixed lunge distances: 22 / 13 × figure scale.</td><td>The lunge does not measure the opposing soldier's body or shield gap. Dense ranks can overlap.</td><td>Finish at a reachable contact surface with a separate body clearance.</td></tr>
+<tr><td>Forward-facing walk poses use a clock-driven cycle; the back-view foot rig caps its reach.</td><td>Foot speed can disagree with world travel. A clamped stride cannot cancel a faster root.</td><td>Plan the foot placements and root travel together; match the production gait to actual distance.</td></tr>
+<tr><td>Members follow an underdamped spring, including after arrival.</td><td>The body can skid beyond a halt and settle backward.</td><td>Land the stopping steps before settling the body; use secondary motion above the supports.</td></tr>
+</tbody></table>
+<details><summary>Current-game baseline — movement and melee</summary>
+<div class="baseline"><div><h3>Existing movement</h3><video controls preload="metadata" aria-label="Current game movement baseline"><source src="motion-study/baseline_march.mp4" type="video/mp4"></video></div><div><h3>Existing melee, front-facing</h3><video controls preload="metadata" aria-label="Current game melee baseline"><source src="motion-study/baseline_melee_sw.mp4" type="video/mp4"></video></div></div>
+<p class="meta">Existing <code>footman_lab.gd</code>, fixed 1/60 s simulation steps, 20 fps capture; normal gameplay time. The native renderer, sprite assets and combat playback are unchanged. The harness reported zero scenario errors, followed by existing resource-leak diagnostics at shutdown. <a href="motion-study/baseline_melee_ne.mp4">Back-facing melee capture</a>.</p>
+</details>
+<p>For a later game pass, give each front-rank attacker a reachable target lane, stop the body before overlap, and let rear ranks hold or step into a free lane. Bind damage and sound to the approved contact time. Those production changes are still pending; this single-pair study does not validate crowd spacing.</p>
+</section>
+
+<section id="sources">
+<h2>Evidence and editable source</h2>
+<div class="checks"><div><strong>4 clips</strong><span>459 native frames, 1600 × 900, 30 fps</span></div><div><strong>5 / 5</strong><span>motion tests passed</span></div><div><strong>0 m/s</strong><span>sampled planted-foot translation, 240 Hz</span></div></div>
+<p>The checks cover foot anchors and ground clearance, limb reach, supported contact, body spacing, the stopped charge root, and the difference between walking support and running flight. These are mathematical checks of the study rig, not a full collision test or proof of natural motion.</p>
+<div class="evidence"><figure><img loading="lazy" src="motion-study/attack.png" width="1600" height="900" alt="Sword contact in the native Godot motion study, with both feet planted and separate body centres"><figcaption>Sword contact. The hand follows through on the weapon side of the shield.</figcaption></figure><figure><img loading="lazy" src="motion-study/charge.png" width="1600" height="900" alt="Charge contact with the attacker braced, shield forward and feet planted"><figcaption>Charge contact. The root has already stopped; shield extension closes the remaining gap.</figcaption></figure></div>
+<p id="regression-result">Final quick regression suite: <strong>368 passed, 1 failed, 10 skipped</strong> (172.9 s). The unrelated <code>test_audio::test_a_marching_squad_is_one_tread</code> reports a shader-compiler error (<code>custom_samplers</code>). All five dedicated motion tests pass.</p>
+<p id="report-result">Report verified in Brave at 1440 × 900 and 1024 × 768, in light and dark appearances: four videos decode at the expected size and duration; replay, ½×, event seeking, exact forward/back frame steps and image preview/close controls work. All 25 local media/source references resolve. <a href="motion-study/delivery-checks.json">Delivery checks and source hashes</a>.</p>
+<div class="downloads"><a href="motion-study/move.mp4" download>Move MP4</a><a href="motion-study/attack.mp4" download>Attack MP4</a><a href="motion-study/shield_bash.mp4" download>Bash MP4</a><a href="motion-study/charge.mp4" download>Charge MP4</a><a href="motion-study/source.zip" download>Editable source ZIP</a><a href="motion-study/manifest.json">Timing &amp; metrics</a><a href="motion-study/README.md">Review &amp; engine notes</a></div>
+<p class="meta">Authored locally in GDScript; no paid generation, mocap or external motion library. Colours and equipment follow the supplied footman reference at a simple proxy level. Motion is inferred and authored, not measured from footage. The original PNG sequences remain in <code>tests/visual/out/motion-study/</code>. No runtime sprites, rules, movement speeds or attack cadence were changed. User approval of the movement and later reference matching remain open.</p>
+</section>
+</main></body></html>

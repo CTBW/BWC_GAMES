@@ -60,6 +60,7 @@ static func profile_of(u: Dictionary) -> Dictionary:
 static func _danger_map(b, from: String) -> Dictionary:
 	var out := {}
 	var foes: Array = b.active(from)
+	foes = foes.filter(func(f): return b.visible_to("enemy" if from == "player" else "player", f))
 	var fdata: Array = []
 	for f in foes:
 		var miss: Variant = _missile_of(f)
@@ -262,6 +263,8 @@ static func _cache_for(b, side: String) -> Dictionary:
 	for u in b.active(side):
 		parts.append("%s:%d,%d,%d,%d" % [u.uid, u.x, u.y, u.facing, u.alive])
 	var stamp := "%d|%s|%s" % [b.turn, b.phase, ";".join(parts)]
+	if b.fog_enabled():
+		stamp += b.Visibility.stamp(b.units)
 	var c: Variant = b.ai_cache
 	if c == null or c.stamp != stamp:
 		c = {"stamp": stamp, "danger": {}, "fields": {}}
@@ -463,10 +466,14 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 	var foes: Array = b.enemies_of(u)
 	var all_foes: Array = foes.duplicate()
 	for x in b.units:
-		if x.status == "routing" and x.faction != u.faction:
+		if x.status == "routing" and x.faction != u.faction and b.visible_to(u.faction, x):
 			all_foes.append(x)
 	if all_foes.is_empty():
-		return
+		_scout(b, u, opts)
+		foes = b.enemies_of(u)
+		all_foes = b.living().filter(func(f): return f.faction != u.faction and b.visible_to(u.faction, f))
+		if all_foes.is_empty():
+			return
 	var ms: String = b.morale_state(u)
 
 	# Leaders shout when the warband wavers or the enemy closes in.
@@ -762,6 +769,35 @@ static func act_unit(b, u: Dictionary, opts: Dictionary = {}) -> void:
 				b.use_stance(u.uid, stance)
 
 
+## Search unknown ground without reading hidden opponents' positions.
+static func _scout(b, u: Dictionary, opts: Dictionary) -> void:
+	if not b.fog_enabled() or u.hasMoved or opts.get("hold") != null:
+		return
+	var seen: Dictionary = b.visible_tiles(u.faction)
+	var goals: Array = []
+	for t in b.map.tiles:
+		if not seen.has(Grid.key(t.x, t.y)) and Grid.tile_passable(b.map, t.x, t.y):
+			goals.append(t)
+	if goals.is_empty():
+		return
+	var unknown: Array = goals.filter(func(t): return not b.explored[u.faction].has(Grid.key(t.x, t.y)))
+	if not unknown.is_empty():
+		goals = unknown
+	var approach := _approach_field(b, goals)
+	var reach: Dictionary = b.reachable(u)
+	var best = null
+	var score := INF
+	for k in reach:
+		if k == Grid.key(u.x, u.y):
+			continue
+		var s: float = approach.get(k, 9999.0) + 0.025 * reach[k].cost
+		if s < score:
+			score = s
+			best = Grid.unkey(k)
+	if best != null:
+		b.move(u.uid, best.x, best.y)
+
+
 static func _outside(hold: Variant, zone_keys: Variant, guards: int, k: int) -> int:
 	return (12 if hold != null and not hold.has(k) else 0) - (8 if zone_keys != null and guards < 2 and zone_keys.has(k) else 0)
 
@@ -773,6 +809,7 @@ static func _sort_options(options: Array) -> void:
 
 static func run_enemy_ai(b) -> void:
 	var players: Array = b.active("player")
+	players = players.filter(func(p): return b.visible_to("enemy", p))
 	var order: Array = b.active("enemy")
 	var rank := {}
 	var near := {}

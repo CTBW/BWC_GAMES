@@ -24,6 +24,18 @@ This saves into `projects/meridius/references/characters/bosses/tripo/rauk/`.
 Omit `-Boss` for `characters/tripo/<character>/`. The browser's remembered
 download folder is only temporary staging, never the final model destination.
 
+When the browser asks where to save each download, `accept-save-dialog.ps1`
+answers its Save dialog. Start it before the download, with the exact file name
+the site gives it:
+
+```powershell
+& scripts/asset-delivery/accept-save-dialog.ps1 -Dir 'E:/staging' -Expect 'orc_brute_body_tripo.zip'
+```
+
+It waits for a Save dialog on a Chrome or Brave window, refuses one that
+suggests any other name, saves to `-Dir`, and returns once the file has stopped
+growing. It does not change browser settings.
+
 This optional, offline tool records the local input and output files for a Workspace card. Existing cards work without a manifest. The manifest proves only that the selected files still have the recorded size and SHA-256 hash. Visual approval and engine readiness require their own review.
 
 ## Build and verify

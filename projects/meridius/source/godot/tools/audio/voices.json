@@ -1,0 +1,57 @@
+{
+  "_doc": "Voice lines generated through the Higgsfield CLI by tools/audio/hfvoice.py. Takes and job receipts live in the audio library (voices/higgsfield/<round>/, receipts.json); each take is registered in the library's candidates.json under its category. A line's takes are separate jobs (speech varies per job). Plan: projects/meridius/docs/plan-audio.md, Voices.",
+  "voices": {
+    "knox": {"voice_id": "195e386a-cb61-5c1b-a53b-0e2f0669c408", "name": "Knox"},
+    "gideon": {"voice_id": "1ad38ba4-9cc4-4f2f-9fde-b0fefdf67ae5", "name": "Gideon"},
+    "barrett": {"voice_id": "d603a8cd-3fe1-55e0-9245-617a2589131e", "name": "Barrett"},
+    "harrison": {"voice_id": "573e5163-59b3-4926-aab1-951ef2985f81", "name": "Harrison"},
+    "bram": {"voice_id": "549ff70a-3ee7-4f04-a4d9-89a24fab7709", "name": "Bram"},
+    "marcus": {"voice_id": "6f98d3dd-324f-4845-8c28-c1d1647a06cd", "name": "Marcus"},
+    "sterling": {"voice_id": "dc382508-c8bd-443c-8cb2-46e57b8d2e6f", "name": "Sterling"}
+  },
+  "rounds": {
+    "round2": {
+      "date": "2026-10-24",
+      "note": "Knox's command lines (the owner chose Knox for the commanders), a victory cheer from six men, and goblin casting by new routes (every round-1 goblin was rejected).",
+      "lines": [
+        {"id": "knox_shieldwall_lock", "category": "voice_commander", "for": "stance_shieldwall", "voice": "knox", "text": "[shouts] Shields up! LOCK THEM!", "stability": 0.3, "takes": 2},
+        {"id": "knox_shieldwall_hold", "category": "voice_commander", "for": "stance_shieldwall", "voice": "knox", "text": "[shouts] HOLD THE LINE!", "stability": 0.3, "takes": 2},
+        {"id": "knox_spearwall_brace", "category": "voice_commander", "for": "stance_spearwall", "voice": "knox", "text": "[shouts] SPEARS! BRACE!", "stability": 0.3, "takes": 2},
+        {"id": "knox_spearwall_set", "category": "voice_commander", "for": "stance_spearwall", "voice": "knox", "text": "[shouts] SET SPEARS!", "stability": 0.3, "takes": 2},
+        {"id": "knox_spearwall_come", "category": "voice_commander", "for": "stance_spearwall", "voice": "knox", "text": "[shouts] Let them COME!", "stability": 0.3, "takes": 2},
+        {"id": "knox_square_form", "category": "voice_commander", "for": "stance_square", "voice": "knox", "text": "[shouts] FORM SQUARE!", "stability": 0.3, "takes": 2},
+        {"id": "knox_square_close", "category": "voice_commander", "for": "stance_square", "voice": "knox", "text": "[shouts] Close ranks! ALL SIDES!", "stability": 0.3, "takes": 2},
+        {"id": "knox_defend_stand", "category": "voice_commander", "for": "stance_footman (Defend)", "voice": "knox", "text": "[shouts] STAND FAST!", "stability": 0.3, "takes": 2},
+        {"id": "knox_defend_dig", "category": "voice_commander", "for": "stance_footman (Defend)", "voice": "knox", "text": "[shouts] Dig in, lads!", "stability": 0.3, "takes": 2},
+        {"id": "knox_overwatch_ready", "category": "voice_commander", "for": "stance_overwatch", "voice": "knox", "text": "[firmly] Bolts ready.", "stability": 0.45, "takes": 2},
+        {"id": "knox_overwatch_wait", "category": "voice_commander", "for": "stance_overwatch", "voice": "knox", "text": "[low, tense] Wait for it...", "stability": 0.45, "takes": 2},
+        {"id": "knox_aimed_loose", "category": "voice_commander", "for": "aimed_shot (needs a hook)", "voice": "knox", "text": "[tense] Steady... [shouts] LOOSE!", "stability": 0.3, "takes": 2},
+        {"id": "knox_charge_forward", "category": "voice_commander", "for": "shield_charge (needs a hook)", "voice": "knox", "text": "[shouts] FORWARD, SHIELDS!", "stability": 0.3, "takes": 2},
+        {"id": "knox_charge_drive", "category": "voice_commander", "for": "shield_charge (needs a hook)", "voice": "knox", "text": "[shouts] Drive them BACK!", "stability": 0.3, "takes": 2},
+        {"id": "knox_select_orders", "category": "voice_commander", "for": "select (needs a hook)", "voice": "knox", "text": "[firmly] Orders?", "stability": 0.45, "takes": 2},
+        {"id": "knox_select_ready", "category": "voice_commander", "for": "select (needs a hook)", "voice": "knox", "text": "[firmly] Ready.", "stability": 0.45, "takes": 2},
+        {"id": "knox_move_moving", "category": "voice_commander", "for": "move (needs a hook)", "voice": "knox", "text": "[shouts] Moving!", "stability": 0.3, "takes": 2},
+        {"id": "knox_move_double", "category": "voice_commander", "for": "move (needs a hook)", "voice": "knox", "text": "[shouts] On the double!", "stability": 0.3, "takes": 2},
+        {"id": "knox_attack_amberfeld", "category": "voice_commander", "for": "attack (needs a hook)", "voice": "knox", "text": "[shouts] FOR AMBERFELD!", "stability": 0.3, "takes": 2},
+        {"id": "knox_attack_at_them", "category": "voice_commander", "for": "attack (needs a hook)", "voice": "knox", "text": "[shouts] AT THEM!", "stability": 0.3, "takes": 2},
+        {"id": "knox_rout_fall_back", "category": "voice_commander", "for": "rout_player", "voice": "knox", "text": "[panicked] [shouts] FALL BACK! FALL BACK!", "stability": 0.3, "takes": 2},
+        {"id": "knox_rout_run", "category": "voice_commander", "for": "rout_player", "voice": "knox", "text": "[panicked] [shouts] RUN!", "stability": 0.3, "takes": 2},
+        {"id": "knox_victory_amberfeld", "category": "voice_cheer", "for": "victory", "voice": "knox", "text": "[triumphant] [shouts] AMBERFELD!", "stability": 0.3, "takes": 2},
+        {"id": "cheer_gideon", "category": "voice_cheer", "for": "victory (layered)", "voice": "gideon", "text": "[cheering] [shouts] HURRAH! AMBERFELD!", "stability": 0.3, "takes": 1},
+        {"id": "cheer_barrett", "category": "voice_cheer", "for": "victory (layered)", "voice": "barrett", "text": "[cheering] [shouts] HURRAH! AMBERFELD!", "stability": 0.3, "takes": 1},
+        {"id": "cheer_harrison", "category": "voice_cheer", "for": "victory (layered)", "voice": "harrison", "text": "[cheering] [shouts] HURRAH! AMBERFELD!", "stability": 0.3, "takes": 1},
+        {"id": "cheer_bram", "category": "voice_cheer", "for": "victory (layered)", "voice": "bram", "text": "[cheering] [shouts] HURRAH! AMBERFELD!", "stability": 0.3, "takes": 1},
+        {"id": "cheer_marcus", "category": "voice_cheer", "for": "victory (layered)", "voice": "marcus", "text": "[cheering] [shouts] HURRAH! AMBERFELD!", "stability": 0.3, "takes": 1},
+        {"id": "goblin_seed_described", "category": "voice_goblin", "for": "goblin casting", "model": "seed_audio",
+         "prompt": "A small, wiry goblin warrior with a raspy, nasal, high, sneering voice, cackling and shrieking with glee: \"Hehehe! Stab 'em! STAB 'EM ALL! Shinies for us!\"", "takes": 1},
+        {"id": "goblin_seed_from_image", "category": "voice_goblin", "for": "goblin casting", "model": "seed_audio",
+         "prompt": "The goblin in the front of this picture cackles and shrieks in a raspy, nasal, sneering voice: \"Hehehe! Stab 'em! STAB 'EM ALL! Shinies for us!\"",
+         "image": "../../references/characters/Goblin spearmen.png", "takes": 1},
+        {"id": "goblin_inworld_snik", "category": "voice_goblin", "for": "goblin casting", "model": "inworld_text_to_speech", "inworld_voice": "Snik (en)",
+         "text": "Hehehe! Stab 'em! STAB 'EM ALL! Shinies for us!", "takes": 1},
+        {"id": "goblin_eleven_sterling", "category": "voice_goblin", "for": "goblin casting (to be pitched up with the formant shifted)", "voice": "sterling",
+         "text": "[raspy] [sneering] [cackles] Hehehe! Stab 'em! STAB 'EM ALL! Shinies for us!", "stability": 0.2, "takes": 1}
+      ]
+    }
+  }
+}

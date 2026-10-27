@@ -9,7 +9,7 @@ const FIXTURE := "res://tests/fixtures/assets/variant_counts.json"
 # Art repainted after the port (MIGRATION.md, "Painted rocks", "Painted
 # woodland" and "Terrain kit 2"): its variant counts, and the original's masks
 # no longer apply. All of it is painted art (hasArt).
-const REPAINTED := {"rock_small": 4, "rock_large": 4, "tree_pine": 7, "tree_oak": 8, "bush": 3, "stump": 3, "log": 4}
+const REPAINTED := {"rock_small": 4, "rock_large": 4, "tree_pine": 7, "tree_oak": 17, "bush": 3, "stump": 3, "log": 4}
 # Art the original never had: ferns, fallen wood and small stones strewn for
 # show, and the trees of other seasons.
 const ADDED := {"fern": 3, "tree_oak_autumn": 3, "tree_oak_spring": 2, "deadwood": 5, "stones": 10}

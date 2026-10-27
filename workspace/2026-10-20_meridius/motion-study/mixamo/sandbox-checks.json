@@ -1,0 +1,18 @@
+{
+  "sandbox_single": {
+    "capture_fps": 30,
+    "frames": 72,
+    "mixamo_installed": false,
+    "peak_whole_sprite_lunge_px": 20.2604026794434,
+    "route": "scripts/ui/screens/unit_playground.gd",
+    "subjects": 1
+  },
+  "sandbox_squad": {
+    "capture_fps": 30,
+    "frames": 72,
+    "mixamo_installed": false,
+    "peak_whole_sprite_lunge_px": 20.2604026794434,
+    "route": "scripts/ui/screens/unit_playground.gd",
+    "subjects": 6
+  }
+}

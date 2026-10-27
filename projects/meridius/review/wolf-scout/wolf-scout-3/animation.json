@@ -1,0 +1,102 @@
+{
+  "source_motion": "wolf_scout_2.blend",
+  "rig": "wolf_scout_3_rig.blend",
+  "grip": "reverse, blades back",
+  "clips": {
+    "idle": {
+      "frames": 121,
+      "reach_max": 0.84075,
+      "blade_twist_off_Left": [
+        -13.0,
+        25.3
+      ],
+      "blade_twist_off_Right": [
+        95.2,
+        0.0
+      ],
+      "fist_move_Left": -0.5081,
+      "fist_move_Right": -0.0733,
+      "fist_min": 0.0343,
+      "tail_seam_m": 0.0,
+      "tail_roll_fix_deg": 9.7,
+      "cloak_seam_m": 0.0,
+      "cloak_twist_max_deg": 25.0,
+      "cape_into_body_mm": [
+        108.7,
+        0.3
+      ],
+      "cape_into_body_worst_frame": 28,
+      "cape_clear_turn_deg": 33.3,
+      "cape_floor_lift_deg": {}
+    },
+    "sneak": {
+      "frames": 33,
+      "reach_max": 0.95749,
+      "fist_min": 0.47,
+      "tail_seam_m": 0.0,
+      "tail_roll_fix_deg": 5.6,
+      "cloak_seam_m": 0.0,
+      "cloak_twist_max_deg": 0,
+      "cape_into_body_mm": [
+        82.7,
+        8.8
+      ],
+      "cape_into_body_worst_frame": 26,
+      "cape_clear_turn_deg": 38.4,
+      "cape_floor_lift_deg": {}
+    },
+    "attack": {
+      "frames": 62,
+      "reach_max": 0.94739,
+      "fist_min": 0.6155,
+      "tail_seam_m": 0.0,
+      "tail_roll_fix_deg": 26.0,
+      "cloak_seam_m": 0.0,
+      "cloak_twist_max_deg": 0,
+      "cape_into_body_mm": [
+        75.8,
+        9.5
+      ],
+      "cape_into_body_worst_frame": 29,
+      "cape_clear_turn_deg": 36.8,
+      "cape_floor_lift_deg": {}
+    },
+    "death": {
+      "frames": 69,
+      "reach_max": 1.00622,
+      "clamped": 1,
+      "fist_min": 0.0091,
+      "tail_seam_m": 0.0,
+      "cloak_seam_m": 0.0,
+      "cloak_twist_max_deg": 119.9,
+      "cape_into_body_mm": [
+        29.1,
+        15.1
+      ],
+      "cape_into_body_worst_frame": 65,
+      "cape_clear_turn_deg": 31.0,
+      "cape_floor_lift_deg": {
+        "29": 2,
+        "30": 5,
+        "31": 8,
+        "32": 13,
+        "33": 18,
+        "34": 18,
+        "35": 15,
+        "36": 10,
+        "37": 9,
+        "38": 6,
+        "39": 4,
+        "54": 1,
+        "55": 2,
+        "56": 3,
+        "57": 3,
+        "58": 3,
+        "59": 3,
+        "60": 3,
+        "61": 2,
+        "62": 1
+      }
+    }
+  }
+}

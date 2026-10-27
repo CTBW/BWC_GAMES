@@ -7,7 +7,7 @@
       "type": "group",
       "category": "project",
       "created": "2026-10-20",
-      "updated": "2026-10-24",
+      "updated": "2026-10-27",
       "folder": "2026-10-20_meridius",
       "steps": [
         {
@@ -31,8 +31,24 @@
           "path": "squads.html"
         },
         {
+          "name": "Rules changelog",
+          "path": "rules-changelog.html"
+        },
+        {
           "name": "Loop 1 · Placeholder art",
           "path": "loop1.html"
+        },
+        {
+          "name": "Sovereign Kiss",
+          "path": "sovereign-kiss.html"
+        },
+        {
+          "name": "Terrain, towns and map edges",
+          "path": "terrain-prompts.html"
+        },
+        {
+          "name": "Terrain tests and fog of war",
+          "path": "terrain-lab.html"
         },
         {
           "name": "Terrain relief ground",
@@ -43,8 +59,26 @@
           "path": "terrain-kit-2.html"
         },
         {
+          "name": "Woodland camp remodel",
+          "path": "camp-remodel.html"
+        },
+        {
+          "name": "Colossal boss fights",
+          "path": "bosses.html"
+        },
+        {
           "name": "Interface redesign",
           "path": "interface.html"
+        },
+        {
+          "name": "Unit playground",
+          "path": "unit-playground.html"
+        },
+        {
+          "name": "Collie Royal Guard 3D rig",
+          "path": "collie-guard-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Collie Royal Guard"
         },
         {
           "name": "Spearman 3D rig",
@@ -57,6 +91,54 @@
           "path": "succubus-3d.html",
           "group": "Character rigs",
           "subgroup": "Succubus"
+        },
+        {
+          "name": "Wolf scout vanguard",
+          "path": "wolf-scout.html",
+          "group": "Character rigs",
+          "subgroup": "Wolf scouts"
+        },
+        {
+          "name": "Goblin Rabble 3D rig",
+          "path": "goblin-rabble-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Rabble"
+        },
+        {
+          "name": "Goblin Archer 3D rig",
+          "path": "goblin-archer-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Archer"
+        },
+        {
+          "name": "Goblin Spearman 3D rig",
+          "path": "goblin-spear-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Spearman"
+        },
+        {
+          "name": "Goblin Shaman 3D rig",
+          "path": "goblin-shaman-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Shaman"
+        },
+        {
+          "name": "Orc Brute 3D rig",
+          "path": "orc-brute-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Orc Brute"
+        },
+        {
+          "name": "Mixar setup",
+          "path": "mixar.html",
+          "group": "Character rigs",
+          "subgroup": "Shared"
+        },
+        {
+          "name": "Facial features",
+          "path": "facial-features.html",
+          "group": "Character rigs",
+          "subgroup": "Shared"
         },
         {
           "name": "Garrison units",
@@ -75,6 +157,12 @@
           "path": "unit-roster-host.html",
           "group": "Unit roster",
           "subgroup": "Hillsvain Host"
+        },
+        {
+          "name": "Height chart",
+          "path": "unit-heights.html",
+          "group": "Unit roster",
+          "subgroup": "Heights"
         }
       ],
       "status": "active",
@@ -99,6 +187,32 @@
       "status": "active",
       "pinned": true,
       "defaultStep": 0
+    },
+    {
+      "id": "sandbox",
+      "title": "Sandbox",
+      "description": "Meridius 3D unit sandbox: every rigged 3D unit on one training ground with hills, the woodland, the fog of war and the night. The button opens it in its own window to try walking, idles, attacks, duels and deaths, and to drill a squad of six footmen.",
+      "type": "standalone",
+      "category": "game",
+      "created": "2026-10-24",
+      "updated": "2026-10-25",
+      "folder": "2026-10-24_sandbox",
+      "steps": [
+        {
+          "name": "Sandbox",
+          "path": "index.html"
+        }
+      ],
+      "status": "active",
+      "pinned": true,
+      "defaultStep": 0,
+      "launchers": [
+        {
+          "id": "sandbox",
+          "name": "3D unit sandbox",
+          "path": "Meridius Sandbox.cmd"
+        }
+      ]
     },
     {
       "id": "my-dream-game",

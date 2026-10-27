@@ -13,6 +13,7 @@ extends Control
 const DB = preload("res://scripts/data/db.gd")
 const Deps = preload("res://scripts/ui/deps.gd")
 const PaperStyle = preload("res://scripts/ui/styles/paper_style.gd")
+const ForgedStyle = preload("res://scripts/ui/styles/forged_style.gd")
 
 const SHADER := """
 shader_type canvas_item;
@@ -56,7 +57,7 @@ static func make(type_id_: String, variant_ := 0, size_ := 56, dead_ := false) -
 func _init() -> void:
 	_content = Control.new()
 	_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_content.position = Vector2(2, 2)
+	_content.position = Vector2(4, 4)
 	_content.draw.connect(_draw_content)
 	if _shader == null:
 		_shader = Shader.new()
@@ -78,15 +79,18 @@ func set_unit(type_id_: String, variant_ := 0, dead_ := false) -> void:
 
 
 func _on_resized() -> void:
-	_content.size = size - Vector2(4, 4)
+	_content.size = size - Vector2(8, 8)
 	(_content.material as ShaderMaterial).set_shader_parameter("box_size", _content.size)
 	_content.queue_redraw()
 
 
 static func _frame_style() -> StyleBox:
 	if _frame == null:
-		var s := PaperStyle.new()
-		s.corner_radius = 5.0
+		var s := ForgedStyle.new()
+		s.corner_radius = 1.0
+		s.metal_width = 4.0
+		s.ornament = 0
+		s.metal_color = Color("#9f9274")
 		s.border_left = 2
 		s.border_top = 2
 		s.border_right = 2

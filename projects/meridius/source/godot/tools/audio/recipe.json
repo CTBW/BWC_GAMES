@@ -1,0 +1,3505 @@
+{
+ "about": "Which audio-library takes become which bank takes (tools/audio/build_bank.py). Take ids are the library's candidates.json ids. A take spec is {id} (whole file), {id, start, len}, {id, slices: n, min, max} (separate events of a multi-take recording) or {mix: [layers]} (layers {id, start?, len?, max_len?, delay, gain}). target_db is the take's mean level after editing (peak capped at -1 dBFS); bank volume_db sets the mix on top. Music: kind \"music\" (stereo Vorbis loops), take ids \"suno/<track>/<file>.wav\" (the library's music/suno/), {id, start, bpm, bars} loops on exactly that many bars from the downbeat at start, bank {\"music\": \"<track id>\"}; \"loop\": false on a group keeps a sting's own ending. Chosen 2026-10-22 from library metadata and measurements, not by ear: the owner swaps takes with local/audio-library/audition.html (repository root, gitignored).",
+ "groups": [
+  {
+   "name": "click",
+   "dir": "ui",
+   "trim": false,
+   "target_db": -22,
+   "max_len": 0.4,
+   "fade_ms": 20,
+   "takes": [
+    {
+     "id": "ui_click_03"
+    },
+    {
+     "id": "ui_click_07"
+    }
+   ],
+   "bank": [
+    {
+     "event": "click"
+    }
+   ]
+  },
+  {
+   "name": "select",
+   "dir": "ui",
+   "trim": false,
+   "target_db": -24,
+   "max_len": 0.6,
+   "fade_ms": 80,
+   "takes": [
+    {
+     "id": "armor_jingle_12"
+    },
+    {
+     "id": "armor_jingle_13"
+    }
+   ],
+   "bank": [
+    {
+     "event": "select"
+    }
+   ]
+  },
+  {
+   "name": "page",
+   "dir": "ui",
+   "target_db": -22,
+   "max_len": 1,
+   "fade_ms": 120,
+   "takes": [
+    {
+     "id": "ui_page_turn_01"
+    },
+    {
+     "id": "ui_page_turn_02"
+    },
+    {
+     "id": "ui_page_turn_10",
+     "weight": 0.25
+    }
+   ],
+   "bank": [
+    {
+     "event": "page"
+    }
+   ]
+  },
+  {
+   "name": "coin",
+   "dir": "ui",
+   "target_db": -22,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "ui_coins_s26_01"
+    },
+    {
+     "mix": [
+      {
+       "id": "ui_coins_02",
+       "start": 1.03,
+       "len": 0.3
+      },
+      {
+       "id": "ui_coins_02",
+       "start": 1.53,
+       "len": 0.3,
+       "delay": 0.07,
+       "gain": -3
+      },
+      {
+       "id": "ui_coins_02",
+       "start": 2.23,
+       "len": 0.3,
+       "delay": 0.15,
+       "gain": -5
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "ui_coins_02",
+       "start": 2.83,
+       "len": 0.3
+      },
+      {
+       "id": "ui_coins_02",
+       "start": 2.23,
+       "len": 0.3,
+       "delay": 0.08,
+       "gain": -4
+      },
+      {
+       "id": "ui_coins_s26_01",
+       "delay": 0.14,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "ui_coins_s26_01"
+      },
+      {
+       "id": "ui_coins_02",
+       "start": 1.53,
+       "len": 0.3,
+       "delay": 0.1,
+       "gain": -4
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "coin",
+     "options": {
+      "pitch_jitter": 0.3
+     }
+    }
+   ]
+  },
+  {
+   "name": "build",
+   "dir": "ui",
+   "target_db": -20,
+   "max_len": 1.6,
+   "fade_ms": 200,
+   "takes": [
+    {
+     "id": "ui_building_01",
+     "len": 2
+    }
+   ],
+   "bank": [
+    {
+     "event": "build"
+    }
+   ]
+  },
+  {
+   "name": "swing",
+   "dir": "sfx/melee",
+   "target_db": -21,
+   "max_len": 0.9,
+   "fade_ms": 80,
+   "takes": [
+    {
+     "id": "sword_swing_03"
+    },
+    {
+     "id": "sword_swing_04"
+    }
+   ],
+   "bank": [
+    {
+     "event": "swing"
+    }
+   ]
+  },
+  {
+   "name": "swing_heavy",
+   "dir": "sfx/melee",
+   "target_db": -19,
+   "max_len": 1.4,
+   "fade_ms": 120,
+   "takes": [
+    {
+     "id": "sword_swing_03"
+    },
+    {
+     "id": "miss_whoosh_05"
+    }
+   ],
+   "bank": [
+    {
+     "event": "swing_troll",
+     "options": {
+      "positional": true,
+      "max_voices": 3,
+      "pitch": -5,
+      "pitch_jitter": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "name": "swing_hound",
+   "dir": "sfx/creatures",
+   "target_db": -18,
+   "max_len": 1.2,
+   "fade_ms": 120,
+   "takes": [
+    {
+     "id": "dog_bark_02"
+    },
+    {
+     "id": "dog_growl_03",
+     "len": 1.2
+    },
+    {
+     "id": "dog_bark_s26_01",
+     "slices": 2,
+     "min": 0.15,
+     "max": 1
+    }
+   ],
+   "bank": [
+    {
+     "event": "swing_collie_guard",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch_jitter": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "name": "swing_wolf",
+   "dir": "sfx/creatures",
+   "target_db": -17,
+   "max_len": 1.4,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "wolf_growl_02",
+     "slices": 3,
+     "min": 0.3,
+     "max": 1.4
+    },
+    {
+     "id": "wolf_growl_01",
+     "slices": 2,
+     "min": 0.3,
+     "max": 1.4
+    }
+   ],
+   "bank": [
+    {
+     "event": "swing_wolf_rider",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch_jitter": 0.5
+     }
+    }
+   ]
+  },
+  {
+   "name": "miss",
+   "dir": "sfx/melee",
+   "target_db": -23,
+   "max_len": 0.8,
+   "fade_ms": 80,
+   "takes": [
+    {
+     "id": "miss_whoosh_05"
+    },
+    {
+     "id": "sword_swing_04"
+    }
+   ],
+   "bank": [
+    {
+     "event": "miss"
+    }
+   ]
+  },
+  {
+   "name": "hit_metal",
+   "dir": "sfx/melee",
+   "target_db": -17,
+   "max_len": 1.3,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "id": "blade_armor_01"
+    },
+    {
+     "id": "blade_armor_02"
+    }
+   ],
+   "bank": [
+    {
+     "event": "hit_metal"
+    }
+   ]
+  },
+  {
+   "name": "hit_flesh",
+   "dir": "sfx/melee",
+   "target_db": -17,
+   "max_len": 1,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "blade_flesh_03"
+    },
+    {
+     "id": "blade_flesh_04"
+    },
+    {
+     "id": "blade_flesh_01",
+     "len": 1.2
+    },
+    {
+     "id": "blade_flesh_02",
+     "len": 1.2
+    },
+    {
+     "id": "blade_flesh_s26_01"
+    },
+    {
+     "id": "blade_flesh_07",
+     "slices": 3,
+     "min": 0.05,
+     "max": 0.8,
+     "floor_db": -24
+    }
+   ],
+   "bank": [
+    {
+     "event": "hit_flesh"
+    }
+   ]
+  },
+  {
+   "name": "block",
+   "dir": "sfx/melee",
+   "target_db": -17,
+   "max_len": 1,
+   "fade_ms": 200,
+   "takes": [
+    {
+     "id": "parry_block_01"
+    },
+    {
+     "id": "sword_shield_wood_05"
+    },
+    {
+     "id": "sword_shield_wood_06"
+    }
+   ],
+   "bank": [
+    {
+     "event": "block"
+    }
+   ]
+  },
+  {
+   "name": "smash",
+   "dir": "sfx/engines",
+   "target_db": -15,
+   "max_len": 1.8,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "cart_crash_01"
+    },
+    {
+     "id": "cart_crash_03"
+    },
+    {
+     "id": "cart_crash_04"
+    },
+    {
+     "id": "log_smash_01"
+    },
+    {
+     "mix": [
+      {
+       "id": "log_smash_03"
+      },
+      {
+       "id": "cart_crash_02",
+       "delay": 0.12,
+       "gain": -4
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "smash"
+    }
+   ]
+  },
+  {
+   "name": "crash",
+   "dir": "sfx/engines",
+   "target_db": -15,
+   "max_len": 2.5,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "id": "boulder_impact_03"
+    },
+    {
+     "id": "boulder_impact_04"
+    },
+    {
+     "id": "boulder_impact_s26_02"
+    },
+    {
+     "id": "boulder_impact_01",
+     "slices": 2,
+     "min": 0.3,
+     "max": 2.5
+    },
+    {
+     "mix": [
+      {
+       "id": "boulder_impact_06"
+      },
+      {
+       "id": "cart_crash_02",
+       "delay": 0.08,
+       "gain": -5
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "crash"
+    }
+   ]
+  },
+  {
+   "name": "death",
+   "dir": "sfx/voices",
+   "target_db": -16,
+   "max_len": 2.6,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "orc_growl_03"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.35,
+       "gain": -7
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "orc_growl_02"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.25,
+       "gain": -7
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "orc_growl_05"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.4,
+       "gain": -7
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "orc_growl_s26_01"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.5,
+       "gain": -7
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "death"
+    }
+   ]
+  },
+  {
+   "name": "death_goblin",
+   "dir": "sfx/voices",
+   "target_db": -17,
+   "max_len": 2.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "goblin_vocal_09"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.3,
+       "gain": -10
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "goblin_vocal_04",
+       "len": 1.6
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.3,
+       "gain": -10
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "goblin_vocal_12"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.35,
+       "gain": -10
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "goblin_vocal_06"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.3,
+       "gain": -10
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "death_goblin",
+     "options": {
+      "positional": true,
+      "max_voices": 3,
+      "pitch_jitter": 0.8
+     }
+    }
+   ]
+  },
+  {
+   "name": "death_player",
+   "dir": "sfx/voices",
+   "target_db": -16,
+   "max_len": 2.6,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "male_death_06"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.3,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "male_pain_01"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.2,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "male_pain_02"
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.2,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "male_death_s26_01",
+       "len": 1.8
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.45,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "male_death_07",
+       "len": 1.6
+      },
+      {
+       "id": "armor_jingle_02",
+       "delay": 0.3,
+       "gain": -6
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "death_player"
+    }
+   ]
+  },
+  {
+   "name": "death_troll",
+   "dir": "sfx/creatures",
+   "target_db": -14,
+   "max_len": 4.2,
+   "fade_ms": 500,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "troll_grunt_breath_02",
+       "af": "rubberband=tempo=0.8:pitch=0.8"
+      },
+      {
+       "id": "troll_stomp_01",
+       "af": "rubberband=pitch=0.78,lowpass=f=800,bass=g=8:f=70",
+       "delay": 1.1,
+       "gain": -1
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "troll_roar_01",
+       "len": 2.4
+      },
+      {
+       "id": "troll_stomp_01",
+       "af": "rubberband=pitch=0.78,lowpass=f=800,bass=g=8:f=70",
+       "delay": 1.3,
+       "gain": -1
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "death_troll",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch": 0,
+      "pitch_jitter": 0.4
+     }
+    }
+   ]
+  },
+  {
+   "name": "death_wolf",
+   "dir": "sfx/creatures",
+   "target_db": -16,
+   "max_len": 1.8,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "id": "wolf_bark_yelp_03",
+     "slices": 3,
+     "min": 0.2,
+     "max": 1.6
+    }
+   ],
+   "bank": [
+    {
+     "event": "death_wolf_rider",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch": -2,
+      "pitch_jitter": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "name": "death_hound",
+   "dir": "sfx/creatures",
+   "target_db": -17,
+   "max_len": 2,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "dog_whimper_01",
+     "len": 2.2
+    },
+    {
+     "id": "dog_whimper_02",
+     "slices": 2,
+     "min": 0.3,
+     "max": 1.8
+    },
+    {
+     "id": "wolf_bark_yelp_05",
+     "slices": 2,
+     "min": 0.2,
+     "max": 1.4
+    }
+   ],
+   "bank": [
+    {
+     "event": "death_collie_guard",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch_jitter": 0.4
+     }
+    }
+   ]
+  },
+  {
+   "name": "rout_enemy",
+   "dir": "sfx/voices",
+   "target_db": -17,
+   "max_len": 2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "id": "goblin_vocal_07"
+    },
+    {
+     "id": "goblin_vocal_12"
+    },
+    {
+     "id": "goblin_vocal_05",
+     "slices": 2,
+     "min": 0.3,
+     "max": 1.6
+    }
+   ],
+   "bank": [
+    {
+     "event": "rout_enemy",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch_jitter": 0.8
+     }
+    }
+   ]
+  },
+  {
+   "name": "stance",
+   "dir": "sfx/melee",
+   "target_db": -17,
+   "max_len": 1,
+   "fade_ms": 200,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "sword_shield_wood_05"
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.07,
+       "gain": -2
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.02,
+       "gain": -8
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "sword_shield_wood_06"
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.05,
+       "gain": -3
+      },
+      {
+       "id": "armor_jingle_13",
+       "delay": 0,
+       "gain": -9
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "sword_shield_metal_07"
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.06,
+       "gain": -2
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.03,
+       "gain": -8
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance"
+    }
+   ]
+  },
+  {
+   "name": "stance_shieldwall",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 2.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_03_commander_knox",
+       "len": 1.55,
+       "fade_ms": 80
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.55,
+       "gain": -4
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.62,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_03_commander_knox",
+       "len": 1.55,
+       "fade_ms": 80
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.5,
+       "gain": -4
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.58,
+       "gain": -6
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.5,
+       "gain": -10
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance_shieldwall",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "stance_spearwall",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 3.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_brace_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.65,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.7,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.77,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.7,
+       "gain": -13
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_brace_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.72,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.77,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.84,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.77,
+       "gain": -13
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_set_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.47,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.52,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.59,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.52,
+       "gain": -13
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_set_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.41,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.46,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.53,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.46,
+       "gain": -13
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_come_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.47,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.52,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.59,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.52,
+       "gain": -13
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_spearwall_come_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "spear_thrust_06",
+       "delay": 0.41,
+       "gain": -12
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.46,
+       "gain": -6
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.53,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.46,
+       "gain": -13
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance_spearwall",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "stance_square",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 3.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_square_form_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.48,
+       "gain": -9
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.59,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 0.72,
+       "gain": -11
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.78,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.53,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_square_form_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.49,
+       "gain": -9
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.6,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 0.73,
+       "gain": -11
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.79,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.54,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_square_close_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 1.03,
+       "gain": -9
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 1.14,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 1.27,
+       "gain": -11
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 1.33,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 1.08,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_square_close_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.97,
+       "gain": -9
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 1.08,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 1.21,
+       "gain": -11
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 1.27,
+       "gain": -8
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 1.02,
+       "gain": -12
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance_square",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "stance_footman",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 3.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_defend_stand_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.5,
+       "gain": -10
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.54,
+       "gain": -4
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.54,
+       "gain": -11
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_defend_stand_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.52,
+       "gain": -10
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.56,
+       "gain": -4
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.56,
+       "gain": -11
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_defend_dig_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.48,
+       "gain": -10
+      },
+      {
+       "id": "sword_shield_wood_05",
+       "delay": 0.52,
+       "gain": -4
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.52,
+       "gain": -11
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_defend_dig_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.5,
+       "gain": -10
+      },
+      {
+       "id": "sword_shield_wood_06",
+       "delay": 0.54,
+       "gain": -4
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.54,
+       "gain": -11
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance_footman",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "stance_overwatch",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 3.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_overwatch_ready_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "crossbow_shot_03",
+       "slice": 3,
+       "of": 12,
+       "min": 0.05,
+       "max": 1.5,
+       "delay": 0.45,
+       "gain": -7
+      },
+      {
+       "id": "armor_jingle_13",
+       "delay": 0.6,
+       "gain": -15
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_overwatch_ready_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "crossbow_shot_03",
+       "slice": 6,
+       "of": 12,
+       "min": 0.05,
+       "max": 1.5,
+       "delay": 0.45,
+       "gain": -7
+      },
+      {
+       "id": "armor_jingle_13",
+       "delay": 0.6,
+       "gain": -15
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_overwatch_wait_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "crossbow_shot_03",
+       "slice": 3,
+       "of": 12,
+       "min": 0.05,
+       "max": 1.5,
+       "delay": 0.5,
+       "gain": -10
+      },
+      {
+       "id": "armor_jingle_13",
+       "delay": 0.65,
+       "gain": -15
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_overwatch_wait_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "crossbow_shot_03",
+       "slice": 6,
+       "of": 12,
+       "min": 0.05,
+       "max": 1.5,
+       "delay": 0.48,
+       "gain": -10
+      },
+      {
+       "id": "armor_jingle_13",
+       "delay": 0.63,
+       "gain": -15
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "stance_overwatch",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "rout_player",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 3,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_rout_fall_back_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.9,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 1.06,
+       "gain": -11
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 1.22,
+       "gain": -12
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.95,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_rout_fall_back_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.9,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 1.06,
+       "gain": -11
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 1.22,
+       "gain": -12
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.95,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_rout_run_1",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.5,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 0.66,
+       "gain": -11
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.82,
+       "gain": -12
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.55,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_rout_run_2",
+       "fade_ms": 120
+      },
+      {
+       "id": "boot_step_grass_06",
+       "delay": 0.5,
+       "gain": -10
+      },
+      {
+       "id": "boot_step_grass_05",
+       "delay": 0.66,
+       "gain": -11
+      },
+      {
+       "id": "boot_step_grass_07",
+       "delay": 0.82,
+       "gain": -12
+      },
+      {
+       "id": "armor_jingle_12",
+       "delay": 0.55,
+       "gain": -12
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "rout_player",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "victory",
+   "dir": "sfx/voices",
+   "target_db": -16,
+   "max_len": 4.6,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_victory_amberfeld_1",
+       "fade_ms": 150
+      },
+      {
+       "id": "hf_round2_cheer_barrett_1",
+       "delay": 0.95,
+       "gain": -4
+      },
+      {
+       "id": "hf_round2_cheer_harrison_1",
+       "delay": 1.02,
+       "gain": -5
+      },
+      {
+       "id": "hf_round2_cheer_marcus_1",
+       "delay": 1.08,
+       "gain": -5
+      },
+      {
+       "id": "hf_round2_cheer_bram_1",
+       "delay": 1.12,
+       "gain": -6
+      },
+      {
+       "id": "hf_round2_cheer_gideon_1",
+       "delay": 1.18,
+       "gain": -6
+      },
+      {
+       "id": "hf_round2_cheer_harrison_1",
+       "delay": 1.11,
+       "gain": -8,
+       "af": "rubberband=pitch=0.92"
+      },
+      {
+       "id": "hf_round2_cheer_bram_1",
+       "delay": 1.17,
+       "gain": -8,
+       "af": "rubberband=pitch=1.06"
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "hf_round2_knox_victory_amberfeld_2",
+       "fade_ms": 150
+      },
+      {
+       "id": "hf_round2_cheer_gideon_1",
+       "delay": 0.92,
+       "gain": -4
+      },
+      {
+       "id": "hf_round2_cheer_bram_1",
+       "delay": 0.98,
+       "gain": -5
+      },
+      {
+       "id": "hf_round2_cheer_harrison_1",
+       "delay": 1.05,
+       "gain": -5
+      },
+      {
+       "id": "hf_round2_cheer_marcus_1",
+       "delay": 1.1,
+       "gain": -6
+      },
+      {
+       "id": "hf_round2_cheer_barrett_1",
+       "delay": 1.16,
+       "gain": -6
+      },
+      {
+       "id": "hf_round2_cheer_bram_1",
+       "delay": 1.07,
+       "gain": -8,
+       "af": "rubberband=pitch=0.92"
+      },
+      {
+       "id": "hf_round2_cheer_marcus_1",
+       "delay": 1.15,
+       "gain": -8,
+       "af": "rubberband=pitch=1.06"
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "victory",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "order_select",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "hf_round2_knox_select_orders_1"
+    },
+    {
+     "id": "hf_round2_knox_select_orders_2"
+    },
+    {
+     "id": "hf_round2_knox_select_ready_1"
+    },
+    {
+     "id": "hf_round2_knox_select_ready_2"
+    }
+   ],
+   "bank": [
+    {
+     "event": "order_select",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "order_move",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 1.5,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "hf_round2_knox_move_moving_1"
+    },
+    {
+     "id": "hf_round2_knox_move_moving_2"
+    },
+    {
+     "id": "hf_round2_knox_move_double_1"
+    },
+    {
+     "id": "hf_round2_knox_move_double_2"
+    }
+   ],
+   "bank": [
+    {
+     "event": "order_move",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "order_attack",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 1.8,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "hf_round2_knox_attack_at_them_1"
+    },
+    {
+     "id": "hf_round2_knox_attack_at_them_2"
+    },
+    {
+     "id": "hf_round2_knox_attack_amberfeld_1"
+    },
+    {
+     "id": "hf_round2_knox_attack_amberfeld_2"
+    }
+   ],
+   "bank": [
+    {
+     "event": "order_attack",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "order_shield_charge",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 1.8,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "hf_round2_knox_charge_forward_1"
+    },
+    {
+     "id": "hf_round2_knox_charge_forward_2"
+    },
+    {
+     "id": "hf_round2_knox_charge_drive_1"
+    },
+    {
+     "id": "hf_round2_knox_charge_drive_2"
+    }
+   ],
+   "bank": [
+    {
+     "event": "order_shield_charge",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "order_aimed_shot",
+   "dir": "sfx/voices",
+   "target_db": -15,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "hf_round2_knox_aimed_loose_1",
+     "start": 1.3
+    },
+    {
+     "id": "hf_round2_knox_aimed_loose_2",
+     "start": 1.36
+    }
+   ],
+   "bank": [
+    {
+     "event": "order_aimed_shot",
+     "options": {
+      "positional": false,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "growl",
+   "dir": "sfx/creatures",
+   "target_db": -15,
+   "max_len": 2.6,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "dog_growl_02",
+     "len": 2.8
+    },
+    {
+     "id": "dog_growl_03"
+    },
+    {
+     "id": "dog_growl_06",
+     "len": 2.8
+    },
+    {
+     "id": "wolf_growl_06",
+     "slices": 2,
+     "min": 0.6,
+     "max": 2.4
+    }
+   ],
+   "bank": [
+    {
+     "event": "roar_collie_guard",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch": -1.5,
+      "pitch_jitter": 0.4
+     }
+    }
+   ]
+  },
+  {
+   "name": "roar_wave",
+   "dir": "sfx/creatures",
+   "target_db": -14,
+   "max_len": 4,
+   "fade_ms": 700,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "orc_growl_06"
+      },
+      {
+       "id": "orc_growl_s26_01",
+       "delay": 0.3,
+       "gain": -2
+      },
+      {
+       "id": "troll_roar_s26_02",
+       "len": 3,
+       "delay": 0.1,
+       "gain": -9
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "troll_roar_02"
+      },
+      {
+       "id": "orc_growl_01",
+       "delay": 0.2,
+       "gain": -3
+      },
+      {
+       "id": "orc_growl_04",
+       "delay": 0.55,
+       "gain": -4
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "roar_wave",
+     "options": {
+      "max_voices": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "warcry_orc",
+   "dir": "sfx/voices",
+   "target_db": -14,
+   "max_len": 5.2,
+   "fade_ms": 250,
+   "takes": [
+    {
+     "id": "hf_09_orc_barrett_down5st",
+     "len": 5.1
+    }
+   ],
+   "bank": [
+    {
+     "event": "warcry_orc_warlord",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "bus": "Voice"
+     }
+    },
+    {
+     "event": "warcry",
+     "options": {
+      "bus": "Voice"
+     }
+    }
+   ]
+  },
+  {
+   "name": "lick",
+   "dir": "sfx/creatures",
+   "target_db": -20,
+   "max_len": 2.5,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "id": "dog_lap_01",
+     "len": 2.6
+    },
+    {
+     "id": "dog_lap_03",
+     "slices": 2,
+     "min": 0.6,
+     "max": 2.4
+    },
+    {
+     "id": "dog_lap_05",
+     "slices": 2,
+     "min": 0.6,
+     "max": 2.4
+    }
+   ],
+   "bank": [
+    {
+     "event": "lick",
+     "options": {
+      "positional": true,
+      "max_voices": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "mend_troll",
+   "dir": "sfx/creatures",
+   "target_db": -18,
+   "max_len": 2.2,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "id": "troll_grunt_breath_s26_01",
+     "slices": 2,
+     "min": 0.5,
+     "max": 2
+    },
+    {
+     "id": "troll_grunt_breath_05"
+    },
+    {
+     "id": "troll_grunt_breath_03",
+     "len": 2.6
+    }
+   ],
+   "bank": [
+    {
+     "event": "mend_troll",
+     "options": {
+      "positional": true,
+      "max_voices": 1,
+      "pitch": -2
+     }
+    }
+   ]
+  },
+  {
+   "name": "warhorn",
+   "dir": "sfx/horns",
+   "mono": false,
+   "target_db": -15,
+   "max_len": 5,
+   "fade_ms": 800,
+   "takes": [
+    {
+     "id": "war_horn_04"
+    },
+    {
+     "id": "goblin_horn_04",
+     "slices": 2,
+     "min": 1,
+     "max": 4.5
+    },
+    {
+     "id": "war_horn_01"
+    }
+   ],
+   "bank": [
+    {
+     "event": "warhorn"
+    }
+   ]
+  },
+  {
+   "name": "horn",
+   "dir": "sfx/horns",
+   "mono": false,
+   "target_db": -15,
+   "max_len": 5,
+   "fade_ms": 800,
+   "takes": [
+    {
+     "id": "war_horn_06"
+    },
+    {
+     "id": "war_horn_05"
+    },
+    {
+     "id": "war_horn_02"
+    }
+   ],
+   "bank": [
+    {
+     "event": "horn"
+    }
+   ]
+  },
+  {
+   "name": "drum",
+   "dir": "sfx/horns",
+   "mono": false,
+   "target_db": -14,
+   "max_len": 4,
+   "fade_ms": 600,
+   "takes": [
+    {
+     "id": "war_drums_01",
+     "len": 3.5
+    },
+    {
+     "id": "war_drums_05"
+    },
+    {
+     "id": "war_drums_02",
+     "len": 4.5
+    }
+   ],
+   "bank": [
+    {
+     "event": "drum"
+    }
+   ]
+  },
+  {
+   "name": "march",
+   "dir": "sfx/steps",
+   "mono": false,
+   "target_db": -21,
+   "max_len": 4,
+   "fade_ms": 900,
+   "takes": [
+    {
+     "id": "march_group_01",
+     "start": 2,
+     "len": 4.5
+    }
+   ],
+   "bank": [
+    {
+     "event": "march"
+    }
+   ]
+  },
+  {
+   "name": "bow",
+   "dir": "sfx/ranged",
+   "target_db": -19,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "bow_release_02"
+    },
+    {
+     "id": "bow_release_05"
+    },
+    {
+     "id": "bow_release_06"
+    },
+    {
+     "id": "bow_release_01"
+    },
+    {
+     "id": "bow_release_03",
+     "slices": 3,
+     "min": 0.1,
+     "max": 1
+    }
+   ],
+   "bank": [
+    {
+     "event": "bow"
+    }
+   ]
+  },
+  {
+   "name": "crossbow",
+   "dir": "sfx/ranged",
+   "target_db": -17,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "crossbow_shot_01"
+    },
+    {
+     "id": "crossbow_shot_04",
+     "len": 1.2
+    },
+    {
+     "id": "bow_release_06"
+    }
+   ],
+   "bank": [
+    {
+     "event": "crossbow",
+     "options": {
+      "pitch": -2
+     }
+    }
+   ]
+  },
+  {
+   "name": "bolt_hit",
+   "dir": "sfx/ranged",
+   "target_db": -17,
+   "max_len": 1,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "id": "arrow_impact_flesh_shield_01"
+    },
+    {
+     "id": "arrow_impact_wood_01"
+    },
+    {
+     "id": "arrow_impact_wood_02"
+    },
+    {
+     "id": "arrow_impact_flesh_shield_02",
+     "slices": 2,
+     "min": 0.1,
+     "max": 0.9
+    }
+   ],
+   "bank": [
+    {
+     "event": "bolt_hit"
+    }
+   ]
+  },
+  {
+   "name": "ballista",
+   "dir": "sfx/engines",
+   "target_db": -15,
+   "max_len": 1.6,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "crossbow_shot_01"
+      },
+      {
+       "id": "bow_release_06",
+       "delay": 0.01,
+       "gain": -3
+      },
+      {
+       "id": "siege_creak_05",
+       "len": 0.8,
+       "gain": -12
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "crossbow_shot_04",
+       "len": 1.2
+      },
+      {
+       "id": "ballista_01",
+       "len": 1,
+       "gain": -8
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "ballista",
+     "options": {
+      "pitch": -4
+     }
+    }
+   ]
+  },
+  {
+   "name": "catapult",
+   "dir": "sfx/engines",
+   "target_db": -15,
+   "max_len": 2.5,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "id": "catapult_01",
+     "slices": 2,
+     "min": 0.4,
+     "max": 2.5
+    }
+   ],
+   "bank": [
+    {
+     "event": "catapult"
+    }
+   ]
+  },
+  {
+   "name": "cast",
+   "dir": "sfx/magic",
+   "target_db": -21,
+   "max_len": 2,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "fire_cast_02"
+    },
+    {
+     "id": "fire_cast_s26_01",
+     "len": 2.2
+    },
+    {
+     "id": "heal_shimmer_s26_02",
+     "len": 2.2
+    }
+   ],
+   "bank": [
+    {
+     "event": "cast"
+    }
+   ]
+  },
+  {
+   "name": "fireball",
+   "dir": "sfx/magic",
+   "target_db": -16,
+   "max_len": 2,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "fire_whoosh_s26_01"
+    },
+    {
+     "id": "fire_whoosh_03"
+    }
+   ],
+   "bank": [
+    {
+     "event": "fireball"
+    }
+   ]
+  },
+  {
+   "name": "explosion",
+   "dir": "sfx/magic",
+   "target_db": -13,
+   "max_len": 3,
+   "fade_ms": 700,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "fire_explosion_02"
+      },
+      {
+       "id": "fire_explosion_s26_01",
+       "len": 3,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "fire_explosion_04"
+      },
+      {
+       "id": "fire_explosion_s26_02",
+       "len": 3,
+       "gain": -6
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "fire_explosion_01",
+       "len": 3
+      },
+      {
+       "id": "boulder_impact_03",
+       "delay": 0.1,
+       "gain": -10
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "explosion"
+    }
+   ]
+  },
+  {
+   "name": "lightning",
+   "dir": "sfx/magic",
+   "target_db": -14,
+   "max_len": 4,
+   "fade_ms": 900,
+   "takes": [
+    {
+     "id": "lightning_crack_05",
+     "len": 6
+    },
+    {
+     "id": "lightning_crack_07",
+     "len": 8
+    },
+    {
+     "id": "lightning_crack_08",
+     "len": 6
+    },
+    {
+     "mix": [
+      {
+       "id": "lightning_crack_03"
+      },
+      {
+       "id": "thunder_03",
+       "delay": 0.15,
+       "gain": -4
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "lightning"
+    }
+   ]
+  },
+  {
+   "name": "frost",
+   "dir": "sfx/magic",
+   "target_db": -17,
+   "max_len": 2,
+   "fade_ms": 400,
+   "takes": [
+    {
+     "id": "ice_frost_s26_05"
+    },
+    {
+     "id": "ice_frost_01"
+    },
+    {
+     "id": "ice_frost_05"
+    },
+    {
+     "id": "ice_frost_s26_01"
+    },
+    {
+     "id": "ice_frost_s26_02",
+     "len": 2.2
+    }
+   ],
+   "bank": [
+    {
+     "event": "frost"
+    }
+   ]
+  },
+  {
+   "name": "heal",
+   "dir": "sfx/magic",
+   "target_db": -21,
+   "max_len": 2.5,
+   "fade_ms": 600,
+   "takes": [
+    {
+     "id": "heal_shimmer_s26_01",
+     "len": 2.8
+    },
+    {
+     "id": "heal_shimmer_01"
+    },
+    {
+     "id": "heal_shimmer_06"
+    },
+    {
+     "id": "heal_shimmer_04",
+     "len": 2.8
+    }
+   ],
+   "bank": [
+    {
+     "event": "heal"
+    }
+   ]
+  },
+  {
+   "name": "hex",
+   "dir": "sfx/magic",
+   "target_db": -18,
+   "max_len": 2.5,
+   "fade_ms": 500,
+   "takes": [
+    {
+     "id": "dark_curse_01"
+    },
+    {
+     "id": "dark_curse_04",
+     "len": 2.8
+    },
+    {
+     "id": "dark_curse_s26_01",
+     "len": 2.8
+    },
+    {
+     "id": "dark_curse_07",
+     "len": 2.8
+    }
+   ],
+   "bank": [
+    {
+     "event": "hex"
+    }
+   ]
+  },
+  {
+   "name": "bloodlust",
+   "dir": "sfx/magic",
+   "target_db": -16,
+   "max_len": 3,
+   "fade_ms": 600,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "dark_curse_01"
+      },
+      {
+       "id": "orc_growl_06",
+       "delay": 0.1,
+       "gain": -4
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "dark_curse_02",
+       "len": 2.6
+      },
+      {
+       "id": "orc_growl_01",
+       "delay": 0.2,
+       "gain": -3
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "bloodlust"
+    }
+   ]
+  },
+  {
+   "name": "step",
+   "dir": "sfx/steps",
+   "target_db": -23,
+   "max_len": 0.6,
+   "fade_ms": 120,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "boot_step_grass_04",
+       "slice": 0,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 6,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.05,
+       "gain": -3
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.01,
+       "gain": -9
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "boot_step_grass_04",
+       "slice": 2,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 8,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.06,
+       "gain": -3
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0.02,
+       "gain": -9
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "boot_step_grass_04",
+       "slice": 4,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 10,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.04,
+       "gain": -3
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "boot_step_grass_04",
+       "slice": 1,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 7,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.055,
+       "gain": -3
+      },
+      {
+       "id": "armor_jingle_11",
+       "delay": 0,
+       "gain": -9
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "boot_step_dirt_08"
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 3,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.05,
+       "gain": -4
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "boot_step_grass_04",
+       "slice": 5,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20
+      },
+      {
+       "id": "boot_step_grass_04",
+       "slice": 11,
+       "of": 12,
+       "min": 0.08,
+       "max": 0.5,
+       "floor_db": -20,
+       "delay": 0.045,
+       "gain": -3
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "step"
+    },
+    {
+     "event": "step_medium"
+    }
+   ]
+  },
+  {
+   "name": "step_small",
+   "dir": "sfx/steps",
+   "target_db": -25,
+   "max_len": 0.45,
+   "fade_ms": 100,
+   "takes": [
+    {
+     "id": "goblin_feet_01",
+     "len": 0.6
+    },
+    {
+     "id": "goblin_feet_02",
+     "slices": 4,
+     "min": 0.05,
+     "max": 0.35
+    },
+    {
+     "id": "goblin_feet_05",
+     "slices": 2,
+     "min": 0.05,
+     "max": 0.35
+    }
+   ],
+   "bank": [
+    {
+     "event": "step_small",
+     "options": {
+      "pitch": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "step_large",
+   "dir": "sfx/steps",
+   "target_db": -17,
+   "max_len": 1.4,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "troll_stomp_02"
+    },
+    {
+     "id": "troll_stomp_01"
+    }
+   ],
+   "bank": [
+    {
+     "event": "step_large",
+     "options": {
+      "pitch": -1
+     }
+    }
+   ]
+  },
+  {
+   "name": "step_wolf",
+   "dir": "sfx/steps",
+   "target_db": -23,
+   "max_len": 0.5,
+   "fade_ms": 100,
+   "takes": [
+    {
+     "id": "wolf_paws_01",
+     "slices": 4,
+     "min": 0.05,
+     "max": 0.4
+    },
+    {
+     "id": "dog_paws_04",
+     "slices": 3,
+     "min": 0.05,
+     "max": 0.4
+    }
+   ],
+   "bank": [
+    {
+     "event": "step_wolf_rider",
+     "options": {
+      "pitch": -1
+     }
+    }
+   ]
+  },
+  {
+   "name": "step_hound",
+   "dir": "sfx/steps",
+   "target_db": -25,
+   "max_len": 0.4,
+   "fade_ms": 80,
+   "takes": [
+    {
+     "id": "dog_paws_01",
+     "slices": 5,
+     "min": 0.04,
+     "max": 0.35
+    }
+   ],
+   "bank": [
+    {
+     "event": "step_collie_guard"
+    }
+   ]
+  },
+  {
+   "name": "camp_forest",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -30,
+   "xfade": 4,
+   "takes": [
+    {
+     "id": "forest_day_bed_06",
+     "start": 60,
+     "len": 94
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp",
+      "beds",
+      "wind"
+     ],
+     "options": {
+      "volume_db": -10.5
+     }
+    }
+   ]
+  },
+  {
+   "name": "camp_night_wind",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -30,
+   "xfade": 4,
+   "takes": [
+    {
+     "id": "forest_day_bed_06",
+     "start": 60,
+     "len": 94,
+     "af": "asetrate=35280,aresample=44100,lowpass=f=1200"
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp_night",
+      "beds",
+      "wind"
+     ],
+     "options": {
+      "volume_db": -15.7
+     }
+    }
+   ]
+  },
+  {
+   "name": "campfire",
+   "kind": "loop",
+   "dir": "ambience",
+   "target_db": -33,
+   "limit": true,
+   "xfade": 3,
+   "takes": [
+    {
+     "id": "campfire_04",
+     "start": 30,
+     "len": 45
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp",
+      "loops",
+      "campfire"
+     ],
+     "options": {
+      "volume_db": 0
+     }
+    },
+    {
+     "ambience": [
+      "camp_night",
+      "loops",
+      "campfire"
+     ],
+     "options": {
+      "volume_db": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "camp_songbird",
+   "dir": "ambience",
+   "target_db": -25,
+   "max_len": 4,
+   "fade_ms": 400,
+   "slice_floor_db": -22,
+   "takes": [
+    {
+     "id": "bird_chaffinch_01",
+     "slices": 5,
+     "min": 0.8,
+     "max": 4
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp",
+      "oneshots",
+      "songbird"
+     ],
+     "options": {
+      "every": [
+       10,
+       25
+      ],
+      "volume_db": [
+       -12,
+       -4
+      ],
+      "pan": [
+       -0.9,
+       0.9
+      ],
+      "pitch_jitter": 0.3,
+      "initial_every": [
+       10,
+       25
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "camp_distant",
+   "dir": "ambience",
+   "target_db": -27,
+   "max_len": 5,
+   "fade_ms": 600,
+   "slice_floor_db": -22,
+   "takes": [
+    {
+     "id": "bird_great_tit_03"
+    },
+    {
+     "id": "bird_raven_crow_03",
+     "slices": 2,
+     "min": 0.4,
+     "max": 3
+    },
+    {
+     "id": "wood_chop_02",
+     "slices": 3,
+     "min": 0.04,
+     "max": 1.2,
+     "floor_db": -24,
+     "start": 20,
+     "len": 90
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp",
+      "oneshots",
+      "distant"
+     ],
+     "options": {
+      "every": [
+       12,
+       35
+      ],
+      "volume_db": [
+       -16,
+       -8
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "pitch_jitter": 0.2
+     }
+    }
+   ]
+  },
+  {
+   "name": "field_wind",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -31,
+   "xfade": 4,
+   "takes": [
+    {
+     "id": "wind_open_field_06",
+     "start": 10,
+     "len": 64
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "battle_day",
+      "beds",
+      "wind"
+     ],
+     "options": {
+      "volume_db": -10.5
+     }
+    }
+   ]
+  },
+  {
+   "name": "night_wind",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -33,
+   "xfade": 4,
+   "takes": [
+    {
+     "id": "wind_open_field_03",
+     "start": 10,
+     "len": 64
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "battle_night",
+      "beds",
+      "wind"
+     ],
+     "options": {
+      "volume_db": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "night_crickets",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -31,
+   "xfade": 4,
+   "takes": [
+    {
+     "id": "night_crickets_01",
+     "start": 10,
+     "len": 64
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "battle_night",
+      "beds",
+      "crickets"
+     ],
+     "options": {
+      "volume_db": 0
+     }
+    },
+    {
+     "ambience": [
+      "camp_night",
+      "beds",
+      "crickets"
+     ],
+     "options": {
+      "volume_db": -8
+     }
+    }
+   ]
+  },
+  {
+   "name": "night_owl",
+   "dir": "ambience",
+   "target_db": -27,
+   "max_len": 4,
+   "fade_ms": 600,
+   "takes": [
+    {
+     "id": "owl_tawny_02",
+     "start": 2.3,
+     "len": 1.8,
+     "af": "highpass=f=300,highpass=f=300"
+    },
+    {
+     "id": "owl_tawny_02",
+     "start": 7.4,
+     "len": 1.9,
+     "af": "highpass=f=300,highpass=f=300"
+    },
+    {
+     "id": "owl_tawny_02",
+     "start": 14.5,
+     "len": 1.7,
+     "af": "highpass=f=300,highpass=f=300"
+    },
+    {
+     "id": "owl_tawny_02",
+     "start": 19.85,
+     "len": 1.9,
+     "af": "highpass=f=300,highpass=f=300"
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "battle_night",
+      "oneshots",
+      "owl"
+     ],
+     "options": {
+      "every": [
+       10,
+       45
+      ],
+      "volume_db": [
+       -14,
+       -6
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "pitch_jitter": 0.1
+     }
+    },
+    {
+     "ambience": [
+      "camp_night",
+      "oneshots",
+      "owl"
+     ],
+     "options": {
+      "every": [
+       10,
+       45
+      ],
+      "volume_db": [
+       -14,
+       -6
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "pitch_jitter": 0.1
+     }
+    }
+   ]
+  },
+  {
+   "name": "night_wolf",
+   "dir": "ambience",
+   "target_db": -28,
+   "max_len": 8,
+   "fade_ms": 1500,
+   "slice_floor_db": -24,
+   "takes": [
+    {
+     "id": "wolf_howl_03",
+     "slices": 1,
+     "min": 2,
+     "max": 8
+    },
+    {
+     "id": "wolf_howl_04",
+     "slices": 2,
+     "min": 2,
+     "max": 8
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "battle_night",
+      "oneshots",
+      "wolf"
+     ],
+     "options": {
+      "every": [
+       40,
+       90
+      ],
+      "volume_db": [
+       -14,
+       -8
+      ],
+      "pan": [
+       -1,
+       1
+      ],
+      "pitch_jitter": 0.3
+     }
+    }
+   ]
+  },
+  {
+   "name": "step_troll",
+   "dir": "sfx/steps",
+   "target_db": -17,
+   "max_len": 1.4,
+   "fade_ms": 300,
+   "takes": [
+    {
+     "id": "troll_stomp_01",
+     "af": "rubberband=pitch=0.78,lowpass=f=800,bass=g=8:f=70"
+    },
+    {
+     "id": "troll_stomp_01",
+     "af": "rubberband=pitch=0.84,lowpass=f=800,bass=g=8:f=70"
+    },
+    {
+     "id": "troll_stomp_01",
+     "af": "rubberband=pitch=0.72,lowpass=f=800,bass=g=8:f=70"
+    }
+   ],
+   "bank": [
+    {
+     "event": "step_troll",
+     "options": {
+      "pitch": 0,
+      "pitch_jitter": 0.3
+     }
+    }
+   ]
+  },
+  {
+   "name": "swing_orc",
+   "dir": "sfx/voices",
+   "target_db": -18,
+   "max_len": 1.2,
+   "fade_ms": 150,
+   "takes": [
+    {
+     "mix": [
+      {
+       "id": "sword_swing_04"
+      },
+      {
+       "id": "troll_grunt_breath_07",
+       "delay": 0.05,
+       "gain": -2
+      }
+     ]
+    },
+    {
+     "mix": [
+      {
+       "id": "sword_swing_03"
+      },
+      {
+       "id": "troll_grunt_breath_07",
+       "delay": 0.08,
+       "gain": -3
+      }
+     ]
+    }
+   ],
+   "bank": [
+    {
+     "event": "swing_orc_warrior",
+     "options": {
+      "positional": true,
+      "max_voices": 3,
+      "pitch_jitter": 0.6
+     }
+    },
+    {
+     "event": "swing_orc_warlord",
+     "options": {
+      "positional": true,
+      "max_voices": 2,
+      "pitch": -1,
+      "pitch_jitter": 0.4
+     }
+    },
+    {
+     "event": "swing_orc_brute",
+     "options": {
+      "positional": true,
+      "max_voices": 3,
+      "pitch": -1.5,
+      "pitch_jitter": 0.6
+     }
+    }
+   ]
+  },
+  {
+   "name": "camp_murmur",
+   "kind": "bed",
+   "dir": "ambience",
+   "mono": false,
+   "target_db": -34,
+   "xfade": 3,
+   "takes": [
+    {
+     "id": "camp_murmur_02",
+     "start": 0,
+     "len": 35
+    }
+   ],
+   "bank": [
+    {
+     "ambience": [
+      "camp",
+      "beds",
+      "murmur"
+     ],
+     "options": {
+      "volume_db": -6,
+      "cycle": {
+       "hold": [
+        8,
+        16
+       ],
+       "quiet": [
+        20,
+        40
+       ],
+       "fade": 8
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "aliases": {
+  "death_goblin_spear": {
+   "fallback": "death_goblin"
+  },
+  "death_goblin_archer": {
+   "fallback": "death_goblin"
+  },
+  "death_goblin_rabble": {
+   "fallback": "death_goblin"
+  },
+  "death_goblin_horn": {
+   "fallback": "death_goblin"
+  },
+  "death_goblin_shaman": {
+   "fallback": "death_goblin"
+  },
+  "death_war_wagon": {
+   "fallback": "death_goblin"
+  },
+  "death_rock_lobber": {
+   "fallback": "death_goblin"
+  },
+  "step_orc_warrior": {
+   "fallback": "step_large",
+   "pitch": 2.5
+  },
+  "step_orc_brute": {
+   "fallback": "step_large",
+   "pitch": 1.5
+  },
+  "step_orc_warlord": {
+   "fallback": "step_large",
+   "pitch": 0.5
+  },
+  "stance_collie_guard": {
+   "fallback": "roar_collie_guard",
+   "pitch": -1
+  },
+  "rout_collie_guard": {
+   "fallback": "death_collie_guard",
+   "pitch": 1
+  }
+ },
+ "remove_ambience": [
+  [
+   "battle_day",
+   "oneshots",
+   "flutter"
+  ],
+  [
+   "battle_day",
+   "oneshots",
+   "crows"
+  ],
+  [
+   "camp",
+   "beds",
+   "pines"
+  ]
+ ],
+ "levels_about": "Event volume_db for the mix (bank.json), applied by every build: recorded takes are full level, the old synth ones were not (steps sat at -37 dBFS). Set from a captured play-through on 2026-10-22 where the master limiter worked most of the battle at 0 dB everywhere; retune by ear.",
+ "levels": {
+  "step": -16,
+  "step_medium": -16,
+  "step_small": -18,
+  "step_large": -12,
+  "step_troll": -10,
+  "step_wolf_rider": -14,
+  "step_collie_guard": -16,
+  "step_orc_warrior": -15,
+  "step_orc_brute": -14,
+  "step_orc_warlord": -13,
+  "swing": -10,
+  "swing_troll": -8,
+  "swing_orc_brute": -9,
+  "swing_collie_guard": -8,
+  "swing_wolf_rider": -8,
+  "hit_metal": -7,
+  "hit_flesh": -7,
+  "block": -7,
+  "miss": -10,
+  "bolt_hit": -8,
+  "bow": -9,
+  "crossbow": -9,
+  "ballista": -6,
+  "catapult": -6,
+  "crash": -6,
+  "smash": -6,
+  "death": -6,
+  "death_goblin": -7,
+  "death_player": -6,
+  "death_troll": -4,
+  "death_wolf_rider": -6,
+  "death_collie_guard": -7,
+  "rout_enemy": -8,
+  "stance": -8,
+  "stance_shieldwall": -5,
+  "stance_spearwall": -5,
+  "stance_square": -5,
+  "stance_overwatch": -6,
+  "cast": -10,
+  "fireball": -6,
+  "explosion": -4,
+  "lightning": -4,
+  "frost": -7,
+  "heal": -9,
+  "hex": -7,
+  "bloodlust": -6,
+  "roar_collie_guard": -5,
+  "roar_wave": -3,
+  "warcry": -3,
+  "warcry_orc_warlord": -3,
+  "lick": -8,
+  "mend_troll": -8,
+  "warhorn": -4,
+  "horn": -4,
+  "drum": -5,
+  "march": -8,
+  "click": -8,
+  "select": -8,
+  "page": -8,
+  "coin": -8,
+  "build": -8,
+  "swing_orc_warrior": -9,
+  "swing_orc_warlord": -9,
+  "stance_footman": -5,
+  "stance_collie_guard": -9,
+  "rout_player": -5,
+  "victory": -4,
+  "rout_collie_guard": -10,
+  "order_select": -14,
+  "order_move": -14,
+  "order_attack": -14,
+  "order_shield_charge": -14,
+  "order_aimed_shot": -14
+ }
+}

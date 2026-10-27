@@ -47,11 +47,13 @@ is Howl; no rebalancing for now.
 
 Rules details:
 - **Charge** uses the existing move-then-strike order: choose Charge, point at
-  an enemy, and the squad runs to the side under the cursor and strikes. The
+  an enemy, and the squad runs to the side under the cursor and strikes. When
+  that side is too close for the run, it runs to the nearest side (to the
+  cursor) that gives a full run; the path and arrival arrow show where. The
   run is `movedTiles` this turn, so a squad that already moved 2+ tiles and
   stands beside the enemy can charge too. The forecast says "Needs a run of at
-  least 2 tiles" when it is too short. Spearmen still strike first at chargers
-  from the front (from any side in a square).
+  least 2 tiles" only when no side the squad can reach gives one. Spearmen
+  still strike first at chargers from the front (from any side in a square).
 - **A square breaks a charge**: against a squad in Square, Charge keeps only a
   plain attack (forecast row "Charge broken by the square"), and the orcs'
   passive Brutal Charge loses its +3 damage and +8 morale too.

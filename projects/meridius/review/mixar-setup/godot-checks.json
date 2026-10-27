@@ -1,0 +1,13 @@
+{
+  "alpha": true,
+  "glb_load": true,
+  "godot_version": "4.7.2-stable (official)",
+  "live_mcp_export": true,
+  "live_mesh_count": 2,
+  "live_y_up": true,
+  "mesh_count": 1,
+  "metre_scale": true,
+  "png_load": true,
+  "texture_creation": true,
+  "textured_material": true
+}

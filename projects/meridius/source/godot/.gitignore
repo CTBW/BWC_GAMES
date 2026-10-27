@@ -5,3 +5,73 @@
 /tests/visual/out/
 /tests/out/
 .lock-import/
+/art/raw/
+# Sound takes with Sonniss sources: licensed for the game, not for redistribution
+# (tools/audio/build_bank.py renders them from the local audio library).
+/assets/audio/bank/local/
+# Raw Mixamo downloads and the Blender scenes built from them: not redistributable.
+/art/footman/mixamo_attacks/
+# The footman's 3D model and rig source stay local by the owner's choice; the
+# sandbox and the footman prototype skip him when the model is missing.
+/prototypes/footman_anim/art3d/footman.glb
+/prototypes/footman_anim/art3d/footman.glb.import
+/art/footman_3d/footman_rig.blend
+# The succubus's clips are retargeted from Mixamo clips: her animation scene and
+# its FBX export stay local (the sidecar is in Git); the sandbox leaves her out
+# where the FBX is missing.
+/art/succubus_3d/succubus_anim.blend
+/prototypes/footman_anim/art3d/succubus.fbx
+/prototypes/footman_anim/art3d/succubus.fbx.import
+# So do the spearman's rig and the spearman's, crossbowman's and battle mage's
+# GLBs (their sidecars and textures are in Git).
+/art/spearman_3d/spearman_rig.blend
+/art/crossbowman_3d/crossbowman_rig.blend
+/prototypes/sandbox3d/art3d/spearman.glb
+/prototypes/sandbox3d/art3d/spearman.glb.import
+/prototypes/sandbox3d/art3d/crossbowman.glb
+/prototypes/sandbox3d/art3d/crossbowman.glb.import
+/prototypes/sandbox3d/art3d/mage.glb
+/prototypes/sandbox3d/art3d/mage.glb.import
+# The goblin rabble's sandbox exports carry Mixamo motion and stay local (their
+# sidecars are in Git); the roster leaves the goblins out where they are missing.
+/prototypes/goblin_rabble_anim/art3d/*
+!/prototypes/goblin_rabble_anim/art3d/*.json
+# So do the goblin archer's.
+/prototypes/goblin_archer_anim/art3d/*
+!/prototypes/goblin_archer_anim/art3d/*.json
+# And the goblin spearman's.
+/prototypes/goblin_spear_anim/art3d/*
+!/prototypes/goblin_spear_anim/art3d/*.json
+# And the orc brute's.
+/prototypes/orc_brute_anim/art3d/*
+!/prototypes/orc_brute_anim/art3d/*.json
+# And the goblin shaman's.
+/prototypes/goblin_shaman_anim/art3d/*
+!/prototypes/goblin_shaman_anim/art3d/*.json
+# Wolf Scout 3's clips build on a Mixamo crouch: her animation scene and GLB
+# stay local (her rig scene, textures, tools and sidecars are in Git); the roster
+# leaves her out where the GLB is missing. Wolf Scouts 1 and 2, the versions she
+# replaced, stay local in full.
+/art/wolf_scout_3d/*
+!/art/wolf_scout_3d/wolf_scout_3_rig.blend
+!/art/wolf_scout_3d/wolf_scout_3.json
+!/art/wolf_scout_3d/ws3_textures/
+!/art/wolf_scout_3d/tools/
+/art/wolf_scout_3d/tools/*
+!/art/wolf_scout_3d/tools/*_3.py
+/prototypes/wolf_scout_anim/*
+!/prototypes/wolf_scout_anim/art3d/
+!/prototypes/wolf_scout_anim/qa/
+/prototypes/wolf_scout_anim/art3d/*
+!/prototypes/wolf_scout_anim/art3d/wolf_scout_3.json
+/prototypes/wolf_scout_anim/qa/wolf_scout_2_sandbox.gd*
+/tools/preview_wolf_scout.ps1
+# The collie Royal Guard plays the footman's clips (Mixamo-derived): his animation
+# scene and GLB stay local (his base and rig scenes, tools and sidecar are in Git);
+# the roster leaves him out where the GLB is missing.
+/art/collie_guard_3d/collie_anim.blend
+/prototypes/sandbox3d/art3d/collie_guard.glb
+/prototypes/sandbox3d/art3d/collie_guard.glb.import
+# The painted UI's raw takes stay local (art/ui/epic/README.md); their keyed
+# runtime copies are in assets/ui/epic.
+/art/ui/epic/*-take*.png

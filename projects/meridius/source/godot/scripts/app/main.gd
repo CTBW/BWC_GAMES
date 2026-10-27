@@ -5,27 +5,25 @@
 ##
 ## Tree:
 ##   Main (Control, theme)                 this script
-##     World (Node2D)                      App.world_host: the base / campaign / battle view
+##     World (Node2D)                      App.world_host: the base view or the 3D battle
 ##     UI (CanvasLayer 10, always processes)
 ##       Root (Control, theme)             full rect, ignores the mouse
 ##         Screen                          the current screen (or HUD)
 ##         Overlays                        manual, pause menu
 ##
 ## Screens: title, base, prep, report (scripts/ui/screens/*), loading. For
-## "campaign" and "battle" the HUD scripts of the second UI agent are used when
-## they exist: scripts/ui/campaign_hud.gd and scripts/ui/battle_hud.gd. Contract
+## "battle" the HUD is scripts/ui/battle_hud.gd (Deps "battle_hud"). Contract
 ## for a HUD: `extends Control`; created with `.new()`, then `setup(view)` (the
-## App.campaign_view / App.battle_view node, may be null) when it has that
-## method, full-rect anchors, added under Screen (inherits the theme). It reads
-## App and subscribes to App.changed / the view itself. A new HUD is made when
-## the screen or the view instance changes.
+## App.battle_view node, may be null) when it has that method, full-rect
+## anchors, added under Screen (inherits the theme). It reads App and subscribes
+## to the view itself. A new HUD is made when the screen or the view instance
+## changes.
 ##
 ## Command line (after `--`): `--newgame [--seed=N]` starts a new company at once
 ## (the original's `?newgame&seed=`); `--smoke` runs scripts/qa/smoke.gd `run(main)`
 ## (deferred, when that file exists).
 ## Esc closes the topmost overlay (confirm, manual, menu, soldier, panel); when
-## nothing is open it opens the pause menu (in battle only while no ability is armed,
-## which Esc cancels first).
+## nothing is open it opens the pause menu.
 extends Control
 
 const ThemeBuilder = preload("res://scripts/ui/theme_builder.gd")
@@ -35,6 +33,8 @@ const UI = preload("res://scripts/ui/ui.gd")
 const SCREENS := {
 	"loading": "res://scripts/ui/screens/loading_screen.gd",
 	"title": "res://scripts/ui/screens/title_screen.gd",
+	"playground": "res://scripts/ui/screens/unit_playground.gd",
+	"terrain_lab": "res://scripts/ui/screens/terrain_lab.gd",
 	"base": "res://scripts/ui/screens/base_screen.gd",
 	"prep": "res://scripts/ui/screens/prep_screen.gd",
 	"report": "res://scripts/ui/screens/report_screen.gd",
@@ -42,11 +42,10 @@ const SCREENS := {
 const MANUAL := "res://scripts/ui/screens/manual.gd"
 const MENU := "res://scripts/ui/screens/pause_menu.gd"
 const SMOKE := "res://scripts/qa/smoke.gd"
-## Loaded (and kept) behind the loading screen, so the first expedition and the
-## first battle do not stop to load and compile their scripts: the battle view,
-## its HUD and the battle rules alone cost ~0.75 s on the first battle.
-## Deps keys first, then the screens main.gd loads by path.
-const WARM_DEPS := ["setup", "battle", "ai", "expedition", "battle_view_scene", "battle_hud", "campaign_view_scene", "campaign_hud"]
+## Loaded (and kept) behind the loading screen, so the first battle does not
+## stop to load and compile its scripts. Deps keys first, then the screens
+## main.gd loads by path.
+const WARM_DEPS := ["setup", "battle", "ai", "battlefields", "expedition", "battle3d", "battle_hud"]
 
 var world: Node2D
 var ui_root: Control
@@ -101,10 +100,15 @@ func _boot() -> void:
 		App.load_progress = float(i + 1) / (steps.size() + 2)
 		App.emit_changed()
 		await get_tree().process_frame
-	await _warm_battle()
 	App.load_progress = 1.0
 	var args := OS.get_cmdline_user_args()
-	if args.has("--newgame"):
+	if args.has("--terrain-lab"):
+		App.go_title()
+		App.open_terrain_lab()
+	elif args.has("--playground"):
+		App.go_title()
+		App.open_playground()
+	elif args.has("--newgame"):
 		var seed := 1234
 		for a in args:
 			if a.begins_with("--seed="):
@@ -122,42 +126,12 @@ static func warm_steps() -> Array:
 	return steps
 
 
-## Draws a small battle once in a hidden viewport: the battle's shaders compile
-## and its figure atlases load now instead of on the first battle's first frame
-## (~190 ms). Its own game and battle; nothing of the App's state is touched.
-func _warm_battle() -> void:
-	var Game = Deps.game()
-	var Setup = Deps.setup()
-	var Battle = Deps.battle()
-	var Soldier = Deps.soldier()
-	if Game == null or Setup == null or Battle == null or Soldier == null or not Deps.has("battle_view"):
-		return
-	var g: Dictionary = Game.new_game(1)
-	var army: Array = []
-	for so in g.roster:
-		army.append(Soldier.soldier_to_unit(so))
-	var roll: Dictionary = Setup.roll_encounter("raiding_party", Deps.rng().new(1), 2)
-	var b = Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
-	var vp := SubViewport.new()
-	vp.name = "WarmBattle"
-	vp.size = Vector2i(480, 270)
-	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	add_child(vp)
-	var v := Deps.instance("battle_view")
-	v.setup(b)
-	vp.add_child(v)
-	for i in 2:
-		await get_tree().process_frame
-	remove_child(vp)
-	vp.queue_free()
-
-
 func _make_screen(key: String) -> Control:
 	var c: Control = null
 	if SCREENS.has(key):
 		c = load(SCREENS[key]).new()
-	elif key == "battle" or key == "campaign":
-		var hud := Deps.instance(key + "_hud")
+	elif key == "battle":
+		var hud := Deps.instance("battle_hud")
 		if hud is Control:
 			c = hud
 			if c.has_method("setup"):
@@ -171,7 +145,7 @@ func _make_screen(key: String) -> Control:
 
 
 func _view_for(key: String) -> Node:
-	var v: Node = App.battle_view if key == "battle" else (App.campaign_view if key == "campaign" else null)
+	var v: Node = App.battle_view if key == "battle" else null
 	return v if v != null and is_instance_valid(v) else null
 
 
@@ -188,8 +162,8 @@ func _refresh() -> void:
 		_screen_key = key
 		_screen_view = view
 		screen_host.add_child(_screen)
-	elif _screen.has_method("refresh") and not (key == "battle" or key == "campaign"):
-		# The HUDs subscribe to App.changed and their view themselves.
+	elif _screen.has_method("refresh") and key != "battle":
+		# The battle HUD subscribes to its view itself.
 		_screen.refresh()
 	_sync_manual()
 	_sync_menu()
@@ -250,6 +224,9 @@ func _escape() -> bool:
 		return true
 	if App.screen == "loading" or App.screen == "title":
 		return false
+	if App.screen in ["playground", "terrain_lab"]:
+		App.go_title()
+		return true
 	if App.soldier != null:
 		if _screen != null and _screen.has_method("close_soldier"):
 			_screen.close_soldier()

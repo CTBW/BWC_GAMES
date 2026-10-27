@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Goblin Spearman 3D rig</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<link rel="stylesheet" href="rig-viewer/viewer.css">
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / GOBLIN SPEARMAN / 3D RIG / 26 OCT 2026</p>
+<h1>Goblin Spearman 3D rig</h1>
+<p>The goblin spearman from the spearmen concept, built in Tripo with his spear as a separate model and rigged in Blender on a Mixamo-compatible skeleton. Both hands close round the shaft: the right fist low on the bare wood, the left round the leather grip. Four clips play below from the game's battle camera, in all four facings: his idle, his walk, his spear thrust and his death, in which he drops the spear. In all 379 frames, no body triangle cuts through the spear. He also stands in the 3D Sandbox, where he walks up and thrusts from 2 m.</p>
+</header>
+
+<h2>Pose viewer</h2>
+<p>Pick a clip and a facing, pause, then step frame by frame to the pose you want to comment on. Screenshot with the readout in view, so the frame is named. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame. The death is drawn at the same scale as the other clips in a wider frame, which scrolls sideways.</p>
+<div class="viewer">
+  <div class="vbar" role="group" aria-label="Clip"><span class="vlbl">Clip</span><div class="vchips" id="clipChips"></div></div>
+  <div class="vbar" role="group" aria-label="Facing"><span class="vlbl">Facing</span><div class="vchips" id="faceChips"></div></div>
+  <div class="vbar" role="group" aria-label="Playback">
+    <button id="first" class="vbtn" title="First frame (Home)" aria-label="First frame">⏮</button>
+    <button id="prev" class="vbtn" title="Previous frame (←)" aria-label="Previous frame">◀</button>
+    <button id="play" class="vbtn" title="Play / pause (Space)" aria-label="Play or pause">❚❚</button>
+    <button id="next" class="vbtn" title="Next frame (→)" aria-label="Next frame">▶</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <label class="vsel">Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+    <label class="vsel">Zoom <select id="zoom"><option value="1">1×</option><option value="1.5" selected>1.5×</option><option value="2">2×</option></select></label>
+    <label class="vsel">Ground <select id="ground"><option value="paper">Paper</option><option value="grass">Grass</option><option value="dark">Dark</option></select></label>
+  </div>
+  <div class="readout"><span id="readout" aria-live="polite">Loading frames…</span><button id="copy" class="vcopy">Copy frame reference</button><span id="copied" class="copied" hidden>Copied</span></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="steps">
+  <div><strong>1 · Reference images</strong><p>The spearman from the front of the spearmen concept. Nano Banana Pro on Higgsfield redrew him as a 4K T-pose with the rabble's face, then without his helmet, bald with his ears free, and drew his spear on its own. You picked the first spear, with the narrower head.</p></div>
+  <div><strong>2 · Tripo</strong><p>Two separate models, Smart Mesh in quads, each textured at 4K from its own image. The body has 6,419 faces, the spear 543. 240 Tripo credits in all.</p></div>
+  <div><strong>3 · Scaled in Blender</strong><p>He stands 1.49 m tall, centred on his mirror plane. The spear is 1.80 m long, about 1.2 times his height as in the concept. Below the red rag its shaft is thinned from 5.6 to 3.4 cm, so his fingers close round it.</p></div>
+  <div><strong>4 · Rigged</strong><p>84 bones with Mixamo names, 60 of them deforming, at most four per vertex: fingers, forearm twist bones, the cape and the skirt flaps, which swing with the thighs. The spear rides a bone in the right fist.</p></div>
+  <div><strong>5 · Grips</strong><p>The fingers are solved on the skin to close round the shaft. The right fist holds the bare wood 0.39 m from the butt, the left the leather grip 0.37 m further up, kept on it by IK as the spear moves.</p></div>
+  <div><strong>6 · Clips</strong><p>Idle - Goblin, Walk - Spearmen, Attack - Goblin Spearmen and Death - Goblin from <code>projects/meridius/Animations</code>, retargeted onto the rig. The spear is kept clear of the body in every frame, and in the death he lets it fall.</p></div>
+</div>
+
+<h2>From concept to Tripo</h2>
+<figure><img src="goblin-spear-3d/img/chain.webp" width="5078" height="900" loading="lazy" alt="The spearman cropped from the concept, the bald T-pose that went into Tripo, and Tripo's textured body from four sides">
+<figcaption>The spearman in the concept, the T-pose that went into Tripo, and Tripo's textured body from the front, three-quarter, side and back. The T-pose keeps his fur mantle with its bone horns, the crossed straps with their round boss, the studded bracers, the red rag skirt and cape, and the rabble's face and nose. The helmet is gone, so he reads as one of the same tribe.</figcaption></figure>
+<figure><img src="goblin-spear-3d/img/spear.webp" width="1831" height="900" loading="lazy" alt="The spear drawn flat from the front, then close views of Tripo's spearhead from the front and side and of the leather grip from the front and side">
+<figcaption>The spear as drawn for Tripo: a knotted wooden shaft, a blood-red rag knotted below the leaf-shaped head, a dark leather grip band and an iron butt cap. Then Tripo's spearhead from the front and side, and the leather grip, where the left hand holds, from the front and side.</figcaption></figure>
+
+<h2>Scaled in Blender</h2>
+<figure><img src="goblin-spear-3d/img/blender.webp" width="2948" height="720" loading="lazy" alt="The goblin in a T-pose with his spear standing beside him, then the spear laid through his right hand from the front and three-quarter">
+<figcaption>The size check: the goblin at 1.49 m with his 1.80 m spear standing beside him. His height is the footman's 1.82 m times the battle view's figure heights, 40 px for a small unit against 49 for a man, as for the goblin archer. Then the thinned shaft laid through his right hand, from the front and three-quarter.</figcaption></figure>
+
+<h2>Standard pose</h2>
+<figure><img src="goblin-spear-3d/img/standard.webp" width="3500" height="700" loading="lazy" alt="The rigged goblin holding his spear across his body with both hands, from five sides">
+<figcaption>The pose the rig opens in, from the front, three-quarter from his left and from his right, his left side and the back. The right fist is beside his right hip, the spear points 35° to his left with its head raised 30°, crossing in front of him, and the left hand reaches forward to the leather grip. This is the concept's hold mirrored, so the right hand drives the thrust. The spear is 6.1 cm clear of his body, and the skin stays bound to the T-pose, so the Mixamo clips still fit.</figcaption></figure>
+
+<h2>Grips</h2>
+<figure><img src="goblin-spear-3d/img/grips.webp" width="2724" height="900" loading="lazy" alt="Close views of the right fist round the bare shaft and the left fist round the leather grip, six views each">
+<figcaption>The right fist round the bare shaft and the left round the leather grip, each from the front, back, top, bottom, outside and three-quarter. Each hand closes round the shaft laid across its palm at the tilt that closes all four fingers best; both thumbs point toward the head. Moving the left hand's hold slides it along the shaft or turns it round it.</figcaption></figure>
+
+<h2>Walk</h2>
+<figure><img src="goblin-spear-3d/img/walk.webp" width="3254" height="395" loading="lazy" alt="One stride of the walk from the south-east in six key frames, the spear held level across his body">
+<figcaption>One stride of the walk from the south-east, at frames 1, 8, 15, 22, 29 and 36. He walks hunched on bent knees with the spear held across him in the standard pose, its head forward and to his left. The right arm is turned 10° out at the shoulder, so the shaft clears his right thigh as it swings forward.</figcaption></figure>
+
+<h2>Spear thrust</h2>
+<figure><img src="goblin-spear-3d/img/attack.webp" width="3062" height="425" loading="lazy" alt="Six key frames of the spear thrust from the south-east: the guard, the draw-back with the head raised, the lunge, the full thrust low and forward, the recovery and back to the guard">
+<figcaption>The thrust from the south-east, at frames 1, 12, 22, 32, 44 and 60: the guard, the draw-back with the spearhead raised, the lunge, the full thrust low and forward, the recovery and back to the guard. It starts from the idle's first pose and ends in it, so the game can cut between the two.</figcaption></figure>
+<figure><img src="goblin-spear-3d/img/thrust.webp" width="2848" height="700" loading="lazy" alt="Close views of the hands on the spear at frame 12 and frame 32 of the thrust, each from the front and from his right">
+<figcaption>The hands at frame 12 and frame 32, each from the front and from his right. At frame 12 the spear has slid 24 cm forward through the right fist, which now holds it low near the butt, so the shaft behind it clears his body as he draws back. At frame 32 the thrust drives past his face, his left fist forward on the leather grip.</figcaption></figure>
+
+<h2>Death</h2>
+<figure><img src="goblin-spear-3d/img/death.webp" width="3788" height="882" loading="lazy" alt="Six key frames of the death from the south-east: struck, thrown back, sinking, falling forward and letting go of the spear, which lies on the ground beside him">
+<figcaption>The death from the south-east, at frames 1, 12, 30, 46, 56 and 72. He is struck and thrown back, sinks, then pitches forward. His left hand lets go first; at frame 46 his right fist opens and the spear tips over and drops, lying flat on the ground from frame 60, 30 cm out from his body.</figcaption></figure>
+
+<h2>Notes</h2>
+<ul class="notes">
+<li><strong>Carrying the spear.</strong> The idle and walk clips were made for empty hands, so both arms keep the standard pose on the clip's chest and he carries the spear levelled across him. The clips' bent-kneed stance brings his right thigh up into the shaft, 20.5 mm into it at the worst, and no bend of the wrist alone clears it. So the right arm turns 10° out at the shoulder, the least turn that clears every frame of both clips, the same turn in every frame. retarget_clips.py adds it to the standard pose in its copy of the rig, so the thrust and the death start from it too.</li>
+<li><strong>The thrust.</strong> In every frame the right wrist turns the spear onto the line from the right fist through the clip's left fist (20–64°, 33° on average), and the left hand's hold slides along the shaft to that fist and turns round it to the clip's turn of the hand. Then the shaft is kept off his body in three steps, each the least that clears it. First the spear slides forward through the right fist, by up to 24 cm in frames 4–45, and the left hand's hold slides back by as much, so the left fist stays put. Then the right arm turns at the shoulder, by up to 8° in frames 6–45, the left hold sliding back up to 5 cm more where the turned shaft would be out of its reach. A bend of the right wrist, the third step, was not needed. Each correction is spread over the neighbouring frames, so it never pops.</li>
+<li><strong>Clearance.</strong> Every frame was checked for body triangles that cut through the spear (the hands holding it left out), and the least gap between the two measured. No triangle cuts through it in any of the 201 frames of the idle, 42 of the walk, 64 of the thrust or 72 of the death. The least gaps: 38.2 mm in the idle, 7.8 mm in the walk (the right thigh), 5.8 mm in the thrust (his head, frame 33). In the death the right forearm grazes the shaft as the fist opens, up to 4.5 mm into it in two frames around frame 48.</li>
+<li><strong>The death and the ground.</strong> The death starts from the idle's first pose and eases into the clip over 8 frames. The arms leave the standard pose over 12 frames, and the left hand lets go of the shaft in frames 3–9. The right fist opens at frame 46, a few frames before the spear in it would touch the ground. The spear then turns level, its blade flat, and drops to the ground in the time its middle would take to fall there, pushed 30 cm out so it stays clear of him. His hips are lifted wherever his body would go below the ground, by up to 24 cm, widened and averaged so the lift never pops. In the walk and the thrust his hips rise and fall by up to 2 and 4 cm, so the lowest point of his soles stays on the ground (within 4 mm).</li>
+<li><strong>Loop and drift.</strong> The idle stays in place and eases its last 10 frames back into the first, so it loops seamlessly. The walk is also kept in place: it covers 0.91 m a stride, 0.66 m/s, which the game adds as he moves, and its last frame meets the first. The thrust is the source's first 64 frames (the source holds its upright guard to frame 99), eased in from the idle's first pose over 8 frames and back into it over the last 12.</li>
+<li><strong>Clips used.</strong> Idle - Goblin, 201 frames (6.67 s). Walk - Spearmen, 42 frames (1.37 s). Attack - Goblin Spearmen, frames 1–64 (2.10 s). Death - Goblin, 72 frames (2.37 s). All from <code>projects/meridius/Animations</code>, at 30 fps, with the hips' motion scaled by his hip height against the clips' (0.652). The Mixamo clips stay local, so the retargeted motion is saved in a separate local copy of the rig, not in the rig file.</li>
+<li><strong>Frames.</strong> Rendered in Blender's Workbench, flat-lit with an outline and cavity, from an orthographic camera 30° above the ground, at 254.5 px per metre, then packed at 0.75 scale. The idle, walk and thrust are framed at 1100 × 880, wide enough for the thrust's reach. The death is framed at 2080 × 1300, because he falls far to one side in some facings and the spear lands beyond him.</li>
+<li><strong>Limits.</strong> The left wrist bends hard in the thrust, up to 82° from the forearm, to follow the clip's hand onto the shaft (the right up to 50°). The spear sliding 24 cm through the right fist is a cheat: he draws back with his fist near the butt rather than shifting his grip. At its nearest the shaft passes 5.8 mm from his head. The right thumb lies along the shaft instead of closing round it, and at the right grip the little finger goes up to 4.7 mm into the shaft's knot rings.</li>
+<li><strong>Files.</strong> <code>projects/meridius/references/characters/blender/goblin_spear/goblin_spear_rig.blend</code> (rig, spear and grips) and <code>goblin_spear_base.blend</code>, built by the scripts in its <code>tools/</code>: <code>build_goblin_spear.py</code> and <code>rig_goblin_spear.py</code>, with <code>render_check.py</code> and <code>render_rig.py</code> for the review renders and measurements. The clips are retargeted by <code>retarget_clips.py</code>, rendered by <code>render_clips.py</code> and packed by <code>pack_sheets.py</code>; <code>export_godot.py</code> and <code>check_export.py</code> make and check the Godot model. The Tripo exports are in <code>references/characters/tripo/goblin_spear/</code>, and job IDs and costs in <code>references/characters/goblin_spear/jobs.json</code>.</li>
+</ul>
+</main>
+<script id="frames-data" type="application/json">{"clips":{"idle":{"sw":{"file":"sheets/idle_sw.webp","frames":201,"cols":19,"w":178,"h":293,"x":327.8,"y":180.0},"se":{"file":"sheets/idle_se.webp","frames":201,"cols":14,"w":335,"h":285,"x":332.2,"y":182.2},"nw":{"file":"sheets/idle_nw.webp","frames":201,"cols":14,"w":336,"h":300,"x":156.8,"y":166.5},"ne":{"file":"sheets/idle_ne.webp","frames":201,"cols":21,"w":179,"h":372,"x":318.0,"y":81.0}},"walk":{"sw":{"file":"sheets/walk_sw.webp","frames":42,"cols":8,"w":234,"h":287,"x":270.8,"y":200.2},"se":{"file":"sheets/walk_se.webp","frames":42,"cols":6,"w":375,"h":282,"x":324.0,"y":198.8},"nw":{"file":"sheets/walk_nw.webp","frames":42,"cols":6,"w":376,"h":306,"x":124.5,"y":165.8},"ne":{"file":"sheets/walk_ne.webp","frames":42,"cols":8,"w":234,"h":345,"x":319.5,"y":126.0}},"attack":{"sw":{"file":"sheets/attack_sw.webp","frames":64,"cols":7,"w":503,"h":331,"x":21.0,"y":183.0},"se":{"file":"sheets/attack_se.webp","frames":64,"cols":8,"w":374,"h":329,"x":312.8,"y":152.2},"nw":{"file":"sheets/attack_nw.webp","frames":64,"cols":9,"w":374,"h":418,"x":138.0,"y":48.0},"ne":{"file":"sheets/attack_ne.webp","frames":64,"cols":8,"w":503,"h":462,"x":300.8,"y":22.5}},"death":{"sw":{"file":"sheets/death_sw.webp","frames":72,"cols":7,"w":1019,"h":574,"x":23.2,"y":149.2},"se":{"file":"sheets/death_se.webp","frames":72,"cols":10,"w":585,"h":801,"x":468.8,"y":162.8},"nw":{"file":"sheets/death_nw.webp","frames":72,"cols":9,"w":585,"h":534,"x":505.5,"y":90.0},"ne":{"file":"sheets/death_ne.webp","frames":72,"cols":6,"w":1019,"h":413,"x":517.5,"y":225.0},"canvas":[1560,975]}},"fps":30,"canvas":[825,660]}</script>
+<script id="viewer-config" type="application/json">{"base": "goblin-spear-3d/", "start": "attack", "key": "goblin-spear-pose-viewer", "sameScale": true, "clips": [["idle", "Idle"], ["walk", "Walk"], ["attack", "Attack"], ["death", "Death"]]}</script>
+<script src="rig-viewer/viewer.js"></script>
+</body>
+</html>

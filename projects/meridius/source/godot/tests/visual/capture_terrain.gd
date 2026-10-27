@@ -5,7 +5,7 @@
 ##
 ##   tools/godot.sh --path . --resolution 1920x1080 -s res://tests/visual/capture_terrain.gd -- [names...]
 ##
-## Names: forest river camp night_torch steading ford base campaign (default: all).
+## Names: forest river camp night_torch steading ford base (default: all).
 ## Writes tests/visual/out/terrain_<name>_layer.png (and _field.png) and prints
 ## the build time of each.
 extends SceneTree
@@ -25,8 +25,6 @@ static func inputs() -> Dictionary:
 	for k in maps:
 		out[k] = maps[k].terrainInput
 	out["base"] = base_input()
-	var camp: Dictionary = load_json("res://tests/fixtures/render/campaign_start.json")
-	out["campaign"] = campaign_input(camp)
 	return out
 
 
@@ -37,15 +35,6 @@ static func base_input() -> Dictionary:
 	var BaseView = load("res://scripts/render/base_view.gd")
 	if BaseView != null and BaseView.has_method("terrain_input"):
 		return BaseView.terrain_input()
-	return {}
-
-
-static func campaign_input(camp: Dictionary) -> Dictionary:
-	if not ResourceLoader.exists("res://scripts/render/campaign_view.gd"):
-		return {}
-	var CampaignView = load("res://scripts/render/campaign_view.gd")
-	if CampaignView != null and CampaignView.has_method("world_for"):
-		return CampaignView.world_for(camp.game.expedition).terrain
 	return {}
 
 

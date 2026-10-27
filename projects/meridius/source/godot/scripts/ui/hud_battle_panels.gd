@@ -190,7 +190,7 @@ static func unit_panel(view: Object, u: Dictionary) -> Control:
 	var caster: bool = (u.get("tags", []) as Array).has("caster")
 	var primary: Dictionary = DB.ABILITIES.get(def.primary, {}) if def.get("primary") != null else {}
 
-	var p := UI.panel("ParchmentPanel", [14, 18])
+	var p := UI.panel("DarkPanel", [17, 22])
 	p.name = "UnitPanel"
 	p.custom_minimum_size.x = 660
 	var row := UI.hbox(14)
@@ -254,6 +254,11 @@ static func unit_panel(view: Object, u: Dictionary) -> Control:
 	var chips := status_chips(u)
 	if chips != null:
 		mid.add_child(H.margin(chips, 2, 0, 0, 0))
+	var wound: Variant = u.get("wound")
+	if wound != null:
+		var wt := _tiny("%s: %s" % ["Injured" if wound.kind == "injured" else "Wounded", Squad.wound_text(wound)], Color("#8a1f15"))
+		wt.name = "Wound"
+		mid.add_child(H.margin(wt, 2, 0, 0, 0))
 	row.add_child(mid)
 
 	# Status tags, Redo, abilities.
@@ -361,7 +366,7 @@ static func _ability_button(view: Object, u: Dictionary, a: String, i: int, ms: 
 		var ov := PanelContainer.new()
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0, 0, 0, 0.55)
-		sb.set_corner_radius_all(6)
+		sb.set_corner_radius_all(1)
 		ov.add_theme_stylebox_override("panel", sb)
 		ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		ov.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -405,8 +410,10 @@ static func facing_rose(facing: int) -> Control:
 	for d in [2, 3, 1, 0]:
 		var cell := PanelContainer.new()
 		var sb := StyleBoxFlat.new()
-		sb.set_corner_radius_all(4)
-		sb.bg_color = UI.GOLD_BRIGHT if d == facing else Color(0, 0, 0, 0.18)
+		sb.set_corner_radius_all(1)
+		sb.bg_color = Color("#cfb878") if d == facing else Color(0, 0, 0, 0.18)
+		sb.set_border_width_all(1)
+		sb.border_color = Color("#f0d797") if d == facing else Color("#4c5351")
 		sb.anti_aliasing = true
 		cell.add_theme_stylebox_override("panel", sb)
 		cell.custom_minimum_size = Vector2(22, 20)
@@ -785,6 +792,16 @@ static func unit_info(view: Object, u: Dictionary) -> Control:
 	var chips := status_chips(u)
 	if chips != null:
 		col.add_child(H.margin(chips, 4, 0, 0, 0))
+	var wound: Variant = u.get("wound")
+	if wound != null:
+		var wl: String
+		if wound.kind == "injured":
+			wl = "Injured in its last fight: %s. %s." % [Squad.wound_text(wound), Squad.hurt_text(wound)]
+		else:
+			wl = "Wounded in its last fight (%d still hurt): %s. %s." % [wound.get("hurt", wound.fell), Squad.wound_text(wound), Squad.hurt_text(wound)]
+		var wlc := _small(wl, Color("#8a1f15"))
+		wlc.name = "Wound"
+		col.add_child(H.margin(wlc, 4, 0, 0, 0))
 	if u.get("leader"):
 		col.add_child(H.margin(_small("Warband leader: if he falls, his followers lose heart.", Color("#8a1f15")), 4, 0, 0, 0))
 	p.add_child(col)
@@ -805,10 +822,14 @@ static func tile_info(view: Object) -> Control:
 	p.name = "TileInfo"
 	p.custom_minimum_size.x = 240
 	var col := UI.vbox(0)
+	if view.fog != null and view.fog.tile_state(t.x, t.y) == 0:
+		col.add_child(UI.cinzel("Unexplored terrain", 16, 700))
+		p.add_child(col)
+		return p
 	col.add_child(UI.cinzel(str(prop.name if prop != null else ter.get("name", tile.terrain)), 16, 700))
 	var s := ""
 	if prop != null:
-		s = "Impassable" if prop.get("blocksMove") else "Passable"
+		s = "Passable · Move cost %s" % _num(Grid.move_cost(view.b.map, t.x, t.y)) if Grid.tile_passable(view.b.map, t.x, t.y) else "Impassable"
 	else:
 		var mc: Variant = ter.get("moveCost", 1)
 		s = "Move cost %s" % ("–" if float(mc) >= 99 else _num(mc))

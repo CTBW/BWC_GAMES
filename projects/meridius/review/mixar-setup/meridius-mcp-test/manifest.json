@@ -1,0 +1,44 @@
+{
+  "asset": "meridius-mcp-test",
+  "format": "glb",
+  "up_axis": "+Y",
+  "units": "meters",
+  "transforms_applied": true,
+  "compression": "none",
+  "objects": [
+    "Meridius_MCP_Test_Cube",
+    "Meridius_MCP_Test_Base"
+  ],
+  "joined": false,
+  "triangles": 200,
+  "dimensions_m": [
+    1.6,
+    1.6,
+    1.1
+  ],
+  "materials": [
+    "Meridius_MCP_Teal",
+    "Meridius_MCP_Stone"
+  ],
+  "textures": [],
+  "animations": [],
+  "tiers": [],
+  "files": [
+    {
+      "file": "meridius-mcp-test.glb",
+      "bytes": 23248,
+      "sha256_16": "3abc5aa224010553"
+    },
+    {
+      "file": "meridius-mcp-test_source.blend",
+      "bytes": 70270,
+      "sha256_16": "8adf703dd4e0d434"
+    },
+    {
+      "file": "README.md",
+      "bytes": 218,
+      "sha256_16": "174601483dbb080c"
+    }
+  ],
+  "generator": "Mixar export_package"
+}

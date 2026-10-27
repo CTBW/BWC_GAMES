@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" data-mak-report="document" data-mak-theme="custom">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sandbox · Meridius 3D units</title>
+  <link rel="stylesheet" href="../_shared/report.css">
+  <link rel="stylesheet" href="sandbox.css">
+  <script defer src="../_shared/report.js"></script>
+  <script defer src="sandbox.js"></script>
+</head>
+<body>
+<main class="sb">
+
+  <header class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Meridius · 3D unit sandbox</p>
+      <h1>Every 3D unit on <em>one battlefield</em></h1>
+      <p class="lede">Six rigged characters and a squad of six footmen, each in his own helmet and face, on a training ground in the game's own look: painted hills, the woodland, a pond, the fog of war and the night. March them over the map, set them on each other, drill the squad and play any of their clips.</p>
+      <div class="launch">
+        <button id="launch" class="launch-btn" type="button"><span class="play" aria-hidden="true"></span><span>Open the sandbox</span></button>
+        <p id="launch-status" class="launch-status" role="status" aria-live="polite">Opens in its own maximized window. If the sandbox is already open, the button brings it to the front.</p>
+        <div id="launch-help" class="launch-help" hidden>
+          <p id="launch-why"></p>
+          <ol>
+            <li>Double-click <strong><code>Meridius Sandbox.cmd</code></strong> in the repository's root folder, <code>E:\ProjektM\BWC_GAMES-godot</code>, next to <code>Setup.ps1</code>. It does exactly what the button does.</li>
+            <li>Or open <code>prototypes/sandbox3d/scenes/sandbox3d.tscn</code> in the Godot editor and press <kbd>F6</kbd>.</li>
+            <li>To enable the button, update Mr. Mak once: open PowerShell from Start (outside Mr. Mak) and run
+              <pre>cd E:\ProjektM\BWC_GAMES-godot
+powershell -ExecutionPolicy Bypass -File .\Setup.ps1 -Mode Update</pre>
+              When it asks, quit Mr. Mak from the tray; it installs and starts again.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <figure class="hero-shots">
+      <img class="lead" src="media/squad-front-rank.webp" width="1120" height="630" decoding="async" alt="The footman squad's front rank cutting at the drill line while the rear rank stands ready">
+      <img src="media/spell-lightning.webp" width="1120" height="630" decoding="async" alt="The battle mage's chain lightning striking a straw dummy">
+      <img src="media/pond.webp" width="1600" height="900" decoding="async" alt="The pond in the woodland at the edge of the yard">
+      <img src="media/strike-succubus.webp" width="1120" height="630" decoding="async" alt="The succubus's whip lash cracking at a straw dummy">
+      <figcaption>From the sandbox: the footman squad's front rank at the drill line, the battle mage's chain lightning, the pond in the woods and the succubus's whip. Click a picture for the full size.</figcaption>
+    </figure>
+  </header>
+
+  <div class="facts" aria-label="The sandbox at a glance">
+    <div><b>6 + 6</b><span>rigged units, and a squad of six footmen</span></div>
+    <div><b>28 × 28</b><span>tiles of hills, road, pond and woods</span></div>
+    <div><b>4</b><span>battle mage spells, quick and full casts</span></div>
+    <div><b>~63 fps</b><span>at 1600 × 900 on the RTX 4070, squad included</span></div>
+  </div>
+
+  <section id="try">
+    <h2><span class="num">01</span>Things to try</h2>
+    <p class="intro">Everything happens with the mouse and a few keys. The left panel lists the roster and the selected unit's attacks, stances and clips; the right panel holds the switches.</p>
+    <div class="tries">
+      <article class="try wide">
+        <h3>Drill the footman squad</h3>
+        <p>Click one of the six footmen in two ranks (or <strong>Footman squad</strong> in the left panel), then a dummy of the drill line: the squad advances in step, only the front rank strikes, each man in his own time, and the ranks re-form. Click the ground to march; <kbd>Q</kbd> / <kbd>E</kbd> wheel it.</p>
+      </article>
+      <article class="try">
+        <h3>March over the hills</h3>
+        <p>Left-click a unit, then click the ground. It walks round trees, rocks and water and never up a bank too steep. <kbd>Shift</kbd> adds units, <kbd>F</kbd> follows them.</p>
+      </article>
+      <article class="try">
+        <h3>Strike a dummy or a foe</h3>
+        <p>With a unit selected, click a foe or a straw dummy: it walks into reach and strikes. <kbd>1</kbd>–<kbd>8</kbd> pick the attack, <kbd>Space</kbd> strikes again.</p>
+      </article>
+      <article class="try">
+        <h3>Start a duel</h3>
+        <p>Set the footman on the wolf scout. With <strong>Fight back</strong> on, a struck unit steadies and answers once the attacker is in its reach.</p>
+      </article>
+      <article class="try">
+        <h3>Lethal blows</h3>
+        <p>Switch on <strong>Lethal blows</strong> and a landed blow kills, with one of the unit's death clips. <kbd>K</kbd> kills the selected unit, <kbd>R</kbd> revives it.</p>
+      </article>
+      <article class="try">
+        <h3>Fog of war and night</h3>
+        <p><kbd>V</kbd> turns on the fog, <kbd>N</kbd> the night. Trees fade while a unit stands behind them, as on the battlefield.</p>
+      </article>
+      <article class="try wide">
+        <h3>Play every clip</h3>
+        <p>The left panel lists every clip in the selected model. Slow it all to 0.25x to read a motion, or run it at 2x. <kbd>H</kbd> plays the hit.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="roster">
+    <h2><span class="num">02</span>The roster</h2>
+    <p class="intro">Players wear blue, enemies red. Each unit walks at its clip's own ground speed and strikes on the moment its animation lands the blow.</p>
+    <div class="roster">
+      <article class="unit">
+        <img src="media/unit-footman.webp" width="440" height="500" loading="lazy" decoding="async" alt="The footman in the sandbox: sword and shield, blue tabard">
+        <div>
+          <span class="side player">Player</span>
+          <h3>Footman</h3>
+          <ul>
+            <li>Slash, stab and lunge</li>
+            <li>Block, shield charge, counter and lane step</li>
+            <li>His own controller: starts, stops and turns on the planted foot</li>
+          </ul>
+        </div>
+      </article>
+      <article class="unit">
+        <img src="media/unit-spearman.webp" width="440" height="500" loading="lazy" decoding="async" alt="The spearman in the sandbox, spear held low">
+        <div>
+          <span class="side player">Player</span>
+          <h3>Spearman</h3>
+          <ul>
+            <li>Spear thrust with a 2.7 m reach</li>
+            <li>Three death clips, a rest idle and a lane step</li>
+          </ul>
+        </div>
+      </article>
+      <article class="unit">
+        <img src="media/unit-crossbowman.webp" width="440" height="500" loading="lazy" decoding="async" alt="The crossbowman in the sandbox, crossbow at the hip">
+        <div>
+          <span class="side player">Player</span>
+          <h3>Crossbowman</h3>
+          <ul>
+            <li>Three shots, among them a steady shot</li>
+            <li>Looses a bolt, then reloads</li>
+            <li>Finds a spot with a clear line before shooting</li>
+          </ul>
+        </div>
+      </article>
+      <article class="unit">
+        <img src="media/unit-mage.webp" width="440" height="500" loading="lazy" decoding="async" alt="The battle mage in the sandbox: blue robe and a staff with a glowing crystal">
+        <div>
+          <span class="side player">Player</span>
+          <h3>Battle Mage</h3>
+          <ul>
+            <li>Fireball, chain lightning, frost nova and earth fist</li>
+            <li>Each spell as a quick cast and a full cast</li>
+          </ul>
+        </div>
+      </article>
+      <article class="unit">
+        <img src="media/unit-wolf-scout.webp" width="440" height="500" loading="lazy" decoding="async" alt="The wolf scout in the sandbox, seen from behind in a grey cloak with twin daggers">
+        <div>
+          <span class="side enemy">Enemy</span>
+          <h3>Wolf Scout</h3>
+          <ul>
+            <li>Twin daggers, two cuts per attack</li>
+            <li>Stealth stance under his cloak</li>
+            <li>No hit clip yet: he flinches procedurally</li>
+          </ul>
+        </div>
+      </article>
+      <article class="unit">
+        <img src="media/unit-succubus.webp" width="440" height="500" loading="lazy" decoding="async" alt="The succubus in the sandbox with purple wings and a coiled whip">
+        <div>
+          <span class="side enemy">Enemy</span>
+          <h3>Succubus</h3>
+          <ul>
+            <li>Whip lash with a 2.3 m reach</li>
+            <li>Slash effects along the whip</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <h2><span class="num">03</span>From the sandbox</h2>
+    <p class="intro">Real-window captures of the sandbox with its panels hidden. Click any picture for the full size, the original file and a download.</p>
+
+    <div class="gallery-group">
+      <h3>The footman squad</h3>
+      <div class="shots">
+        <figure class="shot"><img src="media/squad-ranks.webp" width="1120" height="630" loading="lazy" decoding="async" alt="Six footmen in two ranks of three, each with his own helmet and face, the blue eagle on every shield"><figcaption><b>Two ranks of three.</b> Each man dressed by the looks lab in his own helmet and face, resting a little off his place, his idle at its own phase.</figcaption></figure>
+        <figure class="shot"><img src="media/squad-march.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The squad marching in formation towards the drill line of six straw dummies"><figcaption><b>The advance.</b> In formation to the drill line, each man setting off and stepping at his own pace.</figcaption></figure>
+        <figure class="shot"><img src="media/squad-front-rank.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The front rank of three footmen cutting at the dummies while the rear rank stands behind"><figcaption><b>The front rank strikes.</b> The rear rank stands ready; no two blows start together.</figcaption></figure>
+        <figure class="shot"><img src="media/squad-reformed.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The squad back in two ranks before the drill line after the fight"><figcaption><b>Re-formed.</b> After a few blows each, the ranks close up where they fought.</figcaption></figure>
+        <figure class="shot"><img src="media/squad-line.webp" width="1120" height="630" loading="lazy" decoding="async" alt="All six footmen in one line striking the six dummies"><figcaption><b>Spread to the line.</b> With the panel's switch, the rear rank steps up beside the front rank and all six strike.</figcaption></figure>
+        <figure class="shot"><img src="media/squad-lone-foe.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The squad's front rank turning on the wolf scout"><figcaption><b>A lone foe.</b> The squad faces it square and its front rank closes on it.</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h3>The map</h3>
+      <div class="shots wide">
+        <figure class="shot"><img src="media/field-overview.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The whole sandbox field from above: hills, the yard, the road, the pond and the forest ring"><figcaption><b>The field.</b> 28 × 28 tiles with hills, a road, the pond and a forest ring, on the terrain lab's painted ground.</figcaption></figure>
+        <figure class="shot"><img src="media/yard-game-zoom.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The training yard at the game's zoom with all six units and the straw dummies"><figcaption><b>The yard at game zoom.</b> The game's camera: orthographic, 30 degrees down, a soldier 49 px tall at zoom 1.</figcaption></figure>
+        <figure class="shot"><img src="media/march-mid.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The player's units marching up the north-east hill"><figcaption><b>A march over the hill.</b> The routes go round trees, rocks and water and over no bank too steep.</figcaption></figure>
+        <figure class="shot"><img src="media/pond.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The pond with its banks among the trees"><figcaption><b>The pond.</b> Water, banks and the painted woodland, whose crowns fade when a unit walks behind them.</figcaption></figure>
+        <figure class="shot"><img src="media/fog-scouting.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The fog of war by day: only the ground around the units on the hill is clear"><figcaption><b>Fog of war.</b> Seen and explored tiles follow the battle's own visibility rules.</figcaption></figure>
+        <figure class="shot"><img src="media/fog-night.webp" width="1600" height="900" loading="lazy" decoding="async" alt="The fog of war at night: a small dim clearing around the units"><figcaption><b>Fog by night.</b> The night light dims the paint; the fog keeps the explored ground.</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h3>Combat</h3>
+      <div class="shots">
+        <figure class="shot"><img src="media/duel-blow.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The footman cuts at the wolf scout"><figcaption><b>Duel: the blow.</b> The footman cuts at the wolf scout.</figcaption></figure>
+        <figure class="shot"><img src="media/duel-counter.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The wolf scout strikes back at the footman"><figcaption><b>Duel: the counter.</b> The scout steadies and strikes back.</figcaption></figure>
+        <figure class="shot"><img src="media/lethal-fall.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The spearman's thrust kills the succubus, who falls"><figcaption><b>Lethal blow.</b> The spearman runs the succubus through.</figcaption></figure>
+        <figure class="shot"><img src="media/strike-crossbowman.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The crossbowman looses a bolt at a straw dummy"><figcaption><b>Crossbow.</b> The bolt leaves on the shot's release event.</figcaption></figure>
+        <figure class="shot"><img src="media/strike-succubus.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The succubus lashes a straw dummy with her whip"><figcaption><b>Whip lash.</b> The succubus with her slash effects.</figcaption></figure>
+        <figure class="shot"><img src="media/strike-spearman.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The spearman thrusts at a straw dummy"><figcaption><b>Spear thrust.</b> Caught as the blow lands.</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="gallery-group">
+      <h3>The battle mage's spells</h3>
+      <div class="shots four">
+        <figure class="shot"><img src="media/spell-fireball.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The battle mage's fireball in flight towards a dummy"><figcaption><b>Fireball</b></figcaption></figure>
+        <figure class="shot"><img src="media/spell-lightning.webp" width="1120" height="630" loading="lazy" decoding="async" alt="Chain lightning from the battle mage's hand to a dummy"><figcaption><b>Chain lightning</b></figcaption></figure>
+        <figure class="shot"><img src="media/spell-frost.webp" width="1120" height="630" loading="lazy" decoding="async" alt="The frost nova ring spreading round the battle mage"><figcaption><b>Frost nova</b></figcaption></figure>
+        <figure class="shot"><img src="media/spell-earth.webp" width="1120" height="630" loading="lazy" decoding="async" alt="An earth fist bursting from the ground at a dummy"><figcaption><b>Earth fist</b></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="controls">
+    <h2><span class="num">04</span>Controls</h2>
+    <p class="intro">The same controls are listed in the sandbox's README.</p>
+    <div class="controls">
+      <div class="keys">
+        <h3>Mouse</h3>
+        <dl>
+          <dt>Left click</dt><dd>Select a unit; with a selection, march to the ground or attack a foe or dummy</dd>
+          <dt><kbd>Shift</kbd> + click</dt><dd>Add or remove a unit</dd>
+          <dt><kbd>Ctrl</kbd> + click</dt><dd>Select a foe instead of attacking it</dd>
+          <dt>Right click</dt><dd>Orders only, never selects</dd>
+          <dt>Right / middle drag</dt><dd>Pan</dd>
+          <dt>Wheel</dt><dd>Zoom, 0.6x to 6x</dd>
+        </dl>
+      </div>
+      <div class="keys">
+        <h3>Keys</h3>
+        <dl>
+          <dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Pan (or the arrows)</dd>
+          <dt><kbd>Tab</kbd> / <kbd>Esc</kbd></dt><dd>Next unit / clear the selection</dd>
+          <dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd>Strike with that attack at the last target or the nearest foe or dummy</dd>
+          <dt><kbd>Space</kbd></dt><dd>Strike again</dd>
+          <dt><kbd>H</kbd> <kbd>K</kbd> <kbd>R</kbd></dt><dd>Hit, die, revive</dd>
+          <dt><kbd>Q</kbd> / <kbd>E</kbd></dt><dd>Turn a quarter (the squad: wheel)</dd>
+          <dt><kbd>F</kbd> <kbd>G</kbd> <kbd>V</kbd> <kbd>N</kbd></dt><dd>Follow, grid, fog, night</dd>
+        </dl>
+      </div>
+      <div class="keys">
+        <h3>Footman only</h3>
+        <dl>
+          <dt><kbd>B</kbd> held</dt><dd>Block</dd>
+          <dt><kbd>C</kbd></dt><dd>Shield charge</dd>
+          <dt><kbd>X</kbd></dt><dd>Counter</dd>
+          <dt><kbd>L</kbd></dt><dd>Lane step</dd>
+          <dt><kbd>P</kbd></dt><dd>Walk pace or game pace</dd>
+        </dl>
+        <h3 style="margin-top:18px">The squad</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6">Click any of its men to select all six. Its panel: attack (<kbd>1</kbd> / <kbd>Space</kbd>), re-form, wheel left or right, about face, halt, front rank only or spread to the line, hit, death, revive, stop, and each man alone.</p>
+        <h3 style="margin-top:18px">Right panel</h3>
+        <p style="margin:0;font-size:13.5px;line-height:1.6">Fog (and forget the explored ground), grid, night, follow, outlines, shadows, the footman's 2D sprite beside him, lethal blows, fight back, the look (toon, flat, PBR), time scale 0.25x to 2x, and the camera at 1x, 2x, 3x or the whole field.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="hood">
+    <h2><span class="num">05</span>Under the hood</h2>
+    <p class="intro">For when something needs a closer look.</p>
+    <div class="hood">
+      <div>
+        <h3>How the button works</h3>
+        <ul>
+          <li>This card lists one launcher in <code>workspace/workspace.json</code>: <code>Meridius Sandbox.cmd</code> in the repository root. The button asks Mr. Mak to run it; a card can start only the scripts its own entry lists.</li>
+          <li>The script runs <code>projects/meridius/source/godot/tools/sandbox.ps1</code>, which finds Godot 4.7.2 (or <code>GODOT</code>), opens the sandbox maximized, or brings an open one to the front.</li>
+          <li>Errors (no Godot, a missing scene) come back to the line under the button.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>From a terminal</h3>
+        <p style="margin:0">In <code>projects/meridius/source/godot</code>:</p>
+        <pre>tools/godot.sh --path . res://prototypes/sandbox3d/scenes/sandbox3d.tscn</pre>
+        <p style="margin:8px 0 0">The pictures on this page: append <code>-- --clean --capture=&lt;folder&gt;</code>. A recorded tour: <code>-- --tour</code> with Godot's movie maker (<code>--write-movie</code>).</p>
+      </div>
+      <div>
+        <h3>Checks</h3>
+        <ul>
+          <li><code>tools/test.sh test_sandbox3d</code>: the map, routes, fog, the attacks' timing events, every roster model with its clips, and the squad's ranks and fights (only the front rank strikes, the blows staggered, a rear man closing up, the ranks re-formed).</li>
+          <li>The squad's pictures, with who struck when: append <code>-- --capture=&lt;folder&gt; --shots=squad</code>.</li>
+          <li>Frame cost with each part switched off in turn: <code>prototypes/sandbox3d/qa/perf.gd</code>.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Open points</h3>
+        <ul>
+          <li>The spearman's <code>turn_90</code> clip turns only 67.5 degrees; the sandbox turns units by steering instead.</li>
+          <li>The crossbowman's walk speed comes from local Mixamo sources.</li>
+          <li>The wolf scout has no hit clip yet.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">Sandbox: <code>projects/meridius/source/godot/prototypes/sandbox3d</code>, with its README. Nothing in it touches the game's state, saves or production units. Updated 25 October 2026.</p>
+</main>
+</body>
+</html>

@@ -104,7 +104,7 @@ func test_every_encounter_deploys_its_squads_on_the_right_ground() -> void:
 			for kind in ["full", "small", "depleted"]:
 				var roll := Setup.roll_encounter(e.id, Rng.new(seed * 101), 2)
 				var army := _company(kind, seed)
-				var setup := Setup.build_battle(roll, army, {"survivalBonus": 0})
+				var setup := Setup.build_battle(roll, army, {})
 				var label := "%s seed %d %s on %s" % [e.id, seed, kind, roll.mapId]
 				var m: Dictionary = setup.map
 				var reserve: Array = setup.units.filter(func(u: Dictionary) -> bool: return u.status == "reserve")
@@ -150,7 +150,7 @@ func test_reserves_wait_off_the_field_beyond_their_edge() -> void:
 			continue
 		for seed in range(1, 6):
 			var roll := Setup.roll_encounter(e.id, Rng.new(seed * 977), 3)
-			var setup := Setup.build_battle(roll, _company("full", seed), {"survivalBonus": 0})
+			var setup := Setup.build_battle(roll, _company("full", seed), {})
 			var m: Dictionary = setup.map
 			var by_uid := {}
 			for u in setup.units:
@@ -199,8 +199,8 @@ func test_a_depleted_company_meets_a_thinner_host() -> void:
 	var thin_count := 0
 	for seed in range(1, 9):
 		var roll := Setup.roll_encounter("last_stand", Rng.new(seed), 4)
-		var full := Setup.build_battle(roll.duplicate(true), _company("full", seed), {"survivalBonus": 0})
-		var thin := Setup.build_battle(roll.duplicate(true), _company("depleted", seed), {"survivalBonus": 0})
+		var full := Setup.build_battle(roll.duplicate(true), _company("full", seed), {})
+		var thin := Setup.build_battle(roll.duplicate(true), _company("depleted", seed), {})
 		for w in full.waves:
 			full_count += w.uids.size()
 		for w in thin.waves:

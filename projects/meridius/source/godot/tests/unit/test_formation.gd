@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 
 const Formation = preload("res://scripts/render/formation.gd")
 const SquadView = preload("res://scripts/render/squad_view.gd")
+const SoldierAnim = preload("res://scripts/render/soldier_anim.gd")
 const JS = preload("res://scripts/core/js.gd")
 
 var golden: Dictionary
@@ -145,7 +146,8 @@ func test_the_warlord_keeps_the_front_centre_and_falls_last() -> void:
 
 
 func test_member_scale_and_height() -> void:
-	assert_eq(SquadView.member_height("troll"), 66.0)
+	# Trolls were doubled in size for the pixel-art figures (MIGRATION.md).
+	assert_eq(SquadView.member_height("troll"), 132.0)
 	assert_eq(SquadView.member_height("goblin_rabble"), 34.0)
 	assert_eq(SquadView.member_height("footman"), 49.0)
 	assert_eq(SquadView.member_scale({"typeId": "troll", "size": 3}), SquadView.BIG_MEMBER_SCALE)
@@ -182,6 +184,9 @@ func test_pick_casualties_matches_the_original() -> void:
 func test_make_members_matches_the_original() -> void:
 	for g in golden.members:
 		var u: Dictionary = JS.normalize(g.unit)
+		# Trolls are twice as big and stand wider since 22 Oct 2026 (MIGRATION.md); see test_trolls_doubled.
+		if u.typeId == "troll":
+			continue
 		var ms := SquadView.make_members(u)
 		assert_eq(ms.size(), g.members.size(), u.uid)
 		for i in ms.size():
@@ -204,6 +209,12 @@ func test_fall_and_reform_sequence_matches_the_original() -> void:
 	var s: Dictionary = golden.sequence
 	var u: Dictionary = JS.normalize(s.unit)
 	var ms := SquadView.make_members(u)
+	# The golden is the original's half-second fall. Footmen now fall frame by
+	# frame over SoldierAnim.DEATH (MIGRATION.md, "Footman animation"); every
+	# other figure keeps 0.5 s, which the rest of the sequence checks.
+	assert_almost(ms[0].death_dur, SoldierAnim.DEATH, 1e-9, "footmen fall frame by frame")
+	for m in ms:
+		m.death_dur = 0.5
 	var fallen := SquadView.kill_members(ms, 2, {"x": -1.0, "y": 0.0}, -1)
 	assert_eq(fallen.map(func(m): return m.id), JS.normalize(s.fallen))
 	SquadView.reform(ms, u.size, u.facing, {"dur": 0.3, "stagger": 0.04})
@@ -238,6 +249,8 @@ func test_engine_and_caster_slots_match_the_original() -> void:
 	# ordinary triangle, trolls in the wide one.
 	var g := _engines()
 	for c in g.slots:
+		if c.type == "troll":
+			continue
 		var got := Formation.formation_slots(int(c.n), int(c.size), int(c.f), float(c.tight), c.type)
 		var label := "%s n%d f%d t%s" % [c.type, c.n, c.f, c.tight]
 		if not assert_eq(got.size(), c.slots.size(), label + " count"):
@@ -255,6 +268,8 @@ func test_crews_scales_heights_and_members_match_the_original() -> void:
 	var g := _engines()
 	for c in g.members:
 		var u: Dictionary = JS.normalize(c.unit)
+		if u.typeId == "troll":
+			continue
 		assert_almost(SquadView.member_scale(u), c.scale, 1e-12, u.typeId + " scale")
 		assert_almost(SquadView.member_height(u.typeId), c.height, 1e-12, u.typeId + " height")
 		var ms := SquadView.make_members(u)
@@ -290,3 +305,18 @@ func test_crews_stand_on_their_tile_and_a_wagon_is_shoved_from_behind() -> void:
 	var crew := SquadView.make_members({"uid": "c1", "typeId": "rock_lobber", "size": 3, "alive": 3, "facing": 1, "variant": 0})
 	for m in crew:
 		assert_eq(m.type, "goblin_rabble", "a lobber's crew are goblins")
+
+
+## Trolls doubled (Godot only): their slots are the original's wide triangle
+## spread by TROLL_SPREAD sideways, still inside the tile; ranks unchanged.
+func test_trolls_doubled() -> void:
+	for f in 4:
+		for t in [1.0, 0.84]:
+			var old := Formation.formation_slots(3, 3, f, t, "")
+			var got := Formation.formation_slots(3, 3, f, t, "troll")
+			assert_eq(got.size(), 3)
+			for i in 3:
+				assert_almost(got[i].y, old[i].y, 1e-9, "troll f%d rank %d" % [f, i])
+				assert_true(absf(got[i].x) / 64.0 + absf(got[i].y) / 32.0 < 0.92, "troll f%d slot %d inside the tile" % [f, i])
+			assert_true(absf(got[0].x - got[1].x) > absf(old[0].x - old[1].x), "trolls stand wider")
+	assert_eq(SquadView.member_scale({"typeId": "troll", "size": 3}), SquadView.BIG_MEMBER_SCALE)

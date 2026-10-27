@@ -23,8 +23,11 @@ board. "setup" replaces it with cloth:
 space, before Solidify, kept GROUND_CLEAR above the ground) to <cache_dir>/<clip>.pc2.
 Each run starts in the rest pose, where nothing overlaps, eases into the clip's first pose
 and holds it, so the clip starts with the cape settled; loops are simulated twice and the
-second pass kept, its last frames eased into its first. The renders read the caches with a
-Mesh Cache modifier, so every facing shows the same cloth.
+second pass kept, its last frames eased into its first. Where his left fist rests at the
+small of his back (spear_motion.py marks the clip "back_hand"), the forearm and fist get
+ellipsoids too, which come out of his back during the hold and lift the cloth over the arm
+(back_hand_colliders). The renders read the caches with a Mesh Cache modifier, so every
+facing shows the same cloth.
 """
 import math
 import struct
@@ -47,6 +50,7 @@ PIN_TOP, PIN_BOTTOM = 1.37, 1.31   # pinned fully above PIN_TOP, free below PIN_
 GROUND_CLEAR = 0.01    # m: the baked cape is kept this far above the ground (Solidify thickens it inwards)
 BACK_BOX = ((-0.30, 0.30), (0.90, 1.30))     # rest x and z of his lower back, always under the cape
 BACK_LINE, BACK_KEEP = 0.10, 0.0              # rest y the back is pressed onto, share of the depth behind it kept
+GROW = 10              # frames of the held first pose over which the arm's colliders come out of his back
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 mode = argv[0]
@@ -296,6 +300,53 @@ def setup():
     print("CAPE_SETUP_SAVED")
 
 
+def back_hand_colliders():
+    """His left fist at the small of his back, under the cape: the arm reaches there through the
+    cloth during the run-up, so its colliders wait inside his body, a fifth the size, until the
+    first pose is held, then come out to the arm and grow to size over GROW frames, pushing the
+    cloth outward over it. They are convex hulls of the forearm's and the hand's vertices in the
+    held pose (ellipsoids fitted inside the gauntlet let its cuff and the knuckles through the
+    cloth; grown round them, they stood 6 cm proud of the box of his fist) and ride on the hips,
+    the frame spear_motion.py solves the arm in (the elbow moves up to 1 cm on them). Call with
+    the run-up action on the rig; returns the objects to remove afterwards."""
+    hold = 1 - PREROLL_HOLD
+    sc.frame_set(hold)
+    ev = body.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    V = np.array([v.co[:] for v in ev.data.vertices])
+    assert len(V) == len(body.data.vertices)
+    gi = {g.index: g.name.replace("mixamorig:", "") for g in body.vertex_groups}
+    owner = np.array([gi.get(max(v.groups, key=lambda g: g.weight).group, "") if len(v.groups) else "" for v in body.data.vertices])
+    spine = rig.pose.bones["mixamorig:Spine"].head
+    made = []
+    for name, parts in (("forearm", ["LeftForeArm", "LeftForeArmTwist"]), ("fist", ["LeftHand"])):
+        pts = V[np.isin(owner, parts)]
+        c = Vector(pts.mean(axis=0))
+        bm = bmesh.new()
+        for p in pts:
+            bm.verts.new(Vector(p) - c)
+        bmesh.ops.convex_hull(bm, input=bm.verts)
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        me = bpy.data.meshes.new("CapeCollider_" + name)
+        bm.to_mesh(me); bm.free()
+        e = bpy.data.objects.new("CapeCollider_" + name, me)
+        sc.collection.objects.link(e)
+        e.hide_render = True
+        e.display_type = "WIRE"
+        e.parent = rig; e.parent_type = "BONE"; e.parent_bone = "mixamorig:Hips"
+        inside = Vector((spine.x, spine.y, c.z))      # in his body at the same height
+        for k, (cc, s) in ((1 - PREROLL, (inside, 0.2)), (hold, (inside, 0.2)), (hold + GROW, (c, 1.0))):
+            e.matrix_world = Matrix.Translation(cc) @ Matrix.Scale(s, 4)
+            for path in ("location", "rotation_euler", "scale"):
+                e.keyframe_insert(path, frame=k)
+        e.modifiers.new("Collision", "COLLISION")
+        e.collision.thickness_outer = 0.012
+        e.collision.cloth_friction = 0.3          # the body's 2 held the cape's side out over the elbow like a wing
+        made.append(e)
+        print("CAPE back hand collider", name, "hull faces", len(me.polygons), "centre", tuple(round(x, 3) for x in c))
+    return made
+
+
 def write_pc2(path, frames):
     n = len(frames[0])
     with open(path, "wb") as f:
@@ -347,6 +398,7 @@ def sim(cache_dir, clips):
                 pb.rotation_quaternion = q; pb.location = loc
                 pb.keyframe_insert("rotation_quaternion", frame=t)
                 pb.keyframe_insert("location", frame=t)
+        extra = back_hand_colliders() if "back_hand" in act else []
         sc.frame_start, sc.frame_end = start, total
         cl.point_cache.frame_start, cl.point_cache.frame_end = start, total
         rows = {}
@@ -357,6 +409,10 @@ def sim(cache_dir, clips):
                 rows[f] = np.array([v.co[:] for v in ev.data.vertices], dtype=np.float32)
         rig.animation_data.action = act
         bpy.data.actions.remove(tmp)
+        for e in extra:
+            a = e.animation_data.action
+            bpy.data.objects.remove(e, do_unlink=True)
+            bpy.data.actions.remove(a)
         keep = list(range(n + 1, 2 * n + 1)) if loop else list(range(1, n + 1))
         # Lying on his back, cloth caught between his hips and the ground can be squeezed
         # through it, and the pinned rows ride a few cm under with the spine: put it on the ground.
@@ -380,5 +436,5 @@ if mode == "setup":
     setup()
 elif mode == "sim":
     cache = Path(argv[1])
-    clips = argv[2].split(",") if len(argv) > 2 and argv[2] else ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "turn_90", "step_lane"]
+    clips = argv[2].split(",") if len(argv) > 2 and argv[2] else ["idle", "idle_rest", "walk", "attack", "hit", "death", "death_2", "death_3", "turn_90", "turn_90_r", "turn_180", "step_lane"]
     sim(cache, clips)

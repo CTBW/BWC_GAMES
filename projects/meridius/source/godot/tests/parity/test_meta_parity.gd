@@ -16,6 +16,28 @@ var golden: Dictionary
 func before_all() -> void:
 	# Recorded before the squad skills: ability lists in today's kits (H.OLD_KITS).
 	golden = H.current_kits(H.load_golden("meta_golden.json"))
+	_retire_infirmary_survival()
+
+
+# The Infirmary lost its survival bonus with the wound rule (MIGRATION.md
+# 2026-10-26) and gained the price of dressing wounds (2026-10-27): queries
+# carry no survival effect but today's dressCost, and its levels describe
+# today's treatment. Every other field is compared as recorded.
+func _retire_infirmary_survival() -> void:
+	var levels: Array = DB.building_by_id("infirmary").levels
+	for sc in golden.scripts:
+		for st in sc.steps:
+			if st.op != "query":
+				continue
+			st.ret.effects.erase("infirmary.survival")
+			for nl in st.ret.nextLevels:
+				if nl.id != "infirmary":
+					continue
+				st.ret.effects["infirmary.dressCost"] = levels[nl.level - 1].effects.dressCost
+				if nl.next != null:
+					nl.next.effects.erase("survival")
+					nl.next.effects.dressCost = levels[nl.next.level - 1].effects.dressCost
+					nl.next.description = levels[nl.next.level - 1].description
 
 
 func _match(actual: Variant, expected: Variant, msg: String) -> bool:

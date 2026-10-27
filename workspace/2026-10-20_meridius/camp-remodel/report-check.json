@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "desktopWidths": [
+    1440,
+    1000
+  ],
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "imagePreviewsAndDownloads": 8,
+  "links": "all local targets returned200",
+  "videos": [
+    {
+      "seconds": 12,
+      "width": 1600,
+      "height": 900,
+      "playback": true,
+      "seek": true,
+      "audioDecoded": true,
+      "muted": false
+    },
+    {
+      "seconds": 6,
+      "width": 1600,
+      "height": 900,
+      "playback": true,
+      "seek": true,
+      "audioDecoded": true,
+      "muted": false
+    }
+  ],
+  "horizontalOverflow": false,
+  "pageErrors": [],
+  "registry": "one camp step in Meridius"
+}

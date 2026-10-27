@@ -37,7 +37,7 @@ const DB = preload("res://scripts/data/db.gd")
 
 const INK := Color("#2b1d10")
 const INK_SOFT := Color("#5b4630")
-const INK_FAINT := Color("#8a7356")
+const INK_FAINT := Color("#6c5940")
 const PARCH := Color("#efe2c2")
 const PARCH_2 := Color("#e4d3ab")
 const PARCH_DARK := Color("#cdb88a")
@@ -189,7 +189,15 @@ static func panel(variation := "ParchmentPanel", padding: Array = []) -> PanelCo
 	p.mouse_filter = Control.MOUSE_FILTER_STOP
 	if not padding.is_empty():
 		pad(p, padding)
-	if variation == "DarkPanel":
+	if variation == "BannerPanel":
+		# Keep live headings clear of the fixed-size painted clasps and folded ends.
+		var banner: StyleBox = theme_stylebox(p).duplicate()
+		banner.content_margin_left = maxf(66, banner.content_margin_left)
+		banner.content_margin_right = maxf(66, banner.content_margin_right)
+		banner.content_margin_top = maxf(20, banner.content_margin_top)
+		banner.content_margin_bottom = maxf(22, banner.content_margin_bottom)
+		p.add_theme_stylebox_override("panel", banner)
+	if variation in ["DarkPanel", "BannerPanel"]:
 		dark(p)
 	return p
 
@@ -228,6 +236,8 @@ static func pad(c: Control, padding: Array) -> Control:
 ## A control's stylebox from its theme variation, also before it is in the tree
 ## (then looked up in its own theme and the UI theme; ancestors' sub-themes are not known yet).
 static func theme_stylebox(c: Control, item := "panel") -> StyleBox:
+	if c.has_theme_stylebox_override(item):
+		return c.get_theme_stylebox(item)
 	if c.is_inside_tree():
 		return c.get_theme_stylebox(item)
 	var TB = load("res://scripts/ui/theme_builder.gd")
@@ -245,31 +255,27 @@ static func theme_stylebox(c: Control, item := "panel") -> StyleBox:
 
 
 ## The `.panel .title` block: centred Cinzel title, 6 px, a hairline rule, 10 px.
+## A restrained blue cloth heading set into the panel's binding.
 static func title_block(text: String, size := 0, color := Color(0, 0, 0, 0)) -> VBoxContainer:
 	var col := vbox(0)
-	var l := label(text, "TitleLabel", size, color)
+	var band := panel("BannerPanel", [7, 18])
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := label(text, "TitleLabel", size, color.lightened(0.55) if color.a > 0 else LIGHT_TITLE)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col.add_child(l)
-	col.add_child(gap(0, 6))
-	var s := HSeparator.new()
-	s.theme_type_variation = "TitleRule"
-	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	col.add_child(s)
-	col.add_child(gap(0, 10))
+	band.add_child(l)
+	col.add_child(band)
+	col.add_child(gap(0, 12))
 	return col
 
 
-## The title block with rich text (Cinzel 700 22, e.g. a muted small count after the name).
 static func title_block_rich(bbcode: String) -> VBoxContainer:
 	var col := vbox(0)
-	col.add_child(rich("[center]%s[/center]" % bbcode, "TitleText"))
-	col.add_child(gap(0, 6))
-	var s := HSeparator.new()
-	s.theme_type_variation = "TitleRule"
-	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	col.add_child(s)
-	col.add_child(gap(0, 10))
+	var band := panel("BannerPanel", [7, 18])
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	band.add_child(rich("[center]%s[/center]" % bbcode.replace("#8a7356", "#b8a27c"), "TitleText"))
+	col.add_child(band)
+	col.add_child(gap(0, 12))
 	return col
 
 

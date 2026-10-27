@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Unit playground</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<style>
+.evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.evidence figure{margin:0;padding:12px;border:1px solid var(--mak-border);border-radius:8px}.evidence img,video{width:100%;display:block;border-radius:5px}figcaption,.meta{font-size:13px;color:var(--mak-muted)}figcaption{padding-top:10px}video{background:#10191b}.table-wrap{overflow-x:auto}.notice{padding:18px;border:1px solid var(--mak-border);border-radius:8px;background:var(--mak-surface)}
+</style>
+</head>
+<body><main class="container">
+<p class="meta">MERIDIUS / NATIVE GODOT FEATURE / 23 OCTOBER 2026</p>
+<h1>A field for checking your units</h1>
+<p>Open <strong>Unit Playground</strong> on the game's title screen. Choose any of the 20 current units, inspect its appearance and facings, and replay its existing animations on a simple grass field. Click the straw training dummy to walk into range and attack it as often as you like.</p>
+<p class="notice">The field runs independently of your company. The dummy survives every hit, there are no turn limits, and leaving the playground does not change your save. Models and movement use the production battle renderer.</p>
+<div class="evidence">
+<figure><img src="unit-playground/field.webp" alt="Unit playground with full control sidebar, footmen and straw training dummy" loading="lazy" width="1920" height="1080"><figcaption>The practice field, opened from the title menu. The sidebar stays separate from world clicks.</figcaption></figure>
+<figure><img src="unit-playground/attack_close.webp" alt="Close inspection of a footman squad beside the target dummy" loading="lazy" width="1920" height="1080"><figcaption>Close-up view. Melee units approach the dummy; ranged units stop at firing distance.</figcaption></figure>
+<figure><img src="unit-playground/comparison.webp" alt="Two independently displayed unit models for comparing scale" loading="lazy" width="1920" height="1080"><figcaption>Add a second unit to compare model scale. It remains independent of the dummy.</figcaption></figure>
+<figure><img src="unit-playground/night.webp" alt="The practice field with optional night lighting and grid" loading="lazy" width="1920" height="1080"><figcaption>Use night lighting and the grid to check contrast and grounding.</figcaption></figure>
+</div>
+<h2>Approach and attack</h2>
+<video controls preload="metadata" poster="unit-playground/attack_close.webp" aria-label="Native footmen approaching and attacking the dummy"><source src="unit-playground/attack.mp4" type="video/mp4"></video>
+<p class="meta">Native engine capture, 1× playback, four seconds at 30 fps. <a href="unit-playground/attack.mp4" download>Download video</a>. The original frame sequence is retained under the game's <code>tests/visual/out/playground/</code>.</p>
+<h2>Controls</h2>
+<div class="table-wrap"><table><thead><tr><th>Control</th><th>Use</th></tr></thead><tbody>
+<tr><td>Unit, Look 1–6</td><td>Choose a current unit type and appearance variant.</td></tr>
+<tr><td>Full squad / Single figure</td><td>Inspect formation or individual details. Engines retain their crews.</td></tr>
+<tr><td>Click field / click dummy</td><td>Walk to a tile, or approach and attack the invulnerable target.</td></tr>
+<tr><td>Idle, March, Turn, Attack dummy, Fall</td><td>Replay the game's existing animation states. Toggle Loop for repetition.</td></tr>
+<tr><td>Space, +1 frame, Replay</td><td>Pause, step exactly 1/60 second, or return the chosen animation to its start.</td></tr>
+<tr><td>Playback slider</td><td>Slow down to 0.25× or speed up to 2×, locally to this field.</td></tr>
+<tr><td>Q / E or facing buttons</td><td>Inspect all four directional views.</td></tr>
+<tr><td>Wheel / right or middle drag</td><td>Zoom from 0.4× to 5× and pan. Use Frame unit to recenter.</td></tr>
+<tr><td>Compare with / Grid / Night</td><td>Compare scale, ground contact and lighting.</td></tr>
+<tr><td>Esc / Back to title</td><td>Leave the field. Reopening creates a clean practice session.</td></tr>
+</tbody></table></div>
+<h2>What this version covers</h2>
+<p>This is an inspection tool for the current sprite models. It does not edit models or author new animation clips. Attack previews use each unit's ordinary melee, ranged or magic-bolt attack; special abilities are not separate clip buttons. Combat audio is quiet during inspection. Any sliding, overlap or pose issues visible here are the current production animation and can be reviewed using pause and frame stepping.</p>
+<h2>Verification and editable sources</h2>
+<p id="verification">Native input, roster, repeated attacks, save isolation and desktop layout checks are recorded in <a href="unit-playground/review.txt">the review log</a>. Captures use the actual Godot GL Compatibility renderer. Agent verification is separate from your visual acceptance.</p>
+<p>The quick suite completed with <strong>372 passed, 1 failed, 10 skipped</strong>. All four playground regression cases passed. The remaining failure is <code>test_audio::test_a_marching_squad_is_one_tread</code>, reporting a shared headless shader compiler error in the existing unit-outline shader. The same playground cases pass with the native GL renderer. The guide was checked at 1440- and 1000-pixel desktop widths in dark and light themes, including image preview/download, local links, and video playback.</p>
+<p class="meta">Source baseline: <code>8adca51</code>, with existing local changes preserved. New code: <code>scripts/render/unit_playground.gd</code>, <code>scripts/render/playground_draw.gd</code>, <code>scripts/ui/screens/unit_playground.gd</code>. Editable dummy: <a href="unit-playground/training_dummy.svg" download>SVG source</a>. Tests: <code>tests/unit/test_unit_playground.gd</code> and <code>tests/visual/unit_playground_review.gd</code>. All source paths are inside <code>projects/meridius/source/godot</code>.</p>
+<p>Direct launch from the Godot project folder: <code>tools/godot.sh --path . -- --playground</code>.</p>
+</main></body></html>

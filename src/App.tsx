@@ -10,7 +10,7 @@ import EntityControls from './components/EntityControls'
 import StepGroupRail from './components/StepGroupRail'
 import { stepGroups, type StepGroup, type StepSubgroup } from './lib/stepGroups'
 import ReportBoundary from './components/ReportBoundary'
-import { contentUrl, isDesktop } from './desktop/client'
+import { api, contentUrl, isDesktop } from './desktop/client'
 
 const Compare3D = lazy(() => import('./components/Compare3D'))
 const ReportViewer = lazy(() => import('./components/ReportViewer'))
@@ -102,14 +102,30 @@ export default function App() {
 
   // A report opens another tab of its own card by path, since its sandbox
   // can't navigate the window: parent.postMessage({ type: 'mrmak:open-step',
-  // path: 'other.html' }, '*'). Only the open report frame is listened to.
+  // path: 'other.html' }, '*'). It starts one of its card's launchers (a
+  // program the registry lists for the card) with { type: 'mrmak:launch',
+  // launcher: 'id' } and hears back mrmak:launch-result: state 'starting' at
+  // once, then 'started' with a message or 'failed' with an error. Only the
+  // open report frame is listened to.
   useEffect(() => {
     if (!entity || !reportUrl) return
     const origin = new URL(reportUrl, location.href).origin
     const onMessage = (event: MessageEvent) => {
-      if (event.data?.type !== 'mrmak:open-step' || event.origin !== origin) return
+      const type = event.data?.type
+      if ((type !== 'mrmak:open-step' && type !== 'mrmak:launch') || event.origin !== origin) return
       const frame = document.querySelector<HTMLIFrameElement>('iframe.report-frame')
       if (!frame || event.source !== frame.contentWindow) return
+      if (type === 'mrmak:launch') {
+        const launcher = String(event.data.launcher || '')
+        const reply = (result: { state: string; message?: string; error?: string }) =>
+          frame.contentWindow?.postMessage({ type: 'mrmak:launch-result', launcher, ...result }, origin)
+        if (!isDesktop) return reply({ state: 'failed', error: 'Open this card in the Mr. Mak desktop app to start programs from it.' })
+        reply({ state: 'starting' })
+        api<{ message: string }>('/launch', { entityId: entity.id, launcher }).then(
+          result => reply({ state: 'started', message: result.message }),
+          error => reply({ state: 'failed', error: error instanceof Error ? error.message : String(error) }))
+        return
+      }
       const index = entity.steps.findIndex(s => s.path === event.data.path)
       if (index >= 0) selectStep(entity.id, index)
     }

@@ -54,8 +54,42 @@ projects/meridius/references/characters/goblin_*/*.png
 !projects/meridius/references/characters/goblin_archer/source_crop.png
 !projects/meridius/references/characters/goblin_spear/source_crop.png
 !projects/meridius/references/characters/goblin_rabble/ref_rabble_faces.png
+projects/meridius/references/characters/orc_*/*.png
+!projects/meridius/references/characters/orc_brute/source.png
+projects/meridius/references/characters/wolf_scout_3/*.png
+# Terrain and boss art is public as WebP copies in its Workspace card; the
+# reference library's full-size PNGs stay local.
+projects/meridius/references/backgrounds/terrain/**/*.png
+projects/meridius/references/style/terrain/**/*.png
+projects/meridius/references/characters/bosses/concepts/**/*.png
+# Owner-supplied style guides and boss references, and a Higgsfield site screenshot.
+workspace/2026-10-20_meridius/terrain/references/*.png
+workspace/2026-10-20_meridius/terrain/northern-night-higgsfield.png
+workspace/2026-10-20_meridius/bosses/references/*.png
+# Sovereign Kiss Higgsfield icons and their concept pack are not approved for publishing.
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-fog-b.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-warcraft-a.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-higgsfield-v1.png
+workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-fog-concept-pack.zip
+# Mixamo-derived animation exports are not redistributable.
+workspace/2026-10-20_meridius/motion-study/mixamo/*.glb
+# The goblin shaman's idle, walk and death viewer sheets are rendered from Mixamo clips and
+# stay local (his README has the commands); his standard pose and head check are in Git.
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/idle_*
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/walk_*
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/death_*
 # Tripo downloads in the owner's Chrome save folder; tripo/<unit>/ holds the copies.
 projects/meridius/references/characters/FBX/
+# Wolf Scouts 1 and 2, the versions Wolf Scout 3 replaced, stay local: their
+# production record, Workspace pages and pose viewer. Wolf Scout 3's publisher,
+# check records and viewer sheets are in Git, the frames they are packed from not.
+projects/meridius/review/wolf-scout/*
+!projects/meridius/review/wolf-scout/publish-pose-viewer-wolf-scout-3.mjs
+!projects/meridius/review/wolf-scout/wolf-scout-3/
+projects/meridius/review/wolf-scout/wolf-scout-3/viewer-frames/
+workspace/2026-10-20_meridius/wolf-scout/*
+!workspace/2026-10-20_meridius/wolf-scout/wolf-scout-3/
+workspace/2026-10-20_meridius/wolf-scout-poses.html
 
 # Editor and operating-system files
 .vscode/

@@ -69,7 +69,7 @@ func test_a_whole_last_stand_plays_to_an_end_with_the_ai_on_both_sides() -> void
 		var types := ["footman", "footman", "spearman", "spearman", "crossbowman", "crossbowman"]
 		for k in types.size():
 			army.append(_soldier(types[k], 300 + i * 10 + k, "p%d" % k))
-		var b := Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
+		var b := Battle.new(Setup.build_battle(roll, army, {}))
 		b.begin(enemy_ai)
 		while not b.is_over() and b.turn <= 12:
 			Ai.run_player_auto(b)

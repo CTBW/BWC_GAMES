@@ -1,0 +1,21 @@
+{
+  "mixar_release": "4.3.5",
+  "reported_version": "4.3.5",
+  "python_modules": [
+    "keyring",
+    "mcp",
+    "truststore"
+  ],
+  "save_reopen": true,
+  "packed_texture": true,
+  "uvs": true,
+  "dimensions_metres": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "cycles_cpu_render": true,
+  "rgba_png": "projects\\meridius\\review\\mixar-setup\\verification.png",
+  "glb_export": true,
+  "source": "projects\\meridius\\review\\mixar-setup\\verification.blend"
+}

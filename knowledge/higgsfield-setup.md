@@ -16,6 +16,30 @@ Blender 5.2.2 LTS. Every result below comes from real command output.
 | Higgsfield MCP in Claude Code | Connected (local scope); read-only tools verified. |
 | Official skills plugin for Claude Code | Not installed (user's choice). |
 
+## Paying for a generation
+
+The user's rule (25 October 2026): **use Unlimited when it is available for
+the model; otherwise ask the user before spending credits.** It applies to
+every route and extends the image-generation line in `context/preferences.md`.
+
+- **MCP:** right before each job, call `models_explore` with `get` for the
+  model and read its `unlim` block.
+  - With `available: true`, send `use_unlim: true`. It caps `count` at 1, so
+    send one job per image.
+  - With `available: false`, tell the user the model, the number of images and
+    the estimated credits (`get_cost: true` preflights without submitting), and
+    send `use_unlim: false` only after a yes.
+- Leaving `use_unlim` out lets the server decide: it submits nothing and
+  returns `unlim_choice` only when an allowance covers the model. Check
+  `unlim` yourself instead of relying on that.
+- **Website:** check that the Unlimited switch is on (green) before every
+  submission.
+- On 24 October 2026 the MCP reported `supports_unlim: true` but
+  `unlim: {available: false}` for `nano_banana_pro` at four checks. The 3D
+  battlefields paintings (24–25 October) were paid from credits. Unlimited
+  bought for the web app has not been usable from the MCP or the CLI (see
+  "All squads" below).
+
 ## CLI
 
 Install (the README's Windows route):
@@ -243,6 +267,34 @@ re-rolls); jobs under `anim_keyframes` in the receipt. What we learned:
 - Map frames to the idle palette with `anim.py palette`, which repeats
   `assemble`'s median cut, and PIL `quantize(palette=…)`. Nearest-colour
   matching against the delivered colours alone gave 17% wrong pixels.
+
+## All squads (22 October 2026, CLI on the paid plan)
+
+Every Meridius battle figure was made with `tools/anim/hfgen.py`
+(projects/meridius/source/godot) through the CLI, about 300 `nano_banana_pro`
+2K sheets at 2 credits each. What we learned:
+
+- The CLI now generates (the plan is paid). Call the binary
+  `%APPDATA%\npm\node_modules\@higgsfield\cli\vendor\hf.exe` directly: the npm
+  shim `higgsfield.cmd` runs through cmd.exe, which cuts every argument at its
+  first line break, so a prompt arrives as its first paragraph only (five
+  sheets were wasted before this was found). `hfgen.py` checks that the job
+  received the whole prompt.
+- `generate create … --json` prints a list of job ids. Pass a finished job id
+  as `--image-references` to edit its result without re-uploading it.
+- Unlimited Nano Banana generations bought for the web app were not usable from
+  the CLI or MCP (`Unlimited generations aren't supported for nano_banana_pro`).
+- A painted design sheet as a reference sometimes gets pasted into the result
+  as scenery (orc warriors, royal guards): leave it out or remove it with an
+  edit. A style sheet's equipment gets copied too (goblin shamans with the
+  footmen's eagle shields): say "no shield" explicitly.
+- Back views drift: heads turned to the viewer, weapons and mounts pointing
+  left. A strict "orientation" paragraph (back of the head toward the viewer,
+  everything pointing to the upper right, the mount's head at the upper right)
+  fixed most of them; check every back sheet.
+- An edit of a finished sheet keeps the designs and layout best: plumes removed,
+  helmets made rusty, shields removed, trolls made hulkier (with the user's
+  painted troll as a shape reference). Check for extra limbs.
 
 ## Seedance image-to-video through MCP (24 October 2026)
 

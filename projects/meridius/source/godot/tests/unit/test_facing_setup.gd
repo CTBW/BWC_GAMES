@@ -24,7 +24,7 @@ func test_after_an_enemy_turn_every_squad_faces_its_last_step_and_nothing_turned
 		var types := ["footman", "footman", "spearman", "spearman", "crossbowman"]
 		for i in types.size():
 			army.append(_soldier(types[i], seed * 10 + i, "p%d" % i))
-		var b := Battle.new(Setup.build_battle(roll, army, {"survivalBonus": 0}))
+		var b := Battle.new(Setup.build_battle(roll, army, {}))
 		b.begin(enemy_ai)
 		var turn := 0
 		while turn < 4 and not b.is_over():

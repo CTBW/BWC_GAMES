@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "route": "Unmodified source PNGs, keyed by the marked-foliage branch of battle_sorted.gdshader; root anchors and sizes in woodland_kit.gd",
+  "files": [
+    {
+      "file": "tree_pine__take-01.png",
+      "source": "workspace/2026-10-20_meridius/terrain/originals/tree_pine__take-01.png",
+      "bytes": 5875280,
+      "width": 1792,
+      "height": 2400,
+      "sha256": "66b42a7be5e7dbcc9adbe45d4f005dd2b38d4997fd93bd177c13fd6ff866734a"
+    },
+    {
+      "file": "tree_beech__take-01.png",
+      "source": "workspace/2026-10-20_meridius/terrain/originals/tree_beech__take-01.png",
+      "bytes": 6306417,
+      "width": 1792,
+      "height": 2400,
+      "sha256": "9a02bfed7b15f7229ada3959d695ede9e95e19c85b7c3e8e55d06f09b4abf690"
+    },
+    {
+      "file": "tree_oak__take-02.png",
+      "source": "workspace/2026-10-20_meridius/terrain/originals/tree_oak__take-02.png",
+      "bytes": 6457106,
+      "width": 1792,
+      "height": 2400,
+      "sha256": "44640ab1b39d9e5c9cae2af6808c0011010c1a56a417c19b61245e2d93d7ded8"
+    },
+    {
+      "file": "bush_green__take-01.png",
+      "source": "workspace/2026-10-20_meridius/terrain/originals/bush_green__take-01.png",
+      "bytes": 6046000,
+      "width": 2048,
+      "height": 2048,
+      "sha256": "7a4fdd95fb5fc6ca42bfb598574ac2374117beec804f5f356a1b44dd8c0ceeea"
+    },
+    {
+      "file": "undergrowth_ferns__take-01.png",
+      "source": "workspace/2026-10-20_meridius/terrain/originals/undergrowth_ferns__take-01.png",
+      "bytes": 6433102,
+      "width": 2048,
+      "height": 2048,
+      "sha256": "9f280fca0e823966716c2ee6edcd6319690b84ac356a2d5397f577c82ccc6ebd"
+    }
+  ]
+}

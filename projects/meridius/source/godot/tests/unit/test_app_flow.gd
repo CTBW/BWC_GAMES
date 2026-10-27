@@ -1,13 +1,13 @@
 ## The App store (port of src/ui/store.ts) driven through the game's flow:
-## new game → base → prep → launch → campaign → battle → campaign → home →
-## report → base, plus panels, manual, soldier, menu and the automation API.
-## World views are off (App.use_views = false): this tests the store alone.
+## new game → base → prep → launch → the battle → home → report → base,
+## plus panels, manual, soldier, menu and the automation API. The expedition is
+## one battle for now (the campaign map is set aside while the game is
+## redesigned): the turn-based rules on Ashby farm, one of the 3D battlefields.
+## World views are off (App.use_views = false): this tests the store alone;
+## battles are settled with App.debug_settle_battle or fought by the AI.
 extends "res://tests/test_case.gd"
 
 const Game = preload("res://scripts/meta/game.gd")
-const Ex = preload("res://scripts/campaign/expedition.gd")
-const Setup = preload("res://scripts/rules/setup.gd")
-const Rng = preload("res://scripts/core/rng.gd")
 const Prefs = preload("res://scripts/core/prefs.gd")
 
 const SAVE := "user://test_app_flow_save.json"
@@ -93,82 +93,96 @@ func test_panels_manual_soldier_menu() -> void:
 	assert_eq(App.screen, "title")
 
 
-func test_full_flow_with_battle() -> void:
+func test_launch_takes_the_field_and_a_victory_goes_home() -> void:
 	App.new_game(1234)
 	App.go_prep()
 	assert_eq(App.screen, "prep")
 	var c := _launch_default()
-	assert_eq(App.screen, "campaign")
+	assert_eq(App.screen, "battle", "the army marches straight onto the field")
 	assert_not_null(App.game.expedition, "expedition started")
 	assert_eq(App.game.cycle, 1)
-	# Stage a battle as the campaign would after a march.
-	var ex: Dictionary = App.game.expedition
-	ex.pending = {"kind": "battle", "nodeId": ex.current, "roll": Setup.roll_encounter("raiding_party", Rng.new(3), 1), "title": "Test Field", "objective": false, "surprise": false}
+	assert_eq(App.battle_info.title, "Ashby farm")
 	Prefs.set_pref("manualSeen", false)
-	App.start_battle()
-	assert_eq(App.screen, "battle")
-	assert_not_null(App.battle, "battle created")
-	assert_eq(App.battle_info.title, "Test Field")
-	assert_eq(App.manual, "battle", "the manual opens before the first battle")
-	App.open_manual(null)
-	var b: RefCounted = App.battle
-	App.debug_auto_battle()
-	assert_eq(App.screen, "campaign", "back on the map after the battle")
-	assert_true(b.is_over(), "fought to the end")
-	assert_eq(App.battle_info, null, "battle settled")
-	var p: Variant = App.game.expedition.get("pending") if App.game.expedition != null else null
-	if p != null:
-		assert_eq(p.kind, "battleResult")
-		App.dismiss()
-	if App.screen == "campaign":
-		App.go_home("retreat")
+	assert_eq(App.manual, null, "the manual of the old battles does not open")
+	App.debug_settle_battle("victory")
 	assert_eq(App.screen, "report")
-	assert_not_null(App.report)
-	assert_eq(App.report.campaignId, c.id)
+	assert_eq(App.battle_info, null, "battle settled")
 	assert_null_expedition()
+	assert_eq(App.report.campaignId, c.id)
+	assert_eq(App.report.outcome, "success", "a victory is the expedition's success")
+	assert_eq(App.game.roster.size(), 6, "nobody fell")
 	App.go_base()
 	assert_eq(App.screen, "base")
 	assert_eq(App.game.lastReport.campaignId, c.id)
+
+
+func test_defeat_loses_the_army() -> void:
+	App.new_game(77)
+	_launch_default()
+	var army: Array = App.game.expedition.army.duplicate()
+	App.debug_settle_battle("defeat")
+	assert_eq(App.screen, "report")
+	assert_eq(App.report.outcome, "defeat")
+	for id in army:
+		assert_true(App.game.roster.all(func(s): return s.id != id), "%s fell" % id)
+	assert_true(App.game.fallen.size() >= army.size(), "remembered among the fallen")
+
+
+func test_finish_battle_without_a_view_withdraws() -> void:
+	App.new_game(31)
+	_launch_default()
+	var men := 0
+	for s in App.game.roster:
+		men += int(s.men)
+	App.finish_battle()
+	assert_eq(App.screen, "report")
+	assert_eq(App.report.outcome, "retreat", "no battle fought: the company withdraws")
+	var after := 0
+	for s in App.game.roster:
+		after += int(s.men)
+	assert_eq(after, men, "nobody lost")
+
+
+func test_auto_battle_is_fought_by_the_rules_and_applied() -> void:
+	App.new_game(8)
+	_launch_default()
+	var b = App.battle
+	assert_not_null(b, "a rules battle")
+	assert_eq(b.map.id, "ashby", "on Ashby farm")
+	assert_eq(b.phase, "deploy", "the company deploys first")
+	assert_eq(b.setup.encounterId, App.FIELD_ENCOUNTER)
+	assert_eq(App.game.expedition.pending.kind, "battle", "the battle is the expedition's pending one")
+	var battles: int = App.game.roster.reduce(func(n, s): return n + int(s.battles), 0)
+	App.debug_auto_battle()
+	assert_eq(b.phase, "over", "fought to the end, turn by turn")
+	assert_eq(App.screen, "report")
+	assert_eq(App.report.outcome, {"victory": "success", "retreat": "retreat"}.get(b.result, "defeat"))
+	var after: int = App.game.roster.reduce(func(n, s): return n + int(s.battles), 0)
+	assert_true(after > battles, "the battle counted for the squads that fought it")
 
 
 func assert_null_expedition() -> void:
 	assert_true(App.game.expedition == null, "expedition over")
 
 
-func test_click_node_and_deny() -> void:
-	App.new_game(99)
-	_launch_default()
-	var ex: Dictionary = App.game.expedition
-	var marches: int = ex.marches
-	App.click_node("no-such-node")
-	assert_eq(App.game.expedition.marches, marches, "a refused march changes nothing")
-	var nxt: Array = Ex.next_nodes(ex)
-	assert_true(nxt.size() > 0, "a road ahead")
-	App.click_node(nxt[0].id)
-	assert_eq(App.game.expedition.current, nxt[0].id, "marched")
-	assert_eq(App.game.expedition.marches, marches + 1)
-
-
-func test_auto_prepare_and_expedition() -> void:
+func test_auto_prepare_opens_the_battle() -> void:
 	App.new_game(4321)
 	assert_true(App.debug_auto_prepare(2), "auto prepare")
-	assert_eq(App.screen, "campaign")
-	App.debug_auto_expedition(2)
+	assert_eq(App.screen, "battle")
+	assert_not_null(App.game.expedition)
+	App.debug_settle_battle("retreat")
 	assert_eq(App.screen, "report")
-	assert_not_null(App.report)
-	assert_true(App.game.expedition == null)
-	assert_true(["success", "retreat", "defeat"].has(App.report.outcome), "outcome")
+	assert_eq(App.report.outcome, "retreat")
 
 
 func test_debug_test_battle() -> void:
 	App.new_game(5)
-	App.debug_test_battle("raiding_party", {"seed": 3})
+	App.debug_test_battle({"seed": 3, "army": ["footman", "spearman"], "level": 2})
 	assert_eq(App.screen, "battle")
-	assert_not_null(App.battle)
 	assert_eq(App.battle_info, null, "stand-alone battle")
-	App.battle.begin(func(b): load("res://scripts/rules/ai.gd").run_enemy_ai(b))
-	App.debug_player_turn()
-	assert_true(App.battle.turn >= 1)
+	App.finish_battle()
+	assert_eq(App.screen, "base", "a stand-alone battle goes back to the base")
+	assert_eq(App.game.roster.size(), 6, "the roster is untouched")
 
 
 func test_quit_to_title_saves() -> void:
@@ -182,10 +196,14 @@ func test_quit_to_title_saves() -> void:
 	assert_eq(App.game.resources.silver, 777, "saved before leaving")
 
 
-func test_continue_into_campaign() -> void:
+func test_continue_into_the_battle() -> void:
 	App.new_game(12)
 	_launch_default()
+	var roll: Dictionary = App.game.expedition.pending.roll
+	var units: Array = App.battle.units.map(func(u): return [u.typeId, u.x, u.y])
 	App.game = null
 	App.go_title()
 	App.continue_game()
-	assert_eq(App.screen, "campaign", "a save with an expedition continues on the map")
+	assert_eq(App.screen, "battle", "a save with an expedition continues on the field")
+	assert_eq(App.game.expedition.pending.roll, roll, "the same warband")
+	assert_eq(App.battle.units.map(func(u): return [u.typeId, u.x, u.y]), units, "drawn up the same way")

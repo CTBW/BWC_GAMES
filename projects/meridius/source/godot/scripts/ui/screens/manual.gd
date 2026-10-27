@@ -1,7 +1,8 @@
 ## Port of src/ui/screens/Manual.tsx: the Captain's Field Manual — page tabs
 ## (Battle, The Horde, Squads, Magic & Machines, Your Troops, Morale and Rout,
-## Expeditions, Amberfeld), the page text, "To the field". It opens on its own the first time
-## a battle starts (App.start_battle, prefs "manualSeen").
+## Expeditions, Amberfeld), the page text, "To the field". Opened from the pause menu;
+## closing it marks it seen (prefs "manualSeen"). The pages still describe the
+## turn-based battles and the campaign map the redesign has set aside.
 ##
 ##   const Manual = preload("res://scripts/ui/screens/manual.gd")
 ##   Manual.make(start := "battle", on_close := Callable()) -> Control   (full-rect modal)
@@ -47,7 +48,7 @@ static func pages() -> Array:
 			"Every unit on the field is a [b]squad[/b] of [b]six soldiers[/b] (moss trolls go in threes) that moves, fights and holds its ground as one. A squad is known by its sergeant's name: [i]Aldric's footmen[/i]. The pips beside a squad show its strength: [b]filled[/b] pips are soldiers still serving, [b]hollow[/b] ones have fallen.",
 			"[b]Shared health.[/b] The squad has one pool of HP, split into a share per soldier (the segments of its health bar). Each time the pool drops past a share, a soldier [b]falls[/b]; one heavy blow can cut down several. When the last share is gone the squad is destroyed.",
 			"[b]Damage is soldiers × blows.[/b] Every soldier still standing strikes: a squad of five footmen dealing 7–10 each hits for 35–50 before armour (armour is taken off each blow). A thinned squad hits softer, so wearing an enemy down pays. The forecast shows how many soldiers strike, how many of the target a hit would slay, and the chance to destroy the squad outright.",
-			"[b]The dead stay dead.[/b] Camps, bandages and the trip home heal the survivors, never the fallen. Only the [b]Barracks[/b] at Amberfeld can refill a squad's empty places, for a little silver per soldier. A squad cut down in battle may still keep its sergeant, gravely hurt; he can rebuild it.\n[b]Field triage.[/b] Right after a battle the surgeons search the fallen. Each soldier who fell has the same chance to be found alive as a lone soldier always had (better at higher rank, with bandages and a better Infirmary, and when you hold the field). Those found rejoin their squad badly hurt. Nobody else comes back.",
+			"[b]The dead stay dead.[/b] Soldiers who go down get back up after the fight, but one still hurt from the last fight dies (see Morale and Rout). Camps, bandages and the trip home heal the survivors, never the dead. Only the [b]Barracks[/b] at Amberfeld can refill a squad's empty places, for a little silver per soldier; dressing the hurt at the Infirmary costs less.",
 		]},
 		{"id": "magic", "title": "Magic & Machines", "body": [
 			"[b]Spells.[/b] Mages and shamans come three to a squad. Choose a spell from the squad's panel (or press its number), then click what to cast it at; right-click or%s puts it away. The forecast lists every squad the spell would touch. Spells are [b]per caster[/b]: three mages cast three times as hard as one, so every mage lost weakens the circle. Each spell then needs a few turns before it can be cast again; between spells the casters loose weak bolts of their own power. A wavering squad cannot cast." % kbd("Esc"),
@@ -67,15 +68,15 @@ static func pages() -> Array:
 			"Every squad has [b]morale[/b] (the blue bar). Wounds, flank and rear attacks, comrades falling nearby, being surrounded and a losing battle all drain it. Victories, felling foes and standing beside comrades restore it.",
 			"[b]Confident[/b] troops fight better. [b]Shaken[/b] and [b]Wavering[/b] troops fight worse; wavering troops cannot use abilities. At zero morale a unit [b]routs[/b] and flees the field. It may rally if it gets clear of the enemy.",
 			"Goblins break easily; orcs do not. Kill a warband's [b]leader[/b] and the rest lose heart; slay the host's [b]warchief[/b] and the whole horde breaks and runs.",
-			"Soldiers still lying on the field after the surgeons' search are gone for good. When a whole squad is cut down its sergeant may survive, gravely wounded, with a lasting injury; carried bandages and better surgeons improve the odds. The dead stay dead.",
+			"Soldiers who go down are out of the fight until it ends, then get back up, hurt. Their squad carries the wounds into its [b]next fight[/b]: less damage and defense and lower morale for each hurt soldier (two of six: −10% and −10 morale), and the first of its soldiers to go down are the hurt ones, who [b]die[/b]. A squad cut down to the last soldier rises [b]Injured[/b] (−40% damage and defense, −30 morale) and every soldier of it is hurt: each who goes down in its next fight dies, and cut down again, the squad is gone for good. On an expedition, a night's rest at a camp with full rations or a bandage dresses the wounds; at Amberfeld, the Infirmary dresses them for less than new soldiers cost.",
 		]},
 		{"id": "campaign", "title": "Expeditions", "body": [
-			"On campaign, choose your path across the map. Every march eats [b]rations[/b] (one per two squads) and tires the army. Hungry soldiers lose morale and strength, and a weak one may not survive. Wounds, fallen soldiers, morale, fatigue and spent bolts carry from one battle to the next.",
+			"On campaign, choose your path across the map. Every march eats [b]rations[/b] (one per two squads) and tires the army. Hungry soldiers lose morale and strength, and a weak one may not survive. Wounds, morale, fatigue and spent bolts carry from one battle to the next.",
 			"[b]Camps[/b] let you rest (rations), keep watch (torches) and mend armour (tools). [b]Villages[/b] hide loot; strongboxes need tools. [b]Lookouts[/b] reveal the road ahead, including enemy numbers. [b]Encounters[/b] ask for decisions that cost or reward.",
 			"You may [b]retreat home[/b] at any time and keep the spoils, but the objective's reward is lost. A broken army loses half its spoils.",
 		]},
 		{"id": "base", "title": "Amberfeld", "body": [
-			"Between expeditions the company rests at Amberfeld and the survivors heal. Spend silver, timber, iron and war trophies to upgrade buildings: more command points and slots (Command Tent), better recruits and reinforcements (Barracks), drill and promotions (Training Yard), better gear (Armoury), cheaper treatment and better survival odds (Infirmary), and a bigger wagon (Quartermaster).",
+			"Between expeditions the company rests at Amberfeld and the survivors heal. Spend silver, timber, iron and war trophies to upgrade buildings: more command points and slots (Command Tent), better recruits and reinforcements (Barracks), drill and promotions (Training Yard), better gear (Armoury), cheaper dressing and treatment (Infirmary), and a bigger wagon (Quartermaster).",
 			"Every expedition is capped by [b]unit slots[/b] and [b]command points[/b], one slot per squad. Veteran squads cost more points than recruits, so you can never bring everyone. Refill thinned squads at the Barracks before you march. Squads who stay home recover morale; those treated or sent on leave sit out one expedition.",
 		]},
 	]

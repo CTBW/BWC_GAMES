@@ -1,0 +1,114 @@
+[   4.4s] ok   title: no Continue without a save
+[   5.9s] ok   capture title
+[   5.9s] shot title
+[   6.4s] ok   a new company of 6 squads
+[   7.8s] ok   capture welcome
+[   7.8s] shot welcome
+[   7.9s] ok   welcome closed
+[   7.9s] ok   production painted camp loaded
+[   9.6s] ok   capture day_1920x1080
+[   9.6s] shot day_1920x1080
+[   9.6s] ok   atmosphere-off clears birds immediately
+[  10.6s] ok   capture atmosphere_off
+[  10.6s] shot atmosphere_off
+[  11.6s] ok   capture atmosphere_on
+[  11.6s] shot atmosphere_on
+[  11.6s] ok   daytime flock visible in production view
+[  12.6s] ok   capture bird_roost_2
+[  12.6s] shot bird_roost_2
+[  12.6s] ok   flock lifts off from roost 2
+[  13.6s] ok   capture bird_roost_3
+[  13.6s] shot bird_roost_3
+[  13.6s] ok   flock lifts off from roost 3
+[  35.9s] ok   12 s day and 6 s night native motion captured
+[  35.9s] ok   native flock stays bounded
+[  35.9s] ok   night has no daytime bird flights
+[  35.9s] ok   no scene nodes accumulate
+[  35.9s] ok   atmosphere capture leaves campaign unchanged
+[  35.9s] ok   base view present
+[  36.0s] ok   hover over command highlights it (hover command)
+[  36.0s] ok   garrison: hover tip for command
+[  36.1s] ok   painted command opens its existing panel
+[  36.1s] ok   panel dims and blocks painted camp
+[  36.1s] ok   closing command restores world input
+[  36.1s] ok   base view present
+[  36.2s] ok   hover over barracks highlights it (hover barracks)
+[  36.2s] ok   garrison: hover tip for barracks
+[  36.4s] ok   painted barracks opens its existing panel
+[  36.4s] ok   panel dims and blocks painted camp
+[  37.4s] ok   capture barracks
+[  37.4s] shot barracks
+[  37.4s] ok   closing barracks restores world input
+[  37.4s] ok   base view present
+[  37.4s] ok   hover over training highlights it (hover training)
+[  37.4s] ok   garrison: hover tip for training
+[  37.6s] ok   painted training opens its existing panel
+[  37.6s] ok   panel dims and blocks painted camp
+[  37.6s] ok   closing training restores world input
+[  37.6s] ok   base view present
+[  37.7s] ok   hover over armoury highlights it (hover armoury)
+[  37.7s] ok   garrison: hover tip for armoury
+[  37.9s] ok   painted armoury opens its existing panel
+[  37.9s] ok   panel dims and blocks painted camp
+[  38.8s] ok   capture armoury_panel
+[  38.8s] shot armoury_panel
+[  38.8s] ok   closing armoury restores world input
+[  38.8s] ok   base view present
+[  38.9s] ok   hover over infirmary highlights it (hover infirmary)
+[  38.9s] ok   garrison: hover tip for infirmary
+[  39.0s] ok   painted infirmary opens its existing panel
+[  39.0s] ok   panel dims and blocks painted camp
+[  39.0s] ok   closing infirmary restores world input
+[  39.0s] ok   base view present
+[  39.1s] ok   hover over quartermaster highlights it (hover quartermaster)
+[  39.1s] ok   garrison: hover tip for quartermaster
+[  39.2s] ok   painted quartermaster opens its existing panel
+[  39.2s] ok   panel dims and blocks painted camp
+[  39.2s] ok   closing quartermaster restores world input
+[  39.3s] ok   service panel command
+[  39.6s] ok   service panel barracks
+[  39.8s] ok   service panel training
+[  40.1s] ok   service panel armoury
+[  40.3s] ok   service panel infirmary
+[  40.4s] ok   service panel quartermaster
+[  40.5s] ok   yard hover follows actual painted ground
+[  41.5s] ok   capture training_hover
+[  41.5s] shot training_hover
+[  45.1s] ok   capture night_1920x1080
+[  45.1s] shot night_1920x1080
+[  45.1s] ok   visits, lighting and camera leave campaign data unchanged
+[  45.1s] ok   base view present
+[  45.1s] ok   hover over command highlights it (hover command)
+[  45.1s] ok   garrison: hover tip for command
+[  49.5s] ok   mouse wheel zooms the painting
+[  50.5s] ok   capture zoomed_camp
+[  50.5s] shot zoomed_camp
+[  51.4s] ok   Frame Camp restores the source center
+[  51.4s] ok   Frame Camp restores cover zoom
+[  52.8s] ok   capture expedition_preparation
+[  52.8s] shot expedition_preparation
+[  54.6s] ok   capture day_2560x1080
+[  54.6s] shot day_2560x1080
+[  54.6s] ok   wide desktop aspect exercised
+[  54.6s] ok   wide desktop keeps command accessible
+[  54.6s] ok   wide desktop keeps barracks accessible
+[  54.6s] ok   wide desktop keeps training accessible
+[  54.6s] ok   wide desktop keeps armoury accessible
+[  54.6s] ok   wide desktop keeps infirmary accessible
+[  54.6s] ok   wide desktop keeps quartermaster accessible
+[  54.6s] ok   base view present
+[  54.6s] ok   hover over barracks highlights it (hover barracks)
+[  54.6s] ok   garrison: hover tip for barracks
+[  54.8s] ok   original preference existence restored
+[  54.8s] ok   original preference bytes restored
+[  54.8s] ok   player save unchanged
+[  54.8s] boot                  1 frames    0.0 s   322.3 fps  p99    3.1 ms  worst    3.1 ms  >33 ms: 0
+[  54.8s] title                91 frames    5.1 s    17.8 fps  p99 1699.6 ms  worst 1699.6 ms  >33 ms: 13
+[  54.8s] base                 65 frames    0.6 s   103.2 fps  p99   18.7 ms  worst   18.7 ms  >33 ms: 0
+[  54.8s] camp-day            503 frames    6.1 s    82.3 fps  p99   99.0 ms  worst  202.4 ms  >33 ms: 13
+[  54.8s] camp-atmosphere-realtime    110 frames    1.1 s   101.2 fps  p99   10.4 ms  worst   10.5 ms  >33 ms: 0
+[  54.8s] camp-atmosphere-fixed-step    431 frames   21.1 s    20.4 fps  p99   67.8 ms  worst   77.8 ms  >33 ms: 431
+[  54.8s] camp-night          264 frames    2.7 s    99.0 fps  p99   11.9 ms  worst   42.0 ms  >33 ms: 1
+[  54.8s] camp-camera         306 frames    3.3 s    93.6 fps  p99   18.3 ms  worst  156.3 ms  >33 ms: 3
+[  54.8s] camp-wide            42 frames    0.5 s    82.1 fps  p99   91.4 ms  worst   91.4 ms  >33 ms: 2
+[  54.8s] 90 checks; 0 failed; 0 runtime errors; physical input dropped: 34

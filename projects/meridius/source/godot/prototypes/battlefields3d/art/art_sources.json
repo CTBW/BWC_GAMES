@@ -1,0 +1,625 @@
+{
+ "w_spruce": {
+  "file": "winter_spruce.png",
+  "sha256": "784611a81ab951a81626fc3f61013b7a22d9f98c95885dd291b30947badcc1bf",
+  "anchor": [
+   0.497,
+   0.971
+  ],
+  "worldHeight": 317.0
+ },
+ "w_scots_pine": {
+  "file": "winter_scots_pine.png",
+  "sha256": "0caff4df95f9e157ef0adf14985b684f3bbecd519b55ea9127ec692985be7faa",
+  "anchor": [
+   0.402,
+   0.95
+  ],
+  "worldHeight": 350.0
+ },
+ "w_fir_young": {
+  "file": "winter_fir_young.png",
+  "sha256": "91feed7e488a31767049bc1ca71def720754340e6059934af11f0a490fc7961e",
+  "anchor": [
+   0.503,
+   0.92
+  ],
+  "worldHeight": 168.0
+ },
+ "w_oak_bare": {
+  "file": "winter_oak_bare.png",
+  "sha256": "eb21359af5e4257c19458b7003cc9068dee21e6256dda44a3708eed6cdbfaf99",
+  "anchor": [
+   0.522,
+   0.923
+  ],
+  "worldHeight": 196.0
+ },
+ "w_birch_bare": {
+  "file": "winter_birch_bare.png",
+  "sha256": "cea6b99eab8df1d711286fc42d5b5b10406a5a652b7e6ac4b4e7a76c3f217f34",
+  "anchor": [
+   0.52,
+   0.92
+  ],
+  "worldHeight": 292.0
+ },
+ "house_cottage_stone": {
+  "file": "house_stone_cottage__take-01.png",
+  "folder": "kit",
+  "sha256": "680a68918dd9dc513c59687ab23ea41cf49407aaf44123717a448385542070fd",
+  "worldWidth": 225
+ },
+ "house_longhouse": {
+  "file": "house_longhouse__take-01.png",
+  "folder": "kit",
+  "sha256": "f612cd73cdd5f548959bfb4c9b79046bfa3f386650e6debec8f687a63e007893",
+  "worldWidth": 330
+ },
+ "house_barn": {
+  "file": "house_barn__take-01.png",
+  "folder": "kit",
+  "sha256": "5caedf6ae09a0b287779981484c909d6ecb9bf944f266e5f4ac2ed67126e0a46",
+  "worldWidth": 330
+ },
+ "house_chapel": {
+  "file": "house_chapel__take-01.png",
+  "folder": "kit",
+  "sha256": "8c89acea00b119d850613764d588f056667d9d74cd4e5ee401f845f360ae6636",
+  "worldWidth": 250
+ },
+ "house_windmill": {
+  "file": "house_windmill__take-01.png",
+  "folder": "kit",
+  "sha256": "70f34d2a064888aa9697f587249e9a3856d59d8bb73bf987a15e9b0b7427197b",
+  "worldWidth": 260
+ },
+ "watermill": {
+  "file": "watermill.png",
+  "folder": "own",
+  "sha256": "fa26a283b2c9920f01f1b55eb167f91bb0542e39c60f3bb54c5830a9bd08aa39",
+  "worldWidth": 290
+ },
+ "market_stall": {
+  "file": "market_stall.png",
+  "folder": "own",
+  "sha256": "25549c212b824ce872c24c50ebd6be691e0677c3320617c25e82fb59efb688ea",
+  "worldWidth": 150
+ },
+ "wagon_wreck": {
+  "file": "wagon_wreck.png",
+  "folder": "own",
+  "sha256": "e41a1cc2ba6849ac45e65f5bbe4e7bf8bfd03f3fb3d8833b248c8412e461ccad",
+  "worldWidth": 170
+ },
+ "bridge_stone": {
+  "file": "bridge_stone.png",
+  "folder": "own",
+  "sha256": "7ddd6d0093a67dae10faf6cc61a54015ca96073956cebf2368f5b7935b721638",
+  "worldWidth": 420
+ },
+ "reeds": {
+  "file": "reeds.png",
+  "folder": "own",
+  "sha256": "944489cc1c32e746bb641b110618490c811bfa7531d99c6e9197f8465dc02200",
+  "worldWidth": 92
+ },
+ "ruin_chapel": {
+  "file": "ruin_chapel__take-01.png",
+  "folder": "kit",
+  "sha256": "77c25cbf7fa273d9195e6bc693f6ba01b047efdcefbc416d43d42ae50fce2551",
+  "worldWidth": 290
+ },
+ "ruin_colonnade": {
+  "file": "ruin_colonnade__take-01.png",
+  "folder": "kit",
+  "sha256": "d8e5b64bbdb383203e79db7ca1c504c6da7d6fdd047e15b47da5e5a3c6257a87",
+  "worldWidth": 300
+ },
+ "ruin_stones": {
+  "file": "ruin_standing_stones__take-01.png",
+  "folder": "kit",
+  "sha256": "c3e24d4d7bf5a4d7ebb05e869cdafd94b4a9f368c74ee45eca729262e5366ddd",
+  "worldWidth": 270
+ },
+ "ruin_wall_corner": {
+  "file": "ruin_wall_corner__take-01.png",
+  "folder": "kit",
+  "sha256": "27e091f29f0e6eb77f72ee73d8f9e8ab6718a1e878e98e35c1e038e6a3201955",
+  "worldWidth": 220
+ },
+ "ruin_farmhouse": {
+  "file": "ruin_farmhouse.png",
+  "folder": "own",
+  "sha256": "23dc1a57f4d08a6378c77f32641e9226ea331ff13bfa0b987006856b8f572df0",
+  "worldWidth": 230
+ },
+ "ruin_barn_burnt": {
+  "file": "ruin_barn_burnt.png",
+  "folder": "own",
+  "sha256": "36ef35932ac1c911b53a0d190174d3a599a27862718be2ccc9b2fa903e1b5998",
+  "worldWidth": 320
+ },
+ "w_house_longhouse": {
+  "file": "winter_longhouse.png",
+  "folder": "own",
+  "sha256": "f3d13f797d5d2ced6cac568885ba83690aa22ce9a4da064a6aa4bc67e24e1901",
+  "worldWidth": 330
+ },
+ "w_house_cottage_stone": {
+  "file": "winter_stone_cottage.png",
+  "folder": "own",
+  "sha256": "1313381580ab03b3adf636ace39df5d4b4f8d194468d774343b429ced21d0fb6",
+  "worldWidth": 225
+ },
+ "w_house_chapel": {
+  "file": "winter_chapel.png",
+  "folder": "own",
+  "sha256": "daff6f0622550d7e0d560f4542b372ed74dd466566cc7c21b01445c1806bbd23",
+  "worldWidth": 250
+ },
+ "w_ruin_stones": {
+  "file": "winter_standing_stones.png",
+  "folder": "own",
+  "sha256": "419809e5917b3c5286ca59cceea5c77279cffeab8a966fecb366d1c6014f7a9d",
+  "worldWidth": 270
+ },
+ "harvest": {
+  "file": "harvest_sheet.png",
+  "sha256": "ca5eb7c52b3725cac5c099e7716f0b6d8d0d5e1ad84e4d47a738fc68fc41eeda",
+  "cells": [
+   "stook",
+   "stook",
+   "sheaves",
+   "pumpkins",
+   "bale",
+   "firewood"
+  ],
+  "worldWidth": [
+   52,
+   52,
+   66,
+   58,
+   54,
+   62
+  ]
+ },
+ "w_rocks": {
+  "file": "winter_rocks_sheet.png",
+  "sha256": "8a172879ebf5062229b685e24bf00acd8c0c9f7a8c24096dfd52dc27c8fd90b4",
+  "cells": "as rock_cutout"
+ },
+ "w_wood": {
+  "file": "winter_trunks_sheet.png",
+  "sha256": "bc9484ba958c16a27c16ee2fad35aa1f19fb023526b86a500bc004f9b64481c1",
+  "pieces": "as woodland_cutout"
+ },
+ "ground_snow": {
+  "file": "ground_snow.png",
+  "sha256": "18f48cb478df323bdb5cc102711b63963f768f244ab827110288e72b56e40d87"
+ },
+ "ground_snow_road": {
+  "file": "ground_snow_road.png",
+  "sha256": "88c87bb424297e86f79b0c6d3dc175349f40874fc041ee4ba65008180ed7059f"
+ },
+ "ground_ice": {
+  "file": "ground_ice.png",
+  "sha256": "8f5f5ce14096cc28eb71d43dae325653d8ee1b74929eac940ef463a33f21692b"
+ },
+ "ground_autumn": {
+  "file": "ground_autumn_meadow.png",
+  "sha256": "1a24655dc1e3ec2ef378693c943e4b9e8bbf3e0d2fa38b653be6e6476a543568"
+ },
+ "village": {
+  "file": "village_props.png",
+  "sha256": "3b283ec751514ae0d69d9e415fe88918fe085d09f7cf89e4bf2868834b62c9ef",
+  "cells": [
+   "p_well",
+   "p_cart",
+   "p_crates",
+   "p_rick",
+   "p_fence_x",
+   "p_fence_y"
+  ],
+  "worldWidth": [
+   118,
+   150,
+   128,
+   104,
+   88,
+   88
+  ]
+ },
+ "house_townhouse": {
+  "file": "house_townhouse.png",
+  "folder": "own",
+  "sha256": "8088307f0c08e53afe59ed38ff517e4e5e0bd29df12f5f413b62f8a36c8acb61",
+  "worldWidth": 250
+ },
+ "house_inn": {
+  "file": "house_inn.png",
+  "folder": "own",
+  "sha256": "ba620a183ce10e067df77e805802a329cf7c5aa24d13e7085dbcd789ed063557",
+  "worldWidth": 270
+ },
+ "sheet_reedbeds": {
+  "file": "sheet_reeds_a.png",
+  "sha256": "9c8813eddf898de19b999598138fc8b2fbaf5d3df518910a996dc6efa16e0476",
+  "pieces": [
+   [
+    "reeds",
+    "reeds_plume",
+    57
+   ],
+   [
+    "reeds",
+    "reeds_bulrush",
+    48
+   ],
+   [
+    "reeds",
+    "reeds_sparse",
+    60
+   ],
+   [
+    "reeds_small",
+    "rush_tuft",
+    50
+   ],
+   [
+    "reeds",
+    "reeds_bulrush_small",
+    40
+   ],
+   [
+    "reeds",
+    "reeds_bed",
+    86
+   ],
+   [
+    "reeds_small",
+    "rush_tuft_2",
+    48
+   ],
+   [
+    "iris",
+    "iris",
+    52
+   ],
+   [
+    "reeds_small",
+    "cattails",
+    20
+   ],
+   [
+    "reeds",
+    "reeds_stones",
+    64
+   ]
+  ]
+ },
+ "sheet_waterside": {
+  "file": "sheet_waterside.png",
+  "sha256": "eaa8a6318f181cde90cab65ac58e7d35bc80293e7b5c13de6376b747a55325eb",
+  "pieces": [
+   null,
+   [
+    "driftwood",
+    "driftwood",
+    100
+   ],
+   [
+    "river_stones",
+    "river_stones",
+    56
+   ],
+   [
+    "marigolds",
+    "marigolds",
+    38
+   ],
+   [
+    "horsetail",
+    "horsetail",
+    30
+   ],
+   [
+    "mooring_post",
+    "mooring_post",
+    46
+   ],
+   [
+    "rowboat",
+    "rowboat",
+    120
+   ],
+   [
+    "fish_trap",
+    "fish_trap",
+    70
+   ],
+   [
+    "reed_bundles",
+    "reed_bundles",
+    40
+   ]
+  ]
+ },
+ "sheet_yard": {
+  "file": "sheet_village.png",
+  "sha256": "82bdfea5fdcc6aded654b5d95cf9fa84dd5af579e8eb2d4a5995594927c221a4",
+  "pieces": [
+   [
+    "signpost",
+    "signpost",
+    52
+   ],
+   [
+    "trough",
+    "trough",
+    110
+   ],
+   [
+    "chopping_block",
+    "chopping_block",
+    70
+   ],
+   [
+    "sacks",
+    "sacks",
+    60
+   ],
+   [
+    "wheelbarrow",
+    "wheelbarrow",
+    80
+   ],
+   [
+    "scarecrow",
+    "scarecrow",
+    78
+   ],
+   [
+    "milk_churns",
+    "milk_churns",
+    34
+   ],
+   [
+    "barrels",
+    "barrels",
+    76
+   ],
+   [
+    "beehives",
+    "beehives",
+    92
+   ],
+   [
+    "shrine",
+    "shrine",
+    44
+   ],
+   null,
+   [
+    "lantern_post",
+    "lantern_post",
+    52
+   ]
+  ]
+ },
+ "sheet_yard_winter": {
+  "file": "sheet_winter_yard_1.png",
+  "sha256": "a571857e53a0be07ed4a1ce3d1a04db24d9f7b4c2f323ccfffeedbb0bf469e59",
+  "pieces": [
+   [
+    "barrels_w",
+    "barrels_trio_w",
+    83
+   ],
+   [
+    "p_crates_w",
+    "crates_barrels_w",
+    90
+   ],
+   [
+    "barrels_w",
+    "barrel_single_w",
+    50
+   ],
+   null,
+   [
+    "chopping_block_w",
+    "chopping_block_axe_w",
+    75
+   ],
+   [
+    "barrels_w",
+    "barrel_water_w",
+    53
+   ],
+   [
+    "barrels_w",
+    "barrels_group_w",
+    72
+   ],
+   [
+    "barrels_w",
+    "barrel_lying_w",
+    67
+   ]
+  ]
+ },
+ "sheet_yard_winter_2": {
+  "file": "sheet_winter_yard_2.png",
+  "sha256": "f51c2f509ae11de53e9de9031c0da017850b7232ab59a316a96d81814f90d673",
+  "pieces": [
+   null,
+   null,
+   [
+    "signpost_w",
+    "signpost_snow_w",
+    50
+   ],
+   null,
+   null,
+   [
+    "chopping_block_w",
+    "chopping_block_logs_w",
+    66
+   ],
+   null,
+   [
+    "barrels_w",
+    "barrels_pair_w",
+    57
+   ],
+   null
+  ]
+ },
+ "sheet_yard_winter_3": {
+  "file": "sheet_winter_cart_1.png",
+  "sha256": "b1a2bb00cdcbe270394a6258b59332da708df3c2ec25e8dc88f84f69c2ff37ab",
+  "pieces": [
+   [
+    "p_cart_w",
+    "cart_hay_w",
+    150
+   ],
+   null,
+   [
+    "harvest_firewood_w",
+    "woodpile_w",
+    80
+   ],
+   [
+    "sledge_w",
+    "sledge_logs_w",
+    64
+   ]
+  ]
+ },
+ "sheet_yard_winter_4": {
+  "file": "sheet_winter_cart_2.png",
+  "sha256": "68e0c69cd182a8a0c5ed5e66132cf3e6405f904e1767bc35f547e0dc724e4493",
+  "pieces": [
+   null,
+   [
+    "p_well_w",
+    "well_snow_w",
+    118
+   ],
+   [
+    "harvest_firewood_w",
+    "woodpile_long_w",
+    92
+   ],
+   [
+    "sledge_w",
+    "sledge_bound_w",
+    62
+   ]
+  ]
+ },
+ "sheet_stones_winter": {
+  "file": "sheet_winter_stones_1.png",
+  "sha256": "5d755e56ff2efbcc837ac9e31b9dacfa80134768cf4717f137d0181b597ae4ef",
+  "pieces": [
+   [
+    "stones_w",
+    "stones_snow_1",
+    50
+   ],
+   [
+    "stones_w",
+    "stones_snow_2",
+    55
+   ],
+   [
+    "stones_w",
+    "stones_snow_3",
+    52
+   ],
+   [
+    "stones_w",
+    "stones_snow_4",
+    45
+   ],
+   [
+    "stones_w",
+    "stones_snow_5",
+    40
+   ],
+   [
+    "stones_w",
+    "stones_snow_6",
+    58
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_1",
+    80
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_2",
+    72
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_3",
+    60
+   ]
+  ]
+ },
+ "sheet_stones_winter_2": {
+  "file": "sheet_winter_stones_2.png",
+  "sha256": "a1cfd7e2ddd9fb70aa96bb3787c1b049ed9235c798fca9120dc52b1c7d541734",
+  "pieces": [
+   [
+    "stones_w",
+    "stones_snow_7",
+    50
+   ],
+   [
+    "stones_w",
+    "stones_snow_8",
+    55
+   ],
+   [
+    "stones_w",
+    "stones_snow_9",
+    52
+   ],
+   [
+    "stones_w",
+    "stones_snow_10",
+    45
+   ],
+   [
+    "stones_w",
+    "stones_snow_11",
+    40
+   ],
+   [
+    "stones_w",
+    "stones_snow_12",
+    58
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_4",
+    84
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_5",
+    72
+   ],
+   [
+    "deadwood_w",
+    "deadwood_snow_6",
+    60
+   ]
+  ]
+ }
+}

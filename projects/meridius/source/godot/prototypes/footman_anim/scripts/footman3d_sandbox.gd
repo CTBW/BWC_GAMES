@@ -6,7 +6,9 @@
 ## attack it. Nothing here touches the game's state, saves or production units.
 extends Node3D
 
-const Footman3D = preload("res://prototypes/footman_anim/scripts/footman3d.gd")
+## The footman is the sandbox's unit (unit3d.gd) with the roster's footman profile.
+const Unit3D = preload("res://prototypes/sandbox3d/scripts/unit3d.gd")
+const Roster = preload("res://prototypes/sandbox3d/scripts/roster.gd")
 const Dummy3D = preload("res://prototypes/footman_anim/scripts/dummy3d.gd")
 const Succubus3D = preload("res://prototypes/footman_anim/scripts/succubus3d.gd")
 const GROUND := preload("res://prototypes/footman_anim/shaders/ground3d.gdshader")
@@ -65,14 +67,31 @@ var _flash_text := ""
 var _flash_t := 0.0
 
 
+## The roster's footman profile, or {} when his files are not on disk.
+static func footman_profile() -> Dictionary:
+	for p in Roster.available():
+		if p.id == "footman":
+			return p
+	return {}
+
+
 func _ready() -> void:
 	# Smooth edges: the 3D is drawn at twice the size and scaled down
 	# (the Compatibility renderer drops the ink line under MSAA).
 	get_viewport().msaa_3d = Viewport.MSAA_DISABLED
 	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 	get_viewport().scaling_3d_scale = 2.0
-	footman = Footman3D.new()
+	var prof := footman_profile()
+	if prof.is_empty():
+		# His export is kept out of Git: a clean clone has no footman to show.
+		print("FOOTMAN3D no footman: his export (prototypes/footman_anim/art3d/footman.glb) is not on disk")
+		set_process(false)
+		set_process_unhandled_input(false)
+		get_tree().quit()
+		return
+	footman = Unit3D.new()
 	footman.name = "Footman"
+	footman.setup(prof)
 	add_child(footman)
 	# The scale comes from his standing height in the clips' sidecar.
 	var h: float = footman.meta.get("height_m", 1.7)
@@ -353,6 +372,7 @@ func _build_ui() -> void:
 	col.add_child(_title("ACTIONS"))
 	col.add_child(_row([["Attack", func(): _attack()], ["Charge", func(): _charge()], ["Block", func(): _toggle_block()], ["Hit", func(): footman.hit()]], "act"))
 	col.add_child(_row([["Counter", func(): _counter()], ["Step lane", func(): footman.step_lane(FILE * tile_m)], ["Death", func(): footman.die()], ["Revive", func(): footman.revive()]], "act2"))
+	col.add_child(_row([["Guard idle", func(): footman.idle_variant()]], "act3"))
 	col.add_child(_title("SUCCUBUS (3D, FBX)"))
 	col.add_child(_row([["Idle", func(): succ.play("idle")], ["Walk", func(): _succ_walk()], ["Attack", func(): succ.play("attack")]], "succ"))
 	col.add_child(_row([["Hit", func(): succ.play("hit")], ["Death", func(): succ.play("death")], ["Revive", func(): succ.revive()]], "succ2"))
@@ -429,7 +449,7 @@ func _paces() -> Array:
 func _pace_label(p: String) -> String:
 	if p == "walk":
 		return "Walk %.1f s/tile" % (tile_m / footman.clip_speed("walk"))
-	return "Game %.2f s/tile" % Footman3D.GAME_TILE_TIME
+	return "Game %.2f s/tile" % Unit3D.GAME_TILE_TIME
 
 
 func _pace_items() -> Array:
@@ -459,9 +479,7 @@ func _refresh() -> void:
 # --- Settings -----------------------------------------------------------------
 
 func _set_pace(p: String) -> void:
-	footman.pace = p
-	if footman.state == "walk":
-		footman._start_walk()
+	footman.set_pace(p)
 	_refresh()
 
 
@@ -539,7 +557,7 @@ func _counter() -> void:
 func _charge() -> void:
 	if footman.charge(dummy):
 		return
-	_flash_text = ("Too close to charge (it needs a run of %d tiles): he walks up instead" % Footman3D.CHARGE_MIN_TILES) if footman.can_charge() else "No charge clip in the export"
+	_flash_text = ("Too close to charge (it needs a run of %d tiles): he walks up instead" % Unit3D.CHARGE_MIN_TILES) if footman.can_charge() else "No charge clip in the export"
 	_flash_t = 2.5
 
 
@@ -568,7 +586,7 @@ func tile_path(from: Vector3, to_tile: Vector2i) -> Array:
 func march_to_tile(t: Vector2i) -> void:
 	ground_mat.set_shader_parameter("focus", Vector2(t.x, t.y))
 	ground_mat.set_shader_parameter("focus_on", 1.0)
-	footman.march(tile_path(footman.position, t))
+	footman.order_move(tile_path(footman.position, t))
 
 
 func _ground_at(screen: Vector2) -> Variant:

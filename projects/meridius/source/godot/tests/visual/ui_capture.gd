@@ -9,7 +9,7 @@ extends SceneTree
 const OUT := "res://tests/visual/out"
 const ALL := ["title", "welcome", "base", "barracks", "roster", "soldier", "memorial", "command", "training",
 	"armoury", "infirmary", "quartermaster", "manual", "prep", "report", "menu",
-	"hover", "tooltip", "tip", "confirm", "barracks2", "soldier2", "roster2", "infirmary2", "prep2", "memorial2", "campaign", "battle"]
+	"hover", "tooltip", "tip", "confirm", "barracks2", "soldier2", "roster2", "infirmary2", "prep2", "memorial2", "battle"]
 
 var app: Node
 var main: Node
@@ -73,7 +73,7 @@ func _reset_overlays() -> void:
 	app.menu_open = false
 
 
-## A company after a hard expedition: thinned squads, injuries, low morale, the fallen.
+## A company after a hard expedition: thinned squads, injuries, wounds, low morale, the fallen.
 func _roughen() -> void:
 	var g: Dictionary = app.game
 	if g.get("_rough"):
@@ -82,12 +82,14 @@ func _roughen() -> void:
 	r[0].men = 4
 	r[0].hp = mini(r[0].hp, 100)
 	r[0].injuries = ["gashed_arm"]
+	r[0].wounded = 2
 	r[1].men = 2
 	r[1].hp = mini(r[1].hp, 50)
 	r[1].morale = 20
 	r[2].men = 5
 	r[3].armorCondition = 0.55
 	r[3].promoted = true
+	r[4].injured = true
 	g.resources.silver = 400
 	if g.fallen.is_empty():
 		g.fallen.append({"name": "Ulf Ulfsson", "typeId": "spearman", "level": 2, "kills": 3, "battles": 4, "cause": "Cut down at Elk Hollow", "cycle": 1})
@@ -126,7 +128,7 @@ func _prepare(shot: String) -> void:
 			app.go_base()
 			if app.game.get("lastReport") == null:
 				app.debug_auto_prepare(1)
-				app.debug_auto_expedition(1)
+				app.debug_settle_battle("victory")
 			else:
 				app.report = app.game.lastReport
 				app.screen = "report"
@@ -157,11 +159,8 @@ func _prepare(shot: String) -> void:
 			app.go_title()
 			await _frames(3)
 			main.find_child("NewCompany", true, false).emit_signal("pressed")
-		"campaign":
-			app.go_base()
-			app.debug_auto_prepare(5)
 		"battle":
 			app.go_base()
-			app.debug_test_battle("raiding_party", {"seed": 3})
+			app.debug_auto_prepare(5)
 	app.emit_changed()
 	await _frames(4)

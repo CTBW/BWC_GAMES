@@ -1,0 +1,215 @@
+{
+ "fps": 30.0,
+ "source": "projects/meridius/references/characters/blender/goblin_archer/goblin_archer_rig.blend",
+ "props": [
+  "Bow",
+  "Quiver",
+  "Arrow"
+ ],
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.459,
+ "height_rest_m": 1.486,
+ "roles": {
+  "idle": "idle",
+  "walk": "walk",
+  "attack": [
+   "attack"
+  ],
+  "hit": "block",
+  "death": [
+   "death"
+  ],
+  "extra": [
+   "run"
+  ]
+ },
+ "notes": [
+  "Clips are baked from the rig's evaluated pose (grips, the hand's hold on the bow, forearm twist, the cape and the keyed bow and string); no constraints or drivers go out. The props are skinned to the bones Bow (child of mixamorig:LeftHand), Quiver (child of mixamorig:Spine2) and Arrow (child of mixamorig:RightHand); the string's middle to String (child of Bow), which the shot draws.",
+  "attack is the shot: events.draw is when the arrow appears in his right fist above his shoulder, events.nock when its nock goes on the string, events.shot when he looses (shot_from is the arrow's middle at that frame, Godot axes from his feet; it points aim_up_deg above level and aim_yaw_deg off his facing, positive to his left). The arrow shows only in events.arrow_shown; elsewhere, and in every other clip, the Arrow bone is at zero scale. The last held_frames frames hold the follow-through. No reload clip: the shot draws its own arrow.",
+  "Locomotion is in place. walk and run move the figure by root_vel (m/s, Godot axes): the travel retarget_clips.py removed (travel_from); speed_footlock_mps is how fast his planted foot slides back. idle stands still. block and death keep their authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "block is the source's hit reaction (he crouches and raises the bow across his body), so it is his hit role.",
+  "death: events.bow_drop is when he lets go of the bow; the Bow bone then lays it flat on the ground.",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "Arrow",
+  "Bow",
+  "GoblinArcher",
+  "Quiver"
+ ],
+ "bones": 56,
+ "triangles": 16208,
+ "texture_px": 1024,
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 6.6667,
+   "loop": true,
+   "frames": 201,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.0
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.1667,
+   "loop": true,
+   "frames": 36,
+   "root_vel": [
+    -0.0,
+    0.0,
+    1.0104
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.1,
+      "Left"
+     ],
+     [
+      0.6333,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.0,
+   "speed_mps": 1.0104,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 0.9836
+  },
+  "run": {
+   "anim": "run",
+   "length": 0.8667,
+   "loop": true,
+   "frames": 27,
+   "root_vel": [
+    -0.0,
+    0.0,
+    2.3864
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.3,
+      "Left"
+     ],
+     [
+      0.7333,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.0,
+   "speed_mps": 2.3864,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 2.2755
+  },
+  "attack": {
+   "anim": "attack",
+   "length": 1.3,
+   "loop": false,
+   "frames": 40,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": -29.1,
+   "hips_drift": [
+    0.0223,
+    0.0273,
+    -0.0003
+   ],
+   "events": {
+    "draw": 0.4,
+    "nock": 0.5667,
+    "shot": 1.0333,
+    "arrow_shown": [
+     [
+      0.4,
+      1.0333
+     ]
+    ]
+   },
+   "shot_from": [
+    -0.2949,
+    1.095,
+    0.4332
+   ],
+   "aim_up_deg": 5.6,
+   "aim_yaw_deg": -3.2,
+   "held_frames": 8
+  },
+  "block": {
+   "anim": "block",
+   "length": 2.0,
+   "loop": false,
+   "frames": 61,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": -0.0,
+   "hips_drift": [
+    0.0,
+    -0.0002,
+    0.0
+   ],
+   "events": {}
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.3667,
+   "loop": false,
+   "frames": 72,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 71.7,
+   "hips_drift": [
+    -0.1406,
+    -0.2545,
+    0.9062
+   ],
+   "events": {
+    "settled": 2.2,
+    "bow_drop": 1.3667
+   }
+  }
+ }
+}

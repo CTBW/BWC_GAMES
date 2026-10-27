@@ -1,4 +1,5 @@
-## Builds the Meridius UI theme from the original stylesheet (src/ui/styles.css).
+## Builds the Nordmark interface: vellum, blue cloth, iron and brass fittings.
+## Retains the original stylesheet's semantic variation names for game screens.
 ##
 ## `ThemeBuilder.theme()` returns the shared Theme (built once, cached).
 ## main.tscn's UI root applies it; any other UI root can do the same:
@@ -16,13 +17,14 @@
 ## TYPE VARIATIONS (set `control.theme_type_variation = "<Name>"`)
 ##
 ## PanelContainer
-##   ParchmentPanel          `.panel` cream parchment, 2 px wood border, gold inset ring,
-##                           brown inner glow, drop shadow. Padding 22/26 (`.dialog`).
-##   ParchmentCard           `.card` light inset card inside parchment, padding 8.
+##   ParchmentPanel          warm vellum, 11 px iron/brass binding, corner fittings.
+##                           Dark ink, inward shading, drop shadow. Padding 25/28.
+##   ParchmentCard           light inset card inside parchment, padding 9/10.
 ##   ParchmentCardHover      `.card.clickable:hover`.
 ##   ParchmentCardSelected   `.card.sel` gold border + ring.  ParchmentCardSelectedHover.
-##   DarkPanel               `.panel.dark` leather panel, gold ring; padding 10/14.
+##   DarkPanel               charcoal-blue textured surface, 6 px metal rim; padding 14/18.
 ##                           Give it the light-text sub-theme with UI.dark(panel).
+##   BannerPanel             blue heading band with a 5 px metal rim and light text.
 ##   TopBar                  `.topbar` full-width dark bar, padding 0/18 (height 54 by the widget).
 ##   TooltipPanel            dark tooltip panel (also the native tooltip), padding 8/10.
 ##   ModalBack               `.modal-back` radial dimming behind dialogs (full rect).
@@ -62,6 +64,8 @@
 ##   For toggles, swap the variation (e.g. SmallButton ↔ SmallButtonActive) — see UI.set_active().
 ## ProgressBar  (height 9 unless the widget sets it; use widgets/bar.gd)
 ##   HpBar, HpLowBar, MoraleBar, FatigueBar, XpBar, CpBar, OverBar
+## HSlider                 the pause menu's volumes: the bars' sunk track, a gold fill
+##                          (the XP bar's) up to a round brass knob (Godot addition)
 ## LineEdit
 ##   NameEdit                soldier name field (Cinzel 700 24, dashed underline)
 ## HSeparator
@@ -73,6 +77,7 @@ extends RefCounted
 
 const UI = preload("res://scripts/ui/ui.gd")
 const PaperStyle = preload("res://scripts/ui/styles/paper_style.gd")
+const ForgedStyle = preload("res://scripts/ui/styles/forged_style.gd")
 
 const SAVE_PATH := "res://assets/ui/theme.tres"
 
@@ -216,80 +221,90 @@ static func _margins(sb: StyleBox, v: float, h: float) -> StyleBox:
 
 # ------------------------------------------------------------------ panels
 
+## Warm vellum held in an iron binding, with brass inlay at fixed pixel sizes.
 static func parchment_style() -> StyleBox:
-	var s := PaperStyle.new()
-	s.bg_color = UI.PARCH
-	s.gradient = _grad([[0.0, Color("#f3e8cc")], [0.6, Color("#e8d6ac")], [1.0, Color("#dcc595")]])
-	s.gradient_angle = 170.0
+	var s := ForgedStyle.new()
+	s.artwork = 1
+	s.bg_color = Color("#cfc2a0")
+	s.gradient = _grad([[0.0, Color("#e2d7b9")], [0.5, Color("#d7caa8")], [1.0, Color("#bca981")]])
+	s.gradient_angle = 160.0
 	s.layers = [paper_texture(), blotch_texture()]
-	s.corner_radius = 7.0
-	s.border_color = UI.WOOD
-	_border(s, 2.0)
-	s.rings = [[3.0, UI.C("#c99a3c", 0.35)], [4.0, UI.C("#3a2414", 0.35)]]
-	s.glow_size = 50.0
-	s.glow_color = Color(120 / 255.0, 80 / 255.0, 30 / 255.0, 0.35)
-	s.shadow_color = Color(0, 0, 0, 0.55)
-	s.shadow_offset = Vector2(0, 10)
-	s.shadow_blur = 30.0
-	return _margins(s, 22, 26)
+	s.corner_radius = 2.0
+	s.metal_width = 11.0
+	s.metal_color = Color("#b49c68")
+	s.ornament = 2
+	s.glow_size = 42.0
+	s.glow_color = Color(0.18, 0.12, 0.06, 0.65)
+	s.shadow_color = Color(0, 0, 0, 0.7)
+	s.shadow_offset = Vector2(0, 9)
+	s.shadow_blur = 20.0
+	return _margins(s, 25, 28)
 
 
+## Charcoal leather and blue-black steel: the common command surface.
 static func dark_style() -> StyleBox:
-	var s := PaperStyle.new()
-	s.bg_color = Color("#2c1f14")
-	s.gradient = _grad([[0.0, Color("#3b2918")], [1.0, Color("#24170d")]])
-	s.gradient_angle = 170.0
+	var s := ForgedStyle.new()
+	s.artwork = 2
+	s.bg_color = Color("#111a20")
+	s.gradient = _grad([[0.0, Color("#293238")], [0.48, Color("#172127")], [1.0, Color("#0c141b")]])
 	s.layers = [paper_texture()]
-	s.corner_radius = 7.0
-	s.border_color = Color("#1a0f07")
-	_border(s, 2.0)
-	s.rings = [[2.0, UI.C("#c99a3c", 0.45)]]
-	s.glow_size = 40.0
-	s.glow_color = Color(0, 0, 0, 0.5)
-	s.shadow_color = Color(0, 0, 0, 0.55)
-	s.shadow_offset = Vector2(0, 10)
-	s.shadow_blur = 30.0
-	return _margins(s, 10, 14)
+	s.corner_radius = 2.0
+	s.metal_width = 6.0
+	s.metal_color = Color("#9d8c65")
+	s.ornament = 1
+	s.glow_size = 26.0
+	s.glow_color = Color(0, 0, 0, 0.7)
+	s.shadow_color = Color(0, 0, 0, 0.6)
+	s.shadow_offset = Vector2(0, 5)
+	s.shadow_blur = 12.0
+	return _margins(s, 14, 18)
+
+
+static func banner_style() -> StyleBox:
+	var s: ForgedStyle = dark_style()
+	s.artwork = 3
+	s.gradient = _grad([[0.0, Color("#344a5a")], [0.4, Color("#253b4c")], [1.0, Color("#152635")]])
+	s.metal_width = 5
+	s.ornament = 1
+	s.shadow_blur = 4
+	return _margins(s, 14, 66)
 
 
 static func card_style(hover := false, sel := false) -> StyleBox:
 	var s := PaperStyle.new()
-	s.bg_color = Color(1.0, 250 / 255.0, 235 / 255.0, 0.8) if hover else Color(1.0, 248 / 255.0, 228 / 255.0, 0.55)
-	s.corner_radius = 6.0
+	s.bg_color = Color("#ede1c2") if hover else Color(0.94, 0.89, 0.75, 0.48)
+	s.corner_radius = 1.0
 	_border(s, 1.0)
+	s.border_color = Color("#91784b") if sel else UI.C("#55452f", 0.55)
+	s.top_line = Color(1.0, 0.97, 0.81, 0.5)
+	s.bottom_line = UI.C("#423826", 0.16)
+	s.glow_size = 16.0
+	s.glow_color = UI.C("#695536", 0.22)
 	if sel:
-		s.border_color = UI.GOLD
 		s.outer_ring_width = 2.0
-		s.outer_ring_color = UI.C("#c99a3c", 0.6)
-		s.glow_size = 12.0
-		s.glow_color = UI.C("#c99a3c", 0.25)
-	else:
-		s.border_color = UI.C("#5b4630", 0.35)
-		s.glow_size = 12.0
-		s.glow_color = Color(150 / 255.0, 110 / 255.0, 50 / 255.0, 0.15)
-	return _margins(s, 8, 8)
+		s.outer_ring_color = UI.C("#a88039", 0.85)
+		s.bg_color = Color("#e8d6a7")
+	return _margins(s, 9, 10)
 
 
 static func topbar_style() -> StyleBox:
-	var s := PaperStyle.new()
-	s.gradient = _grad([[0.0, Color(28 / 255.0, 18 / 255.0, 10 / 255.0, 0.95)], [1.0, Color(28 / 255.0, 18 / 255.0, 10 / 255.0, 0.72)]])
-	s.gradient_angle = 180.0
-	s.border_color = Color("#120a04")
-	s.border_bottom = 2.0
-	s.bottom_line = UI.C("#c99a3c", 0.45)
-	s.shadow_color = Color(0, 0, 0, 0.45)
-	s.shadow_offset = Vector2(0, 4)
-	s.shadow_blur = 16.0
-	return _margins(s, 0, 18)
+	var s: ForgedStyle = dark_style()
+	s.gradient = _grad([[0.0, Color("#333a3d")], [0.15, Color("#202c33")], [1.0, Color("#10191f")]])
+	s.metal_width = 5.0
+	s.ornament = 0
+	s.shadow_blur = 8.0
+	return _margins(s, 4, 18)
 
 
 static func tooltip_style() -> StyleBox:
-	var s: StyleBox = dark_style()
-	return _margins(s, 8, 10)
+	var s: ForgedStyle = dark_style()
+	s.metal_width = 4.0
+	s.ornament = 0
+	return _margins(s, 10, 12)
 
 
 static func modal_back_style() -> StyleBox:
-	var g := _grad([[0.0, Color(10 / 255.0, 6 / 255.0, 3 / 255.0, 0.35)], [1.0, Color(10 / 255.0, 6 / 255.0, 3 / 255.0, 0.7)]])
+	var g := _grad([[0.0, Color(0.025, 0.04, 0.055, 0.5)], [1.0, Color(0.015, 0.025, 0.04, 0.82)]])
 	var t := GradientTexture2D.new()
 	t.gradient = g
 	t.fill = GradientTexture2D.FILL_RADIAL
@@ -308,6 +323,19 @@ static func tag_style(kind: String, dark := false) -> StyleBox:
 	if dark:
 		bg = UI.C("#f0e2c0", 0.08)
 		bd = UI.C("#f0e2c0", 0.3)
+		match kind:
+			"Blue":
+				bg = UI.C("#4c7fa6", 0.28)
+				bd = UI.C("#87b8d4", 0.62)
+			"Red":
+				bg = UI.C("#a04a40", 0.26)
+				bd = UI.C("#d49279", 0.62)
+			"Gold":
+				bg = UI.C("#c6a05b", 0.22)
+				bd = UI.C("#ddbd79", 0.62)
+			"Green":
+				bg = UI.C("#527a4a", 0.25)
+				bd = UI.C("#9fbd82", 0.62)
 	else:
 		match kind:
 			"Red":
@@ -326,7 +354,7 @@ static func tag_style(kind: String, dark := false) -> StyleBox:
 	s.bg_color = bg
 	s.border_color = bd
 	s.set_border_width_all(1)
-	s.set_corner_radius_all(3)
+	s.set_corner_radius_all(1)
 	s.anti_aliasing = true
 	s.content_margin_left = 6
 	s.content_margin_right = 6
@@ -374,6 +402,10 @@ static func _map_grad(g: Gradient, f: Callable) -> Gradient:
 static func _map_style(s: PaperStyle, f: Callable, all := false) -> PaperStyle:
 	var o: PaperStyle = s.duplicate()
 	o.bg_color = f.call(s.bg_color)
+	if s is ForgedStyle:
+		(o as ForgedStyle).metal_color = f.call((s as ForgedStyle).metal_color)
+		(o as ForgedStyle).accent = f.call((s as ForgedStyle).accent)
+		(o as ForgedStyle).art_tint = f.call((s as ForgedStyle).art_tint)
 	o.gradient = _map_grad(s.gradient, f)
 	o.border_color = f.call(s.border_color)
 	var rings := []
@@ -393,43 +425,40 @@ static func _map_style(s: PaperStyle, f: Callable, all := false) -> PaperStyle:
 # ------------------------------------------------------------------ buttons
 
 static func _btn_base(kind: String) -> PaperStyle:
-	var s := PaperStyle.new()
-	s.corner_radius = 5.0
-	_border(s, 1.0)
-	s.border_color = Color("#22130a")
-	s.top_line = Color(1.0, 230 / 255.0, 180 / 255.0, 0.25)
-	s.rings = [[1.0, UI.C("#c99a3c", 0.25)]]
-	s.shadow_color = Color(0, 0, 0, 0.45)
-	s.shadow_offset = Vector2(0, 2)
-	s.shadow_blur = 4.0
+	# Ghost and event choices remain quiet; command buttons are inset enamel.
+	if kind in ["Ghost", "GhostDark", "Choice"]:
+		var quiet := PaperStyle.new()
+		quiet.corner_radius = 1
+		_border(quiet, 1)
+		quiet.bg_color = UI.C("#101c26", 0.25) if kind == "GhostDark" else UI.C("#68583c", 0.08)
+		quiet.border_color = UI.C("#b7a478", 0.45) if kind == "GhostDark" else UI.C("#625033", 0.48)
+		return quiet
+	var s := ForgedStyle.new()
+	s.artwork = 4
+	s.corner_radius = 2.0
+	s.metal_width = 4.0
+	s.metal_color = Color("#9a8b6c")
+	s.ornament = 0
+	s.shadow_color = Color(0, 0, 0, 0.6)
+	s.shadow_offset = Vector2(0, 3)
+	s.shadow_blur = 3.0
+	s.glow_size = 12
+	s.glow_color = Color(0, 0, 0, 0.45)
+	s.layers = [paper_texture()]
 	match kind:
 		"Red":
-			s.gradient = _grad([[0.0, Color("#c4412f")], [0.55, Color("#93261a")], [1.0, Color("#761b12")]])
+			s.gradient = _grad([[0.0, Color("#873e37")], [0.35, Color("#682b28")], [1.0, Color("#34181c")]])
+			s.metal_color = Color("#b79a6b")
 		"Blue":
-			s.gradient = _grad([[0.0, Color("#4a74d4")], [0.55, Color("#2f58b8")], [1.0, Color("#22418c")]])
+			s.gradient = _grad([[0.0, Color("#4a667b")], [0.38, Color("#304e65")], [1.0, Color("#152a3b")]])
 		"Gold":
-			s.gradient = _grad([[0.0, Color("#e3b956")], [0.6, Color("#b98a2e")], [1.0, Color("#8e6620")]])
-		"Ghost", "GhostDark":
-			s.bg_color = Color(58 / 255.0, 36 / 255.0, 20 / 255.0, 0.08)
-			s.border_color = UI.C("#3a2414", 0.45) if kind == "Ghost" else UI.C("#f0e2c0", 0.35)
-			s.top_line = Color(0, 0, 0, 0)
-			s.rings = []
-			s.shadow_color = Color(0, 0, 0, 0)
+			s.gradient = _grad([[0.0, Color("#dfc48a")], [0.4, Color("#bfa16a")], [1.0, Color("#8b7045")]])
+			s.metal_color = Color("#b3a076")
 		"Ability":
-			s.corner_radius = 6.0
-			s.gradient = _grad([[0.0, Color("#5b3a20")], [1.0, Color("#2c1a0c")]])
-			s.border_color = Color("#120a04")
-			s.top_line = Color(0, 0, 0, 0)
-			s.rings = [[1.0, UI.C("#c99a3c", 0.35)]]
-			s.shadow_color = Color(0, 0, 0, 0.4)
-		"Choice":
-			s.bg_color = Color(1.0, 248 / 255.0, 228 / 255.0, 0.6)
-			s.border_color = UI.C("#5b4630", 0.4)
-			s.top_line = Color(0, 0, 0, 0)
-			s.rings = []
-			s.shadow_color = Color(0, 0, 0, 0)
+			s.gradient = _grad([[0.0, Color("#36424a")], [1.0, Color("#111c24")]])
+			s.metal_color = Color("#8d9291")
 		_:
-			s.gradient = _grad([[0.0, Color("#7b4c28")], [0.55, Color("#57331a")], [1.0, Color("#452812")]])
+			s.gradient = _grad([[0.0, Color("#4b4f4c")], [0.4, Color("#2c363a")], [1.0, Color("#17232b")]])
 	return s
 
 
@@ -437,6 +466,8 @@ static func _active(s: PaperStyle) -> PaperStyle:
 	# `.btn.active`: inset 0 0 0 2px gold-bright, 0 0 12px rgba(255,215,106,.5) (replaces the base shadows).
 	var o: PaperStyle = s.duplicate()
 	o.rings = [[2.0, UI.GOLD_BRIGHT]]
+	if o is ForgedStyle:
+		(o as ForgedStyle).metal_color = UI.GOLD_BRIGHT
 	o.top_line = Color(0, 0, 0, 0)
 	o.shadow_color = Color(0, 0, 0, 0)
 	o.outer_glow_size = 12.0
@@ -446,6 +477,11 @@ static func _active(s: PaperStyle) -> PaperStyle:
 
 static func _set_button(t: Theme, name: String, kind: String, font_size: int, pad_h: float, pad_v: float, active := false) -> void:
 	var base := _btn_base(kind)
+	if base is ForgedStyle and font_size < 19:
+		(base as ForgedStyle).artwork = 0
+	if base is ForgedStyle and font_size >= 19:
+		(base as ForgedStyle).ornament = 1
+		(base as ForgedStyle).metal_width = 5
 	if active:
 		base = _active(base)
 	var hover_k := 1.2 if kind == "Ability" else 1.15
@@ -515,7 +551,7 @@ static func _focus_style() -> StyleBox:
 	f.draw_center = false
 	f.border_color = UI.C("#ffd76a", 0.7)
 	f.set_border_width_all(1)
-	f.set_corner_radius_all(6)
+	f.set_corner_radius_all(1)
 	f.set_expand_margin_all(2)
 	f.anti_aliasing = true
 	return f
@@ -529,6 +565,28 @@ static func _bar_fill(top: String, bottom: String) -> StyleBox:
 	s.corner_radius = 2.0
 	s.top_line = Color(1, 1, 1, 0.3)
 	return s
+
+
+## The slider knob: a 16 px brass disc with a dark wood rim, lighter on hover.
+static func knob_texture(hover: bool) -> Texture2D:
+	var n := 16
+	var img := Image.create(n, n, false, Image.FORMAT_RGBA8)
+	var top := Color("#fff0b0") if hover else Color("#ffd76a")
+	var bottom := Color("#d9aa4c") if hover else Color("#a37a2a")
+	var rim := Color("#3a2414")
+	var c := (n - 1) / 2.0
+	for y in n:
+		for x in n:
+			var d := Vector2(x - c, y - c).length()
+			# Anti-aliased edge of a 7 px disc with a 1.4 px rim.
+			var a := clampf(7.5 - d, 0.0, 1.0)
+			if a <= 0.0:
+				continue
+			var body := top.lerp(bottom, float(y) / (n - 1))
+			var col := rim.lerp(body, clampf(6.1 - d, 0.0, 1.0))
+			col.a = a
+			img.set_pixel(x, y, col)
+	return ImageTexture.create_from_image(img)
 
 
 static func _bar_bg() -> StyleBox:
@@ -591,6 +649,7 @@ static func build() -> Theme:
 	_panel(t, "ParchmentCardSelected", card_style(false, true))
 	_panel(t, "ParchmentCardSelectedHover", card_style(true, true))
 	_panel(t, "DarkPanel", dark_style())
+	_panel(t, "BannerPanel", banner_style())
 	_panel(t, "TopBar", topbar_style())
 	_panel(t, "TooltipPanel", tooltip_style())
 	_panel(t, "ModalBack", modal_back_style())
@@ -653,6 +712,21 @@ static func build() -> Theme:
 			t.set_stylebox(st[0], type, g)
 		for icon in ["increment", "decrement", "increment_highlight", "decrement_highlight", "increment_pressed", "decrement_pressed"]:
 			t.set_icon(icon, type, ImageTexture.new())
+
+	# Sliders (Godot addition: the sound volumes): the bars' sunk track and gold fill, a brass knob.
+	var track := _bar_bg()
+	_margins(track, 3, 0)
+	t.set_stylebox("slider", "HSlider", track)
+	var fill := _bar_fill("#ffe08a", "#c99a3c")
+	_margins(fill, 3, 0)
+	t.set_stylebox("grabber_area", "HSlider", fill)
+	var fill_hi := _bar_fill("#fff0b0", "#d9aa4c")
+	_margins(fill_hi, 3, 0)
+	t.set_stylebox("grabber_area_highlight", "HSlider", fill_hi)
+	t.set_icon("grabber", "HSlider", knob_texture(false))
+	t.set_icon("grabber_highlight", "HSlider", knob_texture(true))
+	t.set_icon("grabber_disabled", "HSlider", knob_texture(false))
+	t.set_constant("center_grabber", "HSlider", 0)
 
 	# Separators.
 	var rule := StyleBoxLine.new()

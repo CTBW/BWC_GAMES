@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "desktopWidths": [
+    1600,
+    1000
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "images": 25,
+  "newImagePreviewsAndDownloads": 4,
+  "allLocalLinks": true,
+  "video": {
+    "duration": 9.1,
+    "width": 1920,
+    "height": 1080,
+    "playback": true,
+    "seek": true
+  },
+  "horizontalOverflow": false,
+  "pageErrors": []
+}

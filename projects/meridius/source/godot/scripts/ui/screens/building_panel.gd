@@ -6,7 +6,7 @@
 ##                  Refill all), leave and recovery (Grant leave)
 ##   training       Drill and Promote per squad
 ##   armoury        Repair, weapon and armour upgrades per squad
-##   infirmary      Treat each lasting injury
+##   infirmary      Dress the wounds of the last fight; treat each lasting injury
 ##   quartermaster  supply prices and weights (bought when planning)
 ##
 ##   const BuildingPanel = preload("res://scripts/ui/screens/building_panel.gd")
@@ -68,7 +68,9 @@ static func make(id: String, viewport_h := 1080.0) -> PanelContainer:
 	ll.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	right.add_child(ll)
 	head.add_child(right)
-	col.add_child(head)
+	var head_band := UI.panel("BannerPanel", [12, 18])
+	head_band.add_child(head)
+	col.add_child(head_band)
 	col.add_child(Flourish.make())
 	var body := body_for(id, g, viewport_h)
 	var scroll := ScrollBox.make(body, viewport_h * 0.54, 4)
@@ -394,17 +396,24 @@ static func _armoury(g: Dictionary) -> Control:
 
 static func _infirmary(g: Dictionary) -> Control:
 	var Game = Deps.game()
+	var Squad = Deps.squad()
 	var col := UI.vbox(6)
-	var hurt: Array = g.roster.filter(func(so): return so.injuries.size() > 0)
-	var surv: Variant = Game.effect(g, "infirmary", "survival")
-	var intro := "A sergeant's lasting injury weakens the whole squad until treated. Treatment benches the squad for the next expedition. %s" % [
-		("Field surgeons add %d%% to the chance that a cut-down squad's sergeant survives." % JS.rnd(float(surv) * 100.0)) if surv else "Better surgeons will save more sergeants of squads cut down in battle."]
+	var hurt: Array = g.roster.filter(func(so): return so.injuries.size() > 0 or Squad.wound_of(so) != null)
+	var intro := "A squad carries the wounds of its last fight into its next one, and its hurt soldiers die if they go down again. Dressed here, for less than new soldiers would cost, it marches with the next expedition at full strength. A sergeant's lasting injury weakens the whole squad until treated. Treatment benches the squad for the next expedition."
 	col.add_child(UI.rich(intro, "SmallMutedText"))
 	if hurt.is_empty():
 		col.add_child(UI.rich("The cots are empty. Long may it last.", "BodyText"))
 	for so in hurt:
 		var bcol := UI.vbox(6)
 		var sid: String = so.id
+		var wound: Variant = Squad.wound_of(so)
+		if wound != null:
+			var dc: int = Game.dress_cost(g, so)
+			var db := UI.button("Dress wounds · %d" % dc, "SmallButton", func(): act(Game.dress_wounds(App.game, sid)))
+			db.name = "DressWounds"
+			db.disabled = g.resources.silver < dc
+			Tip.attach(db, UI.esc("Lifts the penalty of its last fight before the next: %s. %s." % [Squad.wound_text(wound), Squad.hurt_text(wound)]))
+			bcol.add_child(db)
 		for inj in so.injuries:
 			var I: Dictionary = DB.INJURIES[inj]
 			var cost: int = Game.treat_cost(g, inj)

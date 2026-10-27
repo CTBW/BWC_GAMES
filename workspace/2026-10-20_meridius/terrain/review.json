@@ -1,0 +1,616 @@
+{
+  "date": "2026-10-23",
+  "images": [
+    {
+      "id": "tree_oak",
+      "file": "originals/tree_oak__take-02.png",
+      "status": "Source reviewed",
+      "note": "Complete crown and roots; cooler green shadows improved, though highlights remain olive-gold. Add padding and extract the background before use."
+    },
+    {
+      "id": "battlefield_meadow",
+      "file": "originals/battlefield_meadow__take-02.png",
+      "status": "Source reviewed",
+      "note": "New open basin and S-shaped road with continuous slopes. Palette remains warmer than the requested spring green; layout concept only."
+    },
+    {
+      "id": "house_cottage",
+      "file": "originals/house_cottage__take-02.png",
+      "status": "Source reviewed",
+      "note": "Trees and smoke removed; complete building silhouette. Extra padding and background extraction still required."
+    },
+    {
+      "id": "ruin_arch",
+      "file": "originals/ruin_arch__take-01.png",
+      "status": "Source reviewed",
+      "note": "Readable stone arch and chipped masonry; background extraction and scale checks remain."
+    },
+    {
+      "id": "orc_pit",
+      "file": "originals/orc_pit__take-01.png",
+      "status": "Source reviewed",
+      "note": "Open ramp and sunken timber enclosure; padding and extraction remain."
+    },
+    {
+      "id": "dragon_lair",
+      "file": "originals/dragon_lair__take-03.png",
+      "status": "usable source — narrow padding",
+      "note": "Correction removed the square ground slab and gives an irregular natural apron. Complete cave opening and detailed rock silhouette; padding remains narrower than requested. Three takes preserved."
+    },
+    {
+      "id": "tree_beech",
+      "file": "originals/tree_beech__take-01.png",
+      "status": "Source reviewed",
+      "note": "Slender branching beech with a complete crown and roots. Extraction and scale checks remain."
+    },
+    {
+      "id": "tree_pine",
+      "file": "originals/tree_pine__take-01.png",
+      "status": "Source reviewed",
+      "note": "Readable layered boughs and visible trunk; complete silhouette with narrow top padding."
+    },
+    {
+      "id": "tree_autumn",
+      "file": "originals/tree_autumn__take-01.png",
+      "status": "Source reviewed",
+      "note": "Golden clustered crown and gnarled trunk are complete and readable."
+    },
+    {
+      "id": "tree_snow_pine",
+      "file": "originals/tree_snow_pine__take-01.png",
+      "status": "Source reviewed",
+      "note": "Snow pillows, dark needles and trunk are separated clearly; complete silhouette."
+    },
+    {
+      "id": "tree_dead",
+      "file": "originals/tree_dead__take-01.png",
+      "status": "Source reviewed",
+      "note": "Bare twisted branches and split trunk are complete; add padding at the left edge."
+    },
+    {
+      "id": "tree_dark",
+      "file": "originals/tree_dark__take-01.png",
+      "status": "Source reviewed",
+      "note": "Dense cool green canopy and heavy roots retain readable painted texture."
+    },
+    {
+      "id": "bush_green",
+      "file": "originals/bush_green__take-01.png",
+      "status": "Source reviewed",
+      "note": "Connected low foliage clump and visible stems; warm olive highlights."
+    },
+    {
+      "id": "bush_bramble",
+      "file": "originals/bush_bramble__take-01.png",
+      "status": "Source reviewed",
+      "note": "Readable thorn canes, sparse berries and complete outer leaves."
+    },
+    {
+      "id": "undergrowth_ferns",
+      "file": "originals/undergrowth_ferns__take-01.png",
+      "status": "Source reviewed",
+      "note": "Distinct fronds and curled stems, complete root clump and readable gaps."
+    },
+    {
+      "id": "ruin_tower",
+      "file": "originals/ruin_tower__take-01.png",
+      "status": "Source reviewed",
+      "note": "Readable broken masonry, exposed floors and complete rubble footprint; narrow side padding."
+    },
+    {
+      "id": "ruin_wall",
+      "file": "originals/ruin_wall__take-01.png",
+      "status": "Source reviewed",
+      "note": "Complete descending broken wall with believable thickness and attached rubble."
+    },
+    {
+      "id": "wagon_old",
+      "file": "originals/wagon_old__take-01.png",
+      "status": "Source reviewed",
+      "note": "Complete wagon, wheels and shafts. Painted cast shadow must be excluded during extraction."
+    },
+    {
+      "id": "wagon_wreck",
+      "file": "originals/wagon_wreck__take-01.png",
+      "status": "Source reviewed",
+      "note": "Broken frame, loose wheel and compact wreck footprint are readable. Grass apron is warmer than the primary reference."
+    },
+    {
+      "id": "orc_pit_fortified",
+      "file": "originals/orc_pit_fortified__take-02.png",
+      "status": "usable source — narrow padding",
+      "note": "Cropped trees and rear cliff removed. Complete descending ramp, revetments and awnings, with an irregular low earth rim. Source needs extraction and scale preparation."
+    },
+    {
+      "id": "battlefield_grassland",
+      "file": "originals/battlefield_grassland__take-01.png",
+      "status": "Source reviewed",
+      "note": "Open cart tracks and broad rolling terrain, sparse edge trees; empty of units and UI."
+    },
+    {
+      "id": "battlefield_snow",
+      "file": "originals/battlefield_snow__take-01.png",
+      "status": "Source reviewed",
+      "note": "Connected snowy approaches with readable drifts, rock edges and pine borders."
+    },
+    {
+      "id": "battlefield_forest",
+      "file": "originals/battlefield_forest__take-01.png",
+      "status": "Source reviewed",
+      "note": "Layered forest border and connected clearing; central road and continuous hills remain readable."
+    },
+    {
+      "id": "battlefield_wasteland",
+      "file": "originals/battlefield_wasteland__take-01.png",
+      "status": "Source reviewed",
+      "note": "Open cracked-earth centre, dead trees and a peripheral wreck; no active fires or units."
+    },
+    {
+      "id": "battlefield_dark_forest",
+      "file": "originals/battlefield_dark_forest__take-01.png",
+      "status": "Source reviewed",
+      "note": "Two linked clearings, damp ground and old trees. Camera is lower than other scene concepts; adjust during map design."
+    },
+    {
+      "id": "battlefield_lakeside",
+      "file": "originals/battlefield_lakeside__take-01.png",
+      "status": "Source reviewed",
+      "note": "Wide dry shoreline route and transparent shallows. Steeper eroded banks remain at the landward edge."
+    },
+    {
+      "id": "battlefield_ruined_village",
+      "file": "originals/battlefield_ruined_village__take-01.png",
+      "status": "Source reviewed",
+      "note": "Deserted cottages and stone shell leave an open crossroads; restrained rubble and no units."
+    },
+    {
+      "id": "battlefield_town",
+      "file": "originals/battlefield_town__take-01.png",
+      "status": "Source reviewed",
+      "note": "Broad cobbled junction, quiet market area and readable timber buildings. No people or UI."
+    },
+    {
+      "id": "terrain_hill",
+      "file": "originals/terrain_hill__take-01.png",
+      "status": "Source reviewed",
+      "note": "Rounded linked hills and a clear route, with a complete thin irregular footprint."
+    },
+    {
+      "id": "lakeshore_reeds",
+      "file": "originals/lakeshore_reeds__take-01.png",
+      "status": "Source reviewed",
+      "note": "Complete seed heads and leaf tips; clean gaps, compact muddy roots and no water plane."
+    },
+    {
+      "id": "road_forest_wide",
+      "file": "originals/road_forest_wide__take-01.png",
+      "status": "usable landscape concept",
+      "note": "Continuous rolling ground, worn curving cart road, forest on both sides and connected open approaches. Clear warm/cool painted materials. Broad overview, though trees remain larger than the requested distant scale."
+    },
+    {
+      "id": "road_snow_wide",
+      "file": "originals/road_snow_wide__take-01.png",
+      "status": "usable landscape concept",
+      "note": "Continuous snow road with readable ruts, passing space and evergreen forest on both sides. Ivory snow and cool shaded edges; no troops or UI."
+    },
+    {
+      "id": "house_town",
+      "file": "originals/house_town__take-01.png",
+      "status": "usable source",
+      "note": "Complete two-storey structure, weathered plaster, timber and roof. Needs extraction and game scale work."
+    },
+    {
+      "id": "house_tavern",
+      "file": "originals/house_tavern__take-01.png",
+      "status": "usable source — narrow padding",
+      "note": "Complete tavern and porch with readable materials. Extra grass apron and small stumps need trimming during preparation."
+    },
+    {
+      "id": "house_smithy",
+      "file": "originals/house_smithy__take-01.png",
+      "status": "usable source",
+      "note": "Complete roof and chimney, clear open work bay, anvil and practical structure."
+    },
+    {
+      "id": "house_ruined_cottage",
+      "file": "originals/house_ruined_cottage__take-01.png",
+      "status": "usable source",
+      "note": "Readable collapsed roof, exposed rafters, chimney and restrained rubble footprint."
+    },
+    {
+      "id": "house_ruined_town",
+      "file": "originals/house_ruined_town__take-01.png",
+      "status": "usable source",
+      "note": "Complete ruined building footprint with broken frame, roof and controlled rubble."
+    },
+    {
+      "id": "town_well",
+      "file": "originals/town_well__take-01.png",
+      "status": "usable source",
+      "note": "Complete well, physical roof supports, rope and bucket; compact grass base."
+    },
+    {
+      "id": "town_market_stall",
+      "file": "originals/town_market_stall__take-01.png",
+      "status": "usable source",
+      "note": "Complete canopy and counter with orderly baskets and crate; no figure or lettering."
+    },
+    {
+      "id": "town_wall",
+      "file": "originals/town_wall__take-01.png",
+      "status": "usable source",
+      "note": "Complete crenellations, thickness and end faces with readable weathered masonry."
+    },
+    {
+      "id": "town_gate",
+      "file": "originals/town_gate__take-01.png",
+      "status": "usable source",
+      "note": "Complete open gate structure, practical timber and stone, small grass apron."
+    },
+    {
+      "id": "town_fence",
+      "file": "originals/town_fence__take-01.png",
+      "status": "usable source",
+      "note": "All four posts and two rails visible with restrained timber weathering."
+    },
+    {
+      "id": "road_crossroads_wide",
+      "file": "originals/road_crossroads_wide__take-01.png",
+      "status": "usable landscape concept",
+      "note": "Four open natural approaches, wheel wear, drainage and gravel repairs, with the requested wooden direction sign safely on the shoulder. Sign is prominent; scale can be reduced during layout preparation."
+    },
+    {
+      "id": "deforested_river_valley",
+      "file": "originals/deforested_river_valley__take-01.png",
+      "status": "usable landscape concept",
+      "note": "Strong sweeping dry riverbed, eroded banks, exposed roots, chopped stumps, felled logs and standing dead trees. Open ford and logging approaches connect the terrain. Slight atmospheric recession at the far edge; no troops or UI."
+    },
+    {
+      "id": "road_forest_northern_clear",
+      "file": "originals/road_forest_northern_clear__take-01.png",
+      "status": "forest comparison",
+      "note": "Taller spruce/pine, birch trunks, ferns, mossy rocks and fallen timber create a stronger northern woodland character. Worn road remains clear and continuous. Daylight is warmer than the neutral-light prompt, with slight distant atmospheric haze; the central clearing is still broad. Preserve as the clear-day comparison while the darker, foggier version explores much denser woodland."
+    },
+    {
+      "id": "road_forest_northern_fog",
+      "file": "originals/road_forest_northern_fog__take-01.png",
+      "status": "forest comparison",
+      "note": "Dense taller conifers, birch and old broadleaf trees, mossy rocks, tangled ferns and fallen timber enclose the worn road. Layered mist runs between trunks and through hollows without hiding the main route. More imposing and cooler than the clear-day comparison, although the foreground grass still retains warm golden highlights. No figures or UI."
+    },
+    {
+      "id": "corruption_blood_fungus",
+      "file": "originals/corruption_blood_fungus__take-02.png",
+      "status": "usable corruption concept",
+      "note": "Revised to the user's grey, sick and dying direction. Ashen soil, collapsed dry vegetation, pallid trunks and bare branches replace the first take's healthy golden landscape. Red fungus and pale mycelium remain distinct against the muted surroundings; grey-green water carries dark silt and fungal staining. Stream, ford, routes and major colonies retain the original composition. No troops or UI."
+    },
+    {
+      "id": "road_forest_northern_fog_night",
+      "file": "originals/road_forest_northern_fog_night__take-01.png",
+      "status": "usable night concept",
+      "note": "Faithful match to the daytime forest: the road curve, major trees, rocks, fallen logs and fog placement remain consistent. Cool moonlight replaces golden sunlight, with readable green foliage, grey timber, stone and the route through the forest. Shadows retain detail and no figures, torches or other new objects were added."
+    },
+    {
+      "id": "corruption_root_rot",
+      "file": "originals/corruption_root_rot__take-01.png",
+      "status": "usable corruption concept",
+      "note": "Rotten dark stumps and exposed roots dominate the marsh, with pale shelf fungus, dead standing trees, stagnant green pools and dirty surface films. A raised dry route crosses the connected damp channels. Surviving woodland at the outer edge contrasts with the dead interior, with low fog adding depth. Distinct from the red-fungus landscape and free of troops or UI."
+    },
+    {
+      "id": "corruption_crystal",
+      "file": "originals/corruption_crystal__take-02.png",
+      "status": "usable corruption concept",
+      "note": "The revised image preserves the winding road, rock ridges and violet crystal formations while replacing vigorous golden grass with grey-brown dead vegetation, pale mineral crusts and leached soil. Bleached trees and dusty purple foliage reinforce the blight; healthy woodland remains at the outer boundary. The road retains warm earth colour but the overall light is subdued and cool. No emissive neon, figures or UI."
+    },
+    {
+      "id": "corruption_ash",
+      "file": "originals/corruption_ash__take-01.png",
+      "status": "usable corruption concept",
+      "note": "Grey ash-covered soil, bleached dead trees, blackened fallen timber, pale fungi and cracked earth create a distinct dying landscape. A worn raised road crosses the dry drainage basin; the route remains readable. Healthy foliage is confined to the distant upper edge, with low fog and subdued light through the dead woodland. No troops, torches or UI."
+    },
+    {
+      "id": "camp_medium_river",
+      "file": "originals/camp_medium_river__take-01.png",
+      "status": "usable camp concept",
+      "note": "The complete medium camp stands on a dry river terrace with four bridged gate openings, orderly tent blocks, central command pavilion, a broad drill yard, stores and a well. A gently descending approach connects to a separate timber river crossing outside the palisade. Tall northern woodland, deadwood and low mist frame the clearing without blocking routes. A tiny lit torch beside the rear stores is an unrequested detail to remove during asset preparation; no army figures or UI appear."
+    },
+    {
+      "id": "camp_large_frontier",
+      "file": "originals/camp_large_frontier__take-01.png",
+      "status": "usable camp concept",
+      "note": "A complete large palisade and ditch encloses two extensive tent quarters, command pavilions, a broad drill field, supply and stable courts, a well and connected roads. Four timber gate structures and bridges remain fully in frame. Dense northern forest, mossy boulders, fallen wood and low fog surround a practical cleared apron with chopped stumps. Distinct from the river and small camps; no troops, active fires or UI."
+    },
+    {
+      "id": "deforested_river_basin",
+      "file": "originals/deforested_river_basin__take-01.png",
+      "status": "usable deforested landscape concept",
+      "note": "A broad entirely dry basin contains branching worn channels, gravel bars, rounded stones, cracked mud and bleached driftwood. Chopped stumps, cut trunks and a few skeletal dead trees occupy the eroded banks, with surviving woodland confined mostly to the perimeter. The connected channel floor provides broad movement space and distinct elevation edges. No water, people, machinery or UI."
+    },
+    {
+      "id": "deforested_old_growth",
+      "file": "originals/deforested_old_growth__take-01.png",
+      "status": "usable deforested landscape concept",
+      "note": "Large ancient stumps with clear age rings and mossy roots dominate the felled clearing. Weathered fallen trunks and skeletal trees frame a completely dry diagonal ravine with rounded stones and curled mud. Worn paired wagon tracks bend around the largest stump, and sloped entries connect to the dry channel. The brushwork is more strongly outlined than the basin take, but the elevated framing and natural materials remain coherent. No people, machinery, water or UI."
+    },
+    {
+      "id": "camp_small_woodland",
+      "file": "originals/camp_small_woodland__take-02.png",
+      "status": "usable camp concept",
+      "note": "The rear-left palisade opening is now closed and the enclosing wall and ditch read continuously. Both intended timber bridge entrances remain open. The tent groups, command pavilion, drill yard, supply court, well, tall northern trees, mossy boulders, fallen timber and low mist retain the first take's composition. Complete perimeter and approaches remain in frame; no troops or UI."
+    },
+    {
+      "id": "camp_small_march",
+      "file": "originals/camp_small_march__take-02.png",
+      "status": "usable camp concept",
+      "note": "The approved tent groups, four gates, palisade, ditch, drill yard, well and supply awning match the original composition. Tall spruce, pine, birch and broadleaf layers now surround the clearing, with tangled ferns, mossy boulders, fallen wood and cool distant fog. The golden open parkland has become a more imposing northern forest while all gate approaches and camp structures stay readable. No troops, flames or UI."
+    },
+    {
+      "id": "camp_medium_meadow",
+      "file": "originals/camp_medium_meadow__take-02.png",
+      "status": "usable camp concept",
+      "note": "The original tent blocks, command pavilion, four defended gates, drill ground, supply and stable yards, wells and road connections remain in place. Denser northern woodland now frames the outer edges with spruce, pine, birch, deadwood and undergrowth. Cooler subdued light replaces the strong golden glow; distant haze is subtle. The useful open meadow and defensive apron are preserved. No troops, flames or UI."
+    },
+    {
+      "id": "camp_large_legion",
+      "file": "originals/camp_large_legion__take-02.png",
+      "status": "usable camp concept",
+      "note": "The approved large camp retains its complete palisade, four defended gates, tent blocks, command pavilions, broad drill field, supply courts, well and roads. Tall irregular northern trees now tower beyond the perimeter, with dense undergrowth, mossy stones, fallen timber, cooler light and low fog between trunks. The defensive apron and approaches remain clear. Layout comparison matches the original; no troops, flames or UI."
+    },
+    {
+      "id": "corruption_blood_fungus_night",
+      "file": "originals/corruption_blood_fungus_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The night view preserves the revised grey, dying landscape: stream, ford, roads, tree trunks and red fungal colonies match the daytime source. Cooler moonlit highlights and deeper shadows replace the diffuse daytime light while retaining murky water, pale mycelium and dark crimson fungus. Routes remain readable; no healthy green meadow, added torches, figures or neon growth."
+    },
+    {
+      "id": "corruption_root_rot_night",
+      "file": "originals/corruption_root_rot_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The night treatment preserves the rotten stumps, exposed roots, connected stagnant pools, dry road and fog placement of the daytime marsh. Cool moonlight catches pale shelf fungi and dying grass while deep shadows retain bark and ground detail. Green-brown water and the surviving outer woodland keep their material colours; the crossing remains legible. No added figures, torches or magical glow."
+    },
+    {
+      "id": "corruption_crystal_night",
+      "file": "originals/corruption_crystal_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The corrected blight layout is preserved: winding road, crystal ridges, exposed roots, pale mineral crusts and dying trees stay in place. Cooler blue ambient shadows and moonlit highlights replace the subdued daytime lighting. Violet crystals retain a physical reflective appearance without neon emission; the pale ground and road remain readable. The change is restrained because the daytime source was already overcast. No added troops, torches or UI."
+    },
+    {
+      "id": "corruption_ash_night",
+      "file": "originals/corruption_ash_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The dry basin, raised road, bleached trees, blackened timber and pale fungi retain the daytime layout. Cool night shadows and silver highlights deepen the ash-covered woodland while preserving readable ground and the narrow healthy forest boundary. The dry channels remain empty, with no introduced water, flames, figures or UI."
+    },
+    {
+      "id": "camp_small_march_night",
+      "file": "originals/camp_small_march_night__take-01.png",
+      "status": "usable night concept",
+      "note": "Cool moonlight and deeper woodland shadows retain the revised northern forest, complete palisade, gates, tent rows, stores and open drill yard. Paths and ditch crossings stay readable; no figures or new exterior fires. A few tent openings retain restrained warm colour against the cool canvas and ground."
+    },
+    {
+      "id": "camp_small_woodland_night",
+      "file": "originals/camp_small_woodland_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The repaired continuous rear palisade and two bridged entrances remain intact. Cool moonlight and low woodland fog preserve the tents, open drill yard, supply court and tall northern forest. Tent interiors have warm illumination; no figures, exterior torches or new structures. Routes, drainage and the defensive ditch remain readable."
+    },
+    {
+      "id": "camp_medium_meadow_night",
+      "file": "originals/camp_medium_meadow_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The full palisade, four defended gates, tent blocks, supply and stable courts, wells and drill ground retain their daytime positions. Cool moonlit canvas, subdued meadow and deeper forest shadows clearly separate the night treatment; the command pavilion has a small warm interior glow. Roads, gate bridges and defensive clearances stay legible without exterior fires, troops or added scenery."
+    },
+    {
+      "id": "camp_medium_river_night",
+      "file": "originals/camp_medium_river_night__take-02.png",
+      "status": "usable night concept",
+      "note": "Strict lighting edit restores the approved medium camp composition: all tent blocks, four bridged gates, rear stores and well, central command tent, foreground drill yard and separate river bridge are preserved. Cool moonlight replaces the golden day palette while the river, roads and ditch stay clear. The tiny rear torch is extinguished; only a restrained command-tent interior glow remains. Take 1 was rejected for redesigning the camp into a small outpost."
+    },
+    {
+      "id": "camp_large_legion_night",
+      "file": "originals/camp_large_legion_night__take-01.png",
+      "status": "usable night concept",
+      "note": "Compared directly with the revised daytime source: the large tent blocks, four defended gates, broad drill field, stores, wells and clear perimeter lane retain their layout. Tall northern woodland and low fog surround the complete enclosure. Cool moonlit canvas, darker timber and forest shadows establish night; a few existing tent openings have modest warm interior light. All principal routes remain readable, with no troops or new exterior fires."
+    },
+    {
+      "id": "camp_large_frontier_night",
+      "file": "originals/camp_large_frontier_night__take-01.png",
+      "status": "usable night concept",
+      "note": "Compared directly with the daytime original: tent rows, command pavilions, immense drill ground, supply and stable courts, well, four bridged gates and chopped stumps retain their positions. Cool moonlight and low blue woodland fog replace the warm day lighting. The whole palisade, ditch and clear approach roads stay visible; existing tent interiors provide small warm accents, with no troops or added exterior flames."
+    },
+    {
+      "id": "deforested_river_valley_night",
+      "file": "originals/deforested_river_valley_night__take-01.png",
+      "status": "usable night concept",
+      "note": "Direct comparison confirms the same winding dry channel, crossing track, chopped stumps, felled logs, dead trees and exposed bank roots. Cool moonlit stone and subdued grass replace the golden daytime palette, with deeper woodland shadows. The channel remains visibly dry and the route through it stays clear; no added water, figures, lights or structures."
+    },
+    {
+      "id": "deforested_river_basin_night",
+      "file": "originals/deforested_river_basin_night__take-02.png",
+      "status": "usable night concept",
+      "note": "Strict lighting edit preserves the exact branching dry channels, gravel bars, cracked sediment, stumps, felled timber, eroded banks and surviving forest. Cool silver-blue light replaces golden sunlight while keeping ground detail readable. No added water or structures. Take 1 was rejected for three invented cabins at the upper-right forest edge; this take restores the empty woodland."
+    },
+    {
+      "id": "deforested_old_growth_night",
+      "file": "originals/deforested_old_growth_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The exact huge ringed stumps, felled trunks, dead trees, curving cart track and dry diagonal ravine remain in place. Cool moonlit stump tops and stone, deeper blue-green shadows and subdued dead grass replace the daytime amber light. The sloped crossings and dry sediment remain legible. No buildings, artificial lights, water or figures were added."
+    },
+    {
+      "id": "road_dark_forest_wide",
+      "file": "originals/road_dark_forest_wide__take-02.png",
+      "status": "usable refined concept",
+      "note": "The original woodland composition is preserved. A modest unlettered directional sign now stands on the right-hand shoulder outside the turning area. The roads have smoother broad turning arcs, paired worn wheel routes, irregular verges and small gravel repairs; roots were cleared from the busiest central approach while remaining along forest edges. No figures, extra buildings or UI. Use this revised source for the night view."
+    },
+    {
+      "id": "dragon_lair_snow",
+      "file": "originals/dragon_lair_snow__take-03.png",
+      "status": "usable concept; extraction preparation needed",
+      "note": "The cropped top and right rock formation are now completed as a compact rounded snowy outcrop. Peripheral pines are removed; the dark cave mouth, icicles and disturbed snowy approach remain recognizable. The full silhouette fits on magenta without edge clipping. Margin is still much narrower than requested, and two detached snow chips remain near the lower-left footprint; add padding and remove those chips during extraction preparation. Take 2 was rejected because top/right clipping persisted."
+    },
+    {
+      "id": "bush_snow",
+      "file": "originals/bush_snow__take-02.png",
+      "status": "usable concept",
+      "note": "The square soil platform is replaced by a soft, irregular snow clump. The shrub silhouette and snow-covered foliage are preserved; full original reviewed with no visible clipping."
+    },
+    {
+      "id": "street_crossroads",
+      "file": "originals/street_crossroads__take-02.png",
+      "status": "usable layout reference; finish preparation needed",
+      "note": "Four open approaches now form a thin road footprint with rounded turning corners, wheel wear, gravel repairs and a modest unlettered directional sign outside the travelled area. Trees and the thick soil block are removed. This take has finer, more granular stone rendering than the painted set; harmonize the surface treatment before engine use. Add padding and remove the small sign shadow crossing onto magenta during extraction preparation."
+    },
+    {
+      "id": "rock_moss",
+      "file": "originals/rock_moss__take-03.png",
+      "status": "concept reference; isolation unresolved",
+      "note": "The main connected mossy outcrop is complete, but the detached upper-right fragment remains after three takes, including explicit removal and a clean single-asset prompt. This is not an extraction-ready source. Remove that fragment and add padding during later cutout preparation; all takes are preserved."
+    },
+    {
+      "id": "terrain_bank",
+      "file": "originals/terrain_bank__take-02.png",
+      "status": "concept reference; isolation unresolved",
+      "note": "The grassy incline, exposed soil, roots and stone remain readable, but the unwanted lower-left forest inset persists as a faded fragment. Precise isolation cleanup and additional padding are required before extraction."
+    },
+    {
+      "id": "lakeshore_bank",
+      "file": "originals/lakeshore_bank__take-02.png",
+      "status": "concept reference; water edge preparation needed",
+      "note": "The heavy soil block is removed while the curved beach, reeds, stones and shallow water are preserved. The front water still forms a rectangular transparent cross-section; flatten and reshape that outer water edge before using this as a ground module."
+    },
+    {
+      "id": "street_straight",
+      "file": "originals/street_straight__take-02.png",
+      "status": "concept reference; isolation unresolved",
+      "note": "The road now has a thinner footprint, paired wheel wear, irregular paving repairs and readable gutters. Detached trees and cliffs still remain above its left shoulder; remove that separate scenery and add padding before extraction."
+    },
+    {
+      "id": "street_corner",
+      "file": "originals/street_corner__take-02.png",
+      "status": "concept reference; isolation unresolved",
+      "note": "The rounded cobbled bend and open road ends remain intact. The unwanted lower-left forest inset persists despite explicit removal instructions, so this source still needs precise isolation cleanup and padding before extraction."
+    },
+    {
+      "id": "town_square",
+      "file": "originals/town_square__take-02.png",
+      "status": "usable paving concept; module preparation needed",
+      "note": "Benches, trees, bushes and large rocks are removed, leaving an empty worn paving patch with four unobstructed approaches. Painted stone detail, scattered grass and irregular shoulders remain. A visible earth rim and narrow image margins still need flattening and padding before this can serve as a seamless ground module."
+    },
+    {
+      "id": "town_bridge",
+      "file": "originals/town_bridge__take-02.png",
+      "status": "concept reference; isolation unresolved",
+      "note": "The complete stone arch, open gap, low parapets and worn roadway are preserved, and the structural abutments are more clearly separated from their ground. A large detached earth-and-timber block still remains below the bridge, partly faded into magenta. Remove that fragment before extraction; this is a concept reference, not a clean game asset."
+    },
+    {
+      "id": "orc_pit_night",
+      "file": "originals/orc_pit_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The exact open approach, circular pit, rear timber palisade, torn red banner, rocks and vegetation remain in place. Cool moonlight replaces the warm daylight while the interior and route remain readable. The existing stone-ringed fire pit stays unlit; no figures, torches or new objects appear. Magenta background is preserved."
+    },
+    {
+      "id": "orc_pit_fortified_night",
+      "file": "originals/orc_pit_fortified_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The same reinforced gate, three patched canopies, barrels and crates, central ramp and deep palisaded pit are preserved. Cool upper-left moonlight catches stone and timber while the pit remains dark but readable. No troops, fires, extra structures or lights were added; the magenta background is retained."
+    },
+    {
+      "id": "dragon_lair_night",
+      "file": "originals/dragon_lair_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The rock arch, bones, ferns, bushes and open grassy approach retain the daytime arrangement. Cool blue-grey moonlight and deeper cave shadows give the site a night treatment while keeping the entrance readable; the warm ground coloration remains visible. No dragon, fire, lamps or extra structures were added. Magenta is retained and the source's narrow edge padding still needs preparation before extraction."
+    },
+    {
+      "id": "dragon_lair_snow_night",
+      "file": "originals/dragon_lair_snow_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The rounded snow cap, icicles, cave arch, central tracks and exposed grass patches retain their source positions. Cooler silver-blue snow and deeper blue-grey rock shadows replace the warm daytime treatment while the approach remains legible. No pines, creatures, lights or structures were added. The complete outline is preserved; the source's narrow magenta margins and two detached snow chips still need extraction preparation."
+    },
+    {
+      "id": "battlefield_meadow_night",
+      "file": "originals/battlefield_meadow_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The winding road, open meadow, eroded right bank, flower groups and mixed forest edge retain the reviewed daytime arrangement. Cool silver-blue road light and blue-green meadow fill read as moonlight while darker trees frame the scene. The entire movement area stays legible. No figures, buildings, lamps or other objects were added."
+    },
+    {
+      "id": "battlefield_grassland_night",
+      "file": "originals/battlefield_grassland_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The shallow hills, eroded bank, intersecting worn tracks, scattered rocks and two tree clusters retain their source positions. Cool moonlight replaces the golden daytime lighting and the foreground shadows deepen without losing the routes. Natural vegetation colors remain distinguishable. No figures, buildings or artificial lights were added."
+    },
+    {
+      "id": "battlefield_snow_night",
+      "file": "originals/battlefield_snow_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The intersecting snowy tracks, two rounded hills, exposed rock faces and enclosing winter trees retain the exact daytime layout. Cool silver-blue snow replaces the warm sunlight, with deeper blue forest shadows and readable trail depressions. The scene remains empty and no buildings, fires, lights or figures were introduced."
+    },
+    {
+      "id": "battlefield_forest_night",
+      "file": "originals/battlefield_forest_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The central worn route, two rocky hills, moss, fern groups and enclosing mixed forest match the accepted daytime composition. Cool moonlight opens the route through deeper blue-green canopy shadows without obscuring the terrain. Grass, rock and tree hues remain distinct. No buildings, figures or artificial lighting were added."
+    },
+    {
+      "id": "battlefield_wasteland_night",
+      "file": "originals/battlefield_wasteland_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The dead trees, dried cracked ground, branching tracks, eroded banks, dark stones and abandoned cart retain the daytime arrangement. Cool grey-blue moonlight and deeper edge shadows replace the warm haze while the broad central ground stays readable. No water, new vegetation, figures, structures or lights were added."
+    },
+    {
+      "id": "battlefield_dark_forest_night",
+      "file": "originals/battlefield_dark_forest_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The immense twisting trunks, central clearing, raised right bank, exposed roots, rocks and small streams retain their daytime positions. The warm opening through the left trees becomes cool moonlight, with deeper green-blue shade under the canopy. Both the lower clearing and upper approach stay legible. No added structures, figures, fires or lamps."
+    },
+    {
+      "id": "battlefield_lakeside_night",
+      "file": "originals/battlefield_lakeside_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The diagonal shoreline, submerged rocks, reeds, low eroded banks, forest edge and open grass retain the accepted source layout. Cool moonlight and blue water reflections replace the golden daytime treatment; shore access and underwater depth remain readable. No boats, buildings, figures or artificial lights were added."
+    },
+    {
+      "id": "battlefield_ruined_village_night",
+      "file": "originals/battlefield_ruined_village_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The two damaged cottages, roofless church, foreground foundations, broken walls and open junction retain their exact daytime arrangement. Cool moonlight gives stone and timber distinct values while leaving all windows and ruins unlit. Forest shade deepens around the edges. No repaired buildings, new structures, figures, fires or lamps were introduced."
+    },
+    {
+      "id": "battlefield_town_night",
+      "file": "originals/battlefield_town_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The central cobblestone junction, half-timber houses, well, empty market stalls and surrounding rocky banks retain their daytime layout. Cool moonlit roofs and blue-green shade replace the warm daylight, with restrained glow in existing house windows. The broad streets remain clear and legible. No people, added fixtures or new structures. This is a bright moonlit treatment rather than a deeply dark night."
+    },
+    {
+      "id": "road_forest_wide_night",
+      "file": "originals/road_forest_wide_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The winding diagonal road, upper fork, two rounded rocky hills and mixed woodland retain the daytime arrangement. Silver-green moonlit grass and cool road surfaces replace the warm sunlight, while the dense edge trees fall into blue-green shade. The main route and quiet clearing remain legible. No buildings, fires, lamps or figures were added."
+    },
+    {
+      "id": "road_snow_wide_night",
+      "file": "originals/road_snow_wide_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The diagonal worn snow road, turning tracks, snowbanks, rocks, fallen logs and dense conifer edges match the daytime source. Warm sunlight is replaced by cool silver-blue light and deeper forest shade. Snow remains bright under moonlight, keeping wheel tracks and approaches readable; this is a bright moonlit view. No structures, lamps, fires or figures were added."
+    },
+    {
+      "id": "road_dark_forest_wide_night",
+      "file": "originals/road_dark_forest_wide_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The four worn approaches, mature trunks, fern beds, rocks and wooden sign retain the corrected daytime layout. The sign remains beside the crossing and the central road opening stays clear. Warm sunlight becomes pale cool moonlight with deeper green-blue woodland shade. No figures, structures, torches or lamps were added."
+    },
+    {
+      "id": "road_crossroads_wide_night",
+      "file": "originals/road_crossroads_wide_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The four approaches, turning wheel ruts, compacted crossing, loose gravel, drainage channels, rocks and roadside wooden sign preserve the daytime layout. Cool silver-blue light replaces the warm sunlight, with deep green-blue forest shade. The junction stays empty and all four approaches remain legible. No figures, buildings, torches or lamps were added."
+    },
+    {
+      "id": "road_forest_northern_clear_night",
+      "file": "originals/road_forest_northern_clear_night__take-01.png",
+      "status": "usable night concept",
+      "note": "The winding cart road, rocky right bank, tall spruce and pine, birches, mixed shrubs, fern beds, stumps and fallen wood retain the accepted daylight arrangement. Cool silver-green moonlight replaces golden sunlight, with deep blue-green woodland shadows. The road and sloping ground remain readable. This is a bright moonlit treatment, with a soft cool haze at the upper-left light source. No buildings, figures, torches or artificial lights were added."
+    }
+  ],
+  "generationState": {
+    "status": "required_complete",
+    "note": "All 101 requested subjects have reviewed concepts. Final northern forest night image completed in verified Unlimited mode; the account balance was unchanged between submission and completion. Eight optional material studies remain unsubmitted. Image preparation and previously noted isolated-fragment cleanup remain separate work."
+  },
+  "updated": "2026-10-23"
+}

@@ -216,6 +216,34 @@ and suppresses combat audio, command previews, camera auto-follow and battle HUD
 `ability_1..4` (1–4), `toggle_fullscreen` (F11). Mouse: left click select/act,
 right drag or middle drag pans, wheel zooms.
 
+## Unit bar (Godot addition)
+
+The battle HUD's selected-squad card is the unit bar
+(`scripts/ui/unit_bar/unit_info_bar.gd`), after Warcraft III's console. It is
+a slab in the bottom centre of the screen that rises when a squad is selected
+and sinks when the selection is dropped. From the left it shows the minimap,
+the squad's man (live from his 3D figure, `head_portrait.gd`), the middle
+(name, rank, turn, stat plaques, status row, the men), the gear and the 4×3
+command card. `battle_hud.gd` owns it in place of `Panels.unit_panel`. The hover
+panels, forecasts and tile info stay in `hud_battle_panels.gd`, whose helpers
+the bar reuses.
+
+A foe can be shown in it too: a right click on a foe in sight (the selection
+and a chosen ability stay), or a left click on one while nothing is selected.
+Esc, the foe card's Back, a right click on the field or the selected squad's
+next order go back (`battle_hud.gd` `inspect`). The HUD has those clicks
+before the field; a right drag from a foe is handed back to the view.
+
+It is a view. `bar_data.gd` reads the battle, the view's played-back squads and
+the company's records into plain Dictionaries. The commands call the battle
+view's own methods, and the view keeps its keys. The console takes the clicks
+over it, so none reach the field. Tooltips (`bar_tips.gd`) say where each
+number comes from. Placeholder art and what should replace it:
+`references/ui/unit_bar_asset_list.md` (Meridius project root). Tests:
+`test_unit_bar.gd`, `test_battle_hud.gd`; in a window,
+`tests/visual/unit_bar_battle.gd` (the game's 3D battle on Ashby farm, foes
+included).
+
 ## UI theme contract
 
 The theme (`assets/ui/theme.tres`, built by `scripts/ui/theme_builder.gd`)

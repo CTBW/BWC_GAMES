@@ -69,3 +69,6 @@
 /art/collie_guard_3d/collie_anim.blend
 /prototypes/sandbox3d/art3d/collie_guard.glb
 /prototypes/sandbox3d/art3d/collie_guard.glb.import
+# The painted UI's raw takes stay local (art/ui/epic/README.md); their keyed
+# runtime copies are in assets/ui/epic.
+/art/ui/epic/*-take*.png

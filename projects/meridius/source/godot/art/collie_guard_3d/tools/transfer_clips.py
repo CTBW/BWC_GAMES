@@ -14,11 +14,15 @@ the travel the clips store (root_vel, root_path, lane_m); every other property t
 carry (frames, source, contact_t, enter_walk_t, ...) is copied. The footman's skirt bones
 have no counterpart; the collie's tail, tabard and tasset bones stay at rest for
 collie_motion.py. The appended FootmanRig and its clips are removed again; saves <out.blend>.
+The footman's wrist lock holds the collie's left hand still too: rig_collie.py fits the
+shield's strap to it (strap_wrist), and a clip that turns the hand off it is reported.
 """
+import math
 import sys
 from pathlib import Path
 
 import bpy
+from mathutils import Quaternion
 
 # The clips footman_3d/tools/export_godot.py sends to the sandbox (it adds turn_90_r itself).
 CLIPS = ["idle", "stand", "walk", "attack", "block", "hit", "block_hit", "death", "lane", "turn_90", "turn_180",
@@ -89,6 +93,8 @@ def fcurves(act):
 
 
 rig.animation_data_create()
+wrist = rig.get("strap_wrist")
+wrist_off = {}
 for clip in only:
     sact = SRC_ACTS.get(clip)
     if sact is None:
@@ -118,6 +124,9 @@ for clip in only:
             if n in prev:
                 q.make_compatible(prev[n])
             prev[n] = q
+            if n == "mixamorig:LeftHand" and wrist is not None:
+                off = math.degrees(2 * math.acos(min(1.0, abs(q.dot(Quaternion(wrist))))))
+                wrist_off[clip] = max(wrist_off.get(clip, 0.0), off)
             pb = rig.pose.bones[n]
             pb.rotation_mode = "QUATERNION"
             pb.rotation_quaternion = q
@@ -136,6 +145,11 @@ for clip in only:
     act["transfer"] = "footman's %s on FootmanRig, hips x %.3f" % (clip, ratio)
     act["frames"] = f1 - f0 + 1
     print("TRANSFER", clip, f1 - f0 + 1, "frames")
+
+bad = {k: v for k, v in wrist_off.items() if v > 0.5}
+if bad:
+    print("TRANSFER_WARN the left hand leaves rig_collie.py's WRIST (the strap's fit):",
+          ", ".join("%s %.1f deg" % kv for kv in sorted(bad.items())))
 
 # Only the collie's clips stay.
 arm = src.data

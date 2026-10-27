@@ -14,7 +14,7 @@ meshes at 100, four textures at 20), approved by the user.
 | File | What it is |
 | --- | --- |
 | `collie_base.blend` | Body, tail, sword and shield from the Tripo zips, ears and shield reworked, scaled to the Mixamo height (skull top 1.82 m), textures packed. From `tools/build_collie.py`. |
-| `collie_rig.blend` | The rigged character: `CollieRig`, with FootmanRig's Mixamo names, hierarchy and rolls, plus `Tail_1`..`Tail_6`, `TabardF`, `TabardB` and `Tasset.L/.R`; the sword in his right fist, the shield on his left forearm. From `tools/rig_collie.py`. No actions. |
+| `collie_rig.blend` | The rigged character: `CollieRig`, with FootmanRig's Mixamo names, hierarchy and rolls, plus `Tail_1`..`Tail_6`, `TabardF`, `TabardB` and `Tasset.L/.R`; the sword in his right fist, the shield on his left forearm with its strap and grip. From `tools/rig_collie.py`. No actions. |
 | `collie_anim.blend` | The rig with the footman's 19 clips (`tools/transfer_clips.py`) and his own tail and hanging armour on them (`tools/collie_motion.py`). Local, not in Git: the footman's clips are made from Mixamo clips. |
 | `tools/export_godot.py` | Writes `prototypes/sandbox3d/art3d/collie_guard.glb` (local, as the anim scene) and its sidecar `collie_guard.json` (in Git). |
 | `tools/render_viewer_frames.py` | Renders the clips for the Workspace card's pose viewer. |
@@ -48,6 +48,25 @@ The sword's guard sits just in front of his thumb. The shield is strapped to the
 the forearm as the footman's, then moved straight out from it (along its face's normal)
 until its back clears forearm, bracer and fist by `SHIELD_GAP` (1.2 cm) at the nearest
 point: a move of 10 cm with the closed back (8.7 cm before it).
+
+The shield's arm strap (`ShieldStrap`) wraps the forearm 62 % of the way from elbow to
+wrist (`STRAP_AT`): 4.5 cm wide leather in his belts' brown, 4 mm off the forearm's
+section, riveted to the shield's back above and below it with two brass rivets at each end.
+The clips hold his left wrist at the footman's lock (`WRIST`, which `transfer_clips.py`
+checks), so the forearm keeps still against the shield and the strap is fitted to it as the
+clips hold it; it rides on the hand bone with the shield. In every clip it clears the
+forearm and the shield. His upper arm folds over the forearm's top in the guard and the
+blows (it passes through the forearm there too), and passes through the strap's far side
+where it does.
+
+The shield's grip (`ShieldGrip`) is a flat bar of blackened iron, 2.2 by 0.6 cm, bent into a
+staple. Its middle, wrapped in the strap's leather to the sword grip's radius, lies along the
+left fist's axis, so the fist fits it as the right fist fits the sword. The fist stands 14 cm
+off the shield's back, so the legs run that far from the back, past his hand above and below
+(`GRIP_GAP`, 4 mm clear of the hand's faces), 16.4 cm apart; each foot is riveted to the back
+with two brass rivets. The fist rides on the hand bone alone, as the shield does, so the grip
+keeps its place in his hand in every clip; only the leather inside his fist meets the fingers,
+as the sword's grip does.
 
 The tail is mounted under his belt (`TAIL_Z` 0.90 m), its stump pressed 4 cm in, tilted
 to clear his legs and back panel, on six bones along its centre line, weighted by
@@ -113,7 +132,7 @@ Then re-import with `tools/import.sh` (from the Godot project). The pose viewer'
 
 - His coat is the painting's black tricolour only; the sprite's other coats (red, blue
   merle) could be texture variants later.
-- No strap or grip is modelled between the shield and his forearm; its back clears his
-  arm by 1.2 cm at the nearest point in the T-pose. Clearance in the clips is not checked
-  frame by frame.
+- In the thrusts the shield and his left fist pass into his belly, and as he falls the fist
+  passes into his left tasset: the footman's clips swing the shield arm that far in, and
+  the grip goes with the fist.
 - He has the footman's game settings and attacks; nothing is his own yet.

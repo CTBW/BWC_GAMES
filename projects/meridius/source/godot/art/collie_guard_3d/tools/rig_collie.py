@@ -21,6 +21,7 @@ collie needs besides:
    hand frames (sword along the hand's +X, shield face along -Z, long axis along -X), so
    his clips swing them as they swing the footman's. The sword's guard sits just in front of
    the thumb; the shield is raised off the forearm (SHIELD_GAP) clear of his bracer and fist.
+   Its arm strap (8.) and grip (9.) ride on the hand bone with it.
 5. Tail. Tripo modelled it with its root stump at its +Y end, hanging and sweeping to a white
    tip that curls up. Turned about so the stump faces his lower back, mounted under the
    belt (TAIL_Z, sunk TAIL_SINK), tilted (the least of TAIL_TILTS) to clear his legs and
@@ -29,6 +30,17 @@ collie needs besides:
 6. Hanging armour: the tabard's front panel (TabardF), its back panel (TabardB) and the side
    tassets (Tasset.L/.R) get bones of their own on the hips, from nothing at the belt to all
    at the hem (HANG). collie_motion.py keys them from the thighs' swing.
+8. The shield's arm strap (ShieldStrap: leather, brass rivets), round the forearm STRAP_AT of
+   the way from elbow to wrist. The clips hold the wrist still at the footman's lock
+   (WRIST), so the forearm keeps still against the shield in every clip: the strap is fitted
+   round its section as the clips hold it (STRAP_GAP off it, long faces cut where they cross
+   the strap), then runs to the shield's back at both ends and is riveted there. The upper
+   arm folds over the forearm's top in the guard and passes through the strap there, as it
+   passes through the forearm.
+9. The shield's grip (ShieldGrip): a flat iron bar bent into a staple, its middle wrapped in
+   leather as thick as the sword's grip along the left fist's axis, its legs past his hand
+   above and below (GRIP_GAP clear of it) and its feet riveted to the shield's back. The fist
+   rides on the hand bone alone, so it stands to the shield as in the T-pose.
 Saves the .blend; no actions.
 """
 import heapq
@@ -37,9 +49,10 @@ import math
 import sys
 from pathlib import Path
 
+import bmesh
 import bpy
 import numpy as np
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Quaternion, Vector
 from mathutils.bvhtree import BVHTree
 
 H = 1.82                 # skull top (m), the Mixamo head top
@@ -50,6 +63,17 @@ PRESS = 0.3              # the curled fingers pressed this much closer together
 THUMB_Y = -0.055         # the thumb: the hand's part in front of this, short of the knuckles
 SWORD_L, SHIELD_L = 1.0, 0.92
 SHIELD_GAP = 0.012       # least gap between the shield's back and his forearm or fist (m)
+STRAP_AT = 0.62          # the arm strap's place along the forearm, from elbow to wrist
+STRAP_W, STRAP_TH = 0.045, 0.006   # its width and thickness (m)
+STRAP_GAP = 0.004        # its gap to the forearm
+STRAP_LEG, STRAP_TAB = 0.015, 0.03   # how far past the forearm it turns to the shield; its riveted ends
+RIVET_R = 0.0055
+GRIP_W, GRIP_TH = 0.022, 0.006     # the grip's iron bar: width and thickness (m)
+GRIP_GAP = 0.004         # its legs' least gap to his hand
+GRIP_BEND, GRIP_FOOT = 0.012, 0.045   # its bends' radius; how far its feet reach past its legs
+# LeftHand's rotation in every clip: the footman's wrist lock (footman_3d/tools/retarget_clips.py)
+# as transfer_clips.py carries it over to this rig. transfer_clips.py warns if the clips differ.
+WRIST = Quaternion((0.99959, 0.02846, 0.00033, 0.00328))
 TAIL_N = 6
 TAIL_Z = 0.90            # height of the tail's root on his back, under the belt
 TAIL_SINK = 0.04         # the root stump pressed this far into him
@@ -493,9 +517,212 @@ for obj, bone in ((sword, "RightHand"), (shield, "LeftHand")):
     obj.parent_bone = "mixamorig:" + bone
     obj.matrix_world = mw
 
+
+# 8. The shield's arm strap ---------------------------------------------------------------
+def hull2(pts):
+    """Convex hull of 2D points, counter-clockwise, as indices into pts."""
+    order = sorted(range(len(pts)), key=lambda i: (pts[i][0], pts[i][1]))
+
+    def cross(o, a, b):
+        return (pts[a][0] - pts[o][0]) * (pts[b][1] - pts[o][1]) - (pts[a][1] - pts[o][1]) * (pts[b][0] - pts[o][0])
+    lo, hi = [], []
+    for i in order:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], i) <= 0:
+            lo.pop()
+        lo.append(i)
+    for i in reversed(order):
+        while len(hi) >= 2 and cross(hi[-2], hi[-1], i) <= 0:
+            hi.pop()
+        hi.append(i)
+    return lo[:-1] + hi[:-1]
+
+
+def flat_material(name, rgb, metallic, roughness):
+    m = bpy.data.materials.new(name)
+    bsdf = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    bsdf.inputs["Base Color"].default_value = (*rgb, 1)
+    bsdf.inputs["Metallic"].default_value = metallic
+    bsdf.inputs["Roughness"].default_value = roughness
+    m.diffuse_color = (*rgb, 1)          # the workbench renders (pose viewer) show this
+    return m
+
+
+def band(bm, path, x0, width, thick):
+    """A flat band, `width` along x and `thick`, along `path` ((y, z) points in the shield's
+    frame at x = x0) in even steps of about 4 mm, keeping its corners. Its middle line and length."""
+    seg = np.r_[0, np.cumsum(np.hypot(*np.diff(path, axis=0).T))]
+    s_ = np.unique(np.r_[np.linspace(0, seg[-1], max(8, int(seg[-1] / 0.004))), seg])
+    Q = np.c_[np.interp(s_, seg, path[:, 0]), np.interp(s_, seg, path[:, 1])]
+    T = np.gradient(Q, axis=0)
+    T /= np.linalg.norm(T, axis=1)[:, None]
+    rows = []
+    for (y, z), (ny, nz) in zip(Q, np.c_[T[:, 1], -T[:, 0]]):
+        rows.append([bm.verts.new(S @ Vector((x0 + sx * width / 2, y + sn * ny * thick / 2, z + sn * nz * thick / 2)))
+                     for sx, sn in ((-1, 1), (1, 1), (1, -1), (-1, -1))])
+    for r0, r1 in zip(rows, rows[1:]):
+        for k in range(4):
+            bm.faces.new((r0[k], r0[(k + 1) % 4], r1[(k + 1) % 4], r1[k]))
+    bm.faces.new(rows[0][::-1])
+    bm.faces.new(rows[-1])
+    return Q, seg[-1]
+
+
+def rivet(bm, p, mat):
+    """A domed rivet head centred at p (the shield's frame), material index `mat`."""
+    ret = bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=6, radius=RIVET_R)
+    bmesh.ops.transform(bm, verts=ret["verts"], matrix=S @ Matrix.Translation(p) @ Matrix.Diagonal((1, 0.55, 1, 1)))
+    for f in {f for v in ret["verts"] for f in v.link_faces}:
+        f.material_index = mat
+
+
+def hand_prop(name, bm, mats):
+    """An object of bm (world, at rest) with `mats`, riding on the left hand bone as the shield."""
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    obj = bpy.data.objects.new(name, bpy.data.meshes.new(name))
+    bm.to_mesh(obj.data)
+    bm.free()
+    for m in mats:
+        obj.data.materials.append(m)
+    sc.collection.objects.link(obj)
+    obj.parent = rig
+    obj.parent_type = "BONE"
+    obj.parent_bone = "mixamorig:LeftHand"
+    obj.matrix_world = Matrix.Identity(4)
+    return obj
+
+
+leather = flat_material("ShieldStrap_leather", (0.07, 0.025, 0.018), 0.0, 0.8)   # as his belts
+brass = flat_material("ShieldStrap_rivet", (0.40, 0.21, 0.05), 0.9, 0.4)         # as the shield's rivets
+# All in the shield's frame (x across it, y off its back towards him, z up it). The clips turn
+# the wrist by WRIST, so the forearm and the skin that follows it or the hand alone stand
+# turned back by it, seen from the shield.
+S = shield.matrix_world
+Si = S.inverted()
+hand_rest = rig.matrix_world @ rig.data.bones["mixamorig:LeftHand"].matrix_local
+to_clip = Si @ hand_rest @ WRIST.to_matrix().to_4x4().inverted() @ hand_rest.inverted()
+el, wr = to_clip @ J["LeftForeArm"], to_clip @ J["LeftHand"]
+x0 = el.x + STRAP_AT * (wr.x - el.x)
+c = el.lerp(wr, STRAP_AT)
+m4 = to_clip @ body.matrix_world
+co = np.array([v.co[:] for v in me.vertices]) @ np.array(m4.to_3x3()).T + np.array(m4.translation)
+gname = {g.index: g.name for g in body.vertex_groups}
+rigid = np.array([sum(g.weight for g in v.groups if gname[g.group] in ("mixamorig:LeftForeArm", "mixamorig:LeftHand"))
+                  for v in me.vertices]) > 0.999
+# The forearm's section under the strap: its vertices there, and where its edges cross the
+# strap's sides and middle (a long low-poly face can span the strap with no vertex in it).
+half = STRAP_W / 2 + 0.003
+ed = np.array([e.vertices[:] for e in me.edges])
+ed = ed[rigid[ed[:, 0]] & rigid[ed[:, 1]]]
+a, b = co[ed[:, 0]], co[ed[:, 1]]
+dx = np.where(np.abs(b[:, 0] - a[:, 0]) < 1e-9, 1e-9, b[:, 0] - a[:, 0])
+sec = [co[rigid & (np.abs(co[:, 0] - x0) <= half)]]
+for xp in (x0 - half, x0, x0 + half):
+    t = (xp - a[:, 0]) / dx
+    ok = (t >= 0) & (t <= 1)
+    sec.append(a[ok] + t[ok, None] * (b[ok] - a[ok]))
+sec = np.vstack(sec)[:, 1:]
+sec = sec[np.hypot(sec[:, 0] - c.y, sec[:, 1] - c.z) < 0.15]
+# The strap's middle line: STRAP_GAP and half its thickness round that section, past it by
+# STRAP_LEG at the top and the bottom, and down to the shield's back there.
+r = STRAP_GAP + STRAP_TH / 2
+ring = [(y + r * math.cos(t), z + r * math.sin(t)) for y, z in sec for t in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
+sh_bvh = BVHTree.FromPolygons([v.co for v in shield.data.vertices], [p.vertices[:] for p in shield.data.polygons])
+zs = [q[1] for q in ring]
+ends = []
+for z in (max(zs) + STRAP_LEG, min(zs) - STRAP_LEG):
+    hit = sh_bvh.ray_cast(Vector((x0, c.y, z)), Vector((0, -1, 0)))
+    assert hit[0] is not None, "no shield under the strap's end"
+    ends.append((hit[0].y + STRAP_TH / 2 + 0.0005, z))
+pts = ring + ends
+hl2 = hull2(pts)
+i, j = hl2.index(len(pts) - 2), hl2.index(len(pts) - 1)
+# From the top end to the bottom one the long way round: over the forearm, away from the shield.
+way_a = [hl2[(i + k) % len(hl2)] for k in range((j - i) % len(hl2) + 1)]
+way_b = [hl2[(i - k) % len(hl2)] for k in range((i - j) % len(hl2) + 1)]
+arc = max(way_a, way_b, key=lambda w: max(pts[k][0] for k in w))
+path = np.array([(ends[0][0], ends[0][1] + STRAP_TAB)] + [pts[k] for k in arc] + [(ends[1][0], ends[1][1] - STRAP_TAB)])
+bm = bmesh.new()
+Q, length = band(bm, path, x0, STRAP_W, STRAP_TH)
+# Two rivets through each end, domed on the strap.
+for (y, z), sgn in ((Q[0], 1), (Q[-1], -1)):
+    for sx in (-0.25, 0.25):
+        rivet(bm, (x0 + sx * STRAP_W, y + STRAP_TH / 2, z - sgn * STRAP_TAB / 2), 1)
+hand_prop("ShieldStrap", bm, (leather, brass))
+print("RIG_STRAP %.0f %% along the forearm: %d section points, %.1f cm of leather, riveted %.1f cm apart" % (
+    100 * STRAP_AT, len(sec), 100 * length, 100 * (ends[0][1] - ends[1][1])))
+
+
+# 9. The shield's grip --------------------------------------------------------------------
+def box(lo, hi):
+    """A box's BVH, corners lo and hi."""
+    vs = [Vector((x, y, z)) for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])]
+    return BVHTree.FromPolygons(vs, [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)])
+
+
+def fillet(pts, r):
+    """A polyline with its corners rounded, from r before each to r after it."""
+    out = [np.array(pts[0])]
+    for p0, p1, p2 in zip(pts, pts[1:], pts[2:]):
+        p0, p1, p2 = (np.array(p) for p in (p0, p1, p2))
+        a = p1 + (p0 - p1) / np.linalg.norm(p0 - p1) * r
+        b = p1 + (p2 - p1) / np.linalg.norm(p2 - p1) * r
+        out += [(1 - t) ** 2 * a + 2 * (1 - t) * t * p1 + t * t * b for t in np.linspace(0, 1, 7)]
+    return np.array(out + [np.array(pts[-1])])
+
+
+# The fist rides on the hand bone as the shield does: it stands to the shield as at rest, its
+# axis along the shield's z. The grip's legs pass his hand (the faces the hand bone moves)
+# above and below, from the shield's back to that axis.
+ax = Si @ FIST["Left"]["axis"]
+assert abs((Si.to_3x3() @ Vector((0, 1, 0))).normalized().z) > 0.999, "the fist's axis is not along the shield's z"
+wh = np.array([sum(g.weight for g in v.groups if gname[g.group] == "mixamorig:LeftHand") for v in me.vertices])
+mh = Si @ body.matrix_world
+hand_bvh = BVHTree.FromPolygons([mh @ v.co for v in me.vertices],
+                                [p.vertices[:] for p in me.polygons if wh[list(p.vertices)].max() > 0.01])
+
+
+def back_y(z):
+    hit = sh_bvh.ray_cast(Vector((ax.x, ax.y, z)), Vector((0, -1, 0)))
+    assert hit[0] is not None, "no shield under the grip"
+    return hit[0].y
+
+
+back0 = back_y(ax.z)
+
+
+def leg_clear(z):
+    return not box((ax.x - GRIP_W / 2 - GRIP_GAP, back0 + GRIP_TH, z - GRIP_TH / 2 - GRIP_GAP),
+                   (ax.x + GRIP_W / 2 + GRIP_GAP, ax.y + GRIP_TH / 2 + GRIP_GAP, z + GRIP_TH / 2 + GRIP_GAP)).overlap(hand_bvh)
+
+
+steps = np.arange(0.0, 0.25, 0.002)
+top = ax.z + max(d for d in steps if not leg_clear(ax.z + d)) + 0.002
+bot = ax.z - max(d for d in steps if not leg_clear(ax.z - d)) - 0.002
+feet = [(back_y(z) + GRIP_TH / 2 + 0.0005, z) for z in (top, bot)]
+for (_, z), sgn in zip(feet, (1, -1)):
+    back_y(z + sgn * GRIP_FOOT)
+bm = bmesh.new()
+_, length = band(bm, fillet([(feet[0][0], top + GRIP_FOOT), feet[0], (ax.y, top), (ax.y, bot), feet[1],
+                             (feet[1][0], bot - GRIP_FOOT)], GRIP_BEND), ax.x, GRIP_W, GRIP_TH)
+# The leather round the bar's straight middle, as thick as the sword's grip (the fist fits it).
+z0, z1 = bot + GRIP_BEND + 0.002, top - GRIP_BEND - 0.002
+ret = bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=GRIP_R, radius2=GRIP_R, depth=z1 - z0,
+                            matrix=S @ Matrix.Translation((ax.x, ax.y, (z0 + z1) / 2)))
+for f in {f for v in ret["verts"] for f in v.link_faces}:
+    f.material_index = 1
+    f.smooth = len(f.verts) == 4
+# Two rivets along each foot.
+for (y, z), sgn in zip(feet, (1, -1)):
+    for k in (0.27, 0.73):
+        rivet(bm, (ax.x, y + GRIP_TH / 2, z + sgn * (GRIP_BEND + k * (GRIP_FOOT - GRIP_BEND))), 2)
+hand_prop("ShieldGrip", bm, (flat_material("ShieldGrip_iron", (0.09, 0.09, 0.095), 0.8, 0.55), leather, brass))
+print("RIG_GRIP legs %.1f cm apart, %.1f cm long (the fist's axis off the shield's back), %.1f cm of iron, %.1f cm of leather" % (
+    100 * (top - bot), 100 * (ax.y - feet[0][0]), 100 * length, 100 * (z1 - z0)))
+
 rig["landmarks"] = json.dumps({k: list(v) for k, v in J.items()})
 rig["tail_points"] = json.dumps([list(p) for p in TAIL_PTS])
 rig["grip_r"] = GRIP_R
+rig["strap_wrist"] = list(WRIST)
 # The scene is public: no file browser holding the user's Documents folder.
 bpy.data.batch_remove([w for w in bpy.data.workspaces
                        if any(sp.type == "FILE_BROWSER" for s in w.screens for a in s.areas for sp in a.spaces)])

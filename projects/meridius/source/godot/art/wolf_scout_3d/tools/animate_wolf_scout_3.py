@@ -21,7 +21,8 @@ straight down; her trunk, thighs and tail push it out on the side of her back.
 Those targets are smoothed over time, and in the idle and sneak so are the
 simulated strips, so the cape hangs steady instead of fluttering. After the
 simulation the chain bones turn outwards until the skinned cape clears the skinned
-body, and a panel that would go under the floor is turned up (both eased over
+body (the side panels also lift off over the arm on their side),
+and a panel that would go under the floor is turned up (both eased over
 neighbouring frames; in the idle the cape clears the whole tail with one turn held
 throughout). Each tail bone keeps a steady roll about its length: it bends
 and sways but does not turn round. Loops are simulated until periodic and closed at
@@ -480,12 +481,13 @@ def skinned(tab, pose):
 BODY_TAB = skin_table(body)
 _row = {v: k for k, v in enumerate(BODY_TAB[0])}
 BODY_POLYS = [[_row[i] for i in p.vertices] for p in body.data.polygons if all(i in _row for i in p.vertices)]
-# Only her back, seat, thighs and tail root count: the arms come and go under
-# the cape's sides and the tuft's spiky fur has no clear inside.
+# Only her back, seat, thighs and tail root count (the arms have a test of their
+# own, below): the tuft's spiky fur has no clear inside.
 CLEAR_BONES = {f'mixamorig:{n}' for n in ('Hips', 'Spine', 'Spine1', 'Spine2', 'LeftUpLeg', 'RightUpLeg')} | {'Tail.01', 'Tail.02'}
 # Her idle tail lies out from under the cape, so there the cape also clears the
-# rest of it; in the other clips the tail swings through the cape too fast for that.
-CLEAR_MORE = {'idle': {'Tail.03', 'Tail.04', 'Tail.05'}}
+# rest of it. In the sneak the hem also rides over the tail's middle, which rises
+# into it late in the stride; elsewhere the tail swings through the cape too fast.
+CLEAR_MORE = {'idle': {'Tail.03', 'Tail.04', 'Tail.05'}, 'sneak': {'Tail.03'}}
 # In the idle each chain bone keeps one clearance turn, the largest any frame
 # needs, so the cape rests over the swaying tail instead of following it.
 STEADY_CLEAR = {'idle'}
@@ -495,24 +497,70 @@ def face_ok(bones):
 FACE_OK = face_ok(CLEAR_BONES)
 CLOAK_TAB = skin_table(cloak_ob)
 CHAIN_OF = {b: ns for ns in CHAINS.values() for b in ns}
+# The cape's sides also clear the upper arm and forearm beneath them: when she swings
+# an arm back, the side panel lifts off its outer face and lies over the arm
+# instead of the fur showing through the cloth. Not in the death: once she lies on
+# the cape, that stood its panels up off the floor.
+ARM_CLEAR = {'idle', 'sneak', 'attack'}
+ARM_ON = [True]
+ARM_FACE = {}   # body polygon -> side
+for k, f in enumerate(BODY_POLYS):
+    for s in ('Left', 'Right'):
+        for p in ('Arm', 'ForeArm'):
+            n = f'mixamorig:{s}{p}'
+            if sum(_dom.get(BODY_TAB[0][i]) == n for i in f) * 2 > len(f): ARM_FACE[k] = s
+ARM_POLYS = {s: [BODY_POLYS[k] for k, t in ARM_FACE.items() if t == s] for s in ('Left', 'Right')}
+SIDE_OF = {b: s for s, cs in (('Right', ('Edge.R', 'Back.R')), ('Left', ('Edge.L', 'Back.L'))) for c in cs for b in CHAINS[c]}
 OWN, OWN_W = [], []   # each cape vertex's strongest chain bone
 for ks, ws in zip(CLOAK_TAB[2], CLOAK_TAB[3]):
     c = [(w, ORDER[k]) for k, w in zip(ks, ws) if ORDER[k] in CHAIN_OF and w > 0]
     w, b = max(c) if c else (0.0, None); OWN.append(b); OWN_W.append(w)
-print('CLEARANCE body verts', len(BODY_TAB[0]), 'polys', len(BODY_POLYS), 'cape verts on chains', sum(b is not None for b in OWN), flush=True)
+print('CLEARANCE body verts', len(BODY_TAB[0]), 'polys', len(BODY_POLYS), 'arm polys', {s: len(v) for s, v in ARM_POLYS.items()}, 'cape verts on chains', sum(b is not None for b in OWN), flush=True)
+
+def body_bvh(pose):
+    """BVH of her skinned body, and of each arm alone."""
+    V = skinned(BODY_TAB, pose).tolist()
+    return BVHTree.FromPolygons(V, BODY_POLYS), {s: BVHTree.FromPolygons(V, ps) for s, ps in ARM_POLYS.items()}
+
+def panel_out(b):
+    """The way a chain bone's panel faces, in the bone's rest frame: across its
+    cloth's least spread, away from her spine at rest."""
+    P = np.array([tuple(v) for v in SAMPLES[b]]); c = P.mean(0)
+    n = Vector(np.linalg.eigh(np.cov((P - c).T))[1][:, 0])
+    w = REST[b] @ Vector(c); spine = w - seg_closest(w, REST['mixamorig:Hips'].translation, REST['mixamorig:Neck'].translation)
+    return n if (R3(REST[b]) @ n).dot(spine) > 0 else -n
+PANEL_OUT = {b: panel_out(b) for b in SIDE_OF}
+print('PANEL_OUT', {b.split('.', 1)[1]: tuple(round(x, 2) for x in R3(REST[b]) @ n) for b, n in PANEL_OUT.items()}, flush=True)
+
+def arm_out(pose, arm, s, b, p):
+    """For a point of chain bone b's panel inside an arm: how far out of it, and
+    which way. Out is the way the panel faces, so it lifts off over the arm (pushed
+    away from her spine, or towards her back, it slid along itself and swung out
+    like a wing); a point with the arm on its outer side is left alone."""
+    u = R3(pose[b]) @ PANEL_OUT[b]
+    loc, nrm, _, t = arm[s].ray_cast(p, u, 0.25)
+    return (t, u) if loc is not None and nrm.dot(u) > 0 else None
 
 def cape_pen(pose, bvh, margin, level=None):
     """Deepest intrusion (margin minus clearance) per chain bone: (depth, point,
-    normal), from the vertices that bone mostly moves, well away from its head."""
-    out = {}
+    normal), from the vertices that bone mostly moves, well away from its head.
+    bvh is body_bvh()'s pair."""
+    bvh, arm = bvh; out = {}
     for k, p in enumerate(skinned(CLOAK_TAB, pose)):
         b = OWN[k]
         if b is None or OWN_W[k] < 0.4 or (level is not None and b not in level): continue
         p = Vector(p)
         if (p - pose[b].translation).length < 0.12: continue
         loc, nrm, face, _ = bvh.find_nearest(p, 0.15)
-        if loc is None or not FACE_OK[face]: continue
-        d = (margin - (p - loc).dot(nrm)) / OWN_W[k]
+        if loc is None: continue
+        s = ARM_FACE.get(face)
+        if s is not None and ARM_ON[0] and SIDE_OF.get(b) == s:
+            hit = arm_out(pose, arm, s, b, p)
+            if hit is None: continue
+            d, nrm = (hit[0] + margin) / OWN_W[k], hit[1]
+        elif FACE_OK[face]:
+            d = (margin - (p - loc).dot(nrm)) / OWN_W[k]
+        else: continue
         if d > 0 and d > out.get(b, (0,))[0]: out[b] = (d, p, nrm)
     return out
 
@@ -522,7 +570,7 @@ def cape_low(pose, bones):
     return float(skinned(CLOAK_TAB, pose)[m, 2].min()) if m.any() else 9.0
 
 def clear_cape(pose, margin=0.012, most=math.radians(40)):
-    bvh = BVHTree.FromPolygons(skinned(BODY_TAB, pose).tolist(), BODY_POLYS)
+    bvh = body_bvh(pose)
     before = max((d for d, _, _ in cape_pen(pose, bvh, margin).values()), default=0.0)
     turned = {}
     for _ in range(3):
@@ -551,8 +599,7 @@ def clear_cape(pose, margin=0.012, most=math.radians(40)):
 DEBUG_PEN = [0]
 
 def pen_depth(pose, margin=0.012):
-    bvh = BVHTree.FromPolygons(skinned(BODY_TAB, pose).tolist(), BODY_POLYS)
-    return max((d for d, _, _ in cape_pen(pose, bvh, margin).values()), default=0.0)
+    return max((d for d, _, _ in cape_pen(pose, body_bvh(pose), margin).values()), default=0.0)
 
 def chain_local(pose):
     return {b: R3(pose[PAR[b]]).transposed() @ R3(pose[b]) for b in CHAIN_OF}
@@ -652,7 +699,7 @@ def death_env(frames):
 
 def animate(name):
     stats = {}; src = SRC[name]; n = len(src)
-    FACE_OK[:] = face_ok(CLEAR_BONES | CLEAR_MORE.get(name, set()))
+    FACE_OK[:] = face_ok(CLEAR_BONES | CLEAR_MORE.get(name, set())); ARM_ON[0] = name in ARM_CLEAR
     O, BS = (CREST, CBASE) if name == 'idle' else (OREST, BASE)
     poses = [body_pose(s, stats, O, BS) for s in src]
     env = death_env(n) if name == 'death' else None

@@ -38,11 +38,11 @@
       "cloak_seam_m": 0.0,
       "cloak_twist_max_deg": 0,
       "cape_into_body_mm": [
-        0.0,
-        0.0
+        82.7,
+        8.8
       ],
-      "cape_into_body_worst_frame": 1,
-      "cape_clear_turn_deg": 0.0,
+      "cape_into_body_worst_frame": 26,
+      "cape_clear_turn_deg": 38.4,
       "cape_floor_lift_deg": {}
     },
     "attack": {

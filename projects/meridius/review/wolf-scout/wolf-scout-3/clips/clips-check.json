@@ -1,18 +1,3437 @@
 {
- "death": {
-  "frames": 69,
-  "body_min": -0.005,
-  "body_max_of_min": 0.1203,
-  "cloak_min": -0.5432,
-  "dagger_min": 0.0117,
+ "idle": {
+  "frames": 121,
+  "body_min": 0.0049,
+  "body_max_of_min": 0.0049,
+  "cloak_min": 0.0221,
+  "dagger_min": 0.0343,
   "lowest": {
    "WolfScout3_Body.tail": [
-    -0.0022,
-    66,
-    "Tail.06"
+    0.0116,
+    26,
+    "Tail.05"
    ],
    "WolfScout3_Body.rest": [
-    -0.005,
+    0.0049,
+    1,
+    "LeftToeBase"
+   ],
+   "WolfScout3_Cloak.tail": [
+    9.0,
+    1,
+    "-"
+   ],
+   "WolfScout3_Cloak.rest": [
+    0.0221,
+    18,
+    "Cloak.Edge.R.3"
+   ]
+  },
+  "per_frame": [
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0274,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0246,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.027,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0246,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0265,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0225,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.026,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0225,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0255,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0249,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0242,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0235,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0235,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0228,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0235,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.022,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0343,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0212,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0204,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0195,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0187,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0231,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0178,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0231,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0228,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.017,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0228,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0224,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0162,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0224,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0221,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0154,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0221,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0147,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0232,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.014,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0232,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0245,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0134,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0245,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0128,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0255,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0124,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0255,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.012,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0118,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0118,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0121,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5206,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0125,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.013,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0136,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0143,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.015,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0158,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0167,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0176,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0186,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0255,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0195,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0255,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0205,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0246,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0214,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0246,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0223,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0225,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0232,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0225,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.024,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0248,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0255,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0261,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0235,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0267,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0235,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0272,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0343,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0276,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0279,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0282,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0283,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0231,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0231,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0228,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0228,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0224,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0224,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0221,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0282,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0221,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.028,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0232,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0277,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0232,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0245,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0274,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0245,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.027,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0255,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0265,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0255,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.026,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0255,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0249,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0242,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0235,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0228,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.022,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5206,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0212,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0204,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0195,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0187,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0178,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.017,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0162,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0154,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0147,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0255,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.014,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0255,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0134,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0246,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0128,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0246,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0124,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0225,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.012,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0225,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0118,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0116,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0235,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0118,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0235,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0121,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0343,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0125,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0237,
+    "Dagger.Left": 0.5116,
+    "Dagger.Right": 0.0344,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.013,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0237,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0236,
+    "Dagger.Left": 0.5118,
+    "Dagger.Right": 0.0346,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0136,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0236,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.5121,
+    "Dagger.Right": 0.0349,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0143,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0234,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0231,
+    "Dagger.Left": 0.5124,
+    "Dagger.Right": 0.0353,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.015,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0231,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0228,
+    "Dagger.Left": 0.5129,
+    "Dagger.Right": 0.0357,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0158,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0228,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0224,
+    "Dagger.Left": 0.5135,
+    "Dagger.Right": 0.0363,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0167,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0224,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0221,
+    "Dagger.Left": 0.5141,
+    "Dagger.Right": 0.037,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0176,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0221,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5147,
+    "Dagger.Right": 0.0377,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0186,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0232,
+    "Dagger.Left": 0.5154,
+    "Dagger.Right": 0.0384,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0195,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0232,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0245,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0205,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0245,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0254,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0214,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0254,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0255,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0223,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0255,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0232,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.024,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0248,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0255,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0261,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0267,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0272,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5206,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0276,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0222,
+    "Dagger.Left": 0.5205,
+    "Dagger.Right": 0.0439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0279,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0222,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0223,
+    "Dagger.Left": 0.5204,
+    "Dagger.Right": 0.0437,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0282,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0223,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.5201,
+    "Dagger.Right": 0.0434,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0283,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0226,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0229,
+    "Dagger.Left": 0.5198,
+    "Dagger.Right": 0.043,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0229,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.5193,
+    "Dagger.Right": 0.0425,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0233,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0238,
+    "Dagger.Left": 0.5188,
+    "Dagger.Right": 0.042,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0284,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0244,
+    "Dagger.Left": 0.5182,
+    "Dagger.Right": 0.0413,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0282,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0244,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.025,
+    "Dagger.Left": 0.5175,
+    "Dagger.Right": 0.0406,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.028,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.025,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0257,
+    "Dagger.Left": 0.5168,
+    "Dagger.Right": 0.0399,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0277,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0257,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.0262,
+    "Dagger.Left": 0.5161,
+    "Dagger.Right": 0.0391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0274,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0049,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.0262,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "sneak": {
+  "frames": 33,
+  "body_min": 0.006,
+  "body_max_of_min": 0.0186,
+  "cloak_min": 0.2107,
+  "dagger_min": 0.47,
+  "lowest": {
+   "WolfScout3_Body.tail": [
+    0.3608,
+    8,
+    "Tail.05"
+   ],
+   "WolfScout3_Body.rest": [
+    0.006,
     28,
     "RightFoot"
    ],
@@ -22,25 +3441,249 @@
     "-"
    ],
    "WolfScout3_Cloak.rest": [
-    -0.5432,
-    48,
+    0.2107,
+    18,
     "Cloak.Edge.R.3"
    ]
   },
   "per_frame": [
    {
-    "Body": 0.0184,
-    "Cloak": 0.4444,
-    "Dagger.Left": 0.866,
-    "Dagger.Right": 0.8479,
+    "Body": 0.0062,
+    "Cloak": 0.2562,
+    "Dagger.Left": 0.7095,
+    "Dagger.Right": 0.5295,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0184,
+       0.3932,
        "Tail.05"
       ],
       "rest": [
-       0.0573,
+       0.0062,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2562,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0064,
+    "Cloak": 0.2522,
+    "Dagger.Left": 0.7094,
+    "Dagger.Right": 0.5121,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3887,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0064,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2522,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0065,
+    "Cloak": 0.247,
+    "Dagger.Left": 0.7068,
+    "Dagger.Right": 0.4982,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3785,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0065,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.247,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.007,
+    "Cloak": 0.2491,
+    "Dagger.Left": 0.7087,
+    "Dagger.Right": 0.4922,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3753,
+       "Tail.05"
+      ],
+      "rest": [
+       0.007,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2491,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0082,
+    "Cloak": 0.2571,
+    "Dagger.Left": 0.7138,
+    "Dagger.Right": 0.4929,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3799,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0082,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2571,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0105,
+    "Cloak": 0.2697,
+    "Dagger.Left": 0.7193,
+    "Dagger.Right": 0.5,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3786,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0105,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2697,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0143,
+    "Cloak": 0.2862,
+    "Dagger.Left": 0.7274,
+    "Dagger.Right": 0.5137,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3674,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0143,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2862,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0184,
+    "Cloak": 0.3018,
+    "Dagger.Left": 0.7377,
+    "Dagger.Right": 0.5283,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3608,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0184,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3018,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0186,
+    "Cloak": 0.3128,
+    "Dagger.Left": 0.7481,
+    "Dagger.Right": 0.5381,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3706,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0186,
        "LeftFoot"
       ]
      },
@@ -50,25 +3693,1960 @@
        "-"
       ],
       "rest": [
-       0.4444,
+       0.3128,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0101,
+    "Cloak": 0.2984,
+    "Dagger.Left": 0.7362,
+    "Dagger.Right": 0.521,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3822,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0101,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2984,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0069,
+    "Cloak": 0.2881,
+    "Dagger.Left": 0.7234,
+    "Dagger.Right": 0.5081,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3806,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0069,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2881,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0067,
+    "Cloak": 0.2825,
+    "Dagger.Left": 0.7061,
+    "Dagger.Right": 0.5014,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.376,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0067,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2825,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0076,
+    "Cloak": 0.2754,
+    "Dagger.Left": 0.6862,
+    "Dagger.Right": 0.4946,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3768,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0076,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2754,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0077,
+    "Cloak": 0.2569,
+    "Dagger.Left": 0.6645,
+    "Dagger.Right": 0.4803,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.384,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0077,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2569,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0077,
+    "Cloak": 0.2367,
+    "Dagger.Left": 0.6462,
+    "Dagger.Right": 0.4717,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3961,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0077,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2367,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0077,
+    "Cloak": 0.2209,
+    "Dagger.Left": 0.634,
+    "Dagger.Right": 0.47,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4136,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0077,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2209,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0077,
+    "Cloak": 0.2121,
+    "Dagger.Left": 0.631,
+    "Dagger.Right": 0.4719,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4369,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0077,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2121,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0078,
+    "Cloak": 0.2107,
+    "Dagger.Left": 0.635,
+    "Dagger.Right": 0.4799,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4654,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0078,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2107,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0091,
+    "Cloak": 0.213,
+    "Dagger.Left": 0.6381,
+    "Dagger.Right": 0.492,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4908,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0091,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.213,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0109,
+    "Cloak": 0.2248,
+    "Dagger.Left": 0.6433,
+    "Dagger.Right": 0.5102,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.5055,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0109,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2248,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.012,
+    "Cloak": 0.2413,
+    "Dagger.Left": 0.6517,
+    "Dagger.Right": 0.5322,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.5146,
+       "Tail.05"
+      ],
+      "rest": [
+       0.012,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2413,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0128,
+    "Cloak": 0.256,
+    "Dagger.Left": 0.6576,
+    "Dagger.Right": 0.557,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.515,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0128,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.256,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0139,
+    "Cloak": 0.2632,
+    "Dagger.Left": 0.6632,
+    "Dagger.Right": 0.5723,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4986,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0139,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2632,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0155,
+    "Cloak": 0.2673,
+    "Dagger.Left": 0.6689,
+    "Dagger.Right": 0.5822,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4732,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0155,
+       "LeftToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2673,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0154,
+    "Cloak": 0.2709,
+    "Dagger.Left": 0.6789,
+    "Dagger.Right": 0.5838,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4476,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0154,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2709,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0086,
+    "Cloak": 0.2665,
+    "Dagger.Left": 0.6885,
+    "Dagger.Right": 0.5714,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.4214,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0086,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2665,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0061,
+    "Cloak": 0.258,
+    "Dagger.Left": 0.7024,
+    "Dagger.Right": 0.55,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3933,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0061,
+       "RightFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.258,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.2625,
+    "Dagger.Left": 0.711,
+    "Dagger.Right": 0.5402,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3717,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "RightFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2625,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.2673,
+    "Dagger.Left": 0.7161,
+    "Dagger.Right": 0.5347,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3648,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "RightFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2673,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0061,
+    "Cloak": 0.269,
+    "Dagger.Left": 0.7156,
+    "Dagger.Right": 0.5318,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3719,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0061,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.269,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.2652,
+    "Dagger.Left": 0.7105,
+    "Dagger.Right": 0.5315,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3823,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "RightFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2652,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.259,
+    "Dagger.Left": 0.709,
+    "Dagger.Right": 0.5295,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3894,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "RightFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.259,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0062,
+    "Cloak": 0.2562,
+    "Dagger.Left": 0.7095,
+    "Dagger.Right": 0.5295,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.3932,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0062,
+       "RightToeBase"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2562,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "attack": {
+  "frames": 62,
+  "body_min": 0.0049,
+  "body_max_of_min": 0.0137,
+  "cloak_min": 0.2304,
+  "dagger_min": 0.6155,
+  "lowest": {
+   "WolfScout3_Body.tail": [
+    0.0126,
+    51,
+    "Tail.05"
+   ],
+   "WolfScout3_Body.rest": [
+    0.0049,
+    14,
+    "LeftFoot"
+   ],
+   "WolfScout3_Cloak.tail": [
+    9.0,
+    1,
+    "-"
+   ],
+   "WolfScout3_Cloak.rest": [
+    0.2304,
+    11,
+    "Cloak.Edge.L.3"
+   ]
+  },
+  "per_frame": [
+   {
+    "Body": 0.0136,
+    "Cloak": 0.3735,
+    "Dagger.Left": 0.8626,
+    "Dagger.Right": 0.831,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0136,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0487,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3735,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.019,
-    "Cloak": 0.4518,
-    "Dagger.Left": 0.8562,
-    "Dagger.Right": 0.8273,
+    "Body": 0.0131,
+    "Cloak": 0.3707,
+    "Dagger.Left": 0.854,
+    "Dagger.Right": 0.8285,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.019,
+       0.0131,
        "Tail.05"
       ],
       "rest": [
-       0.054,
+       0.0468,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3707,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0128,
+    "Cloak": 0.3577,
+    "Dagger.Left": 0.8231,
+    "Dagger.Right": 0.8176,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0128,
+       "Tail.05"
+      ],
+      "rest": [
+       0.033,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3577,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0129,
+    "Cloak": 0.3442,
+    "Dagger.Left": 0.7742,
+    "Dagger.Right": 0.858,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0129,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0218,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3442,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0107,
+    "Cloak": 0.3255,
+    "Dagger.Left": 0.7169,
+    "Dagger.Right": 0.9273,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0132,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0107,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3255,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0057,
+    "Cloak": 0.308,
+    "Dagger.Left": 0.6803,
+    "Dagger.Right": 0.9529,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0133,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0057,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.308,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.2987,
+    "Dagger.Left": 0.6731,
+    "Dagger.Right": 0.9575,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0131,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2987,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0064,
+    "Cloak": 0.2857,
+    "Dagger.Left": 0.6794,
+    "Dagger.Right": 0.9652,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.013,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0064,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2857,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0068,
+    "Cloak": 0.2647,
+    "Dagger.Left": 0.7032,
+    "Dagger.Right": 0.973,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0129,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0068,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2647,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0069,
+    "Cloak": 0.2411,
+    "Dagger.Left": 0.7546,
+    "Dagger.Right": 0.986,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0128,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0069,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2411,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0067,
+    "Cloak": 0.2304,
+    "Dagger.Left": 0.8323,
+    "Dagger.Right": 1.0013,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0132,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0067,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2304,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.2365,
+    "Dagger.Left": 0.9068,
+    "Dagger.Right": 1.0224,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0159,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2365,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.005,
+    "Cloak": 0.2505,
+    "Dagger.Left": 0.9042,
+    "Dagger.Right": 1.0591,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.017,
+       "Tail.06"
+      ],
+      "rest": [
+       0.005,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2505,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0049,
+    "Cloak": 0.2627,
+    "Dagger.Left": 0.8833,
+    "Dagger.Right": 1.1036,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0164,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0049,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2627,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0058,
+    "Cloak": 0.2714,
+    "Dagger.Left": 0.9013,
+    "Dagger.Right": 1.1439,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0197,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0058,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2714,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0069,
+    "Cloak": 0.2865,
+    "Dagger.Left": 0.9172,
+    "Dagger.Right": 1.1581,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.026,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0069,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2865,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0079,
+    "Cloak": 0.3379,
+    "Dagger.Left": 0.8685,
+    "Dagger.Right": 1.075,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0311,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0079,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3379,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0092,
+    "Cloak": 0.4302,
+    "Dagger.Left": 0.8562,
+    "Dagger.Right": 0.9867,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0389,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0092,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4302,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0099,
+    "Cloak": 0.5104,
+    "Dagger.Left": 0.8587,
+    "Dagger.Right": 0.9407,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0491,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0099,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.5104,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0093,
+    "Cloak": 0.4807,
+    "Dagger.Left": 0.8705,
+    "Dagger.Right": 0.9151,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0568,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0093,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4807,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0088,
+    "Cloak": 0.4533,
+    "Dagger.Left": 0.8875,
+    "Dagger.Right": 0.8879,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0637,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0088,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4533,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0085,
+    "Cloak": 0.4167,
+    "Dagger.Left": 0.9037,
+    "Dagger.Right": 0.8691,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0744,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0085,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4167,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0085,
+    "Cloak": 0.3908,
+    "Dagger.Left": 0.9147,
+    "Dagger.Right": 0.8716,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0845,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0085,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3908,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0089,
+    "Cloak": 0.3688,
+    "Dagger.Left": 0.9212,
+    "Dagger.Right": 0.9052,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0903,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0089,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3688,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0126,
+    "Cloak": 0.2897,
+    "Dagger.Left": 0.9362,
+    "Dagger.Right": 1.0607,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0868,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0126,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2897,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0127,
+    "Cloak": 0.2486,
+    "Dagger.Left": 0.9303,
+    "Dagger.Right": 1.1645,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0585,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0127,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.2486,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0116,
+    "Cloak": 0.299,
+    "Dagger.Left": 0.9004,
+    "Dagger.Right": 1.233,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0335,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0116,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.299,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0098,
+    "Cloak": 0.3307,
+    "Dagger.Left": 0.8621,
+    "Dagger.Right": 1.17,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0383,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0098,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3307,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0081,
+    "Cloak": 0.3348,
+    "Dagger.Left": 0.8301,
+    "Dagger.Right": 0.9776,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.044,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0081,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3348,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0074,
+    "Cloak": 0.3238,
+    "Dagger.Left": 0.8142,
+    "Dagger.Right": 0.9355,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.029,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0074,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3238,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0064,
+    "Cloak": 0.311,
+    "Dagger.Left": 0.8094,
+    "Dagger.Right": 0.8928,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0198,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0064,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.311,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0055,
+    "Cloak": 0.3243,
+    "Dagger.Left": 0.8177,
+    "Dagger.Right": 0.8227,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0189,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0055,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3243,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0056,
+    "Cloak": 0.3186,
+    "Dagger.Left": 0.822,
+    "Dagger.Right": 0.7887,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0173,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0056,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3186,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0057,
+    "Cloak": 0.3089,
+    "Dagger.Left": 0.8277,
+    "Dagger.Right": 0.7837,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0165,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0057,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3089,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0057,
+    "Cloak": 0.3213,
+    "Dagger.Left": 0.8353,
+    "Dagger.Right": 0.7933,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0161,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0057,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3213,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.006,
+    "Cloak": 0.3256,
+    "Dagger.Left": 0.8388,
+    "Dagger.Right": 0.7865,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0207,
+       "Tail.05"
+      ],
+      "rest": [
+       0.006,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3256,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0059,
+    "Cloak": 0.4258,
+    "Dagger.Left": 0.8425,
+    "Dagger.Right": 0.7603,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0296,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0059,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4258,
+       "Cloak.Back.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0059,
+    "Cloak": 0.3109,
+    "Dagger.Left": 0.8464,
+    "Dagger.Right": 0.7171,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0315,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0059,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3109,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0059,
+    "Cloak": 0.3785,
+    "Dagger.Left": 0.8368,
+    "Dagger.Right": 0.6756,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0296,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0059,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3785,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0063,
+    "Cloak": 0.4358,
+    "Dagger.Left": 0.8231,
+    "Dagger.Right": 0.6391,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0249,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0063,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4358,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0074,
+    "Cloak": 0.4247,
+    "Dagger.Left": 0.8074,
+    "Dagger.Right": 0.6155,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.017,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0074,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4247,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.008,
+    "Cloak": 0.425,
+    "Dagger.Left": 0.7931,
+    "Dagger.Right": 0.6179,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0174,
+       "Tail.05"
+      ],
+      "rest": [
+       0.008,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.425,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0082,
+    "Cloak": 0.4431,
+    "Dagger.Left": 0.7539,
+    "Dagger.Right": 0.6296,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0184,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0082,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4431,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0082,
+    "Cloak": 0.4578,
+    "Dagger.Left": 0.7163,
+    "Dagger.Right": 0.6422,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0176,
+       "Tail.06"
+      ],
+      "rest": [
+       0.0082,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4578,
+       "Cloak.Edge.R.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.008,
+    "Cloak": 0.4518,
+    "Dagger.Left": 0.6936,
+    "Dagger.Right": 0.6787,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.017,
+       "Tail.05"
+      ],
+      "rest": [
+       0.008,
        "LeftFoot"
       ]
      },
@@ -85,14 +5663,577 @@
     }
    },
    {
-    "Body": 0.0161,
-    "Cloak": 0.425,
-    "Dagger.Left": 0.835,
-    "Dagger.Right": 0.8215,
+    "Body": 0.0078,
+    "Cloak": 0.4288,
+    "Dagger.Left": 0.6739,
+    "Dagger.Right": 0.7431,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0161,
+       0.0153,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0078,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4288,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0079,
+    "Cloak": 0.4141,
+    "Dagger.Left": 0.6562,
+    "Dagger.Right": 0.7853,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0138,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0079,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4141,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0078,
+    "Cloak": 0.4045,
+    "Dagger.Left": 0.6524,
+    "Dagger.Right": 0.8148,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0129,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0078,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4045,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0074,
+    "Cloak": 0.3935,
+    "Dagger.Left": 0.6597,
+    "Dagger.Right": 0.8536,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0129,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0074,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3935,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0065,
+    "Cloak": 0.3764,
+    "Dagger.Left": 0.6759,
+    "Dagger.Right": 0.8656,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0127,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0065,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3764,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0058,
+    "Cloak": 0.3518,
+    "Dagger.Left": 0.6872,
+    "Dagger.Right": 0.8847,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0126,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0058,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3518,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0059,
+    "Cloak": 0.3276,
+    "Dagger.Left": 0.6904,
+    "Dagger.Right": 0.9045,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0127,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0059,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3276,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0057,
+    "Cloak": 0.3123,
+    "Dagger.Left": 0.6892,
+    "Dagger.Right": 0.9168,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0131,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0057,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3123,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0053,
+    "Cloak": 0.3062,
+    "Dagger.Left": 0.6861,
+    "Dagger.Right": 0.9254,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0136,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0053,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3062,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0052,
+    "Cloak": 0.3038,
+    "Dagger.Left": 0.6848,
+    "Dagger.Right": 0.9272,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0139,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0052,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3038,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.005,
+    "Cloak": 0.3023,
+    "Dagger.Left": 0.6781,
+    "Dagger.Right": 0.9331,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0142,
+       "Tail.05"
+      ],
+      "rest": [
+       0.005,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3023,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0085,
+    "Cloak": 0.312,
+    "Dagger.Left": 0.6891,
+    "Dagger.Right": 0.927,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0141,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0085,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.312,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0137,
+    "Cloak": 0.3393,
+    "Dagger.Left": 0.7319,
+    "Dagger.Right": 0.8895,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0137,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0167,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3393,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0131,
+    "Cloak": 0.3686,
+    "Dagger.Left": 0.7864,
+    "Dagger.Right": 0.8362,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0131,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0261,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3686,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0129,
+    "Cloak": 0.38,
+    "Dagger.Left": 0.8277,
+    "Dagger.Right": 0.8163,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0129,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0333,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.38,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0131,
+    "Cloak": 0.3772,
+    "Dagger.Left": 0.8507,
+    "Dagger.Right": 0.8237,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0131,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0419,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3772,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0135,
+    "Cloak": 0.3639,
+    "Dagger.Left": 0.8547,
+    "Dagger.Right": 0.823,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0135,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0407,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.3639,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   }
+  ]
+ },
+ "death": {
+  "frames": 69,
+  "body_min": -0.005,
+  "body_max_of_min": 0.1203,
+  "cloak_min": 0.012,
+  "dagger_min": 0.0091,
+  "lowest": {
+   "WolfScout3_Body.tail": [
+    0.0119,
+    33,
+    "Tail.05"
+   ],
+   "WolfScout3_Body.rest": [
+    -0.005,
+    28,
+    "RightFoot"
+   ],
+   "WolfScout3_Cloak.tail": [
+    9.0,
+    1,
+    "-"
+   ],
+   "WolfScout3_Cloak.rest": [
+    0.012,
+    37,
+    "Cloak.Edge.R.2"
+   ]
+  },
+  "per_frame": [
+   {
+    "Body": 0.0165,
+    "Cloak": 0.4164,
+    "Dagger.Left": 0.8712,
+    "Dagger.Right": 0.8396,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0165,
+       "Tail.05"
+      ],
+      "rest": [
+       0.0573,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4164,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.021,
+    "Cloak": 0.4454,
+    "Dagger.Left": 0.8582,
+    "Dagger.Right": 0.8164,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.021,
+       "Tail.05"
+      ],
+      "rest": [
+       0.054,
+       "LeftFoot"
+      ]
+     },
+     "WolfScout3_Cloak": {
+      "tail": [
+       9.0,
+       "-"
+      ],
+      "rest": [
+       0.4454,
+       "Cloak.Edge.L.3"
+      ]
+     }
+    }
+   },
+   {
+    "Body": 0.0202,
+    "Cloak": 0.4421,
+    "Dagger.Left": 0.8301,
+    "Dagger.Right": 0.8067,
+    "parts": {
+     "WolfScout3_Body": {
+      "tail": [
+       0.0202,
        "Tail.05"
       ],
       "rest": [
@@ -106,21 +6247,21 @@
        "-"
       ],
       "rest": [
-       0.425,
+       0.4421,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0157,
-    "Cloak": 0.357,
-    "Dagger.Left": 0.8295,
-    "Dagger.Right": 0.9245,
+    "Body": 0.0169,
+    "Cloak": 0.3736,
+    "Dagger.Left": 0.8228,
+    "Dagger.Right": 0.9,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0157,
+       0.0174,
        "Tail.05"
       ],
       "rest": [
@@ -134,21 +6275,21 @@
        "-"
       ],
       "rest": [
-       0.357,
+       0.3736,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0217,
-    "Cloak": 0.3115,
-    "Dagger.Left": 0.8301,
-    "Dagger.Right": 1.3039,
+    "Body": 0.0207,
+    "Cloak": 0.35,
+    "Dagger.Left": 0.8302,
+    "Dagger.Right": 1.2639,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0221,
+       0.0207,
        "Tail.05"
       ],
       "rest": [
@@ -162,7 +6303,7 @@
        "-"
       ],
       "rest": [
-       0.3115,
+       0.35,
        "Cloak.Edge.L.3"
       ]
      }
@@ -170,13 +6311,13 @@
    },
    {
     "Body": 0.0149,
-    "Cloak": 0.3825,
-    "Dagger.Left": 0.865,
-    "Dagger.Right": 1.4616,
+    "Cloak": 0.4228,
+    "Dagger.Left": 0.8682,
+    "Dagger.Right": 1.4231,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0565,
+       0.0407,
        "Tail.05"
       ],
       "rest": [
@@ -190,7 +6331,7 @@
        "-"
       ],
       "rest": [
-       0.3825,
+       0.4228,
        "Cloak.Edge.L.3"
       ]
      }
@@ -198,13 +6339,13 @@
    },
    {
     "Body": 0.0147,
-    "Cloak": 0.3294,
-    "Dagger.Left": 0.9022,
-    "Dagger.Right": 1.6154,
+    "Cloak": 0.4288,
+    "Dagger.Left": 0.9066,
+    "Dagger.Right": 1.6145,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0785,
+       0.0669,
        "Tail.05"
       ],
       "rest": [
@@ -218,7 +6359,7 @@
        "-"
       ],
       "rest": [
-       0.3294,
+       0.4288,
        "Cloak.Edge.R.3"
       ]
      }
@@ -226,13 +6367,13 @@
    },
    {
     "Body": 0.0133,
-    "Cloak": 0.427,
-    "Dagger.Left": 0.9483,
-    "Dagger.Right": 1.56,
+    "Cloak": 0.4356,
+    "Dagger.Left": 0.943,
+    "Dagger.Right": 1.5671,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0944,
+       0.0905,
        "Tail.05"
       ],
       "rest": [
@@ -246,7 +6387,7 @@
        "-"
       ],
       "rest": [
-       0.427,
+       0.4356,
        "Cloak.Edge.R.3"
       ]
      }
@@ -254,14 +6395,14 @@
    },
    {
     "Body": 0.0108,
-    "Cloak": 0.4971,
-    "Dagger.Left": 0.9961,
-    "Dagger.Right": 1.4455,
+    "Cloak": 0.4446,
+    "Dagger.Left": 0.9869,
+    "Dagger.Right": 1.4524,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1208,
-       "Tail.06"
+       0.1103,
+       "Tail.05"
       ],
       "rest": [
        0.0108,
@@ -274,7 +6415,7 @@
        "-"
       ],
       "rest": [
-       0.4971,
+       0.4446,
        "Cloak.Edge.R.3"
       ]
      }
@@ -282,14 +6423,14 @@
    },
    {
     "Body": 0.011,
-    "Cloak": 0.5395,
-    "Dagger.Left": 1.0225,
-    "Dagger.Right": 1.3308,
+    "Cloak": 0.457,
+    "Dagger.Left": 1.0098,
+    "Dagger.Right": 1.3408,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1331,
-       "Tail.06"
+       0.1315,
+       "Tail.05"
       ],
       "rest": [
        0.011,
@@ -302,7 +6443,7 @@
        "-"
       ],
       "rest": [
-       0.5395,
+       0.457,
        "Cloak.Edge.R.3"
       ]
      }
@@ -310,13 +6451,13 @@
    },
    {
     "Body": 0.0111,
-    "Cloak": 0.5567,
-    "Dagger.Left": 1.0219,
-    "Dagger.Right": 1.1672,
+    "Cloak": 0.4691,
+    "Dagger.Left": 1.0053,
+    "Dagger.Right": 1.1666,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1445,
+       0.1498,
        "Tail.05"
       ],
       "rest": [
@@ -330,7 +6471,7 @@
        "-"
       ],
       "rest": [
-       0.5567,
+       0.4691,
        "Cloak.Edge.R.3"
       ]
      }
@@ -338,13 +6479,13 @@
    },
    {
     "Body": 0.0113,
-    "Cloak": 0.5263,
-    "Dagger.Left": 1.0213,
-    "Dagger.Right": 0.9485,
+    "Cloak": 0.4791,
+    "Dagger.Left": 1.0025,
+    "Dagger.Right": 0.9312,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1638,
+       0.1644,
        "Tail.05"
       ],
       "rest": [
@@ -358,7 +6499,7 @@
        "-"
       ],
       "rest": [
-       0.5263,
+       0.4791,
        "Cloak.Edge.R.3"
       ]
      }
@@ -366,13 +6507,13 @@
    },
    {
     "Body": 0.0109,
-    "Cloak": 0.5489,
-    "Dagger.Left": 1.0237,
-    "Dagger.Right": 0.8544,
+    "Cloak": 0.4865,
+    "Dagger.Left": 1.0039,
+    "Dagger.Right": 0.8362,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1809,
+       0.1785,
        "Tail.05"
       ],
       "rest": [
@@ -386,7 +6527,7 @@
        "-"
       ],
       "rest": [
-       0.5489,
+       0.4865,
        "Cloak.Edge.R.3"
       ]
      }
@@ -394,13 +6535,13 @@
    },
    {
     "Body": 0.0092,
-    "Cloak": 0.5885,
-    "Dagger.Left": 1.0297,
-    "Dagger.Right": 0.8298,
+    "Cloak": 0.4916,
+    "Dagger.Left": 1.0095,
+    "Dagger.Right": 0.8186,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1932,
+       0.1927,
        "Tail.05"
       ],
       "rest": [
@@ -414,7 +6555,7 @@
        "-"
       ],
       "rest": [
-       0.5885,
+       0.4916,
        "Cloak.Edge.R.3"
       ]
      }
@@ -422,13 +6563,13 @@
    },
    {
     "Body": 0.0073,
-    "Cloak": 0.6069,
-    "Dagger.Left": 1.0382,
-    "Dagger.Right": 0.7937,
+    "Cloak": 0.4952,
+    "Dagger.Left": 1.0184,
+    "Dagger.Right": 0.7856,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2053,
+       0.2068,
        "Tail.05"
       ],
       "rest": [
@@ -442,7 +6583,7 @@
        "-"
       ],
       "rest": [
-       0.6069,
+       0.4952,
        "Cloak.Edge.R.3"
       ]
      }
@@ -450,13 +6591,13 @@
    },
    {
     "Body": 0.0056,
-    "Cloak": 0.6042,
-    "Dagger.Left": 1.0521,
-    "Dagger.Right": 0.7711,
+    "Cloak": 0.4985,
+    "Dagger.Left": 1.0329,
+    "Dagger.Right": 0.7647,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2189,
+       0.2199,
        "Tail.05"
       ],
       "rest": [
@@ -470,7 +6611,7 @@
        "-"
       ],
       "rest": [
-       0.6042,
+       0.4985,
        "Cloak.Edge.R.3"
       ]
      }
@@ -478,13 +6619,13 @@
    },
    {
     "Body": 0.0051,
-    "Cloak": 0.5977,
-    "Dagger.Left": 1.0644,
-    "Dagger.Right": 0.7518,
+    "Cloak": 0.4993,
+    "Dagger.Left": 1.0454,
+    "Dagger.Right": 0.7462,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2294,
+       0.2284,
        "Tail.05"
       ],
       "rest": [
@@ -498,7 +6639,7 @@
        "-"
       ],
       "rest": [
-       0.5977,
+       0.4993,
        "Cloak.Edge.R.3"
       ]
      }
@@ -506,13 +6647,13 @@
    },
    {
     "Body": 0.0069,
-    "Cloak": 0.5935,
-    "Dagger.Left": 1.0766,
-    "Dagger.Right": 0.7344,
+    "Cloak": 0.496,
+    "Dagger.Left": 1.0576,
+    "Dagger.Right": 0.7288,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2323,
+       0.2308,
        "Tail.05"
       ],
       "rest": [
@@ -526,7 +6667,7 @@
        "-"
       ],
       "rest": [
-       0.5935,
+       0.496,
        "Cloak.Edge.R.3"
       ]
      }
@@ -534,13 +6675,13 @@
    },
    {
     "Body": 0.0089,
-    "Cloak": 0.5894,
-    "Dagger.Left": 1.0873,
-    "Dagger.Right": 0.7191,
+    "Cloak": 0.4903,
+    "Dagger.Left": 1.0693,
+    "Dagger.Right": 0.7135,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2296,
+       0.23,
        "Tail.05"
       ],
       "rest": [
@@ -554,7 +6695,7 @@
        "-"
       ],
       "rest": [
-       0.5894,
+       0.4903,
        "Cloak.Edge.R.3"
       ]
      }
@@ -562,13 +6703,13 @@
    },
    {
     "Body": 0.0093,
-    "Cloak": 0.5809,
-    "Dagger.Left": 1.1017,
-    "Dagger.Right": 0.7052,
+    "Cloak": 0.4819,
+    "Dagger.Left": 1.0864,
+    "Dagger.Right": 0.6995,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2255,
+       0.2262,
        "Tail.05"
       ],
       "rest": [
@@ -582,7 +6723,7 @@
        "-"
       ],
       "rest": [
-       0.5809,
+       0.4819,
        "Cloak.Edge.R.3"
       ]
      }
@@ -590,13 +6731,13 @@
    },
    {
     "Body": 0.0081,
-    "Cloak": 0.5646,
-    "Dagger.Left": 1.1252,
-    "Dagger.Right": 0.6905,
+    "Cloak": 0.4696,
+    "Dagger.Left": 1.1144,
+    "Dagger.Right": 0.6848,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2194,
+       0.2188,
        "Tail.05"
       ],
       "rest": [
@@ -610,7 +6751,7 @@
        "-"
       ],
       "rest": [
-       0.5646,
+       0.4696,
        "Cloak.Edge.R.3"
       ]
      }
@@ -618,13 +6759,13 @@
    },
    {
     "Body": 0.005,
-    "Cloak": 0.5406,
-    "Dagger.Left": 1.1505,
-    "Dagger.Right": 0.6736,
+    "Cloak": 0.4526,
+    "Dagger.Left": 1.1448,
+    "Dagger.Right": 0.668,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2093,
+       0.2084,
        "Tail.05"
       ],
       "rest": [
@@ -638,7 +6779,7 @@
        "-"
       ],
       "rest": [
-       0.5406,
+       0.4526,
        "Cloak.Edge.R.3"
       ]
      }
@@ -646,13 +6787,13 @@
    },
    {
     "Body": 0.0021,
-    "Cloak": 0.5084,
-    "Dagger.Left": 1.1662,
-    "Dagger.Right": 0.6546,
+    "Cloak": 0.4312,
+    "Dagger.Left": 1.1637,
+    "Dagger.Right": 0.6491,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1971,
+       0.1973,
        "Tail.05"
       ],
       "rest": [
@@ -666,7 +6807,7 @@
        "-"
       ],
       "rest": [
-       0.5084,
+       0.4312,
        "Cloak.Edge.R.3"
       ]
      }
@@ -674,13 +6815,13 @@
    },
    {
     "Body": 0.0019,
-    "Cloak": 0.468,
-    "Dagger.Left": 1.1809,
-    "Dagger.Right": 0.6358,
+    "Cloak": 0.4068,
+    "Dagger.Left": 1.1816,
+    "Dagger.Right": 0.6304,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1868,
+       0.1884,
        "Tail.05"
       ],
       "rest": [
@@ -694,7 +6835,7 @@
        "-"
       ],
       "rest": [
-       0.468,
+       0.4068,
        "Cloak.Edge.R.3"
       ]
      }
@@ -702,13 +6843,13 @@
    },
    {
     "Body": 0.0024,
-    "Cloak": 0.421,
-    "Dagger.Left": 1.1927,
-    "Dagger.Right": 0.619,
+    "Cloak": 0.3786,
+    "Dagger.Left": 1.1969,
+    "Dagger.Right": 0.6138,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.179,
+       0.1806,
        "Tail.05"
       ],
       "rest": [
@@ -722,7 +6863,7 @@
        "-"
       ],
       "rest": [
-       0.421,
+       0.3786,
        "Cloak.Edge.R.3"
       ]
      }
@@ -730,13 +6871,13 @@
    },
    {
     "Body": 0.0044,
-    "Cloak": 0.3667,
-    "Dagger.Left": 1.1912,
-    "Dagger.Right": 0.6022,
+    "Cloak": 0.3461,
+    "Dagger.Left": 1.1962,
+    "Dagger.Right": 0.597,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.171,
+       0.1741,
        "Tail.05"
       ],
       "rest": [
@@ -750,7 +6891,7 @@
        "-"
       ],
       "rest": [
-       0.3667,
+       0.3461,
        "Cloak.Edge.R.3"
       ]
      }
@@ -758,13 +6899,13 @@
    },
    {
     "Body": 0.0018,
-    "Cloak": 0.3011,
-    "Dagger.Left": 1.1829,
-    "Dagger.Right": 0.578,
+    "Cloak": 0.3047,
+    "Dagger.Left": 1.1876,
+    "Dagger.Right": 0.5721,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1594,
+       0.1645,
        "Tail.05"
       ],
       "rest": [
@@ -778,7 +6919,7 @@
        "-"
       ],
       "rest": [
-       0.3011,
+       0.3047,
        "Cloak.Edge.R.3"
       ]
      }
@@ -786,13 +6927,13 @@
    },
    {
     "Body": -0.005,
-    "Cloak": 0.2262,
-    "Dagger.Left": 1.1654,
-    "Dagger.Right": 0.5426,
+    "Cloak": 0.2518,
+    "Dagger.Left": 1.1709,
+    "Dagger.Right": 0.5354,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.138,
+       0.1459,
        "Tail.05"
       ],
       "rest": [
@@ -806,7 +6947,7 @@
        "-"
       ],
       "rest": [
-       0.2262,
+       0.2518,
        "Cloak.Edge.R.3"
       ]
      }
@@ -814,13 +6955,13 @@
    },
    {
     "Body": 0.0296,
-    "Cloak": 0.1412,
-    "Dagger.Left": 1.1359,
-    "Dagger.Right": 0.4891,
+    "Cloak": 0.1855,
+    "Dagger.Left": 1.1435,
+    "Dagger.Right": 0.4801,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1091,
+       0.1127,
        "Tail.05"
       ],
       "rest": [
@@ -834,21 +6975,21 @@
        "-"
       ],
       "rest": [
-       0.1412,
+       0.1855,
        "Cloak.Edge.R.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0656,
-    "Cloak": 0.0371,
-    "Dagger.Left": 1.0837,
-    "Dagger.Right": 0.4157,
+    "Body": 0.065,
+    "Cloak": 0.0956,
+    "Dagger.Left": 1.0917,
+    "Dagger.Right": 0.4041,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0656,
+       0.065,
        "Tail.05"
       ],
       "rest": [
@@ -862,21 +7003,21 @@
        "-"
       ],
       "rest": [
-       0.0371,
+       0.0956,
        "Cloak.Edge.R.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0152,
-    "Cloak": -0.0846,
-    "Dagger.Left": 0.9738,
-    "Dagger.Right": 0.3405,
+    "Body": 0.0183,
+    "Cloak": 0.0242,
+    "Dagger.Left": 0.9782,
+    "Dagger.Right": 0.3278,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0152,
+       0.0183,
        "Tail.05"
       ],
       "rest": [
@@ -890,21 +7031,21 @@
        "-"
       ],
       "rest": [
-       -0.0846,
+       0.0242,
        "Cloak.Edge.R.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0175,
-    "Cloak": -0.2069,
-    "Dagger.Left": 0.8046,
-    "Dagger.Right": 0.2778,
+    "Body": 0.0204,
+    "Cloak": 0.0176,
+    "Dagger.Left": 0.8037,
+    "Dagger.Right": 0.2656,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0175,
+       0.0204,
        "Tail.05"
       ],
       "rest": [
@@ -918,21 +7059,21 @@
        "-"
       ],
       "rest": [
-       -0.2069,
-       "Cloak.Edge.R.3"
+       0.0176,
+       "Cloak.Back.R.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0226,
-    "Cloak": -0.308,
-    "Dagger.Left": 0.6204,
-    "Dagger.Right": 0.2336,
+    "Body": 0.0119,
+    "Cloak": 0.0195,
+    "Dagger.Left": 0.6143,
+    "Dagger.Right": 0.2232,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0226,
+       0.0119,
        "Tail.05"
       ],
       "rest": [
@@ -946,21 +7087,21 @@
        "-"
       ],
       "rest": [
-       -0.308,
-       "Cloak.Edge.R.3"
+       0.0195,
+       "Cloak.Back.C.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0489,
-    "Cloak": -0.3748,
-    "Dagger.Left": 0.5092,
-    "Dagger.Right": 0.1131,
+    "Body": 0.0222,
+    "Cloak": 0.0193,
+    "Dagger.Left": 0.5034,
+    "Dagger.Right": 0.1115,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0497,
+       0.0222,
        "Tail.05"
       ],
       "rest": [
@@ -974,21 +7115,21 @@
        "-"
       ],
       "rest": [
-       -0.3748,
-       "Cloak.Edge.R.3"
+       0.0193,
+       "Cloak.Back.C.3"
       ]
      }
     }
    },
    {
     "Body": 0.0353,
-    "Cloak": -0.4206,
-    "Dagger.Left": 0.4396,
-    "Dagger.Right": 0.0624,
+    "Cloak": 0.0243,
+    "Dagger.Left": 0.438,
+    "Dagger.Right": 0.0601,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0846,
+       0.0676,
        "Tail.05"
       ],
       "rest": [
@@ -1002,22 +7143,22 @@
        "-"
       ],
       "rest": [
-       -0.4206,
-       "Cloak.Edge.R.3"
+       0.0243,
+       "Cloak.Back.R.3"
       ]
      }
     }
    },
    {
     "Body": 0.0301,
-    "Cloak": -0.474,
-    "Dagger.Left": 0.3228,
-    "Dagger.Right": 0.0117,
+    "Cloak": 0.0234,
+    "Dagger.Left": 0.3179,
+    "Dagger.Right": 0.0091,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1403,
-       "Tail.05"
+       0.1628,
+       "Tail.03"
       ],
       "rest": [
        0.0301,
@@ -1030,22 +7171,22 @@
        "-"
       ],
       "rest": [
-       -0.474,
-       "Cloak.Edge.R.3"
+       0.0234,
+       "Cloak.Edge.R.2"
       ]
      }
     }
    },
    {
     "Body": 0.0415,
-    "Cloak": -0.4506,
-    "Dagger.Left": 0.1783,
-    "Dagger.Right": 0.0307,
+    "Cloak": 0.012,
+    "Dagger.Left": 0.1728,
+    "Dagger.Right": 0.0283,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1855,
-       "Tail.05"
+       0.2351,
+       "Tail.03"
       ],
       "rest": [
        0.0415,
@@ -1058,22 +7199,22 @@
        "-"
       ],
       "rest": [
-       -0.4506,
-       "Cloak.Edge.R.3"
+       0.012,
+       "Cloak.Edge.R.2"
       ]
      }
     }
    },
    {
     "Body": 0.0662,
-    "Cloak": -0.2732,
-    "Dagger.Left": 0.1357,
-    "Dagger.Right": 0.1207,
+    "Cloak": 0.0481,
+    "Dagger.Left": 0.1409,
+    "Dagger.Right": 0.1192,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2333,
-       "Tail.04"
+       0.2938,
+       "Tail.01"
       ],
       "rest": [
        0.0662,
@@ -1086,21 +7227,21 @@
        "-"
       ],
       "rest": [
-       -0.2732,
-       "Cloak.Edge.R.2"
+       0.0481,
+       "RightShoulder"
       ]
      }
     }
    },
    {
     "Body": 0.0671,
-    "Cloak": -0.1107,
-    "Dagger.Left": 0.1224,
-    "Dagger.Right": 0.1943,
+    "Cloak": 0.0373,
+    "Dagger.Left": 0.1287,
+    "Dagger.Right": 0.1937,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.326,
+       0.3259,
        "Tail.01"
       ],
       "rest": [
@@ -1114,21 +7255,21 @@
        "-"
       ],
       "rest": [
-       -0.1107,
-       "Cloak.Edge.R.2"
+       0.0373,
+       "RightShoulder"
       ]
      }
     }
    },
    {
     "Body": 0.0448,
-    "Cloak": -0.0224,
-    "Dagger.Left": 0.1269,
-    "Dagger.Right": 0.2333,
+    "Cloak": 0.0376,
+    "Dagger.Left": 0.1333,
+    "Dagger.Right": 0.2364,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3529,
+       0.3528,
        "Tail.01"
       ],
       "rest": [
@@ -1142,21 +7283,21 @@
        "-"
       ],
       "rest": [
-       -0.0224,
-       "Cloak.Edge.R.2"
+       0.0376,
+       "Head"
       ]
      }
     }
    },
    {
     "Body": 0.0541,
-    "Cloak": -0.0114,
-    "Dagger.Left": 0.1297,
-    "Dagger.Right": 0.2685,
+    "Cloak": 0.0438,
+    "Dagger.Left": 0.1362,
+    "Dagger.Right": 0.2706,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3658,
+       0.3664,
        "Tail.01"
       ],
       "rest": [
@@ -1170,21 +7311,21 @@
        "-"
       ],
       "rest": [
-       -0.0114,
-       "Cloak.Edge.R.2"
+       0.0438,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.0722,
-    "Cloak": -0.0424,
-    "Dagger.Left": 0.1383,
-    "Dagger.Right": 0.2896,
+    "Cloak": 0.053,
+    "Dagger.Left": 0.1447,
+    "Dagger.Right": 0.2926,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3784,
+       0.379,
        "Tail.01"
       ],
       "rest": [
@@ -1198,21 +7339,21 @@
        "-"
       ],
       "rest": [
-       -0.0424,
-       "Cloak.Edge.R.2"
+       0.053,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.0836,
-    "Cloak": -0.1117,
-    "Dagger.Left": 0.1539,
-    "Dagger.Right": 0.2921,
+    "Cloak": 0.0661,
+    "Dagger.Left": 0.1603,
+    "Dagger.Right": 0.2916,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3971,
+       0.3973,
        "Tail.01"
       ],
       "rest": [
@@ -1226,21 +7367,21 @@
        "-"
       ],
       "rest": [
-       -0.1117,
-       "Cloak.Edge.R.2"
+       0.0661,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.0815,
-    "Cloak": -0.3126,
-    "Dagger.Left": 0.1745,
-    "Dagger.Right": 0.2656,
+    "Cloak": 0.082,
+    "Dagger.Left": 0.181,
+    "Dagger.Right": 0.2647,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.4223,
+       0.4226,
        "Tail.01"
       ],
       "rest": [
@@ -1254,22 +7395,22 @@
        "-"
       ],
       "rest": [
-       -0.3126,
-       "Cloak.Edge.R.2"
+       0.082,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1041,
-    "Cloak": -0.5278,
-    "Dagger.Left": 0.1958,
-    "Dagger.Right": 0.2212,
+    "Cloak": 0.1001,
+    "Dagger.Left": 0.2017,
+    "Dagger.Right": 0.2199,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.4352,
-       "Tail.01"
+       0.4188,
+       "Tail.02"
       ],
       "rest": [
        0.1041,
@@ -1282,21 +7423,21 @@
        "-"
       ],
       "rest": [
-       -0.5278,
-       "Cloak.Edge.R.3"
+       0.1001,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1052,
-    "Cloak": -0.5263,
-    "Dagger.Left": 0.2148,
-    "Dagger.Right": 0.1839,
+    "Cloak": 0.1221,
+    "Dagger.Left": 0.2212,
+    "Dagger.Right": 0.1821,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.4139,
+       0.4063,
        "Tail.02"
       ],
       "rest": [
@@ -1310,22 +7451,22 @@
        "-"
       ],
       "rest": [
-       -0.5263,
-       "Cloak.Edge.R.3"
+       0.1221,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1127,
-    "Cloak": -0.52,
-    "Dagger.Left": 0.2277,
-    "Dagger.Right": 0.1772,
+    "Cloak": 0.1453,
+    "Dagger.Left": 0.2346,
+    "Dagger.Right": 0.1751,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3901,
-       "Tail.02"
+       0.3858,
+       "Tail.03"
       ],
       "rest": [
        0.1127,
@@ -1338,21 +7479,21 @@
        "-"
       ],
       "rest": [
-       -0.52,
-       "Cloak.Edge.R.3"
+       0.1453,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1116,
-    "Cloak": -0.5432,
-    "Dagger.Left": 0.236,
-    "Dagger.Right": 0.1888,
+    "Cloak": 0.1668,
+    "Dagger.Left": 0.243,
+    "Dagger.Right": 0.1866,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3592,
+       0.3527,
        "Tail.03"
       ],
       "rest": [
@@ -1366,21 +7507,21 @@
        "-"
       ],
       "rest": [
-       -0.5432,
-       "Cloak.Edge.R.3"
+       0.1668,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1176,
-    "Cloak": -0.4571,
-    "Dagger.Left": 0.2399,
-    "Dagger.Right": 0.1995,
+    "Cloak": 0.1824,
+    "Dagger.Left": 0.2466,
+    "Dagger.Right": 0.1973,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.3137,
+       0.3174,
        "Tail.03"
       ],
       "rest": [
@@ -1394,21 +7535,21 @@
        "-"
       ],
       "rest": [
-       -0.4571,
-       "Cloak.Edge.R.3"
+       0.1824,
+       "RightArm"
       ]
      }
     }
    },
    {
     "Body": 0.1203,
-    "Cloak": -0.4448,
-    "Dagger.Left": 0.2406,
-    "Dagger.Right": 0.2042,
+    "Cloak": 0.1914,
+    "Dagger.Left": 0.2466,
+    "Dagger.Right": 0.2021,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2567,
+       0.2781,
        "Tail.03"
       ],
       "rest": [
@@ -1422,21 +7563,21 @@
        "-"
       ],
       "rest": [
-       -0.4448,
-       "Cloak.Edge.R.3"
+       0.1914,
+       "Head"
       ]
      }
     }
    },
    {
     "Body": 0.1151,
-    "Cloak": -0.5192,
-    "Dagger.Left": 0.2377,
-    "Dagger.Right": 0.203,
+    "Cloak": 0.1846,
+    "Dagger.Left": 0.243,
+    "Dagger.Right": 0.2008,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.2121,
+       0.2463,
        "Tail.03"
       ],
       "rest": [
@@ -1450,22 +7591,22 @@
        "-"
       ],
       "rest": [
-       -0.5192,
-       "Cloak.Edge.R.3"
+       0.1846,
+       "Head"
       ]
      }
     }
    },
    {
     "Body": 0.1145,
-    "Cloak": -0.473,
-    "Dagger.Left": 0.2317,
-    "Dagger.Right": 0.1962,
+    "Cloak": 0.1757,
+    "Dagger.Left": 0.2365,
+    "Dagger.Right": 0.194,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1628,
-       "Tail.04"
+       0.2277,
+       "Tail.03"
       ],
       "rest": [
        0.1145,
@@ -1478,22 +7619,22 @@
        "-"
       ],
       "rest": [
-       -0.473,
-       "Cloak.Edge.R.3"
+       0.1757,
+       "Head"
       ]
      }
     }
    },
    {
     "Body": 0.1015,
-    "Cloak": -0.3647,
-    "Dagger.Left": 0.2275,
-    "Dagger.Right": 0.1855,
+    "Cloak": 0.1203,
+    "Dagger.Left": 0.2328,
+    "Dagger.Right": 0.1833,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1433,
-       "Tail.05"
+       0.193,
+       "Tail.04"
       ],
       "rest": [
        0.1015,
@@ -1506,21 +7647,21 @@
        "-"
       ],
       "rest": [
-       -0.3647,
-       "Cloak.Edge.L.3"
+       0.1203,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0809,
-    "Cloak": -0.3821,
-    "Dagger.Left": 0.2223,
-    "Dagger.Right": 0.1771,
+    "Cloak": 0.0707,
+    "Dagger.Left": 0.2282,
+    "Dagger.Right": 0.1747,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1301,
+       0.1674,
        "Tail.05"
       ],
       "rest": [
@@ -1534,21 +7675,21 @@
        "-"
       ],
       "rest": [
-       -0.3821,
-       "Cloak.Edge.L.3"
+       0.0707,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0674,
-    "Cloak": -0.3765,
-    "Dagger.Left": 0.2167,
-    "Dagger.Right": 0.1738,
+    "Cloak": 0.0392,
+    "Dagger.Left": 0.2229,
+    "Dagger.Right": 0.1714,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1262,
+       0.1589,
        "Tail.05"
       ],
       "rest": [
@@ -1562,7 +7703,7 @@
        "-"
       ],
       "rest": [
-       -0.3765,
+       0.0392,
        "Cloak.Edge.L.3"
       ]
      }
@@ -1570,13 +7711,13 @@
    },
    {
     "Body": 0.0608,
-    "Cloak": -0.3548,
-    "Dagger.Left": 0.2109,
-    "Dagger.Right": 0.1704,
+    "Cloak": 0.0226,
+    "Dagger.Left": 0.2178,
+    "Dagger.Right": 0.1679,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.074,
+       0.1068,
        "Tail.05"
       ],
       "rest": [
@@ -1590,21 +7731,21 @@
        "-"
       ],
       "rest": [
-       -0.3548,
-       "Cloak.Edge.L.3"
+       0.0226,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0575,
-    "Cloak": -0.3371,
-    "Dagger.Left": 0.2077,
-    "Dagger.Right": 0.168,
+    "Cloak": 0.0224,
+    "Dagger.Left": 0.2142,
+    "Dagger.Right": 0.1655,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0607,
+       0.0783,
        "Tail.05"
       ],
       "rest": [
@@ -1618,21 +7759,21 @@
        "-"
       ],
       "rest": [
-       -0.3371,
-       "Cloak.Edge.L.3"
+       0.0224,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0564,
-    "Cloak": -0.3347,
-    "Dagger.Left": 0.2066,
-    "Dagger.Right": 0.1663,
+    "Cloak": 0.0249,
+    "Dagger.Left": 0.2132,
+    "Dagger.Right": 0.1638,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1304,
+       0.0742,
        "Tail.05"
       ],
       "rest": [
@@ -1646,21 +7787,21 @@
        "-"
       ],
       "rest": [
-       -0.3347,
-       "Cloak.Edge.L.3"
+       0.0249,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0578,
-    "Cloak": -0.3364,
-    "Dagger.Left": 0.2087,
-    "Dagger.Right": 0.1651,
+    "Cloak": 0.0262,
+    "Dagger.Left": 0.2153,
+    "Dagger.Right": 0.1626,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.1458,
+       0.0797,
        "Tail.05"
       ],
       "rest": [
@@ -1674,21 +7815,21 @@
        "-"
       ],
       "rest": [
-       -0.3364,
-       "Cloak.Edge.L.3"
+       0.0262,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0621,
-    "Cloak": -0.3279,
-    "Dagger.Left": 0.2119,
-    "Dagger.Right": 0.1639,
+    "Cloak": 0.0271,
+    "Dagger.Left": 0.2177,
+    "Dagger.Right": 0.1614,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.144,
+       0.0885,
        "Tail.05"
       ],
       "rest": [
@@ -1702,22 +7843,22 @@
        "-"
       ],
       "rest": [
-       -0.3279,
-       "Cloak.Edge.L.3"
+       0.0271,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0686,
-    "Cloak": -0.3781,
-    "Dagger.Left": 0.2156,
-    "Dagger.Right": 0.1624,
+    "Cloak": 0.0228,
+    "Dagger.Left": 0.2202,
+    "Dagger.Right": 0.1599,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0906,
-       "Tail.06"
+       0.1032,
+       "Tail.05"
       ],
       "rest": [
        0.0686,
@@ -1730,21 +7871,21 @@
        "-"
       ],
       "rest": [
-       -0.3781,
-       "Cloak.Edge.R.3"
+       0.0228,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
     "Body": 0.0765,
-    "Cloak": -0.4242,
-    "Dagger.Left": 0.217,
-    "Dagger.Right": 0.1608,
+    "Cloak": 0.0233,
+    "Dagger.Left": 0.2212,
+    "Dagger.Right": 0.1584,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0831,
+       0.0988,
        "Tail.06"
       ],
       "rest": [
@@ -1758,21 +7899,21 @@
        "-"
       ],
       "rest": [
-       -0.4242,
-       "Cloak.Edge.R.3"
+       0.0233,
+       "Cloak.Edge.L.2"
       ]
      }
     }
    },
    {
-    "Body": 0.0124,
-    "Cloak": -0.3233,
-    "Dagger.Left": 0.2172,
-    "Dagger.Right": 0.1607,
+    "Body": 0.0852,
+    "Cloak": 0.0217,
+    "Dagger.Left": 0.2213,
+    "Dagger.Right": 0.1582,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0124,
+       0.0912,
        "Tail.06"
       ],
       "rest": [
@@ -1786,21 +7927,21 @@
        "-"
       ],
       "rest": [
-       -0.3233,
+       0.0217,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0058,
-    "Cloak": -0.3238,
-    "Dagger.Left": 0.2173,
-    "Dagger.Right": 0.1637,
+    "Body": 0.0757,
+    "Cloak": 0.0194,
+    "Dagger.Left": 0.2222,
+    "Dagger.Right": 0.1613,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0058,
+       0.0757,
        "Tail.06"
       ],
       "rest": [
@@ -1814,21 +7955,21 @@
        "-"
       ],
       "rest": [
-       -0.3238,
+       0.0194,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": -0.0012,
-    "Cloak": -0.457,
-    "Dagger.Left": 0.2167,
-    "Dagger.Right": 0.1707,
+    "Body": 0.0687,
+    "Cloak": 0.0288,
+    "Dagger.Left": 0.2228,
+    "Dagger.Right": 0.1683,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       -0.0012,
+       0.0687,
        "Tail.06"
       ],
       "rest": [
@@ -1842,21 +7983,21 @@
        "-"
       ],
       "rest": [
-       -0.457,
-       "Cloak.Edge.R.3"
+       0.0288,
+       "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": -0.0022,
-    "Cloak": -0.3535,
-    "Dagger.Left": 0.2154,
-    "Dagger.Right": 0.1802,
+    "Body": 0.0622,
+    "Cloak": 0.0554,
+    "Dagger.Left": 0.2219,
+    "Dagger.Right": 0.1778,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       -0.0022,
+       0.0622,
        "Tail.06"
       ],
       "rest": [
@@ -1870,21 +8011,21 @@
        "-"
       ],
       "rest": [
-       -0.3535,
-       "Cloak.Edge.R.3"
+       0.0554,
+       "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0117,
-    "Cloak": -0.3214,
-    "Dagger.Left": 0.2137,
-    "Dagger.Right": 0.1795,
+    "Body": 0.0531,
+    "Cloak": 0.0928,
+    "Dagger.Left": 0.2204,
+    "Dagger.Right": 0.1772,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0117,
+       0.0531,
        "Tail.06"
       ],
       "rest": [
@@ -1898,21 +8039,21 @@
        "-"
       ],
       "rest": [
-       -0.3214,
+       0.0928,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0354,
-    "Cloak": -0.3225,
-    "Dagger.Left": 0.2118,
-    "Dagger.Right": 0.1767,
+    "Body": 0.0458,
+    "Cloak": 0.1158,
+    "Dagger.Left": 0.2186,
+    "Dagger.Right": 0.1744,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0354,
+       0.0458,
        "Tail.06"
       ],
       "rest": [
@@ -1926,21 +8067,21 @@
        "-"
       ],
       "rest": [
-       -0.3225,
+       0.1158,
        "Cloak.Edge.L.3"
       ]
      }
     }
    },
    {
-    "Body": 0.0081,
-    "Cloak": -0.3242,
-    "Dagger.Left": 0.2109,
-    "Dagger.Right": 0.1757,
+    "Body": 0.0408,
+    "Cloak": 0.1461,
+    "Dagger.Left": 0.2173,
+    "Dagger.Right": 0.1734,
     "parts": {
      "WolfScout3_Body": {
       "tail": [
-       0.0081,
+       0.0408,
        "Tail.06"
       ],
       "rest": [
@@ -1954,7 +8095,7 @@
        "-"
       ],
       "rest": [
-       -0.3242,
+       0.1461,
        "Cloak.Edge.L.3"
       ]
      }

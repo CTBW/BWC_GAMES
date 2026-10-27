@@ -78,12 +78,10 @@ RIVETS = (0.034, (22.0, 48.0, 72.0, 122.0, 148.0))
 # The crest's height at the top (m).
 CREST = 0.010
 # The shell's grid: columns round (of them, half the middle slit's and to the
-# eye slit's ends), rows from the top to the eye slit, in it, below it.
-COLS, SLIT_COLS = 96, (2, 11)
-ROWS = (28, 4, 16)
-# The men's grid (as COLS, SLIT_COLS, ROWS): every man wears one, so it is
-# coarser (his body is 5k triangles).
-MEN_GRID = (48, (1, 6), (12, 2, 7))
+# eye slit's ends), rows from the top to the eye slit, in it, below it. Coarse:
+# every man wears one, and his body is 5k triangles.
+COLS, SLIT_COLS = 48, (1, 6)
+ROWS = (12, 2, 7)
 # The wings: mount (degrees from his front, m above the eye slit's middle);
 # size, lean out at the top, trailing edge out, curl out toward the tips.
 WING_AT = (95.0, 0.058)
@@ -427,19 +425,19 @@ class Shell:
 
 
 class Grid:
-    """The shell's grid: `cols` columns round (i, his front in the middle) and
+    """The shell's grid: COLS columns round (i, his front in the middle) and
     rows down (j) from the top (0, one point) to the bottom edge (M). Rows J1
     and J2 run along the eye slit's top and bottom, the columns either side
     of the middle along the slit down the middle and the eye slit's ends."""
 
-    def __init__(self, S, cols=COLS, slit_cols=SLIT_COLS, rows=ROWS):
+    def __init__(self, S):
         self.S = S
-        self.N = cols
-        self.J1 = rows[0]
-        self.J2 = self.J1 + rows[1]
-        self.M = self.J2 + rows[2]
-        self.mid = cols // 2
-        self.c0, self.c1 = slit_cols
+        self.N = COLS
+        self.J1 = ROWS[0]
+        self.J2 = self.J1 + ROWS[1]
+        self.M = self.J2 + ROWS[2]
+        self.mid = COLS // 2
+        self.c0, self.c1 = SLIT_COLS
         self._at = {}
 
     def param(self, i, j):
@@ -611,14 +609,15 @@ def check_fit(G, bvh):
 
 # --- Wings -----------------------------------------------------------------------
 
-def feather_rows(L, W, kind, nl=9, nw=4):
+def feather_rows(L, W, kind, nl=6, nw=2):
     """A feather in its own plane: x along it, y across (the trailing side +),
     z out of the wing (a low cup, a shaft down the middle)."""
     flight = kind == "flight"
     sweep, cup = (0.12, 0.10) if flight else (0.0, 0.08)
     rows = []
     for a in range(nl + 1):
-        s = a / nl
+        # The rows closer toward the tip, to round it.
+        s = 1 - (1 - a / nl) ** 1.5
         if flight:
             base, st, e1, e2 = lerp(0.5, 1.0, ss(0.0, 0.2, s)), 0.6, 2.0, 0.5
         else:
@@ -779,8 +778,9 @@ def build():
         for ob in parts:
             bake_mods(ob)
         return parts
-    parts = shell(Grid(S), gold)
-    men = shell(Grid(S, *MEN_GRID), blue)
+    G = Grid(S)
+    parts = shell(G, gold)
+    men = shell(G, blue)
     for side in (1, -1):
         for ob in build_wing(S, side, gold, silver, gold_f, silver_f):
             bake_mods(ob)

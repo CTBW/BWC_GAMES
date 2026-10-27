@@ -45,6 +45,9 @@
 # And the orc brute's.
 /prototypes/orc_brute_anim/art3d/*
 !/prototypes/orc_brute_anim/art3d/*.json
+# And the goblin shaman's.
+/prototypes/goblin_shaman_anim/art3d/*
+!/prototypes/goblin_shaman_anim/art3d/*.json
 # Wolf Scout 3's clips build on a Mixamo crouch: her animation scene and GLB
 # stay local (her rig scene, textures, tools and sidecars are in Git); the roster
 # leaves her out where the GLB is missing. Wolf Scouts 1 and 2, the versions she

@@ -321,10 +321,58 @@ CLIP_W=1220 CLIP_H=1000 "$B" -b --factory-startup <scratch>/skull_clips.blend \
   idle's turn 4 frames longer (`head_lag`), and until he lets go his shoulder keeps the
   idle arm's turn relative to his hips (`hold_turns`) and the wrist its turn: as his back
   straightens out of the hunch, the staff would otherwise tip back into his face. He
-  lets go of the staff at frame 4: the fist opens to 0.4, the wrist turns back to rest
+  lets go of the staff at frame 4 (the death Action's `staff_release`, which the export
+  reads): the fist opens to 0.4, the wrist turns back to rest
   and the arm eases into the clip's over 6 frames. The staff topples as the spearman's
   spear does, about its foot, 45° to his right of ahead, and lies on the ground from
   frame 18, its shaft 4 cm up. It stays out of his body and at least 22 mm off the skull
   mask (54 mm off the beak mask) in every frame. The hips are raised or
   lowered so his lowest point (the open hand included) lies on the ground in every frame.
-- **Not done:** an export to Godot. The clips live only in the scratch copies.
+- **Export:** see [Godot export](#godot-export).
+
+## Godot export
+
+`tools/export_godot.py` bakes a scratch copy's clips into a GLB for the Godot sandbox,
+with a JSON sidecar beside it; `tools/check_export.py` compares the GLB with the copy it
+came from. Both variants export the same way: the script tells them apart by the mask's
+material.
+
+```sh
+G=projects/meridius/source/godot/prototypes/goblin_shaman_anim/art3d
+"$B" -b <scratch>/skull_clips.blend --python $S/tools/export_godot.py -- $G/goblin_shaman_skull.glb
+"$B" -b <scratch>/beak_clips.blend --python $S/tools/export_godot.py -- $G/goblin_shaman_beak.glb
+"$B" -b <scratch>/skull_clips.blend --python $S/tools/check_export.py -- source <samples.npz>
+"$B" -b --factory-startup --python $S/tools/check_export.py -- glb $G/goblin_shaman_skull.glb <samples.npz>
+```
+
+An optional second argument sets the textures' size (1024 px by default, JPEG). Run
+`tools/import.sh` in the Godot project after an export.
+
+- **Bake:** the 52 deforming bones, `Staff` and `Mask`, sampled at every frame from the
+  evaluated pose (the grips, the wrist's hold on the staff, the forearm twist) and keyed
+  as linear Actions `idle`, `walk` and `death` (0.003 mm bake error at worst); the
+  constraints, drivers and the rig's own Actions go. The staff is skinned whole to
+  `Staff`, the mask plate to `Mask`. 15,168 triangles with the skull mask, 19,621 with
+  the beak mask.
+- **Check:** 0.01 mm at worst for both variants, in every sampled frame of the three
+  clips, the frames round the staff's release included. Loaded in Godot 4.7.2, each GLB
+  has 54 bones, the meshes `GoblinShaman`, `MaskPlate` and `Staff`, and the three
+  animations at the sidecar's lengths; he faces +Z, the idle and the walk stay in place
+  and the death's hips drift matches the sidecar. Godot names the staff's bone
+  `Staff_2`, as its mesh node already has the name (the spearman's `Spear` does the
+  same), so find the props by their meshes.
+- **Sidecar:** fps, variant, his height in the idle's first frame with the mask (1.41 m
+  with the skull, 1.51 m with the beak; 1.53 and 1.65 m in the T-pose), the staff's top
+  (1.78 and 1.75 m), forward +Z, `roles` (no attack or hit clip) and per clip its length,
+  loop flag and loop seam (2 mm, at the right fingertips). The idle and the walk give the
+  staff foot's height (`staff_foot_m`). The walk has its `root_vel` (1.0 m/s forward) and
+  its footfalls (left 0.3 s, right 0.9 s); the death its root motion, `hips_drift`,
+  `staff_drop` (0.1 s), `staff_down` (0.57 s, flat on the ground) and when it settles
+  (2.33 s).
+- **Footfalls:** a step is the first frame in which the foot moves back with the ground,
+  within 20% of the walk's speed, for at least 4 frames. The spearman's test, the ankle
+  back at its lowest, finds the left step late: this crouched walk lands heel first with
+  the ankle 12 cm up.
+- **In Git:** the sidecars only. The GLBs carry Mixamo motion and stay local
+  (`source/godot/.gitignore`), as the other goblins' do; export them to see him in Godot.
+- **Not done:** he is not in the sandbox roster, and he has no cast clip.

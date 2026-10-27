@@ -1,0 +1,127 @@
+{
+ "fps": 30.0,
+ "source": "projects/meridius/references/characters/blender/goblin_shaman/goblin_shaman_beak_rig.blend",
+ "variant": "beak",
+ "props": [
+  "Staff",
+  "MaskPlate"
+ ],
+ "forward": [
+  0,
+  0,
+  1
+ ],
+ "height_m": 1.508,
+ "height_rest_m": 1.646,
+ "staff_top_m": 1.745,
+ "roles": {
+  "idle": "idle",
+  "walk": "walk",
+  "death": [
+   "death"
+  ]
+ },
+ "notes": [
+  "Clips are baked from the rig's evaluated pose (both hands' grips, the wrist's hold on the staff, forearm twist and the keyed staff); no constraints or drivers go out. The staff is skinned to the bone Staff (child of mixamorig:RightHand), the mask to the bone Mask (child of mixamorig:Head).",
+  "Locomotion is in place. walk moves the figure by root_vel (m/s, Godot axes): the travel retarget_clips.py removed (travel_from); speed_footlock_mps is how fast his planted foot slides back. In the idle and the walk he carries the staff upright in front of his right side with its foot off the ground (staff_foot_m, its lowest point's height). The death keeps its authored travel on the hips (root_motion true, hips_drift); do not add it again.",
+  "death: events.staff_drop is when his right fist lets go; the Staff bone then lays the staff on the ground, flat from events.staff_down.",
+  "No attack or hit clip: he will mostly cast spells, and there is no cast clip yet; the sandbox flinches procedurally.",
+  "height_m is his top in the idle's first frame, the mask included; the staff reaches staff_top_m.",
+  "Godot imports every clip with loop mode none; set it from clips.<clip>.loop. Animation names equal the clip names (clips.<clip>.anim)."
+ ],
+ "objects": [
+  "GoblinShaman",
+  "MaskPlate",
+  "Staff"
+ ],
+ "bones": 54,
+ "triangles": 19621,
+ "texture_px": 1024,
+ "clips": {
+  "idle": {
+   "anim": "idle",
+   "length": 6.6667,
+   "loop": true,
+   "frames": 201,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {},
+   "loop_seam_cm": 0.2,
+   "staff_foot_m": [
+    0.094,
+    0.1
+   ]
+  },
+  "walk": {
+   "anim": "walk",
+   "length": 1.1667,
+   "loop": true,
+   "frames": 36,
+   "root_vel": [
+    -0.0,
+    0.0,
+    1.003
+   ],
+   "root_motion": false,
+   "turn_deg": 0.0,
+   "hips_drift": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "events": {
+    "steps": [
+     [
+      0.3,
+      "Left"
+     ],
+     [
+      0.9,
+      "Right"
+     ]
+    ]
+   },
+   "loop_seam_cm": 0.21,
+   "staff_foot_m": [
+    0.099,
+    0.127
+   ],
+   "speed_mps": 1.003,
+   "travel_from": "source clip",
+   "speed_footlock_mps": 0.9847
+  },
+  "death": {
+   "anim": "death",
+   "length": 2.3667,
+   "loop": false,
+   "frames": 72,
+   "root_vel": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "root_motion": true,
+   "turn_deg": 1.9,
+   "hips_drift": [
+    -0.1429,
+    -0.0847,
+    0.8906
+   ],
+   "events": {
+    "settled": 2.3333,
+    "staff_drop": 0.1,
+    "staff_down": 0.5667
+   }
+  }
+ }
+}

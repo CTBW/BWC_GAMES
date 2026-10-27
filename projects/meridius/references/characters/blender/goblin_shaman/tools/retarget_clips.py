@@ -881,6 +881,7 @@ def drop(clip):
         if not cuts + before + near:
             break
     _, _, release, info, Ms = min(tried, key=lambda t: t[:3])
+    bpy.data.actions[clip]["staff_release"] = release     # read by export_godot.py
     for f in range(1, n + 1):
         key_right(f, right_at(clip, f, release, holds))
         key_grip(f, grip_at(f, release))

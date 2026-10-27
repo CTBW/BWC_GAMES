@@ -629,7 +629,7 @@ func test_squad_closes_up_when_a_front_man_falls() -> void:
 # --- Every kind's squad -----------------------------------------------------------
 
 func test_roster_squads_have_their_sizes_and_drills() -> void:
-	var sizes := {"footman": 6, "spearman": 6, "crossbowman": 6, "mage": 3, "wolf_scout_3": 3,
+	var sizes := {"footman": 6, "collie_guard": 6, "spearman": 6, "crossbowman": 6, "mage": 3, "wolf_scout_3": 3,
 		"succubus": 3, "goblin_rabble": 10, "goblin_archer": 8, "goblin_spearman": 8, "orc_brute": 6}
 	var ids := {}
 	for p in Roster.UNITS:

@@ -7,7 +7,7 @@
       "type": "group",
       "category": "project",
       "created": "2026-10-20",
-      "updated": "2026-10-26",
+      "updated": "2026-10-27",
       "folder": "2026-10-20_meridius",
       "steps": [
         {
@@ -73,6 +73,12 @@
         {
           "name": "Unit playground",
           "path": "unit-playground.html"
+        },
+        {
+          "name": "Collie Royal Guard 3D rig",
+          "path": "collie-guard-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Collie Royal Guard"
         },
         {
           "name": "Spearman 3D rig",

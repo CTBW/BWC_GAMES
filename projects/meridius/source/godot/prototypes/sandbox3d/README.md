@@ -18,7 +18,8 @@ Sandbox card, or `Meridius Sandbox.cmd` in the repository root. Both run
 brings an open one to the front).
 
 The roster: footman (start and stop, turns on the planted foot, block, lane
-step, shield charge), spearman, crossbowman (bolt, then
+step, shield charge), the collie Royal Guard (the footman's clips and blows,
+with his own swaying tail: `art/collie_guard_3d/README.md`), spearman, crossbowman (bolt, then
 reload), battle mage (four spells, quick and full), wolf scout (twin daggers,
 stealth stance), succubus (whip lash with its slash effects, and the
 Sovereign Kiss where its clip is on disk), the goblin
@@ -116,7 +117,7 @@ reached it), and only the target it was cast at is marked. The succubi's
 squad keeps to the whip (its drill's `attacks`).
 
 The rigged models carry Mixamo-derived clips and are not in Git: the
-footman's (`footman.glb`), the spearman's, crossbowman's and battle mage's
+footman's (`footman.glb`), the collie guard's, spearman's, crossbowman's and battle mage's
 (`art3d/*.glb`), the succubus's (`succubus.fbx`), the wolf scout's export and
 the goblins' GLBs, the archer's, the goblin spearman's and the orc brute's
 too. Their sidecars are in Git, except the wolf scout's. Where they are missing, the
@@ -291,8 +292,8 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   loaded from `local/` at run time onto a unit's model.
 - `shaders/`: the ground (relief bake, fog, grid, route marks, hover), the
   painted cards and the kiss's fog (`fog_heart.gdshader`).
-- `art3d/`: the spearman, crossbowman and battle mage exports (the GLBs stay
-  local, see above) with their sidecars, and the kiss heart's two shapes (`kiss_heart_sdf.png`,
+- `art3d/`: the collie guard, spearman, crossbowman and battle mage exports (the GLBs stay
+  local, see above) with their sidecars and textures, and the kiss heart's two shapes (`kiss_heart_sdf.png`,
   `kiss_puff_sdf.png`: distance from the edge, imported lossless). The
   footman and succubus are read from `prototypes/footman_anim/art3d`, the
   wolf scout from `prototypes/wolf_scout_anim/art3d`, the goblin rabble

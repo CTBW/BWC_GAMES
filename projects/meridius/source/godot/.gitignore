@@ -63,3 +63,9 @@
 !/prototypes/wolf_scout_anim/art3d/wolf_scout_3.json
 /prototypes/wolf_scout_anim/qa/wolf_scout_2_sandbox.gd*
 /tools/preview_wolf_scout.ps1
+# The collie Royal Guard plays the footman's clips (Mixamo-derived): his animation
+# scene and GLB stay local (his base and rig scenes, tools and sidecar are in Git);
+# the roster leaves him out where the GLB is missing.
+/art/collie_guard_3d/collie_anim.blend
+/prototypes/sandbox3d/art3d/collie_guard.glb
+/prototypes/sandbox3d/art3d/collie_guard.glb.import

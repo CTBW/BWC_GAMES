@@ -40,7 +40,17 @@
   },
   "idle_guard": {
    "ne": {
-    "file": "sheets/idle_guard_ne.webp",
+    "files": [
+     "sheets/idle_guard_ne_1.webp",
+     "sheets/idle_guard_ne_2.webp",
+     "sheets/idle_guard_ne_3.webp",
+     "sheets/idle_guard_ne_4.webp",
+     "sheets/idle_guard_ne_5.webp",
+     "sheets/idle_guard_ne_6.webp",
+     "sheets/idle_guard_ne_7.webp",
+     "sheets/idle_guard_ne_8.webp"
+    ],
+    "per": 30,
     "frames": 227,
     "cols": 15,
     "w": 383,
@@ -49,7 +59,26 @@
     "y": 203
    },
    "nw": {
-    "file": "sheets/idle_guard_nw.webp",
+    "files": [
+     "sheets/idle_guard_nw_1.webp",
+     "sheets/idle_guard_nw_2.webp",
+     "sheets/idle_guard_nw_3.webp",
+     "sheets/idle_guard_nw_4.webp",
+     "sheets/idle_guard_nw_5.webp",
+     "sheets/idle_guard_nw_6.webp",
+     "sheets/idle_guard_nw_7.webp",
+     "sheets/idle_guard_nw_8.webp",
+     "sheets/idle_guard_nw_9.webp",
+     "sheets/idle_guard_nw_10.webp",
+     "sheets/idle_guard_nw_11.webp",
+     "sheets/idle_guard_nw_12.webp",
+     "sheets/idle_guard_nw_13.webp",
+     "sheets/idle_guard_nw_14.webp",
+     "sheets/idle_guard_nw_15.webp",
+     "sheets/idle_guard_nw_16.webp",
+     "sheets/idle_guard_nw_17.webp"
+    ],
+    "per": 14,
     "frames": 227,
     "cols": 14,
     "w": 434,
@@ -58,7 +87,18 @@
     "y": 151
    },
    "se": {
-    "file": "sheets/idle_guard_se.webp",
+    "files": [
+     "sheets/idle_guard_se_1.webp",
+     "sheets/idle_guard_se_2.webp",
+     "sheets/idle_guard_se_3.webp",
+     "sheets/idle_guard_se_4.webp",
+     "sheets/idle_guard_se_5.webp",
+     "sheets/idle_guard_se_6.webp",
+     "sheets/idle_guard_se_7.webp",
+     "sheets/idle_guard_se_8.webp",
+     "sheets/idle_guard_se_9.webp"
+    ],
+    "per": 26,
     "frames": 227,
     "cols": 13,
     "w": 434,
@@ -67,7 +107,24 @@
     "y": 211
    },
    "sw": {
-    "file": "sheets/idle_guard_sw.webp",
+    "files": [
+     "sheets/idle_guard_sw_1.webp",
+     "sheets/idle_guard_sw_2.webp",
+     "sheets/idle_guard_sw_3.webp",
+     "sheets/idle_guard_sw_4.webp",
+     "sheets/idle_guard_sw_5.webp",
+     "sheets/idle_guard_sw_6.webp",
+     "sheets/idle_guard_sw_7.webp",
+     "sheets/idle_guard_sw_8.webp",
+     "sheets/idle_guard_sw_9.webp",
+     "sheets/idle_guard_sw_10.webp",
+     "sheets/idle_guard_sw_11.webp",
+     "sheets/idle_guard_sw_12.webp",
+     "sheets/idle_guard_sw_13.webp",
+     "sheets/idle_guard_sw_14.webp",
+     "sheets/idle_guard_sw_15.webp"
+    ],
+    "per": 16,
     "frames": 227,
     "cols": 16,
     "w": 384,

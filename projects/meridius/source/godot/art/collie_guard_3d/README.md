@@ -126,7 +126,10 @@ F="E:/ProjektM/BWC_GAMES-godot/local/footman_3d/footman_rig.blend"
 Then re-import with `tools/import.sh` (from the Godot project). The pose viewer's frames:
 `"$B" -b collie_anim.blend --factory-startup --python tools/render_viewer_frames.py --
 <out> "" <facing>` (one facing per process), packed by
-`../crossbowman_3d/tools/build_sheets.py <out> <card folder>`.
+`../crossbowman_3d/tools/build_sheets.py <out> <card folder>`. The guard idle's sheets are
+too large to step through in all four facings, so split them into bands with
+`../../../../../../workspace/2026-10-20_meridius/rig-viewer/split_sheets.py <out> <card folder>
+idle_guard`, then copy the card's `frames.json` into its `#frames-data`.
 
 ## Open points
 

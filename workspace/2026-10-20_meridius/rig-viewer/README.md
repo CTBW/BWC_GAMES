@@ -1,7 +1,7 @@
 # Pose viewer
 
 The frame viewer on the Meridius rig tabs: Footman, Crossbowman, Spearman,
-Succubus, Mage, Goblin Rabble, Goblin Spearman and Goblin Shaman. Build every new rig or animation review on it instead of a
+Succubus, Mage, Goblin Rabble, Goblin Spearman, Goblin Shaman and Collie Royal Guard. Build every new rig or animation review on it instead of a
 page-specific player, so each one keeps frame stepping, the four facings, the
 copyable frame reference and the detail zoom.
 
@@ -54,6 +54,7 @@ instead of smoothed, so render flaws are not blurred away.
 | Goblin Rabble | `projects/meridius/references/characters/blender/goblin_rabble/tools/render_clips.py` | `pack_sheets.py` beside it |
 | Goblin Spearman | `projects/meridius/references/characters/blender/goblin_spear/tools/render_clips.py` | `pack_sheets.py` beside it |
 | Goblin Shaman | `projects/meridius/references/characters/blender/goblin_shaman/tools/render_clips.py`, from the scratch copy that `retarget_clips.py` beside it saves with the clips | `goblin_spear/tools/pack_sheets.py` |
+| Collie Royal Guard | `collie_guard_3d/tools/render_viewer_frames.py` | `crossbowman_3d/tools/build_sheets.py`, then `split_sheets.py` here for the guard idle |
 
 Rig folders are under `projects/meridius/source/godot/art/` unless the path says
 otherwise.
@@ -61,3 +62,24 @@ otherwise.
 The viewer also reads sheets rendered larger than the canvas. Give `frames.json`
 a `scale`, the number of sheet pixels per canvas pixel (default 1). `canvas`
 stays in canvas pixels, and `x`, `y`, `w` and `h` are in sheet pixels.
+
+## Long clips
+
+A long clip on a wide canvas packs into sheets of 30 Mpx and more. Shown in all
+four facings, the browser cannot keep such sheets decoded, and the viewer stalls
+on every frame: stepping the Collie Royal Guard's guard idle (227 frames on the
+1000 × 960 canvas, 31–37 Mpx a facing) took 1.5 s a frame. `split_sheets.py`
+here re-packs such a clip from its rendered frames into bands of whole rows of
+at most 4 Mpx:
+
+```sh
+python split_sheets.py <frames dir> <card folder> <clip>[,<clip>...] [max Mpx]
+```
+
+Run it after the packer, on the same frames, then copy the card's `frames.json`
+into the page's `#frames-data`. The clip's entry then lists its bands in
+`"files"`, with `"per"` frames in each, in place of `"file"`; the crop, cell
+and grid stay as packed. The viewer fetches each band and decodes it off the
+main thread, and keeps only the band shown and the next decoded, so a step
+takes a few milliseconds. Opened from disk, without `fetch`, it loads the bands
+as images, which decode when first drawn.

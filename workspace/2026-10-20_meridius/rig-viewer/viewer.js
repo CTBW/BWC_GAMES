@@ -3,7 +3,8 @@
 // (the frames.json of its sheets) as JSON script tags, and the viewer markup.
 // The detail zoom (up to 4x, at the pointer) is added here, so every page loading this file has it.
 // Sheets may be rendered larger than the canvas: frames.json "scale" is sheet pixels per canvas
-// pixel (default 1), and then a frame's x, y, w and h are in sheet pixels. See README.md.
+// pixel (default 1), and then a frame's x, y, w and h are in sheet pixels. A long clip's sheet may
+// be split into bands of whole rows: "files" in place of "file", with "per" frames in each. See README.md.
 (() => {
   const $ = (id) => document.getElementById(id);
   let cfg, meta;
@@ -42,8 +43,25 @@
   }
   function sheet(clip, face) {
     const k = clip + "_" + face;
-    if (!sheets[k]) { const img = new Image(); img.onload = () => draw(); img.src = cfg.base + meta.clips[clip][face].file; sheets[k] = img; }
+    if (!sheets[k]) {
+      const m = meta.clips[clip][face];
+      if (m.files) sheets[k] = m.files.map((file) => ({ url: cfg.base + file }));
+      else { const img = new Image(); img.onload = () => draw(); img.src = cfg.base + m.file; sheets[k] = [img]; }
+    }
     return sheets[k];
+  }
+  // A band is fetched and decoded off the main thread into a bitmap: an <img> decodes on the main
+  // thread when first drawn, some 45 ms for a band of 4 Mpx. Only the band shown and the next stay
+  // decoded, as all of a long clip's bands would take hundreds of MB. Without fetch (file://) a
+  // band is an <img>.
+  function band(part, keep) {
+    part.keep = keep;
+    if (!keep && part.bmp) { if (part.bmp.close) part.bmp.close(); part.bmp = null; }
+    if (!keep || part.bmp || part.wait) return;
+    const done = (b) => { part.wait = null; if (!part.keep) { if (b.close) b.close(); return; } part.bmp = b; draw(); };
+    part.wait = fetch(part.url).then((r) => r.blob()).then(createImageBitmap).then(done, () => {
+      const img = new Image(); img.onload = () => done(img); img.src = part.url;
+    });
   }
   const faces = () => state.face === "all" ? ["sw", "se", "nw", "ne"] : [state.face];
   const count = () => meta.clips[state.clip].se.frames;
@@ -68,6 +86,8 @@
       cell.append(cv, tag, stamp); stage.appendChild(cell);
       cells.push({ f, cv, stamp, k: z * dpr }); sheet(state.clip, f);
     }
+    const shown = cells.map((c) => state.clip + "_" + c.f);
+    for (const [k, parts] of Object.entries(sheets)) if (!shown.includes(k)) for (const b of parts) if (b.url) band(b, false);
     stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
     const n = count(); $("scrub").max = String(n - 1); state.frame = Math.min(state.frame, n - 1); clampView(); draw();
   }
@@ -79,15 +99,22 @@
   function draw() {
     for (const c of cells) {
       const m = meta.clips[state.clip][c.f];
+      const parts = sheets[state.clip + "_" + c.f] || [], per = m.per || m.frames, p = Math.floor(state.frame / per);
+      let img = parts[p];
+      if (m.files) {
+        parts.forEach((b, j) => band(b, j === p || j === (p + 1) % parts.length)); img = img && img.bmp;
+        // Until its band is decoded (after a jump), a cell keeps the frame it shows.
+        if (!img && c.drawn) continue;
+      }
       const ctx = c.cv.getContext("2d");
       ctx.fillStyle = GROUND[state.ground]; ctx.fillRect(0, 0, c.cv.width, c.cv.height);
-      const img = sheets[state.clip + "_" + c.f];
-      if (img && img.complete && img.naturalWidth) {
-        const i = state.frame; const sx = (i % m.cols) * m.w, sy = Math.floor(i / m.cols) * m.h;
+      if (img && (img.naturalWidth ?? img.width)) {
+        const i = state.frame % per; const sx = (i % m.cols) * m.w, sy = Math.floor(i / m.cols) * m.h;
         const s = meta.scale || 1, k = c.k * view.d;
         // Smooth while a sheet pixel covers under 4 canvas pixels; beyond that show the pixels as rendered.
         ctx.imageSmoothingEnabled = k / s < 4; ctx.imageSmoothingQuality = "high";
         ctx.drawImage(img, sx, sy, m.w, m.h, (m.x / s - view.ox) * k, (m.y / s - view.oy) * k, m.w / s * k, m.h / s * k);
+        c.drawn = true;
       }
       c.stamp.textContent = `${state.clip} ${c.f.toUpperCase()} f${state.frame + 1}${view.d > 1 ? " · " + detailText() : ""}`;
     }

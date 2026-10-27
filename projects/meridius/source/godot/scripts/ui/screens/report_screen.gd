@@ -38,11 +38,14 @@ func refresh() -> void:
 	var Soldier = Deps.soldier()
 	var c := DB.campaign_by_id(r.campaignId)
 	var roster: Array = g.roster if g != null else []
+	var injured := 0
 	var wounded := 0
 	var worn := 0
 	var thin := 0
 	for so in roster:
 		if so.injuries.size() > 0:
+			injured += 1
+		if Deps.squad().wound_of(so) != null:
 			wounded += 1
 		if so.morale < Soldier.soldier_stats(so).morale * 0.5:
 			worn += 1
@@ -52,7 +55,9 @@ func refresh() -> void:
 	if thin:
 		advice_parts.append("%s below strength; the Barracks can refill the ranks." % ("One squad is" if thin == 1 else "%d squads are" % thin))
 	if wounded:
-		advice_parts.append("%s the surgeon." % ("One sergeant needs" if wounded == 1 else "%d sergeants need" % wounded))
+		advice_parts.append("%s the wounds of the fight; the Infirmary can dress them." % ("One squad carries" if wounded == 1 else "%d squads carry" % wounded))
+	if injured:
+		advice_parts.append("%s the surgeon." % ("One sergeant needs" if injured == 1 else "%d sergeants need" % injured))
 	if worn:
 		advice_parts.append("%s worn down and may want leave." % ("One is" if worn == 1 else "%d are" % worn))
 	var advice := " ".join(advice_parts)

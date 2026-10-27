@@ -70,6 +70,13 @@ static func wound_of(s: Dictionary) -> Variant:
 	return {"kind": "wounded", "fell": fell, "damage": WOUND_PENALTY * share, "defense": WOUND_PENALTY * share, "morale": JS.rnd(WOUND_MORALE * share)}
 
 
+## Clears the penalty a squad carries from its last fight (wounded or Injured):
+## a camp rest, a bandage or the Infirmary at home.
+static func tend_wounds(s: Dictionary) -> void:
+	s.erase("wounded")
+	s.erase("injured")
+
+
 ## Damage multiplier of a BattleUnit carrying wounds from its last fight.
 static func wound_mult(u: Dictionary) -> float:
 	var w: Variant = u.get("wound")

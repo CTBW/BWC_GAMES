@@ -1077,3 +1077,32 @@ The owner's rule (rules chat). It replaces field triage and the downed sergeant.
 - Tests: `test_meta_squads` (rising wounded, the penalty in the next fight and
   spent by it, Injured then gone, enemies dead, less damage in the preview,
   camp rest and bandage), `test_ui_widgets` (the tags).
+
+### 2026-10-27 - Rule: the Infirmary dresses wounds at home
+
+The owner's rule (rules chat): the Infirmary is a remedy for wounds at
+Amberfeld.
+
+- `Game.dress_wounds(g, id)` clears the penalty a squad carries from its last
+  fight (`Squad.tend_wounds`, moved from `Expedition`) for silver.
+  `Game.dress_cost` charges the Infirmary's `treatCost` (40 / 25 / 15) for each
+  whole squad's worth of fallen, rounded up, and twice that for an Injured
+  squad: two of six down cost 14 / 9 / 5 silver, Injured 80 / 50 / 30. Unlike
+  treating a lasting injury, it does not bench the squad.
+- The Infirmary panel lists the wounded squads with a "Dress wounds" button,
+  and the squad detail's wound card has one at home. The report's advice
+  counts the squads carrying wounds. The Infirmary's role and level
+  descriptions, its panel intro and the Field Manual say so. `buildings.json`
+  changes text only: no new effect.
+- The company automation (`Autoplay.auto_prepare`) dresses wounds while it
+  has more than 120 silver, after treating injuries, skipping recovering
+  squads.
+- Goldens: none re-recorded. The battle traces never reach the home economy,
+  and `test_meta_parity` already reads the Infirmary's descriptions from
+  today's data. The campaign baseline (`test_campaign_parity`) was not
+  checked: the automation now spends silver on dressing, so its runs will
+  differ from the recording.
+- Tests: `test_meta_squads` (the cost by share, kind and level, paid, not
+  benched; the automation), `test_screens` (the panel's and the detail's
+  buttons). `tests/visual/ui_capture.gd`'s rough company carries a wound and
+  an Injured squad (`infirmary2`, `soldier2`).

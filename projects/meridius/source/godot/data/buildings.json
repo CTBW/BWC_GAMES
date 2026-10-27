@@ -221,7 +221,7 @@
   {
    "id": "infirmary",
    "name": "Infirmary",
-   "role": "Treat lasting injuries. Better surgeons save more of the fallen.",
+   "role": "Dress the wounds of the last fight and treat lasting injuries.",
    "sprite": "infirmary",
    "pos": [
     3,
@@ -232,7 +232,7 @@
      "level": 1,
      "name": "Surgeon's Tent",
      "cost": {},
-     "description": "Treat injuries for 40 silver per severity.",
+     "description": "Dress wounds and treat injuries for 40 silver per severity.",
      "effects": {
       "treatCost": 40
      }
@@ -244,7 +244,7 @@
       "silver": 140,
       "timber": 3
      },
-     "description": "Treat injuries for 25 silver per severity.",
+     "description": "Dress wounds and treat injuries for 25 silver per severity.",
      "effects": {
       "treatCost": 25
      }
@@ -258,7 +258,7 @@
       "iron": 2,
       "trophies": 1
      },
-     "description": "Treat injuries for 15 silver per severity.",
+     "description": "Dress wounds and treat injuries for 15 silver per severity.",
      "effects": {
       "treatCost": 15
      }

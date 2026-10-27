@@ -68,7 +68,7 @@ static func pages() -> Array:
 			"Every squad has [b]morale[/b] (the blue bar). Wounds, flank and rear attacks, comrades falling nearby, being surrounded and a losing battle all drain it. Victories, felling foes and standing beside comrades restore it.",
 			"[b]Confident[/b] troops fight better. [b]Shaken[/b] and [b]Wavering[/b] troops fight worse; wavering troops cannot use abilities. At zero morale a unit [b]routs[/b] and flees the field. It may rally if it gets clear of the enemy.",
 			"Goblins break easily; orcs do not. Kill a warband's [b]leader[/b] and the rest lose heart; slay the host's [b]warchief[/b] and the whole horde breaks and runs.",
-			"Soldiers who go down are out of the fight until it ends, then get back up. Their squad carries the wounds into its [b]next fight[/b]: less damage and defense and lower morale for each soldier who went down (two of six: −10% and −10 morale). A squad cut down to the last soldier rises [b]Injured[/b] (−40% damage and defense, −30 morale); cut down again in its next fight, it is gone for good. A night's rest at a camp with full rations, or a bandage, dresses the wounds.",
+			"Soldiers who go down are out of the fight until it ends, then get back up. Their squad carries the wounds into its [b]next fight[/b]: less damage and defense and lower morale for each soldier who went down (two of six: −10% and −10 morale). A squad cut down to the last soldier rises [b]Injured[/b] (−40% damage and defense, −30 morale); cut down again in its next fight, it is gone for good. On an expedition, a night's rest at a camp with full rations or a bandage dresses the wounds; at Amberfeld, the Infirmary dresses them for silver.",
 		]},
 		{"id": "campaign", "title": "Expeditions", "body": [
 			"On campaign, choose your path across the map. Every march eats [b]rations[/b] (one per two squads) and tires the army. Hungry soldiers lose morale and strength, and a weak one may not survive. Wounds, morale, fatigue and spent bolts carry from one battle to the next.",
@@ -76,7 +76,7 @@ static func pages() -> Array:
 			"You may [b]retreat home[/b] at any time and keep the spoils, but the objective's reward is lost. A broken army loses half its spoils.",
 		]},
 		{"id": "base", "title": "Amberfeld", "body": [
-			"Between expeditions the company rests at Amberfeld and the survivors heal. Spend silver, timber, iron and war trophies to upgrade buildings: more command points and slots (Command Tent), better recruits and reinforcements (Barracks), drill and promotions (Training Yard), better gear (Armoury), cheaper treatment (Infirmary), and a bigger wagon (Quartermaster).",
+			"Between expeditions the company rests at Amberfeld and the survivors heal. Spend silver, timber, iron and war trophies to upgrade buildings: more command points and slots (Command Tent), better recruits and reinforcements (Barracks), drill and promotions (Training Yard), better gear (Armoury), cheaper dressing and treatment (Infirmary), and a bigger wagon (Quartermaster).",
 			"Every expedition is capped by [b]unit slots[/b] and [b]command points[/b], one slot per squad. Veteran squads cost more points than recruits, so you can never bring everyone. Refill thinned squads at the Barracks before you march. Squads who stay home recover morale; those treated or sent on leave sit out one expedition.",
 		]},
 	]

@@ -696,7 +696,7 @@ static func camp_rest(g: Dictionary) -> void:
 		s.fatigue = maxi(0, s.fatigue - JS.rnd(45 * ratio))
 		# A full night's rest dresses the wounds of the last fight.
 		if ratio >= 1 and Squad.wound_of(s) != null:
-			tend_wounds(s)
+			Squad.tend_wounds(s)
 			tended += 1
 	p.done.append("rest")
 	if ratio >= 1:
@@ -764,17 +764,11 @@ static func use_bandage(g: Dictionary, soldier_id: String) -> bool:
 	ex.supplies.bandages -= 1
 	var healed := Soldier.heal_soldier(s, bandage_heal(s))
 	if wound != null:
-		tend_wounds(s)
+		Squad.tend_wounds(s)
 		_add_log(ex, "%s are bandaged (+%d HP); the wounds of their last fight are dressed." % [Squad.squad_name(s), healed])
 	else:
 		_add_log(ex, "%s are bandaged (+%d HP)." % [Squad.squad_name(s), healed])
 	return true
-
-
-## Clears the penalty a squad carries from its last fight (wounded or Injured).
-static func tend_wounds(s: Dictionary) -> void:
-	s.erase("wounded")
-	s.erase("injured")
 
 
 ## HP one bandage restores to a squad: 10 for each soldier still serving.

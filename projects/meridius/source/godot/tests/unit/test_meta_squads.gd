@@ -243,6 +243,49 @@ func test_a_nights_rest_or_a_bandage_dresses_the_wounds() -> void:
 	assert_false(Expedition.use_bandage(g, a.id), "nothing left to dress")
 
 
+func test_the_infirmary_dresses_wounds_at_home() -> void:
+	var g := Game.new_game(11)
+	var a: Dictionary = g.roster[0]
+	var c: Dictionary = g.roster[1]
+	var size_a := DB.squad_size(a.typeId)
+	a.wounded = 2
+	c.injured = true
+	# A whole squad's worth of fallen costs one severity of treatment, Injured two.
+	var per: int = Game.effect(g, "infirmary", "treatCost")
+	assert_eq(Game.dress_cost(g, a), ceili(float(per * 2) / size_a), "wounded: by the share that fell")
+	assert_eq(Game.dress_cost(g, c), per * 2, "injured: two severities")
+	assert_eq(Game.dress_cost(g, g.roster[2]), 0, "nothing to dress")
+	g.resources.silver = Game.dress_cost(g, c) - 1
+	assert_false(Game.dress_wounds(g, c.id), "too poor")
+	assert_true(c.injured, "still injured")
+	g.resources.silver = 500
+	assert_true(Game.dress_wounds(g, a.id), "dressed")
+	assert_eq(Squad.wound_of(a), null, "wounded: dressed")
+	assert_eq(g.resources.silver, 500 - ceili(float(per * 2) / size_a), "paid")
+	assert_false(a.get("recovering", false), "fit for the next expedition")
+	assert_true(Game.dress_wounds(g, c.id), "injured: dressed")
+	assert_eq(Squad.wound_of(c), null, "no longer injured")
+	assert_false(Game.dress_wounds(g, a.id), "nothing left to dress")
+	# A better Infirmary dresses them for less.
+	a.wounded = 2
+	var before := Game.dress_cost(g, a)
+	g.buildings.infirmary = 3
+	assert_true(Game.dress_cost(g, a) < before, "House of Healing: cheaper")
+	# Spent before the next fight, the penalty never reaches the field.
+	Game.dress_wounds(g, a.id)
+	assert_false(Soldier.soldier_to_unit(a).has("wound"), "marches whole")
+
+
+func test_the_company_automation_dresses_wounds_at_home() -> void:
+	var g := Game.new_game(11)
+	g.resources.silver = 1000
+	g.roster[0].wounded = 3
+	g.roster[1].injured = true
+	Autoplay.auto_prepare(g, Rng.new(4))
+	assert_eq(Squad.wound_of(g.roster[0]), null, "wounded: dressed")
+	assert_eq(Squad.wound_of(g.roster[1]), null, "injured: dressed")
+
+
 func test_only_the_barracks_raises_men_at_a_price_and_not_on_campaign() -> void:
 	var g := Game.new_game(9)
 	var s: Dictionary = g.roster[0]

@@ -12,6 +12,7 @@ const Prefs = preload("res://scripts/core/prefs.gd")
 const Card = preload("res://scripts/ui/widgets/card.gd")
 const Soldier = preload("res://scripts/meta/soldier.gd")
 const Rng = preload("res://scripts/core/rng.gd")
+const Squad = preload("res://scripts/rules/squad.gd")
 
 const SAVE := "user://test_screens_save.json"
 const SCREENS := {
@@ -321,6 +322,32 @@ func test_soldier_detail_specialists() -> void:
 		assert_true(x.contains("bolts in the quiver"), "crossbow bolts")
 		assert_true(x.contains("Shot damage") and x.contains("Ranged"), "crossbow lines")
 	App.soldier = null
+
+
+func test_infirmary_dresses_wounds() -> void:
+	var g := fixture()
+	var a: Dictionary = g.roster[2]
+	var c: Dictionary = g.roster[3]
+	a.wounded = 2
+	c.injured = true
+	var s := _mount("base")
+	App.panel = "infirmary"
+	s.refresh()
+	var dress: Array = s.panel_overlay.find_children("DressWounds", "Button", true, false)
+	assert_eq(dress.size(), 2, "one for each wounded squad")
+	var silver: int = g.resources.silver
+	var cost: int = Game.dress_cost(g, a)
+	dress[0].pressed.emit()
+	assert_eq(Squad.wound_of(a), null, "dressed")
+	assert_eq(App.game.resources.silver, silver - cost, "paid")
+	# The squad detail dresses them too, at home.
+	App.panel = null
+	App.soldier = c.id
+	s.refresh()
+	var b: Button = s.soldier_overlay.find_child("DressWounds", true, false)
+	assert_not_null(b, "a button in the wound card")
+	b.pressed.emit()
+	assert_eq(Squad.wound_of(c), null, "dressed from the detail")
 
 
 func test_soldier_detail() -> void:

@@ -32,13 +32,16 @@ static func auto_prepare(g: Dictionary, _rng: RefCounted = null) -> bool:
 			break
 		if g.resources.silver > 150:
 			Game.hire(g, r.id)
-	# Rest the badly shaken and treat serious injuries when there is spare silver.
+	# Rest the badly shaken, treat serious injuries and dress the wounds of the
+	# last fight when there is spare silver.
 	for s in g.roster:
 		if s.morale < Soldier.soldier_stats(s).morale * 0.4 and g.resources.silver > 140:
 			Game.grant_leave(g, s.id)
 		for inj in s.injuries.duplicate():
 			if g.resources.silver > 160 and not s.get("recovering", false):
 				Game.treat(g, s.id, inj)
+		if g.resources.silver > 120 and not s.get("recovering", false):
+			Game.dress_wounds(g, s.id)
 	var c: Dictionary = Game.available_campaigns(g)[0]
 	var lim := Game.army_limits(g, c)
 	var order: Array = g.roster.filter(func(s: Dictionary) -> bool: return Game.eligibility(g, s, c).ok)

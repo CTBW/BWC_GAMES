@@ -43,12 +43,17 @@ downed sergeant.
   fallen, 30% less damage, 30% less defense and ranged defense and 30 less
   morale at the start (2 of 6 down: −10%, −10 morale). Hit chance is
   untouched. That fight spends it and sets a new one from its own fallen. It
-  stays with the squad through the return home until its next fight.
+  stays with the squad through the return home until its next fight, unless
+  a remedy clears it first.
 - **Injured**: a squad cut down to the last rises whole but Injured: −40%
   damage and defense, −30 morale. Cut down again while Injured, it is gone for
   good and leaves the roster for the memorial.
 - **Remedies**: a camp rest with full rations dresses every squad's wounds; a
-  bandage dresses one squad's. Relics and command abilities are to come.
+  bandage dresses one squad's. At Amberfeld the **Infirmary** dresses a
+  squad's wounds for silver: its treatment cost (40 / 25 / 15 by level) for
+  each whole squad's worth of fallen, rounded up, twice that for an Injured
+  squad (two of six down: 14 / 9 / 5; Injured: 80 / 50 / 30). The squad still
+  marches with the next expedition. Relics and command abilities are to come.
 - **Reinforcement** (Barracks, at Amberfeld only): +1 soldier or refill, about
   `recruitCost / size × 0.8` silver per soldier, more for veteran squads. New
   soldiers arrive at full health. Soldiers lost on the road (events, hunger)

@@ -233,7 +233,20 @@ func refresh() -> void:
 		wcol.add_child(UI.label("Injured" if injured else "Wounded", "H4Label"))
 		var why := "Cut down to the last in its last fight." if injured else ("%s went down in its last fight." % ("One soldier" if wound.fell == 1 else "%d soldiers" % wound.fell))
 		var then := " Cut down again, the squad is gone for good." if injured else ""
-		wcol.add_child(UI.rich("%s In its next fight: %s.%s" % [why, Deps.squad().wound_text(wound), then], "SmallText"))
+		var wr := UI.hbox(8)
+		wcol.add_child(wr)
+		var wt := UI.rich("%s In its next fight: %s.%s" % [why, Deps.squad().wound_text(wound), then], "SmallText")
+		wt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		wt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		wr.add_child(wt)
+		if g.get("expedition") == null:
+			var dc: int = Game.dress_cost(g, so)
+			var db := RichButton.make(["Dress wounds", {"icon": "silver", "size": 13}, str(dc)], "GoldSmallButton", _dress_wounds)
+			db.name = "DressWounds"
+			db.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			db.disabled = g.resources.silver < dc
+			Tip.attach(db, "The Infirmary dresses the wounds: the squad marches with the next expedition at full strength (%d silver)." % dc)
+			wr.add_child(db)
 		col.add_child(wc)
 
 	# Empty places in the ranks.
@@ -320,6 +333,15 @@ func _icon_line(icon: String, bbcode: String) -> HBoxContainer:
 func _reinforce(count: int) -> void:
 	var Game = Deps.game()
 	if Game.reinforce(App.game, soldier_id, count):
+		App.sfx("coin")
+		App.commit()
+	else:
+		App.sfx("deny")
+
+
+func _dress_wounds() -> void:
+	var Game = Deps.game()
+	if Game.dress_wounds(App.game, soldier_id):
 		App.sfx("coin")
 		App.commit()
 	else:

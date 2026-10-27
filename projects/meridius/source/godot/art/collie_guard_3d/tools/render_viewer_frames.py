@@ -4,8 +4,8 @@
 
 As the footman's (footman_3d/tools/render_preview.py, mode "clip"), whose clips he plays:
 the game's camera (orthographic, 30 degrees down), flat textures with an outline, cavity,
-transparent film, 2.6 m over 560 px (215 px per metre), 520 x 560 px; a clip marked ":wide" (the blows, the
-charges and the death, which carry him out of that frame) gets 1000 x 960 px with the same
+transparent film, 2.6 m over 560 px (215 px per metre), 520 x 560 px; a clip marked ":wide" (the guard,
+the blows, the charges and the death, which carry him out of that frame) gets 1000 x 960 px with the same
 centre. One PNG per frame at 30 fps in <out>/<name>_<facing>/NNNN.png, and
 <out>/render_info.json. "=name" renames a clip to the game's name, as export_godot.py does
 (the .blend's "stand" is his idle, its "idle" the guard idle). The facings default to all
@@ -24,7 +24,7 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 out = Path(argv[0])
 out.mkdir(parents=True, exist_ok=True)
 specs = argv[1].split(",") if len(argv) > 1 and argv[1] else [
-    "stand=idle", "idle=idle_guard", "start", "walk", "stop", "attack:wide", "block", "hit", "block_hit",
+    "stand=idle", "idle=idle_guard:wide", "start", "walk", "stop", "attack:wide", "block", "hit", "block_hit",
     "death:wide", "lane=step_lane", "turn_90", "turn_180", "run", "charge_hit:wide", "attack_stab:wide",
     "charge_stab:wide", "attack_thrust:wide", "charge_thrust:wide"]
 facings = (argv[2] if len(argv) > 2 and argv[2] else "sw,se,nw,ne").split(",")

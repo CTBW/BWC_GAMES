@@ -192,8 +192,9 @@ the men are the plain footman.
   sent back the way it came puts its rear rank in front. The file leader sets
   off first and the others a moment after, the rear rank last; each walks at
   his own pace (0.95x to 1.05x) and comes to rest a few centimetres off his
-  exact place, turned a few degrees (up to 30 cm where his whole strides do
-  not fit the way, or where he stood that near and did not move).
+  exact place, turned a few degrees (up to 30 cm where he stood that near and
+  did not move). His strides lengthen or shorten to land him on it, his legs
+  reaching for them.
 - **Standing.** Each man's idle starts at its own phase, and every so often
   each plays his guard idle at his own moment.
 - **Fighting.** Click a foe or a dummy (or **1** / **Space**). The squad
@@ -272,10 +273,15 @@ grass (0.29, 0.40, 0.17) showed as (0.04, 0.13, 0.0). Keep it out.
   (a short procedural flinch when the model has no hit clip), a random death
   among its death clips, revive, stances, and the moves its clips allow,
   found by their names (the footman has them all): the march's start and stop
-  (`start`, `stop`: moved by their own travel and planned in whole strides to
-  halt on the spot), turns in place (`turn_90`, `turn_90_r`, `turn_180`), the
-  charge (`run` and `charge_hit`, `charge_thrust`, `charge_stab`), the block
-  (`block`, `block_hit`) and the lane step (`lane`).
+  (`start`, `stop`: moved by their own travel and planned in whole strides,
+  stretched up to 20 % to halt on the spot), turns in place (`turn_90`,
+  `turn_90_r`, `turn_180`), the charge (`run` and `charge_hit`,
+  `charge_thrust`, `charge_stab`), the block (`block`, `block_hit`) and the
+  lane step (`lane`).
+- `scripts/stride_warp.gd`: the march's stretch in his steps. Up to 15 % each
+  step lengthens or shortens along his heading, the leg reaching for it (two-
+  bone IK, the knee where the clip has it) and the hips coming down as far as
+  the reach needs, so the feet stay planted. Beyond that they slip.
 - `scripts/fx3d.gd`: sparks, the bolt, the arrow, fireball, chain lightning,
   frost nova and earth fist, and the succubus's kiss (`scripts/kiss_fx3d.gd`).
   A missile leaves from its unit's `missile_from()` where the sidecar gives

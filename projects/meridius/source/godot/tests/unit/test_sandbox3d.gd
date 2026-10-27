@@ -292,6 +292,50 @@ func test_crossbowman_halts_on_the_spot_with_his_stop() -> void:
 	u.free()
 
 
+## Marches with the stop land on the spot whatever their length: the strides
+## lengthen or shorten (his legs reaching, within STRIDE_WARP) and the march
+## stretches within SLACK, between the whole strides that fit.
+func test_marches_land_on_the_spot() -> void:
+	if slow("loads the footman's and crossbowman's models"): return
+	var have := 0
+	for id in ["footman", "crossbowman"]:
+		var found: Array = Roster.available().filter(func(q): return q.id == id)
+		if found.is_empty():
+			continue
+		have += 1
+		var u: Node3D = Unit3D.new()
+		u.setup(found[0].duplicate(true))
+		(Engine.get_main_loop() as SceneTree).root.add_child(u)
+		if not u.is_node_ready():
+			u._ready()
+		assert_not_null(u._warp, "%s's legs reach for the march" % id)
+		var dt := 1.0 / 30.0
+		for dist in [3.0, 3.5, 4.25, 5.25, 6.25, 8.0]:
+			var goal: Vector3 = u.position + u.forward() * dist
+			u.order_move([goal])
+			var stopped := false
+			var stride := 1.0
+			var stretch := 1.0
+			for i in 30 * 15:
+				u.player.advance(dt)
+				u._process(dt)
+				stopped = stopped or u.state == "stop"
+				stride = u._warp.stride if absf(u._warp.stride - 1.0) > absf(stride - 1.0) else stride
+				stretch = u._stretch if absf(u._stretch - 1.0) > absf(stretch - 1.0) else stretch
+				if u.state == "idle":
+					break
+			var off: Vector3 = u.position - goal
+			assert_true(stopped, "%s stopped on %.2f m" % [id, dist])
+			assert_eq(u.state, "idle", "%s stands after %.2f m" % [id, dist])
+			assert_between(absf(off.dot(u.forward())), 0.0, Unit3D.ARRIVE_TOLERANCE, "%s on the spot after %.2f m" % [id, dist])
+			assert_between(Vector2(off.x, off.z).length(), 0.0, 0.03, "%s beside it by no more than the stop's sway" % id)
+			assert_between(absf(stride - 1.0), 0.0, Unit3D.STRIDE_WARP + 1e-4, "%s's steps within STRIDE_WARP on %.2f m" % [id, dist])
+			assert_between(absf(stretch - 1.0), 0.0, Unit3D.SLACK, "%s's march within SLACK on %.2f m" % [id, dist])
+		u.free()
+	if have == 0:
+		skip("neither model is on disk")
+
+
 ## A stand-in caster for the kiss heart: casting, at her own playback.
 class Caster extends Node3D:
 	var state := "attack"

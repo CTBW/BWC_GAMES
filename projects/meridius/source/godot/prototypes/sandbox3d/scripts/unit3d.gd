@@ -19,7 +19,9 @@
 ##   start, stop        the march: he sets off and slows to a halt on the spot
 ##                      he was sent to, each step moved by its own travel
 ##                      (root_path); the walk between them is planned in whole
-##                      strides. `pace` "game" walks at the game's speed instead.
+##                      strides, lengthened or shortened to land him on it (his
+##                      legs reaching, stride_warp.gd). `pace` "game" walks at
+##                      the game's speed instead.
 ##                      Without a start (the crossbowman's) he sets off straight
 ##                      into the walk.
 ##   turn_90, turn_90_r, turn_180   turns in place (root_yaw, about `pivot`),
@@ -45,6 +47,7 @@ signal clip_event(name: String)
 const OUTLINE := preload("res://prototypes/footman_anim/shaders/outline3d.gdshader")
 const WhipFX = preload("res://prototypes/footman_anim/scripts/whip_fx.gd")
 const LocalClips = preload("res://prototypes/sandbox3d/scripts/local_clips.gd")
+const StrideWarp = preload("res://prototypes/sandbox3d/scripts/stride_warp.gd")
 const BLEND := 0.2
 ## Turning on the spot and on the march (radians a second).
 const TURN_RATE := deg_to_rad(420.0)
@@ -78,12 +81,16 @@ const TIP_SLACK := 0.25
 ## down, and about that foot, so a planted foot pivots instead of sliding.
 const FOOT_STEER_RATE := deg_to_rad(220.0)
 ## Landing on the target: the start's travel, the walk's pace and the stop's
-## travel all stretch by one factor, at most SLACK (a few centimetres a step),
-## and he may come to rest up to ARRIVE_TOLERANCE (m) short of or past it
-## (a squad's men stand off the tile's centre anyway). STRETCH_TYPICAL is a
-## normal stretch (_plan).
-const SLACK := 0.06
-const ARRIVE_TOLERANCE := 0.3
+## travel all stretch by one factor, at most SLACK, so that he comes to rest on
+## it (within ARRIVE_TOLERANCE, m). Up to STRIDE_WARP his steps lengthen or
+## shorten with it (his legs reach, stride_warp.gd), the feet planted; only
+## beyond it do they slip (a few centimetres a step). The stride follows the
+## stretch at up to WARP_RATE a second. Of the plans that land him, the one
+## with the least stretch (STRETCH_TYPICAL is a normal one, _plan).
+const SLACK := 0.2
+const STRIDE_WARP := 0.15
+const WARP_RATE := 1.0
+const ARRIVE_TOLERANCE := 0.01
 const STRETCH_TYPICAL := 0.04
 ## The game's march (battle_view.gd _play_move: a player squad, seconds per
 ## tile) and walk cycle (soldier_anim.gd STRIDE: seconds per two steps): the
@@ -187,6 +194,10 @@ var _stop_cue := {}
 var _stretch := 1.0
 var _walk_t_prev := 0.0
 var _march_run := Vector2.ZERO
+## The whole march as planned, at its own pace (0 before the walk plans it).
+var _march_x := 0.0
+## His steps' length for the march (StrideWarp, on his skeleton), if he has the legs.
+var _warp: Node = null
 ## The charge: seconds into it, the run's time last frame, and the strike's cue
 ## (as the stop's, from the run); the run so far, at its own pace and as
 ## stretched; the strike he goes for when two land about as well.
@@ -971,6 +982,8 @@ func pose_at(c: String, seconds: float) -> void:
 		return
 	state = "pose"
 	_clip = c
+	if _warp:
+		_warp.stride = 1.0
 	player.play(clips[c].anim, 0.0)
 	player.seek(seconds, true)
 	player.pause()
@@ -1010,12 +1023,14 @@ func _on_finished(_anim: StringName) -> void:
 			# The start ends on the walk's stride (within a centimetre): carry
 			# straight on from it, posed now and with no cross-fade. A fade's first
 			# frame holds the start's last pose and the next jumps two frames on.
+			_travel(root_at("start", INF), 0.0)
 			state = "walk"
 			_play(profile.get("walk", "walk"), 0.0, true)
 			player.seek(float(meta.clips.start.exit_walk_t), true)
 			_walk_t_prev = player.current_animation_position
 		"stop":
 			# The stop ends in idle's first pose.
+			_travel(root_at("stop", INF), 0.0)
 			_arrive(0.05)
 		"charge_hit", "lane":
 			# Both end in idle's first pose (the lane step one file over).
@@ -1069,6 +1084,13 @@ func _find_moves() -> void:
 		"lane": _clip_has("lane", ["root_path"]),
 		"charge": not _feet.is_empty() and clips.has("run") and not strikes().is_empty(),
 	}
+	if _moves.march and skeleton:
+		_warp = StrideWarp.new()
+		if _warp.setup(_bone, _skeleton_xf().basis):
+			skeleton.add_child(_warp)
+		else:
+			_warp.free()
+			_warp = null
 	if _feet.is_empty():
 		return
 	if _moves.charge:
@@ -1263,6 +1285,7 @@ func _march() -> void:
 		# Off again before he has settled (or off the charge): straight into the stride.
 		_full_march = path_length() >= travel_of("stop") + 0.3
 		_march_run = Vector2.ZERO
+		_march_x = 0.0
 		_start_walk()
 		return
 	# A first corner within half a metre is the centre of the tile he already
@@ -1306,11 +1329,14 @@ func _set_off() -> void:
 		start = travel_of("start") + walk_speed() * fposmod(enter - float(meta.clips.start.exit_walk_t), L)
 	_full_march = pace != "game" and path_length() >= (start + travel_of("stop")) * (1.0 - SLACK)
 	_march_run = Vector2.ZERO
+	_march_x = 0.0
 	if _full_march and _moves.start:
 		state = "start"
 		_root_prev = Vector2.ZERO
 		# The whole march planned at once: the start, whole strides, the stop.
-		_stretch = _plan(path_length(), start + travel_of("stop"), walk_speed() * L).stretch
+		var plan := _plan(path_length(), start + travel_of("stop"), walk_speed() * L)
+		_stretch = plan.stretch
+		_march_x = start + travel_of("stop") + int(plan.k) * walk_speed() * L
 		_play("start")
 	else:
 		_start_walk()
@@ -1361,6 +1387,19 @@ func _plan(R: float, fixed: float, C: float, slack: float = SLACK, tolerance: fl
 		if best.is_empty() or score < best.score:
 			best = {"k": k, "stretch": st, "score": score}
 	return best
+
+
+## Moves him by the start's or stop's travel since the last frame, up to `r`
+## (root_at), as stretched; returns that move. Its last frame comes with
+## animation_finished, before _process, so _on_finished moves him by it.
+func _travel(r: Vector2, sdt: float) -> Vector2:
+	var d := r - _root_prev
+	_root_prev = r
+	d.y *= _stretch
+	_move_along(d.y, sdt)
+	_march_run += Vector2(d.y / _stretch, d.y)
+	position += Vector3(d.x, 0, 0).rotated(Vector3.UP, rotation.y)
+	return d
 
 
 ## `at`: how far the walk has gone past enter_walk_t this frame. The stop starts
@@ -1573,13 +1612,7 @@ func _process(dt: float) -> void:
 			else:
 				_walk(sdt)
 		"start", "stop":
-			var r := root_at(state, player.current_animation_position)
-			var d := r - _root_prev
-			_root_prev = r
-			d.y *= _stretch
-			_move_along(d.y, sdt)
-			_march_run += Vector2(d.y / _stretch, d.y)
-			position += Vector3(d.x, 0, 0).rotated(Vector3.UP, rotation.y)
+			var d := _travel(root_at(state, player.current_animation_position), sdt)
 			speed_now = d.length() / maxf(sdt, 1e-4)
 		"turn":
 			var curve: Array = _turn.curve
@@ -1599,6 +1632,12 @@ func _process(dt: float) -> void:
 			_charge_hit_step(sdt)
 		"idle":
 			_rest(sdt)
+	if _warp:
+		# The march's stretch, as far as STRIDE_WARP goes, in his steps.
+		var want := 1.0
+		if (state == "walk" and _full_march) or state in ["start", "stop"]:
+			want = clampf(_stretch, 1.0 - STRIDE_WARP, 1.0 + STRIDE_WARP)
+		_warp.stride = move_toward(_warp.stride, want, WARP_RATE * sdt)
 	if not _feet.is_empty():
 		_measure_feet(sdt)
 
@@ -1690,19 +1729,36 @@ func _march_walk(sdt: float) -> void:
 		var L := player.current_animation_length
 		var t := player.current_animation_position
 		var enter := float(meta.clips.stop.enter_walk_t)
-		var crossed := (_walk_t_prev <= enter and enter < t) or (t < _walk_t_prev and (enter >= _walk_t_prev or enter < t))
+		var t_prev := _walk_t_prev
+		var crossed := (t_prev <= enter and enter < t) or (t < t_prev and (enter >= t_prev or enter < t))
 		_walk_t_prev = t
 		if crossed and not _stop_cue.is_empty() and int(_stop_cue.k) == 0 and not _stop_cue.skip:
+			# The walk up to the crossing, then the stop from it.
+			var pre := walk_speed() * fposmod(enter - t_prev, L)
+			_move_along(pre * _stretch, sdt)
+			_march_run += Vector2(pre, pre * _stretch)
 			_begin_stop(fposmod(t - enter, L))
 			return
 		var d_next := walk_speed() * fposmod(enter - t, L)
-		var skip := _march_run.x + d_next < 0.5 * walk_speed() * L
+		# This frame's step (the walk from last frame's time to t) is still to come.
+		var step := walk_speed() * sdt
+		var skip := _march_run.x + step + d_next < 0.5 * walk_speed() * L
 		if skip:
 			d_next += walk_speed() * L
-		_stop_cue = _plan(path_length() + _march_run.y, _march_run.x + d_next + travel_of("stop"), walk_speed() * L)
+		var C := walk_speed() * L
+		var R := path_length() + _march_run.y
+		var fixed := _march_run.x + step + d_next + travel_of("stop")
+		_stop_cue = _plan(R, fixed, C)
+		# The strides planned so far stay while they land him: two plans landing
+		# about as well would otherwise take turns, his stride jumping between them.
+		var k := roundi((_march_x - fixed) / C)
+		if _march_x > 0.0 and k >= 0 and absf(R / (fixed + k * C) - 1.0) <= SLACK:
+			_stop_cue = {"k": k, "stretch": R / (fixed + k * C)}
+		_march_x = fixed + int(_stop_cue.k) * C
 		_stop_cue.skip = skip
-		# What is left takes the stretch that brings the whole march to the plan's.
-		var rest := maxf(d_next + int(_stop_cue.k) * walk_speed() * L + travel_of("stop"), 0.5)
+		# What is left, this step on, takes the stretch that brings the whole
+		# march to the plan's.
+		var rest := maxf(step + d_next + int(_stop_cue.k) * walk_speed() * L + travel_of("stop"), 0.5)
 		_stretch = clampf((float(_stop_cue.stretch) * (_march_run.x + rest) - _march_run.y) / rest, 1.0 - SLACK, 1.0 + SLACK)
 		spd *= _stretch
 		_move_along(spd * sdt, sdt)

@@ -1037,12 +1037,13 @@ func _rout(u: Dictionary) -> void:
 # ---------------------------------------------------------------- damage
 
 func _fall(u: Dictionary, killer: Variant = null) -> void:
-	# A company squad cut down rises again after the fight, Injured; cut down
-	# while still Injured from its last fight, it is gone for good.
+	# A company squad cut down rises again after the fight, Injured, less the
+	# soldiers still hurt from its last fight (Squad.hurt_of), who die. Cut
+	# down with every soldier hurt (always so when Injured), it is gone for good.
 	var dead := true
+	var w: Variant = u.get("wound")
 	if u.faction == "player":
-		var w: Variant = u.get("wound")
-		dead = w != null and w.kind == "injured"
+		dead = w != null and (w.kind == "injured" or w.get("hurt", 0) >= w.get("marched", u.size + 1))
 	u.status = "dead" if dead else "downed"
 	u.erase("stance")
 	u.hp = 0
@@ -1055,6 +1056,8 @@ func _fall(u: Dictionary, killer: Variant = null) -> void:
 		text = "%s is slain." % name
 	elif dead:
 		text = "%s are wiped out to the last." % name
+	elif w != null:
+		text = "%s are cut down to the last; those still hurt from the last fight die, the rest are dragged clear." % name
 	else:
 		text = "%s are cut down to the last; the wounded are dragged clear." % name
 	_log(text, "bad" if u.faction == "player" else "good")

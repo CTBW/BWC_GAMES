@@ -231,11 +231,10 @@ func refresh() -> void:
 		wc.add_child(wcol)
 		var injured: bool = wound.kind == "injured"
 		wcol.add_child(UI.label("Injured" if injured else "Wounded", "H4Label"))
-		var why := "Cut down to the last in its last fight." if injured else ("%s went down in its last fight." % ("One soldier" if wound.fell == 1 else "%d soldiers" % wound.fell))
-		var then := " Cut down again, the squad is gone for good." if injured else ""
+		var why := "Cut down to the last in its last fight." if injured else ("%s still hurt from its last fight." % ("One soldier is" if wound.hurt == 1 else "%d soldiers are" % wound.hurt))
 		var wr := UI.hbox(8)
 		wcol.add_child(wr)
-		var wt := UI.rich("%s In its next fight: %s.%s" % [why, Deps.squad().wound_text(wound), then], "SmallText")
+		var wt := UI.rich("%s In its next fight: %s. %s." % [why, Deps.squad().wound_text(wound), Deps.squad().hurt_text(wound)], "SmallText")
 		wt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		wt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		wr.add_child(wt)
@@ -245,7 +244,7 @@ func refresh() -> void:
 			db.name = "DressWounds"
 			db.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			db.disabled = g.resources.silver < dc
-			Tip.attach(db, "The Infirmary dresses the wounds: the squad marches with the next expedition at full strength (%d silver)." % dc)
+			Tip.attach(db, "The Infirmary dresses the wounds: the squad marches with the next expedition at full strength, and its soldiers who go down rise again (%d silver; new soldiers for the hurt would cost %d)." % [dc, Game.reinforce_cost(g, so) * wound.hurt])
 			wr.add_child(db)
 		col.add_child(wc)
 

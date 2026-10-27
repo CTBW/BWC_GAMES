@@ -796,9 +796,9 @@ static func unit_info(view: Object, u: Dictionary) -> Control:
 	if wound != null:
 		var wl: String
 		if wound.kind == "injured":
-			wl = "Injured in its last fight: %s. Cut down again, the squad is gone for good." % Squad.wound_text(wound)
+			wl = "Injured in its last fight: %s. %s." % [Squad.wound_text(wound), Squad.hurt_text(wound)]
 		else:
-			wl = "Wounded in its last fight (%d went down): %s." % [wound.fell, Squad.wound_text(wound)]
+			wl = "Wounded in its last fight (%d still hurt): %s. %s." % [wound.get("hurt", wound.fell), Squad.wound_text(wound), Squad.hurt_text(wound)]
 		var wlc := _small(wl, Color("#8a1f15"))
 		wlc.name = "Wound"
 		col.add_child(H.margin(wlc, 4, 0, 0, 0))

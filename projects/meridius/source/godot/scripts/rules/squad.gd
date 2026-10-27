@@ -46,28 +46,41 @@ static func kills_from(s: Dictionary, damage: Variant) -> int:
 
 # ---------------------------------------------------------------- wounds
 
-## Soldiers who go down in a fight rise again after it, but the squad carries
-## their wounds into its next fight: for the whole squad's worth of fallen,
-## 30% less damage and defense and 30 less morale (2 of 6 down: 10%, 10).
+## Soldiers who go down in a fight rise again after it, hurt, and the squad
+## carries their wounds into its next fight: for the whole squad's worth of
+## fallen, 30% less damage and defense and 30 less morale (2 of 6 down: 10%,
+## 10). In that fight the first of them to go down again die for good.
 const WOUND_PENALTY := 0.3
 const WOUND_MORALE := 30
 ## A squad cut down to the last soldier rises Injured: 40% less damage and
-## defense, 30 less morale, and gone for good if it is cut down again.
+## defense, 30 less morale, and every soldier of it hurt: each who goes down
+## in its next fight dies, and cut down again, the squad is gone for good.
 const INJURED_PENALTY := 0.4
 const INJURED_MORALE := 30
 
 
 ## The penalty a roster squad (`wounded`, `injured`) carries into its next fight:
-## {kind: "wounded" | "injured", fell, damage, defense, morale}, or null.
+## {kind: "wounded" | "injured", fell, hurt, damage, defense, morale}, or null.
+## `hurt` soldiers are still hurt (Squad.hurt_of).
 static func wound_of(s: Dictionary) -> Variant:
 	var size: int = DB.squad_size(s.typeId)
 	if s.get("injured", false):
-		return {"kind": "injured", "fell": size, "damage": INJURED_PENALTY, "defense": INJURED_PENALTY, "morale": INJURED_MORALE}
+		return {"kind": "injured", "fell": size, "hurt": hurt_of(s), "damage": INJURED_PENALTY, "defense": INJURED_PENALTY, "morale": INJURED_MORALE}
 	var fell: int = s.get("wounded", 0)
 	if fell <= 0:
 		return null
 	var share := float(fell) / size
-	return {"kind": "wounded", "fell": fell, "damage": WOUND_PENALTY * share, "defense": WOUND_PENALTY * share, "morale": JS.rnd(WOUND_MORALE * share)}
+	return {"kind": "wounded", "fell": fell, "hurt": hurt_of(s), "damage": WOUND_PENALTY * share, "defense": WOUND_PENALTY * share, "morale": JS.rnd(WOUND_MORALE * share)}
+
+
+## Soldiers of a roster squad still hurt from its last fight: in its next
+## fight the first of them to go down die for good. Every soldier of an
+## Injured squad is hurt.
+static func hurt_of(s: Dictionary) -> int:
+	var men: int = s.get("men", DB.squad_size(s.typeId))
+	if s.get("injured", false):
+		return men
+	return mini(s.get("wounded", 0), men)
 
 
 ## Clears the penalty a squad carries from its last fight (wounded or Injured):
@@ -86,6 +99,15 @@ static func wound_mult(u: Dictionary) -> float:
 ## "−10% damage and defense, −10 morale".
 static func wound_text(w: Dictionary) -> String:
 	return "−%d%% damage and defense, −%d morale" % [JS.rnd(w.damage * 100), w.morale]
+
+
+## What going down costs a squad carrying `w` (a wound_of result), without the
+## full stop: "The first 2 soldiers to go down die".
+static func hurt_text(w: Dictionary) -> String:
+	if w.kind == "injured":
+		return "Every soldier who goes down dies; cut down to the last, the squad is gone for good"
+	var n: int = w.get("hurt", w.fell)
+	return "The first soldier to go down dies" if n == 1 else "The first %d soldiers to go down die" % n
 
 
 ## "soldier" or "soldiers" in the unit's own words: "goblin spearman", "moss trolls", "crewman" of a war machine.

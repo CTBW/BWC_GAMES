@@ -1135,3 +1135,48 @@ the field or of the men. The four 3D battlefields keep their ground (about
   the rules suites (`--quick tests/unit` and the parity suites) and the 3D
   battle in a window (`tests/visual/battle3d_flow.gd`, a victory in 7 turns)
   pass.
+
+### 2026-10-27 - Rule: the hurt die if they go down again; dressing costs less than new soldiers
+
+The owner's rule (rules chat): a hurt soldier who goes down again dies, a
+squad cut down while Injured is dead, and dressing wounds costs less than
+refilling the ranks, so scarce silver decides which squads and soldiers are
+kept fit to fight. The owner chose that every wounded soldier counts, not
+only Injured squads.
+
+- A squad's soldiers who went down in its last fight are still hurt
+  (`Squad.hurt_of`: its `wounded`, or every soldier of an Injured squad). In
+  its next fight the first of its soldiers to go down are the hurt ones, and
+  they die (`Expedition.apply_battle`): the squad loses them for good (`men`,
+  `menLost`, a chronicle line); the others who went down rise wounded as
+  before. That fight spends the penalty, as before.
+- Cut down to the last, a wounded squad loses its hurt and the rest rise
+  Injured. If every soldier who marched was hurt (an Injured squad always),
+  it is dead and leaves the roster. `Soldier.soldier_to_unit` gives the
+  unit's wound `hurt` (of the soldiers who march) and `marched`, so
+  `Battle._fall` knows; its log line for a wounded squad reads "those still
+  hurt from the last fight die, the rest are dragged clear". An Injured squad
+  that is not cut down loses each soldier who went down.
+- The Infirmary's new effect `dressCost` (0.5 / 0.4 / 0.3) prices dressing:
+  that share of a new soldier's price (`Game.reinforce_cost`) for each hurt
+  soldier, rounded up (`Game.dress_cost`). Two hurt footmen of six cost
+  6 / 5 / 4 silver (was 14 / 9 / 5); an Injured footman squad 18 / 15 / 11
+  (was 80 / 50 / 30), against 36 for six new footmen. `treatCost` still
+  prices lasting injuries. The Infirmary's level descriptions say so.
+- Texts: the Wounded (n) tag counts the hurt; the tags, the squad detail's
+  wound card (its dress button compares the price with new soldiers), the
+  battle hover panel, the Infirmary panel, the report's advice and the Field
+  Manual say who dies. The Manual's "The dead stay dead" still described
+  field triage, retired on 26 October; it now describes this rule.
+- Report keys: `losses[].lost` counts the hurt who died; `fate` is `died`
+  when every soldier of the squad who went down died.
+- Goldens: none re-recorded. `meta_golden.json` has no recorder:
+  `test_meta_parity` adds today's `infirmary.dressCost` to the recorded
+  queries and next levels. The battle traces were run and are unchanged, as
+  no trace fields a wounded squad. The campaign baseline
+  (`test_campaign_parity`) was not checked: hurt soldiers now die and the
+  automation dresses for less, so its runs will differ from the recording.
+- Tests: `test_meta_squads` (the hurt die first, an Injured squad loses each
+  who goes down, a wounded squad cut down loses its hurt and rises Injured,
+  one with every soldier hurt is gone, dressing costs less than new soldiers
+  for every type, rank and Infirmary level).

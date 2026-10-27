@@ -39,9 +39,11 @@ static func wound_tag(so: Dictionary, font_size := 0) -> Control:
 
 static func wound_chip(w: Dictionary, font_size := 0) -> Control:
 	var effect: String = Deps.squad().wound_text(w)
+	var then: String = Deps.squad().hurt_text(w)
 	if w.kind == "injured":
-		return Tag.make("Injured", "red", "", font_size, "Cut down to the last in its last fight. Next fight: %s. Cut down again, the squad is gone for good." % effect)
-	return Tag.make("Wounded (%d)" % w.fell, "gold", "", font_size, "%s went down in its last fight. Next fight: %s." % ["One soldier" if w.fell == 1 else "%d soldiers" % w.fell, effect])
+		return Tag.make("Injured", "red", "", font_size, "Cut down to the last in its last fight. Next fight: %s. %s." % [effect, then])
+	var n: int = w.get("hurt", w.fell)
+	return Tag.make("Wounded (%d)" % n, "gold", "", font_size, "%s still hurt from its last fight. Next fight: %s. %s." % ["One soldier is" if n == 1 else "%d soldiers are" % n, effect, then])
 
 
 static func squad_order(type_id: String) -> int:

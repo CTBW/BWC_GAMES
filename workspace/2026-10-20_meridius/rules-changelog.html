@@ -21,9 +21,66 @@
   <h1>Meridius: rules changelog</h1>
   <p>Every rule implemented in the main game from the rules chat, newest first. Each entry gives the rule as it now plays, the numbers, what it replaced, the code and tests that changed, and the calls still open for the owner.</p>
 
+  <section class="entry" id="2026-10-27-hurt-die">
+    <h2>The hurt die if they go down again; dressing costs less than new soldiers</h2>
+    <p class="meta">27 October 2026 · Godot, <code>godot-migration</code> · committed (the hash goes in with the next rules entry)</p>
+
+    <h3>The rule</h3>
+    <ul>
+      <li><b>Every wounded soldier is hurt.</b> A Wounded (2) squad carries two hurt soldiers into its next fight. The first of its soldiers to go down in that fight are the hurt ones, and they <b>die</b>. Anyone else who goes down rises again, wounded, as before.</li>
+      <li><b>An Injured squad is all hurt:</b> every soldier who goes down in its next fight dies, and if the whole squad goes down it is gone for good.</li>
+      <li><b>A Wounded squad cut down to the last</b> loses its hurt soldiers; the rest rise Injured. If every soldier who marched was hurt, the squad is gone.</li>
+      <li>The next fight spends the wounds, as before. A camp rest, a bandage or the Infirmary clears them first, and with them the danger.</li>
+      <li><b>Dressing costs less than new soldiers.</b> The Infirmary charges a share of a new soldier's price for each hurt soldier: half at the Surgeon's Tent, 40% at the Infirmary, 30% at the House of Healing, rounded up. Veteran squads cost more to dress, as they cost more to refill.</li>
+    </ul>
+
+    <h3>An example</h3>
+    <p>Aldric's six footmen come out of a fight Wounded (2). Undressed, they march into the next one; three of them go down. The two hurt men die and the third rises wounded: the squad is now five, Wounded (1). Dressed at the Surgeon's Tent for 6 silver, all three would have risen again. Replacing the two dead costs 12.</p>
+
+    <h3>The price in silver (a recruit footman squad of six)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Hurt soldiers</th><th>Surgeon's Tent (level 1)</th><th>Infirmary (level 2)</th><th>House of Healing (level 3)</th><th>New soldiers at the Barracks</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>3</td><td>3</td><td>2</td><td>6</td></tr>
+          <tr><td>2</td><td>6</td><td>5</td><td>4</td><td>12</td></tr>
+          <tr><td>3</td><td>9</td><td>8</td><td>6</td><td>18</td></tr>
+          <tr><td>4</td><td>12</td><td>10</td><td>8</td><td>24</td></tr>
+          <tr><td>5</td><td>15</td><td>12</td><td>9</td><td>30</td></tr>
+          <tr><td>All six: Injured</td><td>18</td><td>15</td><td>11</td><td>36</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Before this change dressing cost the treatment price for each whole squad's worth of fallen: 14 / 9 / 5 for two of six, 80 / 50 / 30 for an Injured squad, more than refilling the ranks.</p>
+
+    <h3>Where you see it</h3>
+    <ul>
+      <li>The Wounded (n) tag counts the hurt soldiers, and its tooltip, the squad detail's wound card and the battle's squad panel say who dies: "The first 2 soldiers to go down die", or for an Injured squad "Every soldier who goes down dies".</li>
+      <li>The Infirmary panel's intro and button tooltips, and the squad detail's <b>Dress wounds</b> button, which compares the price with new soldiers.</li>
+      <li>The battle log: "cut down to the last; those still hurt from the last fight die, the rest are dragged clear". The chronicle notes the hurt who fell for good, and the expedition report counts them among the soldiers who died.</li>
+      <li>The Field Manual (Squads, Morale and Rout). Its "The dead stay dead" paragraph still described field triage, retired on 26 October; it now describes this rule.</li>
+    </ul>
+
+    <h3>Code and checks</h3>
+    <ul>
+      <li>Rules: <code>Squad.hurt_of</code> in <code>scripts/rules/squad.gd</code>; <code>Expedition.apply_battle</code>; <code>Battle._fall</code>; <code>Soldier.soldier_to_unit</code>; <code>Game.dress_cost</code>. <code>buildings.json</code>: the Infirmary's new effect <code>dressCost</code> (0.5 / 0.4 / 0.3) and its level descriptions.</li>
+      <li>Screens: <code>soldier_card.gd</code>, <code>soldier_detail.gd</code>, <code>hud_battle_panels.gd</code>, <code>building_panel.gd</code>, <code>report_screen.gd</code>, <code>manual.gd</code>.</li>
+      <li>Tests: five rule tests in <code>test_meta_squads</code>, among them one that checks dressing costs less than new soldiers for every unit type, rank and Infirmary level.</li>
+      <li>No baseline re-recorded; the battle traces never field a wounded squad. The campaign baseline was not checked. Details in <code>MIGRATION.md</code> and <code>docs/squads.md</code>.</li>
+    </ul>
+
+    <h3>Calls made in implementing it (open to change)</h3>
+    <ul>
+      <li>The hurt are always the first to go down. The rule does not pick at random which of the fallen were the hurt ones.</li>
+      <li>The shares (50% / 40% / 30%) are new numbers. Whether silver is scarce enough to force a choice depends on the economy (stipend, loot, prices), which this change leaves alone.</li>
+      <li>An Injured squad that is not cut down comes out of the fight with no penalty; it has lost only its dead.</li>
+      <li>The squad's compact line in the battle's unit list still shows the penalty only; the hover panel says who dies.</li>
+    </ul>
+  </section>
+
   <section class="entry" id="2026-10-27-infirmary">
     <h2>The Infirmary dresses wounds at home</h2>
-    <p class="meta">27 October 2026 · Godot, <code>godot-migration</code> · committed</p>
+    <p class="meta">27 October 2026 · Godot, <code>godot-migration</code> · committed in <code>8a952f6</code></p>
 
     <h3>The rule</h3>
     <ul>
@@ -61,13 +118,13 @@
     <ul>
       <li>Rules: <code>Game.dress_cost</code> and <code>Game.dress_wounds</code> in <code>scripts/meta/game.gd</code>; <code>Squad.tend_wounds</code> moved to <code>scripts/rules/squad.gd</code>; <code>Autoplay.auto_prepare</code>. <code>buildings.json</code> changes text only.</li>
       <li>Screens: <code>building_panel.gd</code> (Infirmary), <code>soldier_detail.gd</code>, <code>report_screen.gd</code>, <code>manual.gd</code>. Checked in a 1920×1080 window.</li>
-      <li>Tests: two rule tests in <code>test_meta_squads</code>, one screen test in <code>test_screens</code>. Every suite but the whole-campaign test passes: 443 passed, 0 failed, 14 skipped, and the slow battle traces (77 traces) match unchanged.</li>
+      <li>Tests: two rule tests in <code>test_meta_squads</code>, one screen test in <code>test_screens</code>. Every suite but the whole-campaign test passes on the committed tree: 435 passed, 0 failed, 14 skipped, and the slow battle traces (77 traces) match unchanged.</li>
       <li>No baseline re-recorded. The campaign baseline was not checked: the automation now spends silver on dressing. Details in <code>MIGRATION.md</code> and <code>docs/squads.md</code>.</li>
     </ul>
 
     <h3>Calls made in implementing it (open to change)</h3>
     <ul>
-      <li>The price reuses the Infirmary's treatment cost rather than a new number per level. Two fallen cost more than refilling two empty places in a recruit squad.</li>
+      <li>The price reuses the Infirmary's treatment cost rather than a new number per level. Two fallen cost more than refilling two empty places in a recruit squad. <a href="#2026-10-27-hurt-die">Changed on 27 October: dressing now costs less than new soldiers.</a></li>
       <li>Dressing wounds does not bench the squad.</li>
       <li>There is no free remedy at home: a squad that sits out an expedition still carries its wounds into its next fight.</li>
       <li>One button per squad, no "dress every squad" button.</li>

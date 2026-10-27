@@ -20,8 +20,9 @@ func before_all() -> void:
 
 
 # The Infirmary lost its survival bonus with the wound rule (MIGRATION.md
-# 2026-10-26): queries carry no survival effect, and its levels describe
-# treatment only. Every other field is compared as recorded.
+# 2026-10-26) and gained the price of dressing wounds (2026-10-27): queries
+# carry no survival effect but today's dressCost, and its levels describe
+# today's treatment. Every other field is compared as recorded.
 func _retire_infirmary_survival() -> void:
 	var levels: Array = DB.building_by_id("infirmary").levels
 	for sc in golden.scripts:
@@ -30,8 +31,12 @@ func _retire_infirmary_survival() -> void:
 				continue
 			st.ret.effects.erase("infirmary.survival")
 			for nl in st.ret.nextLevels:
-				if nl.id == "infirmary" and nl.next != null:
+				if nl.id != "infirmary":
+					continue
+				st.ret.effects["infirmary.dressCost"] = levels[nl.level - 1].effects.dressCost
+				if nl.next != null:
 					nl.next.effects.erase("survival")
+					nl.next.effects.dressCost = levels[nl.next.level - 1].effects.dressCost
 					nl.next.description = levels[nl.next.level - 1].description
 
 

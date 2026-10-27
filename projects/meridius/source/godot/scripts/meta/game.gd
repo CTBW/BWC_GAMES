@@ -557,16 +557,14 @@ static func treat(g: Dictionary, id: String, injury_id: String) -> bool:
 
 
 ## Silver for the Infirmary to dress the wounds a squad carries from its last
-## fight: a whole squad's worth of fallen costs one severity of treatment
-## (rounded up), an Injured squad two. 0 when it carries none.
+## fight: a share of a new soldier's price (reinforce_cost) for each soldier
+## still hurt (Squad.hurt_of), rounded up, so dressing a soldier always costs
+## less than replacing him. 0 when it carries none.
 static func dress_cost(g: Dictionary, s: Dictionary) -> int:
 	var w: Variant = Squad.wound_of(s)
 	if w == null:
 		return 0
-	var per: int = effect(g, "infirmary", "treatCost")
-	if w.kind == "injured":
-		return per * 2
-	return ceili(float(per * w.fell) / DB.squad_size(s.typeId))
+	return ceili(reinforce_cost(g, s) * w.hurt * float(effect(g, "infirmary", "dressCost")))
 
 
 ## At home, the surgeons dress a squad's wounds: it marches with the next

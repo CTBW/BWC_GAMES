@@ -892,10 +892,12 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		"losses": [],
 		"boltsUsed": 0,
 	}
-	# The soldiers who went down rise again once the fighting is over. Their
-	# wounds weaken the squad in its next fight (Squad.wound_of); the penalty
-	# it carried into this one is spent. A squad cut down to the last rises
-	# Injured; cut down again while Injured, it is gone for good.
+	# The soldiers who went down rise again once the fighting is over, hurt.
+	# Their wounds weaken the squad in its next fight (Squad.wound_of); the
+	# penalty it carried into this one is spent. Soldiers still hurt from the
+	# last fight die if they go down again: the first of the squad to go down
+	# are the hurt ones (Squad.hurt_of). A squad cut down to the last rises
+	# Injured, all hurt; cut down again while Injured, it is gone for good.
 	for u in b.units.filter(func(x: Dictionary) -> bool: return x.faction == "player" and x.get("soldierId") != null):
 		var s: Variant = null
 		for r in g.roster:
@@ -911,9 +913,16 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 		# Soldiers who marched into the battle (as soldier_to_unit fielded them).
 		var men0: int = maxi(1, mini(size, s.men))
 		var marched: int = Squad.alive_for(maxi(1, mini(s.hp, st.hp * men0)), st.hp, men0)
+		var hurt: int = mini(Squad.hurt_of(s), marched)
 		s.erase("wounded")
 		s.erase("injured")
-		if u.status == "dead":
+		var status: String = u.status
+		var died := 0
+		if status == "downed":
+			died = hurt
+			if men0 - died <= 0:
+				status = "dead"
+		if status == "dead":
 			report.fallen.append({"name": s.name, "typeId": s.typeId, "level": s.level})
 			report.losses.append({"name": s.name, "typeId": s.typeId, "fell": marched, "lost": s.men, "men": 0, "size": size, "fate": "gone"})
 			ex.menLost = JS.get_or(ex, "menLost", 0) + s.men
@@ -923,29 +932,37 @@ static func apply_battle(g: Dictionary, b: RefCounted, title: String, objective:
 			ex.army = ex.army.filter(func(id: String) -> bool: return id != sid)
 			Game.chronicle(g, "%s and his %s fell at %s." % [s.name, String(DB.UNIT_TYPES[s.typeId].plural).to_lower(), title], "bad")
 			continue
-		if u.status == "downed":
-			# Cut down to the last: the squad rises whole, Injured. The penalty,
-			# not the pool or its spirit, carries the blow into the next fight.
-			s.men = men0
+		if status == "downed":
+			# Cut down to the last: the hurt die, the rest rise whole, Injured.
+			# The penalty, not the pool or its spirit, carries the blow into the
+			# next fight.
+			s.men = men0 - died
 			s.hp = Soldier.squad_hp_cap(s)
 			s.morale = st.morale
 			s.injured = true
 			report.injured.append(s.name)
-			report.losses.append({"name": s.name, "typeId": s.typeId, "fell": marched, "lost": 0, "men": s.men, "size": size, "fate": "injured"})
+			report.losses.append({"name": s.name, "typeId": s.typeId, "fell": marched, "lost": died, "men": s.men, "size": size, "fate": "injured"})
 		else:
-			# The survivors keep their scratches; the fallen get up with their
-			# full share, wounded. (Men too hurt to march, which only an old save
-			# can have, stay as they were.)
+			# The survivors keep their scratches; of the fallen, the hurt die and
+			# the rest get up with their full share, wounded. (Men too hurt to
+			# march, which only an old save can have, stay as they were.)
 			var fell: int = maxi(0, marched - maxi(1, JS.get_or(u, "alive", marched)))
-			s.men = men0
-			s.hp = maxi(1, mini(int(u.hp) + fell * st.hp, Soldier.squad_hp_cap(s)))
+			died = mini(hurt, fell)
+			var rose := fell - died
+			s.men = men0 - died
+			s.hp = maxi(1, mini(int(u.hp) + rose * st.hp, Soldier.squad_hp_cap(s)))
+			if rose > 0:
+				s.wounded = rose
 			if fell > 0:
-				s.wounded = fell
-				report.losses.append({"name": s.name, "typeId": s.typeId, "fell": fell, "lost": 0, "men": s.men, "size": size, "fate": "wounded"})
+				report.losses.append({"name": s.name, "typeId": s.typeId, "fell": fell, "lost": died, "men": s.men, "size": size, "fate": "wounded" if rose > 0 else "died"})
 			s.morale = maxi(1, u.morale + (12 if result == "victory" else -5))
 			if u.status == "fled":
 				s.morale = maxi(1, JS.rnd(st.morale * 0.25))
 				report.routed.append(s.name)
+		if died > 0:
+			ex.menLost = JS.get_or(ex, "menLost", 0) + died
+			Game.chronicle(g, "%s of %s's %s, still hurt from the last fight, fell for good at %s." % [
+				Game.number_word(died).capitalize(), s.name, String(DB.UNIT_TYPES[s.typeId].plural).to_lower(), title], "bad")
 		s.morale = mini(st.morale, s.morale)
 		s.fatigue = mini(100, s.fatigue + 6)
 		var hits: int = JS.get_or(b.hits_taken, u.uid, 0)

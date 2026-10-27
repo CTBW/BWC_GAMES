@@ -55,7 +55,7 @@ func refresh() -> void:
 	if thin:
 		advice_parts.append("%s below strength; the Barracks can refill the ranks." % ("One squad is" if thin == 1 else "%d squads are" % thin))
 	if wounded:
-		advice_parts.append("%s the wounds of the fight; the Infirmary can dress them." % ("One squad carries" if wounded == 1 else "%d squads carry" % wounded))
+		advice_parts.append("%s the wounds of the fight, and the hurt die if they go down again; the Infirmary can dress them." % ("One squad carries" if wounded == 1 else "%d squads carry" % wounded))
 	if injured:
 		advice_parts.append("%s the surgeon." % ("One sergeant needs" if injured == 1 else "%d sergeants need" % injured))
 	if worn:

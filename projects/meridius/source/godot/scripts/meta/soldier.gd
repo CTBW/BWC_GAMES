@@ -258,6 +258,10 @@ static func soldier_to_unit(s: Dictionary) -> Dictionary:
 	u.startMorale = s.morale
 	u.statuses = []
 	if wound != null:
+		# Of the soldiers who march, those still hurt: if that is every one of
+		# them, cut down to the last the squad is gone for good (Battle._fall).
+		wound.hurt = mini(wound.hurt, u.alive)
+		wound.marched = u.alive
 		u.wound = wound
 	return u
 

@@ -188,6 +188,105 @@ func test_a_squad_cut_down_rises_injured_and_is_gone_if_cut_down_again() -> void
 	assert_eq(g.expedition.menLost, size, "the whole squad lost")
 
 
+func _loss(report: Dictionary, s: Dictionary) -> Dictionary:
+	return report.losses.filter(func(l: Dictionary) -> bool: return l.name == s.name)[0]
+
+
+func test_the_hurt_are_the_first_to_die_when_they_go_down_again() -> void:
+	var g := _on_expedition(11)
+	var a: Dictionary = g.roster[0]
+	var c: Dictionary = g.roster[1]
+	var size_a: int = DB.squad_size(a.typeId)
+	var size_c: int = DB.squad_size(c.typeId)
+	var per_a: int = Soldier.soldier_stats(a).hp
+	var per_c: int = Soldier.soldier_stats(c).hp
+	a.wounded = 2
+	c.wounded = 2
+	var report := _settle(g, "victory", func(u: Dictionary, _b) -> void:
+		if u.soldierId == a.id:
+			# Three go down: the two hurt die, the third rises wounded.
+			u.alive = size_a - 3
+			u.hp = per_a * u.alive
+		elif u.soldierId == c.id:
+			# One goes down, hurt, and dies; the fight spends the other's wound.
+			u.alive = size_c - 1
+			u.hp = per_c * u.alive
+	)
+	assert_eq(a.men, size_a - 2, "the two hurt die")
+	assert_eq(a.wounded, 1, "the third rises wounded")
+	assert_eq(a.hp, per_a * (size_a - 2), "he gets up with his full share")
+	assert_eq(c.men, size_c - 1, "the hurt one who went down dies")
+	assert_eq(Squad.wound_of(c), null, "nobody rises wounded")
+	assert_eq(g.expedition.menLost, 3, "three lost for good")
+	var la := _loss(report, a)
+	assert_eq([la.fell, la.lost, la.men, la.fate], [3, 2, size_a - 2, "wounded"], "reported")
+	var lc := _loss(report, c)
+	assert_eq([lc.fell, lc.lost, lc.men, lc.fate], [1, 1, size_c - 1, "died"], "reported")
+	assert_true(g.chronicle.any(func(e: Dictionary) -> bool: return e.text.begins_with("Two of %s's " % a.name) and e.text.contains("fell for good")), "chronicled")
+	# Untouched, a squad without wounds loses nobody for good.
+	for o in g.roster.slice(2, 5):
+		assert_eq(o.men, DB.squad_size(o.typeId), "the rest rise whole")
+
+
+func test_an_injured_squad_loses_every_soldier_who_goes_down() -> void:
+	var g := _on_expedition(11)
+	var c: Dictionary = g.roster[1]
+	var size: int = DB.squad_size(c.typeId)
+	var per: int = Soldier.soldier_stats(c).hp
+	c.injured = true
+	var report := _settle(g, "victory", func(u: Dictionary, _b) -> void:
+		if u.soldierId == c.id:
+			u.alive = size - 2
+			u.hp = per * u.alive
+	)
+	assert_eq(_squad(g, c.id), c, "still on the roster")
+	assert_eq(c.men, size - 2, "both who went down die")
+	assert_eq(Squad.wound_of(c), null, "the survivors are spent of the injury, nobody rises wounded")
+	assert_eq(g.expedition.menLost, 2, "two lost for good")
+	assert_eq(_loss(report, c).fate, "died")
+
+
+func test_a_wounded_squad_cut_down_loses_its_hurt_and_rises_injured() -> void:
+	var g := _on_expedition(12)
+	var s: Dictionary = g.roster[0]
+	var size: int = DB.squad_size(s.typeId)
+	s.wounded = 2
+	var said := [false]
+	var report := _settle(g, "retreat", func(u: Dictionary, b) -> void:
+		if u.soldierId == s.id:
+			b._fall(u)
+			assert_eq(u.status, "downed", "cut down, not dead: the unhurt are dragged clear")
+			said[0] = b.events.any(func(e: Dictionary) -> bool: return e.t == "log" and String(e.text).contains("those still hurt from the last fight die"))
+	)
+	assert_true(said[0], "the battle log says so")
+	assert_eq(_squad(g, s.id), s, "still on the roster")
+	assert_eq(s.men, size - 2, "the two hurt die")
+	assert_true(s.injured, "the rest rise Injured")
+	assert_eq(s.hp, Soldier.squad_hp_cap(s), "full pool")
+	assert_eq(report.injured, [s.name], "reported")
+	assert_eq(g.expedition.menLost, 2, "two lost for good")
+	var l := _loss(report, s)
+	assert_eq([l.lost, l.men, l.fate], [2, size - 2, "injured"])
+
+
+func test_a_squad_cut_down_with_every_soldier_hurt_is_gone() -> void:
+	var g := _on_expedition(12)
+	var s: Dictionary = g.roster[0]
+	var per: int = Soldier.soldier_stats(s).hp
+	# Fever thinned the squad after its last fight; the two left are both hurt.
+	s.men = 2
+	s.hp = per * 2
+	s.wounded = 2
+	var report := _settle(g, "retreat", func(u: Dictionary, b) -> void:
+		if u.soldierId == s.id:
+			b._fall(u)
+			assert_eq(u.status, "dead", "nobody whole to drag clear")
+	)
+	assert_eq(_squad(g, s.id), null, "gone from the roster")
+	assert_eq(_loss(report, s).fate, "gone")
+	assert_eq(g.expedition.menLost, 2, "both lost")
+
+
 func test_enemies_cut_down_are_dead_and_carry_no_wounds() -> void:
 	var g := _on_expedition(12)
 	var roll := Setup.roll_encounter("raiding_party", Rng.new(4), 1)
@@ -247,13 +346,13 @@ func test_the_infirmary_dresses_wounds_at_home() -> void:
 	var g := Game.new_game(11)
 	var a: Dictionary = g.roster[0]
 	var c: Dictionary = g.roster[1]
-	var size_a := DB.squad_size(a.typeId)
 	a.wounded = 2
 	c.injured = true
-	# A whole squad's worth of fallen costs one severity of treatment, Injured two.
-	var per: int = Game.effect(g, "infirmary", "treatCost")
-	assert_eq(Game.dress_cost(g, a), ceili(float(per * 2) / size_a), "wounded: by the share that fell")
-	assert_eq(Game.dress_cost(g, c), per * 2, "injured: two severities")
+	# A share of a new soldier's price for each soldier still hurt; Injured, all of them.
+	var share: float = Game.effect(g, "infirmary", "dressCost")
+	var cost_a := ceili(Game.reinforce_cost(g, a) * 2 * share)
+	assert_eq(Game.dress_cost(g, a), cost_a, "wounded: the two still hurt")
+	assert_eq(Game.dress_cost(g, c), ceili(Game.reinforce_cost(g, c) * c.men * share), "injured: every soldier")
 	assert_eq(Game.dress_cost(g, g.roster[2]), 0, "nothing to dress")
 	g.resources.silver = Game.dress_cost(g, c) - 1
 	assert_false(Game.dress_wounds(g, c.id), "too poor")
@@ -261,7 +360,7 @@ func test_the_infirmary_dresses_wounds_at_home() -> void:
 	g.resources.silver = 500
 	assert_true(Game.dress_wounds(g, a.id), "dressed")
 	assert_eq(Squad.wound_of(a), null, "wounded: dressed")
-	assert_eq(g.resources.silver, 500 - ceili(float(per * 2) / size_a), "paid")
+	assert_eq(g.resources.silver, 500 - cost_a, "paid")
 	assert_false(a.get("recovering", false), "fit for the next expedition")
 	assert_true(Game.dress_wounds(g, c.id), "injured: dressed")
 	assert_eq(Squad.wound_of(c), null, "no longer injured")
@@ -274,6 +373,27 @@ func test_the_infirmary_dresses_wounds_at_home() -> void:
 	# Spent before the next fight, the penalty never reaches the field.
 	Game.dress_wounds(g, a.id)
 	assert_false(Soldier.soldier_to_unit(a).has("wound"), "marches whole")
+
+
+func test_dressing_costs_less_than_refilling_the_ranks() -> void:
+	var g := Game.new_game(11)
+	for lv in [1, 2, 3]:
+		g.buildings.infirmary = lv
+		for type_id in DB.UNIT_TYPES:
+			if JS.get_or(DB.UNIT_TYPES[type_id], "recruitCost", 0) <= 0:
+				continue
+			var size := DB.squad_size(type_id)
+			for level in [1, 5]:
+				var s := {"typeId": type_id, "level": level, "men": size}
+				var new: int = Game.reinforce_cost(g, s)
+				for n in range(1, size):
+					s.wounded = n
+					var c := Game.dress_cost(g, s)
+					assert_true(c > 0 and c < new * n, "%s L%d, Infirmary %d: %d hurt dress for %d, not %d" % [type_id, level, lv, n, c, new * n])
+				s.erase("wounded")
+				s.injured = true
+				var ci := Game.dress_cost(g, s)
+				assert_true(ci > 0 and ci < new * size, "%s L%d, Infirmary %d: Injured dress for %d, not %d" % [type_id, level, lv, ci, new * size])
 
 
 func test_the_company_automation_dresses_wounds_at_home() -> void:

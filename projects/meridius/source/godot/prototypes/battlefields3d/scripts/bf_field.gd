@@ -43,11 +43,16 @@ const GROUND_ART := "res://prototypes/battlefields3d/art/ground/"
 const W := Fields.W
 const H := Fields.H
 const BORDER := Fields.BORDER
+## A tile's width on screen at zoom 1 (px).
+const TILE_PX := Fields.TILE_PX
+## What the woods and the ground carry so many to a tile is drawn this many
+## times over, so a field of fewer, bigger tiles is as thickly grown.
+const AREA := Fields.AREA
 ## Ground mesh cells per tile side.
 const SUB := 4
-## The ground pictures: the field and NEAR_PAD tiles round it at BAKE_NEAR
-## pixels square, the whole padded grid at BAKE_FAR.
-const NEAR_PAD := 8
+## The ground pictures: the field and NEAR_PAD tiles round it (8 of the
+## battle's) at BAKE_NEAR pixels square, the whole padded grid at BAKE_FAR.
+const NEAR_PAD := roundi(8 * Fields.K)
 const BAKE_NEAR := 4096
 const BAKE_FAR := 2048
 ## Screen pixels per level of height at zoom 1 (the relief shader's LH).
@@ -62,9 +67,9 @@ const FLOOR_CAT := 7
 ## orthographic view that moves nothing on screen, it only keeps a slope in
 ## front of the foot from cutting it off.
 const CARD_PULL := 0.7
-## Cards are built this many tiles round the field; beyond, the far woods are
-## the ground picture's forest floor.
-const CARD_PAD := 7
+## Cards are built this many tiles round the field (7 of the battle's);
+## beyond, the far woods are the ground picture's forest floor.
+const CARD_PAD := roundi(7 * Fields.K)
 ## Decor that bends in the wind and grows in varying sizes.
 const SOFT := ["reeds", "reeds_small", "iris", "marigolds", "horsetail"]
 ## The northern woods (docs/terrain-direction-2026-10-23.md: tall spruce and
@@ -286,6 +291,7 @@ func _build_ground() -> void:
 	mat.set_shader_parameter("far_rect", Vector4(far.position.x, far.position.y, far.size.x, far.size.y))
 	mat.set_shader_parameter("map_size", Vector2(W, H))
 	mat.set_shader_parameter("tile_m", tile_m)
+	mat.set_shader_parameter("tile_px", TILE_PX)
 	mat.set_shader_parameter("level_m", level_m)
 	mat.set_shader_parameter("fog_grain", load(FOG_GRAIN))
 	_mark_img = Image.create(W, H, false, Image.FORMAT_R8)
@@ -344,6 +350,7 @@ func _bake(label: String, rect: Rect2, size: int) -> SubViewport:
 	rm.set_shader_parameter("seed", data.seed)
 	rm.set_shader_parameter("camp", false)
 	rm.set_shader_parameter("hmax", relief.max_h)
+	rm.set_shader_parameter("tile_k", 1.0 / Fields.K)
 	for pair in [["grass", "grass"], ["dry", "dry_grass"], ["dirt", "dirt"], ["forest", "forest_floor"], ["rock", "rock"], ["mud", "mud"], ["stone", "flagstone"]]:
 		rm.set_shader_parameter("tex_" + pair[0], load("res://assets/terrain/%s.webp" % pair[1]))
 	rm.set_shader_parameter("season", SEASONS.get(season, 0))
@@ -458,19 +465,30 @@ func _build_woodland() -> void:
 			if not pick.is_empty():
 				var variants := _variants(pick[0])
 				if not variants.is_empty():
-					var e: Dictionary = variants[int(Rng.hash2(t.x, t.y, seed + 5) * variants.size()) % variants.size()]
-					var j := Vector2(Rng.hash2(t.x, t.y, seed + 7) - 0.5, Rng.hash2(t.x, t.y, seed + 9) - 0.5)
 					var tree := prop.begins_with("tree")
-					var size: float = pick[1]
-					if tree:
-						size *= lerpf(0.9, 1.12, Rng.hash2(t.x, t.y, seed + 11))
-					_card(holder, e, at + j * (0.64 if tree else 0.4), size, prop, pick[0], pick[2])
+					# A tile of the woods holds AREA trees or bushes (on average),
+					# spread across it; a lone tree in the open is one.
+					var n := 1
+					var turn := Rng.hash2(t.x, t.y, seed + 15) * TAU
+					if t.terrain == "forest" and (tree or prop == "bush"):
+						n = floori(AREA) + (1 if Rng.hash2(t.x, t.y, seed + 3) < AREA - floori(AREA) else 0)
+					for i in n:
+						var s: int = seed + i * 31
+						var e: Dictionary = variants[int(Rng.hash2(t.x, t.y, s + 5) * variants.size()) % variants.size()]
+						var j := Vector2(Rng.hash2(t.x, t.y, s + 7) - 0.5, Rng.hash2(t.x, t.y, s + 9) - 0.5)
+						var size: float = pick[1]
+						if tree:
+							size *= lerpf(0.9, 1.12, Rng.hash2(t.x, t.y, s + 11))
+						var p := at + j * (0.64 if tree else 0.4)
+						if n > 1:
+							p = at + Vector2.from_angle(turn + TAU * i / n) * 0.27 + j * 0.3
+						_card(holder, e, p, size, prop, pick[0], pick[2])
 		if t.get("covered", false) or t.terrain in ["water", "shallows", "bridge", "stone"]:
 			continue
 		# Ferns (bracken in autumn) on the woodland floor and in the thickets.
 		if not winter and t.terrain in ["forest", "brush"] and (prop == "" or prop == "bush" or rng.chance(0.4)):
 			var ferns := _variants("fern")
-			for i in (2 if t.terrain == "brush" else 1):
+			for i in roundi((2 if t.terrain == "brush" else 1) * AREA):
 				if ferns.is_empty() or not rng.chance(0.7):
 					continue
 				var off := Vector2(rng.frange(-0.45, 0.45), rng.frange(-0.45, 0.45))
@@ -479,13 +497,13 @@ func _build_woodland() -> void:
 				_card(holder, rng.pick(ferns), at + off, rng.frange(0.75, 1.15), "fern", "fern",
 					{"autumn": 1.0} if season == "autumn" else {})
 		# Fallen branches under the trees; small stones in the open.
-		if t.terrain == "forest" and rng.chance(0.1):
+		if t.terrain == "forest" and rng.chance(0.1 * AREA):
 			var dk := _snowed("deadwood") if winter else ["deadwood", 1.0, {"autumn": 0.6} if season == "autumn" else {}]
 			var dw := _variants(dk[0])
 			if not dw.is_empty():
 				_card(holder, rng.pick(dw), at + Vector2(rng.frange(-0.4, 0.4), rng.frange(-0.4, 0.4)), rng.frange(0.8, 1.05),
 					"deadwood", dk[0], dk[2])
-		elif t.terrain in ["grass", "dirt", "mud"] and prop == "" and rng.chance(0.045):
+		elif t.terrain in ["grass", "dirt", "mud"] and prop == "" and rng.chance(0.045 * AREA):
 			var sk := _snowed("stones") if winter else ["stones", 1.0, {}]
 			var st := _variants(sk[0])
 			if not st.is_empty():
@@ -548,8 +566,8 @@ func _card_point(card: Dictionary, e: Dictionary, px: Vector2) -> Vector3:
 ## One painted cut-out standing at grid point `at`: its upright part (above the
 ## foot point ay) turned to the camera and stretched by 1 / cos(elevation) so it
 ## keeps its painted shape on screen; its painted ground shadow (below ay) laid
-## on the ground through the battle's iso projection (64 px across and 32 px
-## down per tile) and draped over the relief.
+## on the ground through the battle's iso projection (TILE_PX / 2 across and
+## TILE_PX / 4 down per tile) and draped over the relief.
 func _card(parent: Node3D, e: Dictionary, at: Vector2, size: float, kind: String, key: String, look := {}) -> Dictionary:
 	var tex: Texture2D = load(e.file)
 	if tex == null:
@@ -606,7 +624,7 @@ func _card(parent: Node3D, e: Dictionary, at: Vector2, size: float, kind: String
 				var u := region.position.x + region.size.x * float(i) / su
 				var dx := (u - ax) * spx
 				var dy := (v - ay) * spx
-				var g := at + Vector2((dx / 64.0 + dy / 32.0) * 0.5, (dy / 32.0 - dx / 64.0) * 0.5)
+				var g := at + Vector2((dx / (TILE_PX * 0.5) + dy / (TILE_PX * 0.25)) * 0.5, (dy / (TILE_PX * 0.25) - dx / (TILE_PX * 0.5)) * 0.5)
 				var w := on_ground(g) + Vector3(0, 0.035, 0)
 				verts.append(w - foot)
 				uvs.append(Vector2(u / tw, v / th))
@@ -660,8 +678,8 @@ func _caster(card: MeshInstance3D, tex: Texture2D, region: Rect2, anchor: Vector
 		across = (absf(side.x) * fp.x + absf(side.z) * fp.y) * tile_m / region.size.x
 		anchor.x = region.position.x + region.size.x * 0.5
 		# The footprint's depth on screen in the painting's pixels (a tile is
-		# 64 px deep at zoom 1), from the foot to the middle of the base.
-		base_px = (fp.x + fp.y) * 16.0 / (m_px * ppu)
+		# TILE_PX / 2 deep at zoom 1), from the foot to the middle of the base.
+		base_px = (fp.x + fp.y) * TILE_PX / 8.0 / (m_px * ppu)
 	var tall := maxf(top_px - base_px, 1.0) * m_px / cos(el)
 	# UV2: the card's phase in the wind (from its foot, as bf_card.gdshader
 	# takes it) and how far the point sways (its height up the card's node,
@@ -753,6 +771,7 @@ func _card_material(file: String, kind: String, look: Dictionary) -> ShaderMater
 	m.set_shader_parameter("sway", sway)
 	m.set_shader_parameter("map_size", Vector2(W, H))
 	m.set_shader_parameter("tile_m", tile_m)
+	m.set_shader_parameter("tile_px", TILE_PX)
 	m.set_shader_parameter("level_m", level_m)
 	m.set_shader_parameter("fog_grain", load(FOG_GRAIN))
 	m.set_shader_parameter("autumn", autumn)
@@ -813,6 +832,7 @@ func _build_blades() -> void:
 		if not rng.chance(look.keep):
 			continue
 		var n: int = look.n * 2 if t.terrain == "brush" else (maxi(1, look.n / 2) if t.terrain == "forest" else look.n)
+		n = roundi(n * AREA)
 		for i in n:
 			var p := on_ground(Vector2(t.x + rng.frange(-0.48, 0.48), t.y + rng.frange(-0.48, 0.48)))
 			var tip: Color = look.tip0.lerp(look.tip1, rng.frange(0.0, 1.0))
@@ -844,6 +864,7 @@ func _build_blades() -> void:
 	m.set_shader_parameter("sway", 0.08)
 	m.set_shader_parameter("map_size", Vector2(W, H))
 	m.set_shader_parameter("tile_m", tile_m)
+	m.set_shader_parameter("tile_px", TILE_PX)
 	m.set_shader_parameter("level_m", level_m)
 	m.set_shader_parameter("fog_grain", load(FOG_GRAIN))
 	for k in _shared:

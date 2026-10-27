@@ -1106,3 +1106,32 @@ Amberfeld.
   benched; the automation), `test_screens` (the panel's and the detail's
   buttons). `tests/visual/ui_capture.gd`'s rough company carries a wound and
   an Injured squad (`infirmary2`, `soldier2`).
+
+### 2026-10-27 - 3D battlefields: bigger squares, same field
+
+The owner wanted visible room between squads without changing the size of
+the field or of the men. The four 3D battlefields keep their ground (about
+76 m a side) but are laid out in 20 × 20 tiles of about 3.8 m instead of
+28 × 28 of 2.7 m, so the battle on Ashby farm is played on 20 × 20 squares.
+
+- `bf_fields.gd` still writes the fields in the battle's 28 × 28 tiles
+  (design tiles) and `make()` fits them to its own (`K`, `_scaled`); houses
+  stand on 2 × 2 tiles, the bridge's deck on 1 × 3. What is drawn so many to
+  a tile is drawn by area (`AREA`). Lone trees, rocks and bushes in the open
+  are rules props and keep their chance a tile, so there are about half as
+  many.
+- The look per metre is kept: the relief shader takes `tile_k` (1 by default,
+  so the 2D battle, the terrain lab and the sandbox's field are unchanged) and
+  the battlefields' ground, card and water shaders take `tile_px`.
+- `battlefields.gd`: Ashby's deployment boxes are written in design tiles and
+  `_fit` turns them into the field's (the tiles whose middles lie in a box).
+  `battle3d.gd` takes the field's tile width.
+- Squads now stand about 1.6 m apart side by side (was 0.5 m) and 2.3 m front
+  to back (was 1.2 m); the men in a squad keep 1.1 m.
+- Goldens: the battle traces were run (`tools/test.sh test_battle_parity`, 16
+  passed) and are unchanged, as no trace is fought on a 3D field; none were
+  re-recorded. The campaign baseline (`test_campaign_parity`) was not checked.
+- Tests: `test_battle3d` lays the field out at the new tile. The quick suite,
+  the rules suites (`--quick tests/unit` and the parity suites) and the 3D
+  battle in a window (`tests/visual/battle3d_flow.gd`, a victory in 7 turns)
+  pass.

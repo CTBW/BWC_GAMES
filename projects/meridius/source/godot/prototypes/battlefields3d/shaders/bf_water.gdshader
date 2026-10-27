@@ -12,6 +12,8 @@ render_mode unshaded, cull_disabled, shadows_disabled, ambient_light_disabled, d
 
 uniform vec2 map_size;
 uniform float tile_m = 2.72;
+// A tile's width on screen at zoom 1 (px); the battle's are 128.
+uniform float tile_px = 128.0;
 uniform float level_m = 0.9;
 uniform sampler2D fog_tex : filter_linear, repeat_disable;
 uniform bool fog_on = false;
@@ -19,7 +21,7 @@ uniform sampler2D fog_grain : filter_nearest, repeat_enable;
 uniform vec3 night = vec3(1.0);
 uniform vec3 shallow_col = vec3(0.36, 0.62, 0.6);
 uniform vec3 deep_col = vec3(0.1, 0.33, 0.44);
-// How fast the current runs (tiles a second).
+// How fast the current runs (the battle's tiles a second).
 uniform float speed = 0.35;
 
 varying vec2 grid;
@@ -60,19 +62,21 @@ void vertex() {
 	grid = w.xz / tile_m;
 	depth = COLOR.r;
 	flow = COLOR.gb * 2.0 - 1.0;
-	px = vec2((w.x - w.z) / tile_m * 64.0, (w.x + w.z) / tile_m * 32.0 - w.y / level_m * 26.0);
+	px = vec2((w.x - w.z) / tile_m * tile_px * 0.5, (w.x + w.z) / tile_m * tile_px * 0.25 - w.y / level_m * 26.0);
 }
 
 void fragment() {
+	// The water's patterns are measured in the battle's tiles.
+	vec2 pg = grid * tile_px / 128.0;
 	// Streaks along the current, drawn in its own frame so they run with it.
 	vec2 f = length(flow) > 0.01 ? normalize(flow) : vec2(1.0, 0.0);
-	vec2 q = vec2(dot(grid, f), dot(grid, vec2(-f.y, f.x)));
+	vec2 q = vec2(dot(pg, f), dot(pg, vec2(-f.y, f.x)));
 	float t = TIME * speed * (0.4 + length(flow));
 	float streak = vnoise(vec2(q.x * 1.1 - t * 1.6, q.y * 5.0)) * 0.6 + vnoise(vec2(q.x * 2.7 - t * 2.4, q.y * 11.0)) * 0.4;
 	float d = smoothstep(0.0, 1.0, depth);
 	vec3 col = mix(shallow_col, deep_col, d * 0.9 + (streak - 0.5) * 0.15);
 	// The sky in the water, brighter toward the far (upper) bank.
-	float sky = vnoise(grid * 0.15 + vec2(TIME * 0.01, 0.0));
+	float sky = vnoise(pg * 0.15 + vec2(TIME * 0.01, 0.0));
 	col += vec3(0.08, 0.11, 0.12) * (sky - 0.3);
 	col = mix(col, col * 1.18 + vec3(0.02, 0.04, 0.04), smoothstep(0.55, 0.8, streak) * 0.5);
 	// Glints: small bright flecks that drift with the current and blink.

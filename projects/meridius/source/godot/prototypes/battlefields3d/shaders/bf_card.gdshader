@@ -29,6 +29,8 @@ uniform float sway = 0.0;
 uniform float fade = 1.0;
 uniform vec2 map_size;
 uniform float tile_m = 2.72;
+// A tile's width on screen at zoom 1 (px); the battle's are 128.
+uniform float tile_px = 128.0;
 uniform float level_m = 0.9;
 uniform sampler2D fog_tex : filter_linear, repeat_disable;
 uniform bool fog_on = false;
@@ -134,7 +136,7 @@ void vertex() {
 	if (upright <= 0.5) {
 		grid = w.xz / tile_m;
 	}
-	px = vec2((w.x - w.z) / tile_m * 64.0, (w.x + w.z) / tile_m * 32.0 - w.y / level_m * 26.0);
+	px = vec2((w.x - w.z) / tile_m * tile_px * 0.5, (w.x + w.z) / tile_m * tile_px * 0.25 - w.y / level_m * 26.0);
 }
 
 void fragment() {
@@ -183,7 +185,7 @@ void fragment() {
 		if (upright > 0.5 && !blades) {
 			vec3 q = ground_behind((INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz, -INV_VIEW_MATRIX[2].xyz);
 			g = q.xz / tile_m;
-			gpx = vec2((q.x - q.z) / tile_m * 64.0, (q.x + q.z) / tile_m * 32.0 - q.y / level_m * 26.0);
+			gpx = vec2((q.x - q.z) / tile_m * tile_px * 0.5, (q.x + q.z) / tile_m * tile_px * 0.25 - q.y / level_m * 26.0);
 		}
 		vec2 m = fog_at(g);
 		float clear = smoothstep(0.08, 0.84, m.r);

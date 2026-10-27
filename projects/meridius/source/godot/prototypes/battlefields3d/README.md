@@ -35,8 +35,22 @@ and, with the fog on, whether it is seen).
 ## The camera and the field
 
 The camera is the game's and the 3D sandbox's: orthographic, 30 degrees down,
-tiles 128 × 64 px and a soldier 49 px tall at zoom 1 (the footman's height
-comes from `prototypes/footman_anim/art3d/footman.json`, 1.7 m without it).
+a soldier 49 px tall at zoom 1 (the footman's height comes from
+`prototypes/footman_anim/art3d/footman.json`, 1.7 m without it).
+
+The fields are as large as a battle's 28 × 28 tiles of 128 × 64 px, but laid
+out in 20 × 20 bigger tiles (179 × 90 px at zoom 1, about 3.8 m), so two
+squads a tile apart have room between them and the houses, trees and soldiers
+keep their size. `bf_fields.gd` writes the fields in the battle's tiles
+(design tiles) and `make()` fits them to its own (`_scaled`); the houses stand
+on 2 × 2 tiles, the bridge's deck on 1 × 3. What is drawn so many to a tile is
+drawn by area (`AREA`): about two trees or bushes a tile of woods, and as many
+more ferns, grass strokes, fallen branches and stones. The relief shader
+paints the ground in the battle's tiles (`tile_k`: its textures, noise and the
+slopes that make banks), as the water and the fog's grain do (`tile_px`).
+Lone trees, rocks and bushes in the open are rules props and keep their chance
+a tile, so there are fewer of them, and terrain (shallows, brush, roads) is
+classed by the bigger tiles.
 
 - `scripts/bf_fields.gd` lays out the four fields as pure data: a map in the
   rules' format (`{x, y, h, surface_h, terrain, prop}`, rules props from

@@ -15,6 +15,10 @@
 ## through it) and from a field's "open" boxes. The woods go on outside. On
 ## the camera's side (south and east) the woods' first NEAR_RIM tiles are
 ## thickets, so no tree there hides the field behind it.
+## The fields are laid out in design tiles, DESIGN to a side at 128 px a
+## tile; make() fits them to W x H tiles of TILE_PX, so a field keeps its
+## ground with fewer, bigger tiles (more room between two squads standing a
+## tile apart) and its houses, trees and soldiers keep their size.
 ## Rules props are DB.PROPS ids, so the map is one the battle could load.
 ## Pure data: no nodes. bf_field.gd builds the scene from it.
 extends RefCounted
@@ -22,54 +26,66 @@ extends RefCounted
 const Fields = preload("res://scripts/rules/terrain_test_fields.gd")
 const Rng = preload("res://scripts/core/rng.gd")
 
-const W := 28
-const H := 28
-const BORDER := 12
+## A side of the fields as laid out below (design tiles of 128 px).
+const DESIGN := 28.0
+const W := 20
+const H := 20
+## Design tiles to tiles.
+const K := W / DESIGN
+## A tile's width on screen at zoom 1 (px): the design's 28 x 128 px over W.
+const TILE_PX := 128.0 * DESIGN / W
+## A tile's ground in design tiles: what is drawn so many to a tile (trees in
+## the woods, ferns, grass) is drawn this many times over.
+const AREA := 1.0 / (K * K)
+## The tiles laid outside the field (the design's 12).
+const BORDER := 9
 const IDS := ["millford", "ashby", "frosthollow", "willowford"]
 ## How far into the woods on the camera's side they are thickets (tiles): a
 ## tree hides about this much of the ground behind it.
-const NEAR_RIM := 3.5
+const NEAR_RIM := 3.5 * K
 
 ## Footprints (tiles across x, y) and rules props of the pieces. A piece's card
 ## stands on the near corner of its painted base: its width in world px (as
-## cut by tools/cut_art.py) over a tile's 128 px gives the base's side.
+## cut by tools/cut_art.py) over a tile's TILE_PX gives the base's side, 1.3
+## to 1.9 tiles, so a house, a barn or a ruin stands on 2 x 2 tiles and the
+## bridge's deck spans 3.
 const PIECE := {
 	"house_townhouse": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 250},
 	"house_inn": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 270},
 	"house_cottage_stone": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 225},
 	"house_chapel": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 250},
-	"house_barn": {"fp": Vector2i(3, 2), "rules": "wall_high", "w": 330},
-	"house_longhouse": {"fp": Vector2i(3, 2), "rules": "wall_high", "w": 330},
+	"house_barn": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 330},
+	"house_longhouse": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 330},
 	"house_windmill": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 260},
 	"watermill": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 290},
 	"ruin_farmhouse": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 230},
-	"ruin_barn_burnt": {"fp": Vector2i(3, 2), "rules": "wall_high", "w": 320},
-	"ruin_chapel": {"fp": Vector2i(3, 2), "rules": "wall_high", "w": 290},
-	"ruin_colonnade": {"fp": Vector2i(3, 2), "rules": "wall_ruin", "w": 300},
-	"ruin_stones": {"fp": Vector2i(3, 2), "rules": "rock_large", "w": 270},
+	"ruin_barn_burnt": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 320},
+	"ruin_chapel": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 290},
+	"ruin_colonnade": {"fp": Vector2i(2, 2), "rules": "wall_ruin", "w": 300},
+	"ruin_stones": {"fp": Vector2i(2, 2), "rules": "rock_large", "w": 270},
 	"ruin_wall_corner": {"fp": Vector2i(2, 2), "rules": "wall_ruin", "w": 220},
-	"w_house_longhouse": {"fp": Vector2i(3, 2), "rules": "wall_high", "w": 330},
+	"w_house_longhouse": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 330},
 	"w_house_cottage_stone": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 225},
 	"w_house_chapel": {"fp": Vector2i(2, 2), "rules": "wall_high", "w": 250},
-	"w_ruin_stones": {"fp": Vector2i(3, 2), "rules": "rock_large", "w": 270},
-	"bridge_stone": {"fp": Vector2i(1, 5), "rules": "", "w": 480},
+	"w_ruin_stones": {"fp": Vector2i(2, 2), "rules": "rock_large", "w": 270},
+	"bridge_stone": {"fp": Vector2i(1, 3), "rules": "", "w": 480},
 }
 
 
 static func make(id: String) -> Dictionary:
 	match id:
 		"millford":
-			return _generate(_millford())
+			return _generate(_scaled(_millford()))
 		"ashby":
-			return _generate(_ashby())
+			return _generate(_scaled(_ashby()))
 		"frosthollow":
-			return _generate(_frosthollow())
+			return _generate(_scaled(_frosthollow()))
 		"willowford":
-			return _generate(_willowford())
+			return _generate(_scaled(_willowford()))
 	return {}
 
 
-# --- The four fields ----------------------------------------------------------------
+# --- The four fields (in design tiles) ---------------------------------------------
 
 ## Summer: a market town where the road crosses the river on a stone bridge;
 ## the windmill on the hill to the north, the watermill below the town.
@@ -123,13 +139,12 @@ static func _millford() -> Dictionary:
 			{"key": "market_stall", "at": Vector2(16.6, 16.4), "rules": "crates"},
 			{"key": "market_stall", "at": Vector2(13.8, 19.0), "rules": "crates"},
 			{"key": "p_well", "at": Vector2(16.0, 18.8), "rules": "well"},
-			{"key": "p_crates", "at": Vector2(17.0, 19.6), "rules": "crates"},
-			{"key": "p_cart", "at": Vector2(9.6, 18.0), "rules": "cart"},
+			{"key": "p_crates", "at": Vector2(20.4, 19.0), "rules": "crates"},
+			{"key": "p_cart", "at": Vector2(9.6, 21.8), "rules": "cart"},
 			{"key": "p_rick", "at": Vector2(18.0, 2.4), "rules": "haystack"},
 			{"key": "p_rick", "at": Vector2(23.6, 2.0), "rules": "haystack"},
-			{"key": "p_rick", "at": Vector2(17.2, 6.8), "rules": "haystack"},
 			{"key": "harvest_firewood", "at": Vector2(9.2, 14.2), "rules": ""},
-			{"key": "harvest_bale", "at": Vector2(19.6, 7.0), "rules": ""},
+			{"key": "harvest_bale", "at": Vector2(21.4, 2.4), "rules": ""},
 			# The town's yards and street.
 			{"key": "barrels", "at": Vector2(19.2, 17.1), "rules": ""},
 			{"key": "milk_churns", "at": Vector2(18.0, 17.3), "rules": ""},
@@ -137,13 +152,14 @@ static func _millford() -> Dictionary:
 			{"key": "sacks", "at": Vector2(12.8, 19.3), "rules": ""},
 			{"key": "chopping_block", "at": Vector2(10.0, 14.7), "rules": ""},
 			{"key": "beehives", "at": Vector2(9.4, 21.2), "rules": ""},
-			{"key": "lantern_post", "at": Vector2(16.2, 20.6), "rules": ""},
+			{"key": "lantern_post", "at": Vector2(19.6, 22.4), "rules": ""},
 			{"key": "lantern_post", "at": Vector2(13.9, 13.4), "rules": ""},
 			{"key": "signpost", "at": Vector2(14.3, 6.0), "rules": ""},
 			{"key": "wheelbarrow", "at": Vector2(21.95, 6.45), "rules": ""},
 			{"key": "shrine", "at": Vector2(16.3, 2.8), "rules": ""},
 		],
-		"fences": [[Vector2(16.5, 1.0), Vector2(16.5, 7.5)], [Vector2(16.5, 7.5), Vector2(24.5, 7.5)]],
+		# The paddock round the barn, its gate at the corner by the river.
+		"fences": [[Vector2(16.5, 1.0), Vector2(16.5, 6.5)], [Vector2(19.0, 7.5), Vector2(24.5, 7.5)]],
 		"reeds": 0.35,
 		"bank": {"horsetail": 0.08, "iris": 0.06},
 		"scatter": {"oak": 0.012, "rock": 0.04, "bush": 0.03},
@@ -225,8 +241,9 @@ static func _frosthollow() -> Dictionary:
 			h += 2.6 * Fields.hill(x, y, -9.0, 6.0, 8.0, 14.0) + 2.2 * Fields.hill(x, y, 12.0, -10.0, 16.0, 7.0)
 			return h,
 		"ponds": [{"c": Vector2(7.0, 20.5), "rx": 4.2, "ry": 3.0, "level": 1.05}],
+		# The road to the chapel fords the stream.
 		"river": {"pts": PackedVector2Array([Vector2(10.5, 19.0), Vector2(14.0, 16.4), Vector2(18.0, 15.2), Vector2(23.0, 14.6), Vector2(28.0, 12.8), Vector2(42.0, 11.0)]),
-			"half": 0.6, "shallow": 0.4, "level": 1.05, "bed": 0.35},
+			"half": 0.6, "shallow": 0.4, "level": 1.05, "bed": 0.35, "ford": {"c": Vector2(17.5, 15.4), "r": 1.2}},
 		"roads": [
 			{"pts": PackedVector2Array([Vector2(-14.0, 13.0), Vector2(4.0, 13.5), Vector2(10.0, 12.0), Vector2(15.0, 12.6), Vector2(18.5, 16.5), Vector2(19.0, 18.0)]), "w": 0.65},
 			{"pts": PackedVector2Array([Vector2(15.0, 12.6), Vector2(19.0, 10.0), Vector2(24.0, 9.2), Vector2(42.0, 8.0)]), "w": 0.6},
@@ -333,6 +350,62 @@ static func _willowford() -> Dictionary:
 
 # --- The generator ---------------------------------------------------------------------
 
+## Field f, laid out in design tiles, in tiles: every place and size on the
+## ground times K (but the stooks' spacing), its heights and water levels as
+## they are. A piece keeps its
+## footprint, its middle moved onto whole tiles; the bridge stays on its road.
+static func _scaled(f: Dictionary) -> Dictionary:
+	var g := f.duplicate()
+	var hf: Callable = f.height
+	var wf: Callable = f.woods
+	g.height = func(x: float, y: float) -> float: return hf.call(x / K, y / K)
+	g.woods = func(x: float, y: float, n: float) -> bool: return wf.call(x / K, y / K, n)
+	if f.has("river"):
+		var r: Dictionary = f.river.duplicate()
+		r.pts = _times_k(r.pts)
+		r.half *= K
+		r.shallow *= K
+		if r.has("ford"):
+			r.ford = {"c": r.ford.c * K, "r": r.ford.r * K}
+		g.river = r
+	g.ponds = f.get("ponds", []).map(func(p): return {"c": p.c * K, "rx": p.rx * K, "ry": p.ry * K, "level": p.level})
+	g.roads = f.get("roads", []).map(func(r): return {"pts": _times_k(r.pts), "w": r.w * K})
+	for key in ["squares", "yards"]:
+		g[key] = f.get(key, []).map(func(q): return {"c": q.c * K, "r": q.r * K})
+	g.fields = f.get("fields", []).map(func(q): return {"rect": Rect2(q.rect.position * K, q.rect.size * K)})
+	g.open = f.get("open", []).map(func(q): return Rect2(q.position * K, q.size * K))
+	# The stooks stand as many tiles apart as before (each makes its tile a
+	# haystack), so squads still find their way between them.
+	if f.has("stooks"):
+		g.stooks = {"rect": Rect2(f.stooks.rect.position * K, f.stooks.rect.size * K), "step": f.stooks.step}
+	g.fences = f.get("fences", []).map(func(line): return [line[0] * K, line[1] * K])
+	g.decor = f.get("decor", []).map(func(d):
+		var e: Dictionary = d.duplicate()
+		e.at = d.at * K
+		return e)
+	g.pieces = f.get("pieces", []).map(func(p):
+		var e: Dictionary = p.duplicate()
+		var c: Vector2 = p.c * K
+		if p.key != "bridge_stone":
+			var half := Vector2(PIECE[p.key].fp) * 0.5 - Vector2(0.5, 0.5)
+			c = (c - half).round() + half
+		e.c = c
+		if p.has("foot"):
+			e.foot = p.foot * K
+		return e)
+	g.focus = f.focus * K
+	g.close = f.close * K
+	g.scouts = f.scouts.map(func(s): return Vector2i((Vector2(s) * K).round()))
+	return g
+
+
+static func _times_k(pts: PackedVector2Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for p in pts:
+		out.append(p * K)
+	return out
+
+
 static func _line(f: Callable, t0: float, t1: float, step: float) -> PackedVector2Array:
 	var pts := PackedVector2Array()
 	var t := t0
@@ -382,7 +455,7 @@ static func _from_edge(e: int, p: Vector2i) -> Vector2i:
 ## The woods along each edge: for each tile along it, how deep they stand (a
 ## tile is in them when its distance from that edge is less). A field may set
 ## "border": {"depth", "spread", "deep"}: the least depth, how much it waves
-## and how deep the tongues go. Each depth stops at the tiles in `keep`, so
+## and how deep the tongues go (design tiles). Each depth stops at the tiles in `keep`, so
 ## whatever is placed stays open and joined to the field.
 static func _border(f: Dictionary, keep: Dictionary) -> Array:
 	var b: Dictionary = f.get("border", {})
@@ -392,9 +465,10 @@ static func _border(f: Dictionary, keep: Dictionary) -> Array:
 		var row := PackedFloat32Array()
 		row.resize(W)
 		for s in W:
-			var d: float = b.get("depth", 1.2) + b.get("spread", 2.6) * _wave(s * 0.26, seed + 101 + e * 7)
-			d += b.get("deep", 5.0) * maxf(0.0, _wave(s * 0.42 + 0.5, seed + 131 + e * 7) - 0.6) / 0.4
-			row[s] = d
+			var u := s / K
+			var d: float = b.get("depth", 1.2) + b.get("spread", 2.6) * _wave(u * 0.26, seed + 101 + e * 7)
+			d += b.get("deep", 5.0) * maxf(0.0, _wave(u * 0.42 + 0.5, seed + 131 + e * 7) - 0.6) / 0.4
+			row[s] = d * K
 		out.append(row)
 	for k in keep:
 		for e in 4:
@@ -435,7 +509,7 @@ static func _kept(f: Dictionary, pieces: Array) -> Dictionary:
 		# The ground cleared of trees round a piece (_generate) as well.
 		for y in range(floori(pc.c.y) - 4, floori(pc.c.y) + 5):
 			for x in range(floori(pc.c.x) - 4, floori(pc.c.x) + 5):
-				if Vector2(x, y).distance_to(pc.c) < 3.3:
+				if Vector2(x, y).distance_to(pc.c) < 3.3 * K:
 					keep[Vector2i(x, y)] = true
 	for d in f.get("decor", []):
 		for dy in range(-1, 2):
@@ -491,10 +565,10 @@ static func _generate(f: Dictionary) -> Dictionary:
 			"glow": p.get("glow", false), "smoke": p.get("smoke", "")}
 		# The card's foot: the near corner of a square base as wide as the painting;
 		# the bridge's is the middle of its deck's near end, on the near bank: the
-		# deck spans 0.59 of the painting's width at a tile per 64 px, so the
-		# foot is half that from the centre.
-		var s: float = float(info.w) / 256.0
-		var foot := Vector2(0.0, 0.5897 * info.w / 128.0) if p.key == "bridge_stone" else Vector2(s, s)
+		# deck spans 0.59 of the painting's width at a tile per TILE_PX / 2 px,
+		# so the foot is half that from the centre.
+		var s: float = float(info.w) / (2.0 * TILE_PX)
+		var foot := Vector2(0.0, 0.5897 * info.w / TILE_PX) if p.key == "bridge_stone" else Vector2(s, s)
 		piece["foot"] = p.c + foot + Vector2(p.get("foot", Vector2.ZERO))
 		pieces.append(piece)
 		if p.key != "bridge_stone":
@@ -515,7 +589,7 @@ static func _generate(f: Dictionary) -> Dictionary:
 			for pad in pads:
 				var q: Vector2 = (p - pad.c).abs() - pad.fp * 0.5
 				var out_d := Vector2(maxf(q.x, 0.0), maxf(q.y, 0.0)).length()
-				var k := 1.0 - smoothstep(0.0, 1.8, out_d)
+				var k := 1.0 - smoothstep(0.0, 1.8 * K, out_d)
 				e = lerpf(e, pad.h, k)
 			var terrain := "grass"
 			var prop := ""
@@ -532,7 +606,7 @@ static func _generate(f: Dictionary) -> Dictionary:
 				var in_ford: bool = not ford.is_empty() and p.distance_to(ford.c) < ford.r
 				if in_ford:
 					bed = level - 0.22
-				e = lerpf(bed, bank, smoothstep(half * 0.55, half + river.shallow + 1.3, water_d))
+				e = lerpf(bed, bank, smoothstep(half * 0.55, half + river.shallow + 1.3 * K, water_d))
 				if water_d < half + river.shallow:
 					terrain = "shallows" if (in_ford or water_d > half) else "water"
 					flows[Vector2i(x, y)] = nr[1]
@@ -551,9 +625,9 @@ static func _generate(f: Dictionary) -> Dictionary:
 			var woods: bool = f.woods.call(x, y, n)
 			var out := maxf(maxf(-x, x - W + 1), maxf(-y, y - H + 1))
 			# The edge woods, and outside the field their close stand.
-			var wild: bool = not wet and (_in_border(border, x, y) if inside else out <= 5.0)
+			var wild: bool = not wet and (_in_border(border, x, y) if inside else out <= 5.0 * K)
 			if not inside:
-				woods = woods or n < 0.62 - out * 0.02
+				woods = woods or n < 0.62 - out / K * 0.02
 			if wet:
 				woods = false
 			if woods:
@@ -575,7 +649,7 @@ static func _generate(f: Dictionary) -> Dictionary:
 				elif n > 0.4 and n < 0.4 + sc.get("rock", 0.0) and e > 1.4:
 					prop = "rock_small" if n < 0.4 + sc.get("rock", 0.0) * 0.85 else "rock_large"
 			for sq in f.get("squares", []):
-				if p.distance_to(sq.c) < sq.r + (n - 0.5) * 0.3:
+				if p.distance_to(sq.c) < sq.r + (n - 0.5) * 0.3 * K:
 					terrain = "stone"
 					prop = ""
 			for yd in f.get("yards", []):
@@ -638,16 +712,21 @@ static func _generate(f: Dictionary) -> Dictionary:
 		for y in range(roundi(pc.c.y) - 4, roundi(pc.c.y) + 4):
 			for x in range(roundi(pc.c.x) - 4, roundi(pc.c.x) + 4):
 				var t = at.call(x, y)
-				if t == null or t.get("covered", false) or Vector2(x, y).distance_to(pc.c) >= 3.2:
+				if t == null or t.get("covered", false) or Vector2(x, y).distance_to(pc.c) >= 3.2 * K:
 					continue
 				var prop := String(t.get("prop", ""))
 				if prop.begins_with("tree") or prop.begins_with("rock"):
 					t.erase("prop")
 	var decor: Array = []
 	var rng := Rng.new(seed + 61)
+	var built := {}
+	for pc in pieces:
+		for c in pc.tiles:
+			built[c] = true
 	for d in f.get("decor", []):
 		decor.append({"key": d.key, "at": d.at, "snow": d.get("snow", false), "v": d.get("v", -1)})
-		var t = at.call(roundi(d.at.x), roundi(d.at.y))
+		# A thing by a house, on the edge of its footprint, leaves the house's prop.
+		var t = null if built.has(Vector2i(roundi(d.at.x), roundi(d.at.y))) else at.call(roundi(d.at.x), roundi(d.at.y))
 		if t != null:
 			t.erase("prop")
 			t["covered"] = true
@@ -698,7 +777,7 @@ static func _generate(f: Dictionary) -> Dictionary:
 				continue
 			var on_road := false
 			for rd in f.get("roads", []):
-				on_road = on_road or _near(Vector2(t.x, t.y), rd.pts)[0] < rd.w + 0.9
+				on_road = on_road or _near(Vector2(t.x, t.y), rd.pts)[0] < rd.w + 0.9 * K
 			if on_road:
 				continue
 			var r := Rng.hash2(t.x, t.y, seed + 41)

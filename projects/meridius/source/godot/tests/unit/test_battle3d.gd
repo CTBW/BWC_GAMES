@@ -62,7 +62,7 @@ func test_every_thing_on_the_field_blocks_a_move() -> void:
 	var data: Dictionary = Fields.make("ashby")
 	var m: Dictionary = Battlefields.battle_map("ashby")
 	var field = Field3D.new()
-	field.lay_out("ashby", 2.72, 0.9)
+	field.lay_out("ashby", 3.81, 0.9)
 	var things := 0
 	for d in data.decor:
 		var x := roundi(d.at.x)

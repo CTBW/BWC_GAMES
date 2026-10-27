@@ -10,6 +10,7 @@
 extends RefCounted
 
 const WaterShader = preload("res://prototypes/battlefields3d/shaders/bf_water.gdshader")
+const Fields = preload("res://prototypes/battlefields3d/scripts/bf_fields.gd")
 ## Vertices per tile side.
 const SUB := 3
 ## The depth (levels) at which the water counts as deep.
@@ -83,6 +84,7 @@ static func build(relief, tiles: Array, level: float, tile_m: float, level_m: fl
 	var m := ShaderMaterial.new()
 	m.shader = WaterShader
 	m.set_shader_parameter("tile_m", tile_m)
+	m.set_shader_parameter("tile_px", Fields.TILE_PX)
 	m.set_shader_parameter("level_m", level_m)
 	mi.material_override = m
 	return mi

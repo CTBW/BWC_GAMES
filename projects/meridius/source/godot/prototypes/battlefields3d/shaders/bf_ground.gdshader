@@ -23,6 +23,8 @@ uniform vec4 near_rect;
 uniform vec4 far_rect;
 uniform vec2 map_size;
 uniform float tile_m = 2.72;
+// A tile's width on screen at zoom 1 (px); the battle's are 128.
+uniform float tile_px = 128.0;
 uniform float level_m = 0.9;
 
 // Fog of war: R seen now, G explored, one texel a tile (fog3d.gd eases it).
@@ -71,7 +73,7 @@ void vertex() {
 	vec3 w = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	// The point's place on screen at zoom 1, in the battle's pixels: the grain
 	// of the fog lies on the screen, the same on ground, trees and figures.
-	px = vec2((w.x - w.z) / tile_m * 64.0, (w.x + w.z) / tile_m * 32.0 - w.y / level_m * 26.0);
+	px = vec2((w.x - w.z) / tile_m * tile_px * 0.5, (w.x + w.z) / tile_m * tile_px * 0.25 - w.y / level_m * 26.0);
 }
 
 void fragment() {
@@ -80,10 +82,11 @@ void fragment() {
 	vec3 col = texture(far_tex, fuv).rgb;
 	float inner = min(min(nuv.x, 1.0 - nuv.x), min(nuv.y, 1.0 - nuv.y));
 	col = mix(col, texture(near_tex, nuv).rgb, smoothstep(0.0, 0.02, inner));
-	// The forest beyond the field darkens toward the edge of the world.
+	// The forest beyond the field darkens toward the edge of the world
+	// (out_d in the battle's tiles).
 	vec2 lo = -0.5 - grid;
 	vec2 hi = grid - (map_size - 0.5);
-	float out_d = max(max(lo.x, hi.x), max(lo.y, hi.y));
+	float out_d = max(max(lo.x, hi.x), max(lo.y, hi.y)) * tile_px / 128.0;
 	col = mix(col, deep, smoothstep(5.0, 11.5, out_d) * 0.92);
 
 	// The tile grid, the hovered tile, the route.

@@ -27,6 +27,11 @@ uniform bool camp;
 uniform bool height_view = false;
 // Highest surface level on the map (relief.gd max_h): the height tint's range.
 uniform float hmax = 4.0;
+// How many of the battle's tiles a tile of this ground spans (the 3D
+// battlefields lay their fields out in fewer, bigger tiles). The painting is
+// measured in the battle's tiles: its textures and noise, and the slopes and
+// curvature that make the banks, so the ground looks as it does in battle.
+uniform float tile_k = 1.0;
 
 uniform sampler2D tex_grass : repeat_enable, filter_linear_mipmap_anisotropic;
 uniform sampler2D tex_dry : repeat_enable, filter_linear_mipmap_anisotropic;
@@ -233,17 +238,23 @@ vec4 fallen_block(vec2 q, ivec2 id, uint k, vec3 stone, vec3 moss, float snow) {
 	return vec4(col, 1.0 - smoothstep(0.94, 1.0, d));
 }
 
+// The surface at p in the battle's tiles (tile_k).
+float surf_at(vec2 p) {
+	return surf(p / tile_k);
+}
+
 void fragment() {
-	vec2 p = grid;
+	// p in the battle's tiles; grid in this ground's (its heights and categories).
+	vec2 p = grid * tile_k;
 	uint s = uint(seed) % 9973u;
 
 	// Shape: height, slope and curvature of the surface here.
 	float e = 0.08;
-	float hC = surf(p);
-	float hxp = surf(p + vec2(e, 0.0));
-	float hxm = surf(p - vec2(e, 0.0));
-	float hyp = surf(p + vec2(0.0, e));
-	float hym = surf(p - vec2(0.0, e));
+	float hC = surf_at(p);
+	float hxp = surf_at(p + vec2(e, 0.0));
+	float hxm = surf_at(p - vec2(e, 0.0));
+	float hyp = surf_at(p + vec2(0.0, e));
+	float hym = surf_at(p - vec2(0.0, e));
 	vec2 grad = vec2(hxp - hxm, hyp - hym) / (2.0 * e);
 	float lap = (hxp + hxm + hyp + hym - 4.0 * hC) / (e * e);
 	float slope = length(grad);
@@ -266,10 +277,10 @@ void fragment() {
 	vec2 pj = p + (vec2(fbm(p * 1.4, s + 5u), fbm(p * 1.4, s + 77u)) - 0.5) * 0.9;
 	ivec4 cj;
 	vec2 tj;
-	corners(pj, cj, tj);
+	corners(pj / tile_k, cj, tj);
 	ivec4 cp;
 	vec2 tp;
-	corners(p, cp, tp);
+	corners(grid, cp, tp);
 	float wDirt = wcat(cj, tj, 1);
 	float wBrush = wcat(cj, tj, 2);
 	float wForest = wcat(cj, tj, 3);
@@ -486,11 +497,11 @@ void fragment() {
 			// The grid point under the centre, at this fragment's height.
 			vec2 dq = c - fq;
 			vec2 pc = p + vec2(dq.y + dq.x * 0.5, dq.y - dq.x * 0.5);
-			float c0 = surf(pc);
-			float cxp = surf(pc + vec2(e, 0.0));
-			float cxm = surf(pc - vec2(e, 0.0));
-			float cyp = surf(pc + vec2(0.0, e));
-			float cym = surf(pc - vec2(0.0, e));
+			float c0 = surf_at(pc);
+			float cxp = surf_at(pc + vec2(e, 0.0));
+			float cxm = surf_at(pc - vec2(e, 0.0));
+			float cyp = surf_at(pc + vec2(0.0, e));
+			float cym = surf_at(pc - vec2(0.0, e));
 			vec2 cg = vec2(cxp - cxm, cyp - cym) / (2.0 * e);
 			float cl = (cxp + cxm + cyp + cym - 4.0 * c0) / (e * e);
 			float csl = length(cg);
@@ -540,13 +551,13 @@ void fragment() {
 	float sh = 1.0;
 	for (int i = 1; i <= 12; i++) {
 		float t = float(i) * 0.075;
-		float d = hC + rise * t - surf(p + ld * t);
+		float d = hC + rise * t - surf_at(p + ld * t);
 		sh = min(sh, smoothstep(-0.06, 0.1, d));
 	}
 	// Occlusion: hollows, slope feet, the trees' canopy, the forest ring.
 	float ao = 1.0 - clamp(lap * 0.03, 0.0, 0.24);
-	vec2 ouv = (p + float(border) + 0.5) / vec2(float(gw), float(gh));
-	float occ = texture(occ_tex, ouv + (vec2(nEdge, nMid) - 0.5) * 0.6 / vec2(float(gw), float(gh))).r;
+	vec2 ouv = (grid + float(border) + 0.5) / vec2(float(gw), float(gh));
+	float occ = texture(occ_tex, ouv + (vec2(nEdge, nMid) - 0.5) * 0.6 / tile_k / vec2(float(gw), float(gh))).r;
 	ao *= 1.0 - occ * 0.42;
 	ao *= 1.0 - wFloor * 0.12;
 	vec3 amb = vec3(0.4, 0.5, 0.62);

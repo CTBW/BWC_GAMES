@@ -66,10 +66,11 @@ const Fx3D = preload("res://prototypes/sandbox3d/scripts/fx3d.gd")
 const Squad3D = preload("res://prototypes/sandbox3d/scripts/squad3d.gd")
 const Roster = preload("res://prototypes/sandbox3d/scripts/roster.gd")
 
-## Game scale (the sandbox's): a soldier SOLDIER_PX tall at zoom 1, a tile
-## TILE_PX wide and a level LEVEL_PX high; the footman's height sets the metres.
+## Game scale (the sandbox's soldiers and levels): a soldier SOLDIER_PX tall at
+## zoom 1, a tile TILE_PX wide (the field's: its fewer, bigger tiles) and a
+## level LEVEL_PX high; the footman's height sets the metres.
 const SOLDIER_PX := 49.0
-const TILE_PX := 128.0
+const TILE_PX := Field.TILE_PX
 const LEVEL_PX := 26.0
 const ELEVATION := 30.0
 const FOOTMAN_META := "res://prototypes/footman_anim/art3d/footman.json"

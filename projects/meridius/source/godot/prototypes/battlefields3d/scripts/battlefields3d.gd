@@ -2,8 +2,8 @@
 ## built from the battle's own pieces (its relief ground and textures, the
 ## painted woodland and the terrain kits' houses, ruins and farm things, the
 ## fog of war) and seen through the game's camera (orthographic, 30 degrees
-## down, tiles 128 x 64 px and a soldier 49 px tall at zoom 1, as the 3D
-## sandbox in prototypes/sandbox3d). No units: scouts (invisible eyes, placed
+## down, a soldier 49 px tall at zoom 1 as in the 3D sandbox in
+## prototypes/sandbox3d, the tiles the fields' own: TILE_PX wide). No units: scouts (invisible eyes, placed
 ## with a click) uncover the fog by the battle's sight rules.
 ##   tools/godot.sh --path . res://prototypes/battlefields3d/scenes/battlefields3d.tscn
 ##   ... -- --field=<id>                                  open on a field
@@ -19,7 +19,7 @@ const Grid = preload("res://scripts/rules/grid.gd")
 const UI = preload("res://scripts/ui/ui.gd")
 
 const SOLDIER_PX := 49.0
-const TILE_PX := 128.0
+const TILE_PX := Field.TILE_PX
 const LEVEL_PX := 26.0
 const ELEVATION := 30.0
 const FOOTMAN_META := "res://prototypes/footman_anim/art3d/footman.json"
@@ -464,7 +464,7 @@ func _capture(dir: String, only: Array) -> void:
 		await field.wait_baked()
 		await _wait(1.0)
 		var data: Dictionary = field.data
-		var mid: Vector3 = field.on_ground(Vector2(13.5, 13.5))
+		var mid: Vector3 = field.on_ground(Vector2(Field.W, Field.H) * 0.5 - Vector2(0.5, 0.5))
 		var at: Vector3 = field.on_ground(data.focus)
 		var close: Vector3 = field.on_ground(data.close)
 		await _shot(id + "_overview", 0.62, mid)

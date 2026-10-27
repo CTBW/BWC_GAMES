@@ -5,37 +5,37 @@
     "file": "sheets/stand_skull_sw.webp",
     "frames": 1,
     "cols": 1,
-    "w": 191,
-    "h": 360,
-    "x": 102.0,
-    "y": 72.0
+    "w": 244,
+    "h": 287,
+    "x": 75.8,
+    "y": 144.0
    },
    "se": {
     "file": "sheets/stand_skull_se.webp",
     "frames": 1,
     "cols": 1,
-    "w": 158,
-    "h": 315,
-    "x": 184.5,
-    "y": 117.0
+    "w": 141,
+    "h": 247,
+    "x": 190.5,
+    "y": 178.5
    },
    "nw": {
     "file": "sheets/stand_skull_nw.webp",
     "frames": 1,
     "cols": 1,
-    "w": 158,
-    "h": 402,
-    "x": 137.2,
-    "y": 12.8
+    "w": 141,
+    "h": 378,
+    "x": 147.8,
+    "y": 45.0
    },
    "ne": {
     "file": "sheets/stand_skull_ne.webp",
     "frames": 1,
     "cols": 1,
-    "w": 191,
-    "h": 365,
-    "x": 186.8,
-    "y": 50.2
+    "w": 244,
+    "h": 330,
+    "x": 159.8,
+    "y": 82.5
    }
   },
   "stand_beak": {
@@ -43,114 +43,350 @@
     "file": "sheets/stand_beak_sw.webp",
     "frames": 1,
     "cols": 1,
-    "w": 191,
-    "h": 360,
-    "x": 102.0,
-    "y": 72.0
+    "w": 244,
+    "h": 287,
+    "x": 75.8,
+    "y": 144.0
    },
    "se": {
     "file": "sheets/stand_beak_se.webp",
     "frames": 1,
     "cols": 1,
-    "w": 158,
-    "h": 318,
-    "x": 184.5,
-    "y": 114.0
+    "w": 144,
+    "h": 267,
+    "x": 190.5,
+    "y": 158.2
    },
    "nw": {
     "file": "sheets/stand_beak_nw.webp",
     "frames": 1,
     "cols": 1,
-    "w": 158,
-    "h": 402,
-    "x": 137.2,
-    "y": 12.8
+    "w": 144,
+    "h": 378,
+    "x": 144.8,
+    "y": 45.0
    },
    "ne": {
     "file": "sheets/stand_beak_ne.webp",
     "frames": 1,
     "cols": 1,
-    "w": 191,
-    "h": 365,
-    "x": 186.8,
-    "y": 50.2
+    "w": 244,
+    "h": 330,
+    "x": 159.8,
+    "y": 82.5
    }
   },
   "head_skull": {
    "sw": {
     "file": "sheets/head_skull_sw.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 191,
-    "h": 360,
-    "x": 102.0,
-    "y": 72.0
+    "cols": 12,
+    "w": 244,
+    "h": 287,
+    "x": 75.8,
+    "y": 144.0
    },
    "se": {
     "file": "sheets/head_skull_se.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 158,
-    "h": 318,
-    "x": 184.5,
-    "y": 114.0
+    "cols": 14,
+    "w": 151,
+    "h": 269,
+    "x": 190.5,
+    "y": 156.8
    },
    "nw": {
     "file": "sheets/head_skull_nw.webp",
     "frames": 104,
     "cols": 17,
-    "w": 158,
-    "h": 402,
-    "x": 137.2,
-    "y": 12.8
+    "w": 150,
+    "h": 378,
+    "x": 138.0,
+    "y": 45.0
    },
    "ne": {
     "file": "sheets/head_skull_ne.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 191,
-    "h": 365,
-    "x": 186.8,
-    "y": 50.2
+    "cols": 12,
+    "w": 244,
+    "h": 330,
+    "x": 159.8,
+    "y": 82.5
    }
   },
   "head_beak": {
    "sw": {
     "file": "sheets/head_beak_sw.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 191,
-    "h": 360,
-    "x": 102.0,
-    "y": 72.0
+    "cols": 12,
+    "w": 244,
+    "h": 293,
+    "x": 75.8,
+    "y": 138.0
    },
    "se": {
     "file": "sheets/head_beak_se.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 158,
-    "h": 333,
-    "x": 184.5,
-    "y": 99.0
+    "cols": 14,
+    "w": 166,
+    "h": 288,
+    "x": 190.5,
+    "y": 137.2
    },
    "nw": {
     "file": "sheets/head_beak_nw.webp",
     "frames": 104,
-    "cols": 17,
-    "w": 158,
-    "h": 402,
-    "x": 137.2,
-    "y": 12.8
+    "cols": 16,
+    "w": 165,
+    "h": 378,
+    "x": 123.0,
+    "y": 45.0
    },
    "ne": {
     "file": "sheets/head_beak_ne.webp",
     "frames": 104,
-    "cols": 15,
-    "w": 191,
-    "h": 365,
-    "x": 186.8,
-    "y": 50.2
+    "cols": 12,
+    "w": 244,
+    "h": 330,
+    "x": 159.8,
+    "y": 82.5
    }
+  },
+  "idle_skull": {
+   "sw": {
+    "file": "sheets/idle_skull_sw.webp",
+    "frames": 201,
+    "cols": 19,
+    "w": 198,
+    "h": 343,
+    "x": 122.2,
+    "y": 87.8
+   },
+   "se": {
+    "file": "sheets/idle_skull_se.webp",
+    "frames": 201,
+    "cols": 20,
+    "w": 160,
+    "h": 308,
+    "x": 183.0,
+    "y": 118.5
+   },
+   "nw": {
+    "file": "sheets/idle_skull_nw.webp",
+    "frames": 201,
+    "cols": 23,
+    "w": 159,
+    "h": 385,
+    "x": 136.5,
+    "y": 38.2
+   },
+   "ne": {
+    "file": "sheets/idle_skull_ne.webp",
+    "frames": 201,
+    "cols": 19,
+    "w": 198,
+    "h": 345,
+    "x": 159.8,
+    "y": 66.8
+   }
+  },
+  "idle_beak": {
+   "sw": {
+    "file": "sheets/idle_beak_sw.webp",
+    "frames": 201,
+    "cols": 19,
+    "w": 207,
+    "h": 335,
+    "x": 113.2,
+    "y": 96.0
+   },
+   "se": {
+    "file": "sheets/idle_beak_se.webp",
+    "frames": 201,
+    "cols": 20,
+    "w": 164,
+    "h": 296,
+    "x": 179.2,
+    "y": 130.5
+   },
+   "nw": {
+    "file": "sheets/idle_beak_nw.webp",
+    "frames": 201,
+    "cols": 22,
+    "w": 164,
+    "h": 384,
+    "x": 136.5,
+    "y": 39.0
+   },
+   "ne": {
+    "file": "sheets/idle_beak_ne.webp",
+    "frames": 201,
+    "cols": 19,
+    "w": 207,
+    "h": 344,
+    "x": 159.8,
+    "y": 68.2
+   }
+  },
+  "walk_skull": {
+   "sw": {
+    "file": "sheets/walk_skull_sw.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 231,
+    "h": 372,
+    "x": 115.5,
+    "y": 75.0
+   },
+   "se": {
+    "file": "sheets/walk_skull_se.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 234,
+    "h": 329,
+    "x": 139.5,
+    "y": 117.0
+   },
+   "nw": {
+    "file": "sheets/walk_skull_nw.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 235,
+    "h": 405,
+    "x": 105.0,
+    "y": 32.2
+   },
+   "ne": {
+    "file": "sheets/walk_skull_ne.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 231,
+    "h": 378,
+    "x": 133.5,
+    "y": 57.8
+   }
+  },
+  "walk_beak": {
+   "sw": {
+    "file": "sheets/walk_beak_sw.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 238,
+    "h": 367,
+    "x": 108.0,
+    "y": 80.2
+   },
+   "se": {
+    "file": "sheets/walk_beak_se.webp",
+    "frames": 36,
+    "cols": 7,
+    "w": 234,
+    "h": 317,
+    "x": 139.5,
+    "y": 129.0
+   },
+   "nw": {
+    "file": "sheets/walk_beak_nw.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 235,
+    "h": 406,
+    "x": 105.0,
+    "y": 31.5
+   },
+   "ne": {
+    "file": "sheets/walk_beak_ne.webp",
+    "frames": 36,
+    "cols": 8,
+    "w": 237,
+    "h": 376,
+    "x": 133.5,
+    "y": 60.0
+   }
+  },
+  "death_skull": {
+   "sw": {
+    "file": "sheets/death_skull_sw.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 482,
+    "h": 487,
+    "x": 54.8,
+    "y": 164.2
+   },
+   "se": {
+    "file": "sheets/death_skull_se.webp",
+    "frames": 72,
+    "cols": 8,
+    "w": 596,
+    "h": 471,
+    "x": 131.2,
+    "y": 251.2
+   },
+   "nw": {
+    "file": "sheets/death_skull_nw.webp",
+    "frames": 72,
+    "cols": 7,
+    "w": 597,
+    "h": 385,
+    "x": 186.8,
+    "y": 173.2
+   },
+   "ne": {
+    "file": "sheets/death_skull_ne.webp",
+    "frames": 72,
+    "cols": 8,
+    "w": 483,
+    "h": 420,
+    "x": 377.2,
+    "y": 201.8
+   },
+   "canvas": [
+    915,
+    750
+   ]
+  },
+  "death_beak": {
+   "sw": {
+    "file": "sheets/death_beak_sw.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 463,
+    "h": 489,
+    "x": 73.5,
+    "y": 162.0
+   },
+   "se": {
+    "file": "sheets/death_beak_se.webp",
+    "frames": 72,
+    "cols": 8,
+    "w": 606,
+    "h": 450,
+    "x": 121.5,
+    "y": 261.8
+   },
+   "nw": {
+    "file": "sheets/death_beak_nw.webp",
+    "frames": 72,
+    "cols": 7,
+    "w": 606,
+    "h": 385,
+    "x": 186.8,
+    "y": 173.2
+   },
+   "ne": {
+    "file": "sheets/death_beak_ne.webp",
+    "frames": 72,
+    "cols": 9,
+    "w": 463,
+    "h": 430,
+    "x": 377.2,
+    "y": 204.0
+   },
+   "canvas": [
+    915,
+    750
+   ]
   }
  },
  "fps": 30,

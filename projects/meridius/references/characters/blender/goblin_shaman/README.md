@@ -257,3 +257,74 @@ weights (but for the face round the mask), grips and standard pose.
   fist that holds the staff upright cannot plant its foot on the ground. The skirt
   passes through the legs a little in a stride (11–15 leg triangles) and a high kick
   (20), none in the standard pose.
+
+## Clips (review)
+
+`tools/retarget_clips.py` retargets the goblin's Mixamo idle, walk and death from
+`projects/meridius/Animations/` onto either rig and saves a scratch copy with the clips
+and a JSON report of every frame. The Mixamo motion is not saved in the rigs here, which
+keep only `stand`. There is no attack: he will mostly cast spells (the user, 27 October
+2026). `tools/render_clips.py` renders the copy's clips for the Workspace pose viewer,
+and `goblin_spear/tools/pack_sheets.py` packs them. The idle, walk and death sheets
+are made from the Mixamo clips, so they stay out of Git (`.gitignore`); render them
+locally to see those clips in the viewer.
+
+```sh
+"$B" -b --factory-startup $S/goblin_shaman_rig.blend --python $S/tools/retarget_clips.py -- \
+  projects/meridius/Animations <scratch>/skull_clips.blend <scratch>/skull_measure.json
+"$B" -b --factory-startup <scratch>/skull_clips.blend --python $S/tools/render_clips.py -- \
+  <out dir> skull stand,head,idle,walk
+CLIP_W=1220 CLIP_H=1000 "$B" -b --factory-startup <scratch>/skull_clips.blend \
+  --python $S/tools/render_clips.py -- <out dir> skull death
+```
+
+- **Retarget:** as the rabble's: rest-pose difference, bone by bone, the hips' motion
+  scaled by the hip-height ratio (0.652). Only the Mixamo body bones are keyed; the
+  fingers keep the grip Actions. Every clip keys the controls, `Staff` and `StaffHold`
+  at rest and the right grip closed in its first frame, so switching clips leaves
+  nothing behind.
+- **idle:** 201 frames (6.67 s), in place, the last 10 frames eased into the first, so
+  it loops.
+- **walk:** 36 frames (1.17 s), a loop, in place; its speed is kept as the Action's
+  `root_vel` (1.0 m/s). The hips follow the soles, so the lowest sole point keeps its
+  rest height.
+- **The concept's stance (idle and walk):** laid over the clip, as his concept art
+  crouches (the user, 27 October 2026). The hips sink 6 cm with the feet kept where they
+  are, the knees bending deeper and turned 15° outward: in the idle they bend 55° and
+  64° instead of 24° and 36°, in the walk 50–92° instead of 17–76°. The back hunches
+  18° further forward in the idle and 5° in the walk, shared by `Spine`, `Spine1` and
+  `Spine2`. The clip's idle leans 3° back and its walk 6° forward, so the line from spine
+  to neck now leans 9–10° forward in the idle and 10–13° in the walk; the user chose to
+  keep this hunch (27 October 2026). The head turns 0.7 of the hunch back, so he still
+  looks ahead. His left hand is held out in front of his hip, where the concept holds a
+  bone fetish: `stand`'s arm with the elbow bent 71° instead of 37°, the wrist 20 cm out
+  from the shoulder, 17 cm ahead of it and 33 cm below it. The idle keeps all its own
+  left-arm motion about that, the walk 0.35 of its swing.
+- **The carried staff (idle and walk):** his right arm keeps `stand` on the clip's
+  chest, so he holds the staff upright in front of his right side with his fist at
+  chest height, as his concept art does (`source/godot/art/raw/goblin_shaman/f_base.png`,
+  `f_walk_a.png`). Its foot stays off the ground: the user chose that over lengthening
+  the staff or lowering the hand. The chest's lean, the hunch included, would tip it up
+  to 22° in the idle and 23° in the walk, so `StaffHold` (the hand's turn) takes back
+  0.8 of the sway in every frame: it stays within 6° of its standard axis in the idle
+  and 7° in the walk. The crouch lowers his chest, so the fist rises to keep the foot
+  12 cm off the ground (the elbow bends and the arm turns at the shoulder): by up to
+  14 cm in the idle and 18 cm where the walk's right footfall dips the chest. With the
+  skull mask the foot stays 13 cm off the ground in the idle and 13–16 cm in the walk,
+  and the staff at least 20 mm off the body and 10 mm off the mask. The beak mask's
+  feathers would meet it in the walk, so its arm is turned 7° at the shoulder in every
+  frame of both clips (`carry_arm`): the staff keeps 10 mm off the feathers and its
+  foot 9–10 cm off the ground in the idle and 10–13 cm in the walk. No body triangle
+  passes through it.
+- **death:** 72 frames (2.37 s), easing in from the idle's first pose over 8 frames,
+  crouched, with the left hand out and the fist raised. His neck and head keep the
+  idle's turn 4 frames longer (`head_lag`), and until he lets go his shoulder keeps the
+  idle arm's turn relative to his hips (`hold_turns`) and the wrist its turn: as his back
+  straightens out of the hunch, the staff would otherwise tip back into his face. He
+  lets go of the staff at frame 4: the fist opens to 0.4, the wrist turns back to rest
+  and the arm eases into the clip's over 6 frames. The staff topples as the spearman's
+  spear does, about its foot, 45° to his right of ahead, and lies on the ground from
+  frame 18, its shaft 4 cm up. It stays out of his body and at least 22 mm off the skull
+  mask (54 mm off the beak mask) in every frame. The hips are raised or
+  lowered so his lowest point (the open hand included) lies on the ground in every frame.
+- **Not done:** an export to Godot. The clips live only in the scratch copies.

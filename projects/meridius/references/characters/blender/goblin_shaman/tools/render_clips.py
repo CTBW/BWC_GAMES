@@ -2,16 +2,19 @@
 (orthographic, 30 degree elevation) in the four facings, as goblin_rabble/tools/render_clips.py:
 flat-lit textures with an outline and cavity, at the rabble's 254.5 px per metre.
 
-The shaman has no animation clips yet, so this renders two of the rig's poses:
+Poses (`stand` and `head` by default):
 * `stand`: the standard pose, one frame.
 * `head`: the head turned 40 degrees left and right, nodded 25 degrees down and up and tilted
   15 degrees each way (render_rig.py's mask checks), the neck taking 0.4 of each turn and the
   head 0.6, eased, in 104 frames that loop. It is keyed on a copy of `stand` that is not saved.
+* any clip the blend holds with its `frames` count: retarget_clips.py's idle, walk and death,
+  from its scratch copy of the rig.
 
-  blender -b goblin_shaman_rig.blend --python render_clips.py -- <out dir> <variant>
+  blender -b goblin_shaman_rig.blend --python render_clips.py -- <out dir> <variant> [pose,...]
 
 Frames go to <out dir>/<pose>_<variant>_<facing>/NNNN.png (e.g. head_beak_se/0000.png), for
-goblin_rabble/tools/pack_sheets.py.
+goblin_rabble/tools/pack_sheets.py, which takes every pose's frame size from the first: render
+them all at one size (CLIP_W, CLIP_H).
 """
 import math
 import os
@@ -24,6 +27,7 @@ from mathutils import Matrix, Quaternion, Vector
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 out, variant = Path(argv[0]), argv[1]
+POSES = argv[2].split(",") if len(argv) > 2 and argv[2] else ["stand", "head"]
 sc = bpy.context.scene
 rig = bpy.data.objects["GoblinShamanRig"]
 MX = "mixamorig:"
@@ -111,7 +115,9 @@ YAW = {"se": 45, "sw": -45, "ne": 135, "nw": -135}
 base = rig.matrix_world.copy()
 aim(0, 30, CLIP_SCALE, Vector((0, 0, CLIP_Z)))
 t0 = time.time()
-for pose, act, n in (("stand", stand, 1), ("head", head, len(keys))):
+ACTS = {"stand": (stand, 1), "head": (head, len(keys))}
+for pose in POSES:
+    act, n = ACTS[pose] if pose in ACTS else (bpy.data.actions[pose], int(bpy.data.actions[pose]["frames"]))
     rig.animation_data.action = act
     rig.animation_data.action_slot = act.slots[0]
     cid = f"{pose}_{variant}"

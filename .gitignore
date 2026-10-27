@@ -73,6 +73,11 @@ workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-icon-higgsfield-v1.p
 workspace/2026-10-20_meridius/sovereign-kiss/sovereign-kiss-fog-concept-pack.zip
 # Mixamo-derived animation exports are not redistributable.
 workspace/2026-10-20_meridius/motion-study/mixamo/*.glb
+# The goblin shaman's idle, walk and death viewer sheets are rendered from Mixamo clips and
+# stay local (his README has the commands); his standard pose and head check are in Git.
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/idle_*
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/walk_*
+workspace/2026-10-20_meridius/goblin-shaman-3d/sheets/death_*
 # Tripo downloads in the owner's Chrome save folder; tripo/<unit>/ holds the copies.
 projects/meridius/references/characters/FBX/
 # Wolf Scouts 1 and 2, the versions Wolf Scout 3 replaced, stay local: their

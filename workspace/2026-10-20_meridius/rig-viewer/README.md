@@ -53,7 +53,7 @@ instead of smoothed, so render flaws are not blurred away.
 | Wolf Scout | `wolf_scout_3d/tools/render_viewer_wolf_scout_3.py` | `crossbowman_3d/tools/build_sheets.py` (scale 0.8), run by `projects/meridius/review/wolf-scout/publish-pose-viewer-wolf-scout-3.mjs` |
 | Goblin Rabble | `projects/meridius/references/characters/blender/goblin_rabble/tools/render_clips.py` | `pack_sheets.py` beside it |
 | Goblin Spearman | `projects/meridius/references/characters/blender/goblin_spear/tools/render_clips.py` | `pack_sheets.py` beside it |
-| Goblin Shaman | `projects/meridius/references/characters/blender/goblin_shaman/tools/render_clips.py` (poses: no clips yet) | `goblin_rabble/tools/pack_sheets.py` |
+| Goblin Shaman | `projects/meridius/references/characters/blender/goblin_shaman/tools/render_clips.py`, from the scratch copy that `retarget_clips.py` beside it saves with the clips | `goblin_spear/tools/pack_sheets.py` |
 
 Rig folders are under `projects/meridius/source/godot/art/` unless the path says
 otherwise.

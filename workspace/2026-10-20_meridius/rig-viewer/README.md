@@ -1,7 +1,7 @@
 # Pose viewer
 
 The frame viewer on the Meridius rig tabs: Footman, Crossbowman, Spearman,
-Succubus, Mage, Goblin Rabble and Goblin Spearman. Build every new rig or animation review on it instead of a
+Succubus, Mage, Goblin Rabble, Goblin Spearman and Goblin Shaman. Build every new rig or animation review on it instead of a
 page-specific player, so each one keeps frame stepping, the four facings, the
 copyable frame reference and the detail zoom.
 
@@ -53,6 +53,7 @@ instead of smoothed, so render flaws are not blurred away.
 | Wolf Scout | `wolf_scout_3d/tools/render_viewer_wolf_scout_3.py` | `crossbowman_3d/tools/build_sheets.py` (scale 0.8), run by `projects/meridius/review/wolf-scout/publish-pose-viewer-wolf-scout-3.mjs` |
 | Goblin Rabble | `projects/meridius/references/characters/blender/goblin_rabble/tools/render_clips.py` | `pack_sheets.py` beside it |
 | Goblin Spearman | `projects/meridius/references/characters/blender/goblin_spear/tools/render_clips.py` | `pack_sheets.py` beside it |
+| Goblin Shaman | `projects/meridius/references/characters/blender/goblin_shaman/tools/render_clips.py` (poses: no clips yet) | `goblin_rabble/tools/pack_sheets.py` |
 
 Rig folders are under `projects/meridius/source/godot/art/` unless the path says
 otherwise.

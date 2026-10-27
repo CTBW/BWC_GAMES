@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-mak-report="document">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridius — Goblin Shaman 3D rig</title>
+<link rel="stylesheet" href="../_shared/report.css"><link rel="stylesheet" href="../_shared/examples.css">
+<script defer src="../_shared/report.js"></script>
+<link rel="stylesheet" href="rig-viewer/viewer.css">
+</head>
+<body><main class="container">
+<header class="intro">
+<p class="eyebrow">MERIDIUS / GOBLIN SHAMAN / 3D RIG / 27 OCT 2026</p>
+<h1>Goblin Shaman 3D rig</h1>
+<p>The goblin shaman, built in Tripo with his staff and mask as separate models and rigged in Blender on a Mixamo-compatible skeleton. He comes in two variants, one in each mask: the horned skull, Tripo's mask trimmed to a face plate, and the bird skull with a feather crest on a red band, built from code in Blender. Both hold the staff closed in the right fist and carry the same tribal markings in dried blood. No animation clips have been retargeted onto him yet, so the viewer below shows each shaman in his standard pose and in a head check, from the game's battle camera, in all four facings.</p>
+</header>
+
+<h2>Pose viewer</h2>
+<p>Pick a shaman and a pose, then a facing. Switching between the two masks keeps the facing, so you can compare them. SW shows the masks best: in SE the staff's skull stands in front of his face, and NW and NE show his back. The head check turns his head 40° left and right, nods it 25° down and up and tilts it 15° each way, as the rig's mask checks do; pause and step to the frame you want to comment on. Keys: Space play / pause, ← → one frame, Shift + ← → five frames, Home and End first and last frame.</p>
+<div class="viewer">
+  <div class="vbar" role="group" aria-label="Clip"><span class="vlbl">Clip</span><div class="vchips" id="clipChips"></div></div>
+  <div class="vbar" role="group" aria-label="Facing"><span class="vlbl">Facing</span><div class="vchips" id="faceChips"></div></div>
+  <div class="vbar" role="group" aria-label="Playback">
+    <button id="first" class="vbtn" title="First frame (Home)" aria-label="First frame">⏮</button>
+    <button id="prev" class="vbtn" title="Previous frame (←)" aria-label="Previous frame">◀</button>
+    <button id="play" class="vbtn" title="Play / pause (Space)" aria-label="Play or pause">❚❚</button>
+    <button id="next" class="vbtn" title="Next frame (→)" aria-label="Next frame">▶</button>
+    <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Frame">
+    <label class="vsel">Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label>
+    <label class="vsel">Zoom <select id="zoom"><option value="1">1×</option><option value="1.5" selected>1.5×</option><option value="2">2×</option></select></label>
+    <label class="vsel">Ground <select id="ground"><option value="paper">Paper</option><option value="grass">Grass</option><option value="dark">Dark</option></select></label>
+  </div>
+  <div class="readout"><span id="readout" aria-live="polite">Loading frames…</span><button id="copy" class="vcopy">Copy frame reference</button><span id="copied" class="copied" hidden>Copied</span></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="steps">
+  <div><strong>1 · Reference images</strong><p>Nano Banana Pro on Higgsfield redrew the shaman as a T-pose and drew his staff and the horned skull mask on their own. The bird skull mask was drawn later, straight from the front, as the reference for building it in Blender.</p></div>
+  <div><strong>2 · Tripo</strong><p>Body, staff and horned mask as three models, Smart Mesh in quads, each textured at 4096 px. The body has 6,123 faces. 360 Tripo credits in all.</p></div>
+  <div><strong>3 · Fixed in Blender</strong><p>He stands 1.486 m tall, like the other goblins. The staff's leather grip is thinned from 5.7 to 3.6 cm, so his three-fingered fist closes round it.</p></div>
+  <div><strong>4 · Two masks</strong><p>The horned skull is cut behind the horns to a 0.34 m face plate and bent round his face. The beak mask is built from code: 4,575 faces, its eye sockets cut through in dark grey so his eyes show.</p></div>
+  <div><strong>5 · Body paint</strong><p>Tribal markings in dried blood, painted on his skin by script before the mask is fitted, so both shamans share one texture.</p></div>
+  <div><strong>6 · Rigged</strong><p>75 bones with Mixamo names, 52 of them deforming, at most four per vertex: fingers, forearm twist bones and skirt flaps. The staff rides in the right fist and the mask is rigid on the head.</p></div>
+  <div><strong>7 · Checks</strong><p>Turned, nodded or tilted, no body triangle passes through either mask; the face stays 1.3–1.4 mm off it. Only the fist's fingers touch the staff.</p></div>
+</div>
+
+<h2>The two shamans</h2>
+<figure><img src="goblin-shaman-3d/img/both.webp" width="1500" height="1000" loading="lazy" alt="Both goblin shamans in their standard pose from three-quarter front: on the left the horned skull mask, on the right the bird skull mask with a feather crest on a red band, each holding a staff topped with a horned animal skull">
+<figcaption>Both rigs in the standard pose: the skull mask on the left (<code>goblin_shaman_rig.blend</code>) and the beak mask on the right (<code>goblin_shaman_beak_rig.blend</code>). The staff stands beside him, leaning 3° ahead, its skull turned 16° to his right, with the arm 32° out from his side and the elbow bent 50°.</figcaption></figure>
+<figure><img src="goblin-shaman-3d/img/heads.webp" width="1600" height="800" loading="lazy" alt="The two shamans' heads from the front: the horned skull mask with its fangs over his mouth, and the bird skull mask with round eye sockets, a long beak, a red band and a crest of barred feathers">
+<figcaption>The two masks from the front. The skull plate covers his face from the brow to below his mouth, its fangs hanging over his chin. The bird skull rests on his face from the brow to the snout, his eyes looking out through its sockets, with the beak running down over his mouth.</figcaption></figure>
+
+<h2>The beak mask, built in Blender</h2>
+<figure><img src="goblin-shaman-3d/img/beak_mask.webp" width="1800" height="1200" loading="lazy" alt="The bird skull mask on the T-posed goblin from six sides: front, left side, both three-quarter views, from above and from below">
+<figcaption>The beak mask on the base scene's T-posed goblin, the sheet the user approved: from the front, his left side, both three-quarters, above and below. The skull is a signed distance field round his face, meshed and simplified to about 3,000 triangles, as coarse as the footman's helmet. The red band is drawn tight round his head, and 23 feathers are tucked into it, fanned 80° to either side, 14.5–21.5 cm long and about 4 cm wide: larger than in the first build, at the user's request. The mask is 52 cm across the crest.</figcaption></figure>
+
+<h2>Head and mask checks</h2>
+<figure><img src="goblin-shaman-3d/img/head_skull.webp" width="2000" height="1000" loading="lazy" alt="Eight views of the horned skull mask on the shaman's head: front and side at rest, then turned left and right, nodded down and up and tilted right and left">
+<figcaption>The skull mask at rest from the front and the side, then turned 40° left and right, nodded 25° down and up and tilted 15° right and left, from his left three-quarter with the staff hidden. The face round the mask follows the head alone, so the gap stays 1.4 mm at the nearest in every pose.</figcaption></figure>
+<figure><img src="goblin-shaman-3d/img/head_beak.webp" width="2000" height="1000" loading="lazy" alt="The same eight views of the bird skull mask: front and side at rest, then turned, nodded and tilted each way">
+<figcaption>The beak mask in the same eight views. Its gap stays 1.3 mm at the nearest. The feathers stay 3.5 cm clear of his head, and the band 2 mm.</figcaption></figure>
+
+<h2>Notes</h2>
+<ul class="notes">
+<li><strong>No clips yet.</strong> The viewer shows poses, not animation. The head check is a review motion keyed on a copy of the standard pose for the render (104 frames, eased, looping); it is not saved in the rig. The goblin clips in <code>projects/meridius/Animations</code> have not been retargeted onto the shaman, and his staff will need the same per-frame arm corrections as the rabble's weapons.</li>
+<li><strong>Frames.</strong> Rendered in Blender's Workbench, flat-lit with an outline and cavity, from an orthographic camera 30° above the ground, at 254.5 px per metre (the rabble's scale) in a 640 × 640 frame, then packed at 0.75 scale. Every frame stays at least 27 px inside the frame, the staff's top in the north-west facing.</li>
+<li><strong>Limits.</strong> The thumb lies along the staff's grip instead of folding over the index finger, as on the other goblins. Ten finger triangles cut the round grip, hidden inside the fist. The grip is at his hip height, so a fist that holds the staff upright cannot plant its foot on the ground: it stands 23 cm off it. No strap holds either mask on; the rig keeps it rigid on the head. The skirt passes through the legs a little in a stride, none in the standard pose.</li>
+<li><strong>Files.</strong> In <code>projects/meridius/references/characters/blender/goblin_shaman/</code>: <code>goblin_shaman_rig.blend</code> and <code>goblin_shaman_base.blend</code> (skull mask), <code>goblin_shaman_beak_rig.blend</code> and <code>goblin_shaman_beak_base.blend</code> (beak mask), built by the scripts in its <code>tools/</code>: <code>build_goblin_shaman.py</code> (with <code>MASK=beak</code> for the beak mask), <code>beak_mask.py</code>, <code>paint_beak_mask.py</code>, <code>paint_goblin_shaman.py</code> and <code>rig_goblin_shaman.py</code>, with <code>render_rig.py</code> for the review renders and measurements. The viewer's frames are rendered by <code>render_clips.py</code> and packed by <code>goblin_rabble/tools/pack_sheets.py</code>. The README there records the build and every check. Prompts and the mask's front view are in <code>references/characters/goblin_shaman/</code>.</li>
+</ul>
+</main>
+<script id="frames-data" type="application/json">{"clips":{"stand_skull":{"sw":{"file":"sheets/stand_skull_sw.webp","frames":1,"cols":1,"w":191,"h":360,"x":102.0,"y":72.0},"se":{"file":"sheets/stand_skull_se.webp","frames":1,"cols":1,"w":158,"h":315,"x":184.5,"y":117.0},"nw":{"file":"sheets/stand_skull_nw.webp","frames":1,"cols":1,"w":158,"h":402,"x":137.2,"y":12.8},"ne":{"file":"sheets/stand_skull_ne.webp","frames":1,"cols":1,"w":191,"h":365,"x":186.8,"y":50.2}},"stand_beak":{"sw":{"file":"sheets/stand_beak_sw.webp","frames":1,"cols":1,"w":191,"h":360,"x":102.0,"y":72.0},"se":{"file":"sheets/stand_beak_se.webp","frames":1,"cols":1,"w":158,"h":318,"x":184.5,"y":114.0},"nw":{"file":"sheets/stand_beak_nw.webp","frames":1,"cols":1,"w":158,"h":402,"x":137.2,"y":12.8},"ne":{"file":"sheets/stand_beak_ne.webp","frames":1,"cols":1,"w":191,"h":365,"x":186.8,"y":50.2}},"head_skull":{"sw":{"file":"sheets/head_skull_sw.webp","frames":104,"cols":15,"w":191,"h":360,"x":102.0,"y":72.0},"se":{"file":"sheets/head_skull_se.webp","frames":104,"cols":15,"w":158,"h":318,"x":184.5,"y":114.0},"nw":{"file":"sheets/head_skull_nw.webp","frames":104,"cols":17,"w":158,"h":402,"x":137.2,"y":12.8},"ne":{"file":"sheets/head_skull_ne.webp","frames":104,"cols":15,"w":191,"h":365,"x":186.8,"y":50.2}},"head_beak":{"sw":{"file":"sheets/head_beak_sw.webp","frames":104,"cols":15,"w":191,"h":360,"x":102.0,"y":72.0},"se":{"file":"sheets/head_beak_se.webp","frames":104,"cols":15,"w":158,"h":333,"x":184.5,"y":99.0},"nw":{"file":"sheets/head_beak_nw.webp","frames":104,"cols":17,"w":158,"h":402,"x":137.2,"y":12.8},"ne":{"file":"sheets/head_beak_ne.webp","frames":104,"cols":15,"w":191,"h":365,"x":186.8,"y":50.2}}},"fps":30,"canvas":[480,480]}</script>
+<script id="viewer-config" type="application/json">{"base": "goblin-shaman-3d/", "start": "stand_skull", "key": "goblin-shaman-pose-viewer", "clips": [["stand_skull", "Skull mask · stand"], ["stand_beak", "Beak mask · stand"], ["head_skull", "Skull mask · head check"], ["head_beak", "Beak mask · head check"]]}</script>
+<script>
+// The viewer opens on SE; on a first visit start on SW, where the staff does not hide the masks.
+try { if (!localStorage.getItem("goblin-shaman-pose-viewer")) localStorage.setItem("goblin-shaman-pose-viewer", JSON.stringify({ face: "sw" })); } catch (e) {}
+</script>
+<script src="rig-viewer/viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{
+ "clips": {
+  "stand_skull": {
+   "sw": {
+    "file": "sheets/stand_skull_sw.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 191,
+    "h": 360,
+    "x": 102.0,
+    "y": 72.0
+   },
+   "se": {
+    "file": "sheets/stand_skull_se.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 158,
+    "h": 315,
+    "x": 184.5,
+    "y": 117.0
+   },
+   "nw": {
+    "file": "sheets/stand_skull_nw.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 158,
+    "h": 402,
+    "x": 137.2,
+    "y": 12.8
+   },
+   "ne": {
+    "file": "sheets/stand_skull_ne.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 191,
+    "h": 365,
+    "x": 186.8,
+    "y": 50.2
+   }
+  },
+  "stand_beak": {
+   "sw": {
+    "file": "sheets/stand_beak_sw.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 191,
+    "h": 360,
+    "x": 102.0,
+    "y": 72.0
+   },
+   "se": {
+    "file": "sheets/stand_beak_se.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 158,
+    "h": 318,
+    "x": 184.5,
+    "y": 114.0
+   },
+   "nw": {
+    "file": "sheets/stand_beak_nw.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 158,
+    "h": 402,
+    "x": 137.2,
+    "y": 12.8
+   },
+   "ne": {
+    "file": "sheets/stand_beak_ne.webp",
+    "frames": 1,
+    "cols": 1,
+    "w": 191,
+    "h": 365,
+    "x": 186.8,
+    "y": 50.2
+   }
+  },
+  "head_skull": {
+   "sw": {
+    "file": "sheets/head_skull_sw.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 191,
+    "h": 360,
+    "x": 102.0,
+    "y": 72.0
+   },
+   "se": {
+    "file": "sheets/head_skull_se.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 158,
+    "h": 318,
+    "x": 184.5,
+    "y": 114.0
+   },
+   "nw": {
+    "file": "sheets/head_skull_nw.webp",
+    "frames": 104,
+    "cols": 17,
+    "w": 158,
+    "h": 402,
+    "x": 137.2,
+    "y": 12.8
+   },
+   "ne": {
+    "file": "sheets/head_skull_ne.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 191,
+    "h": 365,
+    "x": 186.8,
+    "y": 50.2
+   }
+  },
+  "head_beak": {
+   "sw": {
+    "file": "sheets/head_beak_sw.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 191,
+    "h": 360,
+    "x": 102.0,
+    "y": 72.0
+   },
+   "se": {
+    "file": "sheets/head_beak_se.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 158,
+    "h": 333,
+    "x": 184.5,
+    "y": 99.0
+   },
+   "nw": {
+    "file": "sheets/head_beak_nw.webp",
+    "frames": 104,
+    "cols": 17,
+    "w": 158,
+    "h": 402,
+    "x": 137.2,
+    "y": 12.8
+   },
+   "ne": {
+    "file": "sheets/head_beak_ne.webp",
+    "frames": 104,
+    "cols": 15,
+    "w": 191,
+    "h": 365,
+    "x": 186.8,
+    "y": 50.2
+   }
+  }
+ },
+ "fps": 30,
+ "canvas": [
+  480,
+  480
+ ]
+}

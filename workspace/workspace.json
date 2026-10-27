@@ -117,6 +117,12 @@
           "subgroup": "Goblin Spearman"
         },
         {
+          "name": "Goblin Shaman 3D rig",
+          "path": "goblin-shaman-3d.html",
+          "group": "Character rigs",
+          "subgroup": "Goblin Shaman"
+        },
+        {
           "name": "Orc Brute 3D rig",
           "path": "orc-brute-3d.html",
           "group": "Character rigs",

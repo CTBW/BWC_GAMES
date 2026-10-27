@@ -257,8 +257,7 @@ static func effects(u: Dictionary, v: Variant, s: Variant, ms: String) -> Array:
 		var injured: bool = wound.get("kind") == "injured"
 		out.append({"id": "wound", "name": "Injured" if injured else "Wounded", "icon": "injury", "kind": "debuff",
 			"desc": Squad.wound_text(wound) + ".",
-			"source": "Injured in its last fight. Cut down again, the squad is gone for good." if injured
-				else "Wounded in its last fight (%d went down)." % int(wound.get("fell", 0))})
+			"source": "%s in its last fight. %s." % ["Injured" if injured else "Wounded", Squad.hurt_text(wound)]})
 	if s != null:
 		for inj in s.get("injuries", []):
 			var row: Dictionary = DB.INJURIES.get(inj, {})

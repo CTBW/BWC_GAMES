@@ -134,12 +134,20 @@ func test_squad_data() -> void:
 	# The mages: casters.
 	assert_eq(BarData.squad(view, _of_type("battle_mage"), store).members, "Casters")
 	# A squad wounded in its last fight: the rules' own words in its status row.
-	f.wound = {"kind": "wounded", "damage": 0.1, "morale": 5, "fell": 2}
+	f.wound = {"kind": "wounded", "damage": 0.1, "morale": 5, "fell": 2, "hurt": 2}
 	var w: Array = BarData.squad(view, f, store).effects.filter(func(e): return e.id == "wound")
 	if assert_eq(w.size(), 1, "the wound in the status row"):
 		assert_eq(w[0].name, "Wounded")
 		assert_eq(w[0].desc, Squad.wound_text(f.wound) + ".")
-		assert_true(str(w[0].source).contains("2 went down"), w[0].source)
+		assert_eq(w[0].source, "Wounded in its last fight. The first 2 soldiers to go down die.")
+	# Dressed down to one still hurt, then Injured: what going down costs follows.
+	f.wound.hurt = 1
+	w = BarData.squad(view, f, store).effects.filter(func(e): return e.id == "wound")
+	assert_eq(w[0].source, "Wounded in its last fight. The first soldier to go down dies.")
+	f.wound = {"kind": "injured", "damage": 0.25, "morale": 15, "fell": 8, "hurt": 8}
+	w = BarData.squad(view, f, store).effects.filter(func(e): return e.id == "wound")
+	assert_eq(w[0].name, "Injured")
+	assert_eq(w[0].source, "Injured in its last fight. %s." % Squad.hurt_text(f.wound))
 	f.erase("wound")
 
 
